@@ -170,7 +170,19 @@ export const section15Data = {
         stage3: {
           title: "Stage 3: The 2-Second Inspection Shortcut (The 9-9-9-10 Rule)",
           ruleSummary: "Scanning from Left to Right, subtract every digit from 9, EXCEPT subtract the last non-zero rightmost digit from 10. Keep any trailing zeros unchanged.",
-          whyItWorks: "Subtracting the last non-zero digit from 10 inherently absorbs the '+1' addition at the LSB, skipping the intermediate 9's complement step completely."
+          whyItWorks: "Subtracting the last non-zero digit from 10 inherently absorbs the '+1' addition at the LSB, skipping the intermediate 9's complement step completely.",
+          rules: [
+            {
+              name: "Standard Integers (No Trailing Zeros)",
+              rule: "Subtract all leading digits from 9, and subtract the rightmost units digit from 10.",
+              example: "For 5472: (9 - 5 = 4), (9 - 4 = 5), (9 - 7 = 2), (10 - 2 = 8) -> 4528 directly."
+            },
+            {
+              name: "Integers with Trailing Zeros (Exam Trap)",
+              rule: "Keep all trailing zeros unchanged. Subtract the first non-zero digit from 10, and all other digits to the left from 9.",
+              example: "For 24600: Trailing zeros stay '00', (10 - 6 = 4), (9 - 4 = 5), (9 - 2 = 7) -> 75400 directly."
+            }
+          ]
         }
       },
 

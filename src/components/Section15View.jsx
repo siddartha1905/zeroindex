@@ -309,17 +309,35 @@ export const Section15View = ({ section }) => {
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                    {section.findingComplements.decimal.threeStages.stage3.rules.map((r, i) => (
-                      <div key={i} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
-                        <span className="font-bold text-[#1E293B] block">{r.name}:</span>
-                        <p className="text-[11px] text-[#475569] leading-relaxed">{r.rule}</p>
-                        <div className="text-[11px] text-[#2E6F40] font-semibold pt-1">
-                          Mechanism: {r.example}
+                  {section.findingComplements.decimal.threeStages.stage3.ruleSummary && (
+                    <div className="p-3.5 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] space-y-1">
+                      <span className="font-bold text-[#3730A3] text-xs block">The 9-9-9-10 Inspection Rule:</span>
+                      <p className="text-xs text-[#4338CA] leading-relaxed">
+                        {section.findingComplements.decimal.threeStages.stage3.ruleSummary}
+                      </p>
+                    </div>
+                  )}
+
+                  {section.findingComplements.decimal.threeStages.stage3.rules && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                      {section.findingComplements.decimal.threeStages.stage3.rules.map((r, i) => (
+                        <div key={i} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+                          <span className="font-bold text-[#1E293B] block">{r.name}:</span>
+                          <p className="text-[11px] text-[#475569] leading-relaxed">{r.rule}</p>
+                          <div className="text-[11px] text-[#2E6F40] font-semibold pt-1">
+                            Mechanism: {r.example}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {section.findingComplements.decimal.threeStages.stage3.whyItWorks && (
+                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1 text-xs text-[#334155]">
+                      <span className="font-bold text-[#1E293B] block">Why the Shortcut Works Mathematically:</span>
+                      <p className="leading-relaxed">{section.findingComplements.decimal.threeStages.stage3.whyItWorks}</p>
+                    </div>
+                  )}
                 </div>
               )}
 
