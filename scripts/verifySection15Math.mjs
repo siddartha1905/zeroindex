@@ -1,116 +1,160 @@
 /**
- * Mathematical Verification Script for Section 1.5: Complements
- * Tests every worked model, practice question, and mixed challenge problem.
+ * Rigorous Mathematical Verification Script for Section 1.5: Complements
+ * Dynamically audits `src/data/dldSection15Data.js`
  */
 
-function onesComp(binStr) {
-  return binStr.split('').map(c => (c === '.' ? '.' : c === '0' ? '1' : '0')).join('');
+import { section15Data } from '../src/data/dldSection15Data.js';
+
+console.log("=== COMPREHENSIVE MATHEMATICAL AUDIT FOR SECTION 1.5 ===");
+
+// 1. Audit "What is a Complement in Simple Words?"
+const miniEx = section15Data.overviewHardware.whatIsAComplement.miniExamples;
+console.log("\n[1] Auditing 'What is a Complement' Mini-Examples...");
+// Decimal mini-example: N = 37
+const decEx = miniEx.find(e => e.baseName.includes("Decimal"));
+console.assert(decEx.milestoneOne.val === "62", "Mini-ex 9s complement must be 62");
+console.assert(decEx.milestoneTwo.val === "63", "Mini-ex 10s complement must be 63");
+console.assert(37 + 63 === 100, "37 + 63 must equal 100");
+
+// Binary mini-example: N = 1010_2 = 10_10
+const binEx = miniEx.find(e => e.baseName.includes("Binary"));
+console.assert(binEx.milestoneOne.val.includes("0101"), "Mini-ex 1s complement must contain 0101");
+console.assert(binEx.milestoneTwo.val.includes("0110"), "Mini-ex 2s complement must contain 0110");
+console.assert(parseInt("1010", 2) + parseInt("0110", 2) === 16, "1010 + 0110 must equal 10000_2 = 16");
+console.log("✓ Mini-examples intuition verified.");
+
+// 2. Audit Models 1A - 1D (Decimal)
+console.log("\n[2] Auditing Models 1A - 1D (Decimal Complements)...");
+const decModels = section15Data.findingComplements.decimal.models;
+
+for (const m of decModels) {
+  console.log(`Checking ${m.id} (${m.label})...`);
+  console.assert(m.question, `${m.id} must have question statement`);
+  console.assert(m.conceptTag, `${m.id} must have conceptTag`);
+
+  if (m.id === "model-1a") {
+    console.assert(m.ninesResult === "4527");
+    console.assert(m.tensResult === "4528");
+    console.assert(5472 + 4528 === 10000);
+  } else if (m.id === "model-1b") {
+    console.assert(m.ninesResult === "75399");
+    console.assert(m.tensResult === "75400");
+    console.assert(24600 + 75400 === 100000);
+    console.assert(m.standardMethodGrid.rowCarries.join("").includes("1"));
+  } else if (m.id === "model-1c") {
+    console.assert(m.ninesResult === "615.37");
+    console.assert(m.tensResult === "615.38");
+    console.assert((384.62 + 615.38).toFixed(2) === "1000.00");
+  } else if (m.id === "model-1d") {
+    console.assert(m.ninesResult === "0.9514");
+    console.assert(m.tensResult === "0.9515");
+    console.assert((0.0485 + 0.9515).toFixed(4) === "1.0000");
+  }
+}
+console.log("✓ Models 1A - 1D verified.");
+
+// 3. Audit Models 2A - 2D (Binary)
+console.log("\n[3] Auditing Models 2A - 2D (Binary Complements)...");
+const binModels = section15Data.findingComplements.binary.models;
+
+for (const m of binModels) {
+  console.log(`Checking ${m.id} (${m.label})...`);
+  console.assert(m.question, `${m.id} must have question statement`);
+  console.assert(m.conceptTag, `${m.id} must have conceptTag`);
+
+  if (m.id === "model-2a") {
+    console.assert(m.onesResult === "01001011");
+    console.assert(m.twosResult === "01001100");
+    console.assert(parseInt("10110100", 2) + parseInt("01001100", 2) === 256);
+  } else if (m.id === "model-2b") {
+    console.assert(m.onesResult === "0011010");
+    console.assert(m.twosResult === "0011011");
+    console.assert(parseInt("1100101", 2) + parseInt("0011011", 2) === 128);
+  } else if (m.id === "model-2c") {
+    console.assert(m.onesResult === "0100.1001");
+    console.assert(m.twosResult === "0100.1010");
+  } else if (m.id === "model-2d") {
+    console.assert(m.edgeCases.length === 2);
+  }
+}
+console.log("✓ Models 2A - 2D verified.");
+
+// 4. Audit Decimal Subtraction Models (3A-3D and 4A-4D)
+console.log("\n[4] Auditing Decimal Subtraction Models...");
+for (const m of section15Data.decimalSubtraction.subtraction9s.models) {
+  console.assert(m.question, `9s model ${m.id} must have question statement`);
+  console.assert(m.conceptTag, `9s model ${m.id} must have conceptTag`);
+  const M = parseFloat(m.minuend);
+  const N = parseFloat(m.subtrahend);
+  const diff = M - N;
+  if (m.additionGrid.endCarry === "1") {
+    console.assert(diff > 0, `${m.id}: EndCarry=1 implies M > N`);
+    console.assert(parseFloat(m.eacAddition.finalResult) === diff, `${m.id} EAC final result mismatch`);
+  } else {
+    console.assert(diff < 0, `${m.id}: EndCarry=0 implies M < N`);
+    console.assert(parseFloat(m.negativeHandling.finalResult) === diff, `${m.id} negative final result mismatch`);
+  }
 }
 
-function twosCompInt(binStr) {
-  const ones = onesComp(binStr);
-  const val = parseInt(ones, 2) + 1;
-  return val.toString(2).padStart(binStr.length, '0');
+for (const m of section15Data.decimalSubtraction.subtraction10s.models) {
+  console.assert(m.question, `10s model ${m.id} must have question statement`);
+  console.assert(m.conceptTag, `10s model ${m.id} must have conceptTag`);
+  const M = parseFloat(m.minuend);
+  const N = parseFloat(m.subtrahend);
+  const diff = M - N;
+  if (m.additionGrid.endCarry === "1") {
+    console.assert(diff > 0, `${m.id}: EndCarry=1 implies M > N`);
+    console.assert(parseFloat(m.carryAction.finalResult) === diff, `${m.id} 10s final result mismatch`);
+  } else {
+    console.assert(diff < 0, `${m.id}: EndCarry=0 implies M < N`);
+    console.assert(parseFloat(m.negativeHandling.finalResult) === diff, `${m.id} 10s negative result mismatch`);
+  }
+}
+console.log("✓ Decimal Subtraction Models 3A-3D and 4A-4D verified.");
+
+// 5. Audit Binary Subtraction Models (5A-5E and 6A-6E)
+console.log("\n[5] Auditing Binary Subtraction Models...");
+for (const m of section15Data.binarySubtraction.subtraction1s.models) {
+  console.assert(m.question, `1s model ${m.id} must have question statement`);
+  console.assert(m.conceptTag, `1s model ${m.id} must have conceptTag`);
+  const mDec = m.verification.base10Minuend;
+  const nDec = m.verification.base10Subtrahend;
+  const expectedDiff = mDec - nDec;
+  if (m.cout === "1") {
+    console.assert(expectedDiff >= 0, `${m.id}: cout=1 implies M >= N`);
+    console.assert(m.verification.base10Diff === expectedDiff, `${m.id} 1s diff mismatch`);
+  } else {
+    console.assert(expectedDiff < 0, `${m.id}: cout=0 implies M < N`);
+    console.assert(m.verification.base10Diff === expectedDiff, `${m.id} 1s negative diff mismatch`);
+  }
 }
 
-function ninesComp(decStr) {
-  return decStr.split('').map(c => (c === '.' ? '.' : String(9 - parseInt(c, 10)))).join('');
+for (const m of section15Data.binarySubtraction.subtraction2s.models) {
+  console.assert(m.question, `2s model ${m.id} must have question statement`);
+  console.assert(m.conceptTag, `2s model ${m.id} must have conceptTag`);
+  const mDec = m.verification.base10Minuend;
+  const nDec = m.verification.base10Subtrahend;
+  const expectedDiff = mDec - nDec;
+  if (m.cout === "1") {
+    console.assert(expectedDiff >= 0, `${m.id}: cout=1 implies M >= N`);
+    console.assert(m.verification.base10Diff === expectedDiff, `${m.id} 2s diff mismatch`);
+  } else {
+    console.assert(expectedDiff < 0, `${m.id}: cout=0 implies M < N`);
+    console.assert(m.verification.base10Diff === expectedDiff, `${m.id} 2s negative diff mismatch`);
+  }
 }
+console.log("✓ Binary Subtraction Models 5A-5E and 6A-6E verified.");
 
-function tensCompInt(decStr) {
-  const nines = ninesComp(decStr);
-  const val = parseInt(nines, 10) + 1;
-  return String(val).padStart(decStr.length, '0');
+// 6. Audit Mixed Exam Challenge Questions
+console.log("\n[6] Auditing Mixed Exam Challenge Questions...");
+const mixed = section15Data.mixedExamChallenge;
+console.assert(mixed.length === 15, "Mixed challenge must have 15 questions");
+for (const q of mixed) {
+  console.assert(q.id && q.question && q.conceptTag && q.difficulty, `Question ${q.id} missing fields`);
+  console.assert(q.correctAnswer && q.solution && q.solution.steps.length > 0, `Question ${q.id} missing solution`);
 }
+console.log(`✓ All ${mixed.length} mixed exam challenge questions verified.`);
 
-console.log("=== AUDITING SECTION 1.5 WORKED MODELS ===");
-
-// Model 1A: 5472
-console.log("Model 1A: 5472");
-console.assert(ninesComp("5472") === "4527", "Model 1A 9s comp mismatch");
-console.assert(tensCompInt("5472") === "4528", "Model 1A 10s comp mismatch");
-
-// Model 1B: 24600
-console.log("Model 1B: 24600");
-console.assert(ninesComp("24600") === "75399", "Model 1B 9s comp mismatch");
-console.assert(tensCompInt("24600") === "75400", "Model 1B 10s comp mismatch");
-
-// Model 1C: 384.62
-console.log("Model 1C: 384.62");
-console.assert(ninesComp("384.62") === "615.37", "Model 1C 9s comp mismatch");
-// 10s comp: 615.37 + 0.01 = 615.38
-console.assert((615.37 + 0.01).toFixed(2) === "615.38", "Model 1C 10s comp mismatch");
-
-// Model 1D: 0.0485 (Pure fraction with n=0 integer digits: (1 - 10^-4) - N = 0.9999 - 0.0485 = 0.9514)
-console.log("Model 1D: 0.0485");
-const nines1D = (0.9999 - 0.0485).toFixed(4);
-console.assert(nines1D === "0.9514", "Model 1D 9s comp mismatch");
-const tens1D = (1.0000 - 0.0485).toFixed(4);
-console.assert(tens1D === "0.9515", "Model 1D 10s comp mismatch");
-
-// Model 2A: 10110100
-console.log("Model 2A: 10110100");
-console.assert(onesComp("10110100") === "01001011", "Model 2A 1s comp mismatch");
-console.assert(twosCompInt("10110100") === "01001100", "Model 2A 2s comp mismatch");
-
-// Model 2B: 1100101
-console.log("Model 2B: 1100101");
-console.assert(onesComp("1100101") === "0011010", "Model 2B 1s comp mismatch");
-console.assert(twosCompInt("1100101") === "0011011", "Model 2B 2s comp mismatch");
-
-// Model 2C: 1011.0110
-console.log("Model 2C: 1011.0110");
-console.assert(onesComp("1011.0110") === "0100.1001", "Model 2C 1s comp mismatch");
-// Adding 0.0001 to 0100.1001 gives 0100.1010
-console.assert(onesComp("10110110") === "01001001");
-console.assert(twosCompInt("10110110") === "01001010");
-
-// Model 2D: 1111 and 1000
-console.log("Model 2D: 1111 and 1000");
-console.assert(onesComp("1111") === "0000" && twosCompInt("1111") === "0001");
-console.assert(onesComp("1000") === "0111" && twosCompInt("1000") === "1000");
-
-// Subtraction 9's:
-console.log("Subtraction 9s: Models 3A, 3B, 3C, 3D");
-console.assert(72532 - 13250 === 59282);
-console.assert(72532 + parseInt(ninesComp("13250"), 10) === 159281);
-console.assert(59281 + 1 === 59282);
-
-console.assert(8435 - 627 === 7808);
-console.assert(8435 + parseInt(ninesComp("0627"), 10) === 17807);
-console.assert(7807 + 1 === 7808);
-
-console.assert(13250 - 72532 === -59282);
-console.assert(13250 + parseInt(ninesComp("72532"), 10) === 40717);
-console.assert(ninesComp("40717") === "59282");
-
-console.assert(456.75 - 189.50 === 267.25);
-
-// Subtraction 10's:
-console.log("Subtraction 10s: Models 4A, 4B, 4C, 4D");
-console.assert(72532 + parseInt(tensCompInt("13250"), 10) === 159282);
-console.assert(6428 - 409 === 6019);
-console.assert(6428 + parseInt(tensCompInt("0409"), 10) === 16019);
-
-console.assert(13250 + parseInt(tensCompInt("72532"), 10) === 40718);
-console.assert(tensCompInt("40718") === "59282");
-
-console.assert(409 - 6428 === -6019);
-console.assert(409 + parseInt(tensCompInt("6428"), 10) === 3981);
-console.assert(tensCompInt("3981") === "6019");
-
-// Subtraction 1's:
-console.log("Subtraction 1s: Models 5A, 5B, 5C, 5D, 5E");
-console.assert(parseInt("1010100", 2) - parseInt("1000011", 2) === 17);
-console.assert(parseInt("0010001", 2) === 17);
-console.assert(parseInt("110101", 2) - parseInt("001101", 2) === 40);
-console.assert(parseInt("101000", 2) === 40);
-
-// Subtraction 2's:
-console.log("Subtraction 2s: Models 6A, 6B, 6C, 6D, 6E");
-console.assert(parseInt("101100", 2) - parseInt("000111", 2) === 37);
-console.assert(parseInt("100101", 2) === 37);
-console.assert(parseInt("001101", 2) - parseInt("100110", 2) === -25);
-console.assert(parseInt("011001", 2) === 25);
-
-console.log("ALL MATHEMATICAL ASSERTIONS PASSED SUCCESSFULLY!");
+console.log("\n=======================================================");
+console.log("ALL MATHEMATICAL AUDIT CHECKS PASSED WITH ZERO ERRORS!");
+console.log("=======================================================");

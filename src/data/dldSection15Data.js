@@ -29,6 +29,53 @@ export const section15Data = {
     heroTitle: "Why Digital Computers Use Complements Instead of Subtractors",
     heroSubtitle: "In early computing, engineers attempted building physical subtractor circuits alongside adder circuits. This duplicated silicon real estate, doubled transistor counts, and increased manufacturing costs. The invention of complement arithmetic eliminated the need for subtractors entirely.",
 
+    // "What is a Complement in Simple Words?"
+    whatIsAComplement: {
+      title: "What is a Complement in Simple Words?",
+      subtitle: "The most intuitive way to understand complements without getting lost in abstract mathematical notation.",
+      intuitionPoints: [
+        "In everyday language, a complement represents 'how much more you need to add to reach a complete milestone or full capacity'.",
+        "In decimal (Base 10), the milestone is reaching all 9s (for 9's complement) or the next full power of ten like 100 or 1000 (for 10's complement).",
+        "In binary (Base 2), the milestone is reaching all 1s (for 1's complement) or the next power of two like 16 or 256 (for 2's complement)."
+      ],
+      miniExamples: [
+        {
+          baseName: "Decimal (Base 10) 2-Digit Example",
+          givenNumber: "37",
+          milestoneOne: {
+            goal: "Reaching all nines (99)",
+            calc: "99 - 37 = 62",
+            name: "9's Complement",
+            val: "62"
+          },
+          milestoneTwo: {
+            goal: "Reaching next power of ten (100 = 99 + 1)",
+            calc: "62 + 1 = 63 (or 100 - 37 = 63)",
+            name: "10's Complement",
+            val: "63"
+          },
+          balanceCheck: "37 + 63 = 100 = 10²"
+        },
+        {
+          baseName: "Binary (Base 2) 4-Bit Example",
+          givenNumber: "(1010)₂ = 10₁₀",
+          milestoneOne: {
+            goal: "Reaching all ones (1111₂ = 15₁₀)",
+            calc: "1111₂ - 1010₂ = 0101₂ (Every bit flips: 0 <-> 1)",
+            name: "1's Complement",
+            val: "(0101)₂"
+          },
+          milestoneTwo: {
+            goal: "Reaching next power of two (10000₂ = 16₁₀ = 1111₂ + 1)",
+            calc: "0101₂ + 1 = 0110₂ (Add 1 to 1's complement)",
+            name: "2's Complement",
+            val: "(0110)₂"
+          },
+          balanceCheck: "(1010)₂ + (0110)₂ = (10000)₂ = 2⁴ = 16₁₀"
+        }
+      ]
+    },
+
     hardwareComparison: {
       withoutComplements: {
         title: "Without Complements (Dual Circuit Approach)",
@@ -102,109 +149,166 @@ export const section15Data = {
     decimal: {
       title: "Finding 9's and 10's Complements (Decimal Base 10)",
       badge: "Base 10 Radix Rules",
-      rules: {
-        ninesRule: "To find the 9's complement of any decimal number, subtract every single digit from 9.",
-        tensRuleStandard: "Standard Method: Find the 9's complement first, then add 1 to the least significant digit (LSB).",
-        tensRuleShortcut: "Fast Exam Shortcut (The 9-9-9-10 Rule): Scanning from Left to Right, subtract each digit from 9, EXCEPT subtract the last non-zero rightmost digit from 10. Keep any trailing zeros unchanged."
+      
+      // 3 Progressive Pedagogical Stages
+      threeStages: {
+        stage1: {
+          title: "Stage 1: Formal Mathematical Definition & Formula",
+          formulaNines: "C_9(N) = (10^n - 1) - N   [for integers]  or  (10^n - 10^-m) - N  [with m fraction digits]",
+          formulaTens: "C_{10}(N) = 10^n - N = C_9(N) + 1  (added at the LSB position)",
+          glossary: "where r = 10 (base), n = number of integer digits, m = number of fractional digits, N = given number."
+        },
+        stage2: {
+          title: "Stage 2: The Standard Classroom Method (Normal Step-by-Step Method)",
+          theoryTip: "Always write out this standard step-by-step subtraction and addition in subjective university exams to secure full step marks!",
+          steps: [
+            { stepNum: "Step 1", title: "Write Max Digits (Row of 9s)", desc: "Write a row of 9s above every digit of N, matching its exact integer and fractional layout." },
+            { stepNum: "Step 2", title: "Subtract Digit-by-Digit", desc: "Subtract each individual digit of N from 9 to produce the 9's Complement." },
+            { stepNum: "Step 3", title: "Add +1 to LSB", desc: "Add +1 to the units place (or rightmost fractional digit) of the 9's complement to obtain the 10's Complement." }
+          ]
+        },
+        stage3: {
+          title: "Stage 3: The 2-Second Inspection Shortcut (The 9-9-9-10 Rule)",
+          ruleSummary: "Scanning from Left to Right, subtract every digit from 9, EXCEPT subtract the last non-zero rightmost digit from 10. Keep any trailing zeros unchanged.",
+          whyItWorks: "Subtracting the last non-zero digit from 10 inherently absorbs the '+1' addition at the LSB, skipping the intermediate 9's complement step completely."
+        }
       },
+
       models: [
         {
           id: "model-1a",
           label: "Model 1A: Pure Integer (Standard 4-Digit)",
+          question: "Find the 9's complement and 10's complement of the decimal integer (5472)₁₀. Show both the Standard Classroom Method and the Shortcut Verification.",
           inputNumber: "5472",
           base: 10,
           conceptTag: "Standard Integer",
           digits: ["5", "4", "7", "2"],
-          ninesRows: [
-            { label: "Radix Max (9)", values: ["9", "9", "9", "9"] },
-            { label: "Original Number N", values: ["5", "4", "7", "2"] },
-            { label: "9's Complement", values: ["4", "5", "2", "7"] }
-          ],
+          columns: ["Thousands (10³)", "Hundreds (10²)", "Tens (10¹)", "Units (10⁰)"],
+          standardMethodGrid: {
+            rowNines: ["9", "9", "9", "9"],
+            rowOriginal: ["5", "4", "7", "2"],
+            rowNinesComp: ["4", "5", "2", "7"],
+            rowCarries: ["0", "0", "0", "-"],
+            rowAddOne: ["", "", "", "+1"],
+            rowTensComp: ["4", "5", "2", "8"]
+          },
           ninesResult: "4527",
-          tensSteps: [
-            { step: "Step 1: Compute 9's complement", val: "4527" },
-            { step: "Step 2: Add 1 to LSB", val: "4527 + 1 = 4528" },
-            { step: "Shortcut Check (9-9-9-10 Rule)", val: "(9-5)(9-4)(9-7)(10-2) = 4 5 2 8" }
-          ],
           tensResult: "4528",
+          shortcutCheck: {
+            methodName: "9-9-9-10 Scan Inspection",
+            walkthrough: "(9 - 5 = 4), (9 - 4 = 5), (9 - 7 = 2), (10 - 2 = 8) -> 4528",
+            isInstantMatch: true
+          },
+          proofCheck: {
+            ninesSum: "5472 + 4527 = 9999 (All 9s Milestone)",
+            tensSum: "5472 + 4528 = 10000 = 10⁴ (Next Power of 10)"
+          },
           verification: {
             method: "Radix Definition Check",
-            formula: "10^4 - 5472 = 10000 - 5472 = 4528",
+            formula: "10⁴ - 5472 = 10000 - 5472 = 4528",
             isCorrect: true
           }
         },
         {
           id: "model-1b",
           label: "Model 1B: Integer Ending with Trailing Zeros (Classic Exam Trap)",
+          question: "Find the 9's complement and 10's complement of the decimal integer (24600)₁₀. Pay special attention to the trailing zeros in the normal addition method.",
           inputNumber: "24600",
           base: 10,
           conceptTag: "Trailing Zeros Trap",
           digits: ["2", "4", "6", "0", "0"],
-          ninesRows: [
-            { label: "Radix Max (9)", values: ["9", "9", "9", "9", "9"] },
-            { label: "Original Number N", values: ["2", "4", "6", "0", "0"] },
-            { label: "9's Complement", values: ["7", "5", "3", "9", "9"] }
-          ],
+          columns: ["10⁴", "10³", "10²", "10¹", "10⁰"],
+          standardMethodGrid: {
+            rowNines: ["9", "9", "9", "9", "9"],
+            rowOriginal: ["2", "4", "6", "0", "0"],
+            rowNinesComp: ["7", "5", "3", "9", "9"],
+            rowCarries: ["0", "0", "1", "1", "-"],
+            rowAddOne: ["", "", "", "", "+1"],
+            rowTensComp: ["7", "5", "4", "0", "0"]
+          },
+          carryExplanation: "Notice in the normal method: adding +1 to 75399 causes a carry ripple: 9 + 1 = 10 (write 0, carry 1), next 9 + 1 = 10 (write 0, carry 1), and 3 + 1 = 4, yielding 75400!",
           ninesResult: "75399",
-          tensSteps: [
-            { step: "Step 1: Compute 9's complement", val: "75399" },
-            { step: "Step 2: Add 1 to LSB", val: "75399 + 1 = 75400" },
-            { step: "Shortcut Check (9-9-9-10 Rule)", val: "Keep trailing zeros '00'. Subtract first non-zero digit 6 from 10 (10-6=4). Subtract rest from 9: (9-2=7), (9-4=5) -> 75400" }
-          ],
           tensResult: "75400",
+          shortcutCheck: {
+            methodName: "9-9-9-10 Trailing Zeros Rule",
+            walkthrough: "Keep trailing '00' unchanged. Subtract last non-zero digit 6 from 10: (10 - 6 = 4). Subtract preceding digits from 9: (9 - 2 = 7), (9 - 4 = 5) -> 75400",
+            isInstantMatch: true
+          },
+          proofCheck: {
+            ninesSum: "24600 + 75399 = 99999 (All 9s Milestone)",
+            tensSum: "24600 + 75400 = 100000 = 10⁵ (Next Power of 10)"
+          },
           verification: {
             method: "Radix Definition Check",
-            formula: "10^5 - 24600 = 100000 - 24600 = 75400",
+            formula: "10⁵ - 24600 = 100000 - 24600 = 75400",
             isCorrect: true
           }
         },
         {
           id: "model-1c",
           label: "Model 1C: Combined Integer and Fraction",
+          question: "Find the 9's complement and 10's complement of the mixed decimal number (384.62)₁₀. Show the precise fractional LSB addition.",
           inputNumber: "384.62",
           base: 10,
           conceptTag: "Fractional Complement",
           digits: ["3", "8", "4", ".", "6", "2"],
-          ninesRows: [
-            { label: "Radix Max (9)", values: ["9", "9", "9", ".", "9", "9"] },
-            { label: "Original Number N", values: ["3", "8", "4", ".", "6", "2"] },
-            { label: "9's Complement", values: ["6", "1", "5", ".", "3", "7"] }
-          ],
+          columns: ["10²", "10¹", "10⁰", ".", "10⁻¹", "10⁻²"],
+          standardMethodGrid: {
+            rowNines: ["9", "9", "9", ".", "9", "9"],
+            rowOriginal: ["3", "8", "4", ".", "6", "2"],
+            rowNinesComp: ["6", "1", "5", ".", "3", "7"],
+            rowCarries: ["0", "0", "0", ".", "0", "-"],
+            rowAddOne: ["", "", "", ".", "", "+1"],
+            rowTensComp: ["6", "1", "5", ".", "3", "8"]
+          },
           ninesResult: "615.37",
-          tensSteps: [
-            { step: "Step 1: Compute 9's complement", val: "615.37" },
-            { step: "Step 2: Add 1 at the LSB position (0.01)", val: "615.37 + 0.01 = 615.38" },
-            { step: "Shortcut Check (9-9-9-10 Rule)", val: "Subtract last non-zero digit 2 from 10 (10-2=8), subtract all other digits from 9 -> 615.38" }
-          ],
           tensResult: "615.38",
+          shortcutCheck: {
+            methodName: "9-9-9-10 Fractional Scan",
+            walkthrough: "Subtract last fractional digit 2 from 10 (10 - 2 = 8). Subtract all other digits from 9: (9-3=6), (9-8=1), (9-4=5), (9-6=3) -> 615.38",
+            isInstantMatch: true
+          },
+          proofCheck: {
+            ninesSum: "384.62 + 615.37 = 999.99 (All 9s Milestone)",
+            tensSum: "384.62 + 615.38 = 1000.00 = 10³ (Next Power of 10)"
+          },
           verification: {
             method: "Radix Formula Check",
-            formula: "10^3 - 384.62 = 1000 - 384.62 = 615.38",
+            formula: "10³ - 384.62 = 1000 - 384.62 = 615.38",
             isCorrect: true
           }
         },
         {
           id: "model-1d",
           label: "Model 1D: Pure Decimal Fraction (Zero Integer Part)",
+          question: "Find the 9's complement and 10's complement of the pure decimal fraction (0.0485)₁₀. Apply n = 0 integer digits in the formula.",
           inputNumber: "0.0485",
           base: 10,
           conceptTag: "Pure Decimal Fraction",
           digits: ["0", ".", "0", "4", "8", "5"],
-          ninesRows: [
-            { label: "Radix Max (0.9999)", values: ["0", ".", "9", "9", "9", "9"] },
-            { label: "Original Number N", values: ["0", ".", "0", "4", "8", "5"] },
-            { label: "9's Complement", values: ["0", ".", "9", "5", "1", "4"] }
-          ],
+          columns: ["10⁰", ".", "10⁻¹", "10⁻²", "10⁻³", "10⁻⁴"],
+          standardMethodGrid: {
+            rowNines: ["0", ".", "9", "9", "9", "9"],
+            rowOriginal: ["0", ".", "0", "4", "8", "5"],
+            rowNinesComp: ["0", ".", "9", "5", "1", "4"],
+            rowCarries: ["0", ".", "0", "0", "0", "-"],
+            rowAddOne: ["", ".", "", "", "", "+1"],
+            rowTensComp: ["0", ".", "9", "5", "1", "5"]
+          },
           ninesResult: "0.9514",
-          tensSteps: [
-            { step: "Step 1: Compute 9's complement", val: "0.9514" },
-            { step: "Step 2: Add 1 to LSB position (0.0001)", val: "0.9514 + 0.0001 = 0.9515" },
-            { step: "Shortcut Check (9-9-9-10 Rule)", val: "Subtract rightmost digit 5 from 10 (10-5=5), others from 9 -> 0.9515" }
-          ],
           tensResult: "0.9515",
+          shortcutCheck: {
+            methodName: "9-9-9-10 Pure Fraction Scan",
+            walkthrough: "Subtract rightmost digit 5 from 10: (10 - 5 = 5). Subtract all other fractional digits from 9: (9-0=9), (9-4=5), (9-8=1) -> 0.9515",
+            isInstantMatch: true
+          },
+          proofCheck: {
+            ninesSum: "0.0485 + 0.9514 = 0.9999 (All 9s Fraction)",
+            tensSum: "0.0485 + 0.9515 = 1.0000 = 10⁰ (Next Power of 10)"
+          },
           verification: {
             method: "Radix Formula Check",
-            formula: "10^0 - 0.0485 = 1.0000 - 0.0485 = 0.9515",
+            formula: "10⁰ - 0.0485 = 1.0000 - 0.0485 = 0.9515",
             isCorrect: true
           }
         }
@@ -259,31 +363,62 @@ export const section15Data = {
     binary: {
       title: "Finding 1's and 2's Complements (Binary Base 2)",
       badge: "Base 2 Logic Rules",
-      rules: {
-        onesRule: "To find the 1's complement of any binary number, invert every single bit (change 0 to 1 and 1 to 0).",
-        twosRuleStandard: "Method A (Standard Definition): Invert all bits to find the 1's complement, then add 1 to the LSB.",
-        twosRuleShortcut: "Method B (2-Second Exam Shortcut: 'Keep Up to First 1, Flip the Rest'): Scan the bits from Right to Left (<- from LSB towards MSB). Keep all trailing 0s and the very first 1 completely unchanged. Invert every bit to the left of that first 1."
+
+      // 3 Progressive Pedagogical Stages
+      threeStages: {
+        stage1: {
+          title: "Stage 1: Formal Mathematical Definition & Formula",
+          formulaOnes: "C_1(N) = (2^n - 1) - N   [for n-bit integer]  or  (2^n - 2^-m) - N  [with m fraction bits]",
+          formulaTwos: "C_2(N) = 2^n - N = C_1(N) + 1  (added at the LSB position)",
+          glossary: "where r = 2 (base), n = number of integer bits, m = number of fractional bits, N = given binary number."
+        },
+        stage2: {
+          title: "Stage 2: The Standard Classroom Method (Normal Step-by-Step Method)",
+          theoryTip: "In university theory exams, always write out the 1's complement bit inversion row followed by the explicit +1 addition row to secure full step marks!",
+          steps: [
+            { stepNum: "Step 1", title: "Write Binary Number N", desc: "Write out the given binary number with all bits clearly aligned." },
+            { stepNum: "Step 2", title: "Invert Every Bit (1's Comp)", desc: "Flip every single bit: change all 0s to 1s and all 1s to 0s to produce the 1's Complement." },
+            { stepNum: "Step 3", title: "Add +1 to LSB (2's Comp)", desc: "Perform binary addition of +1 to the LSB, propagating any carries leftward to produce the 2's Complement." }
+          ]
+        },
+        stage3: {
+          title: "Stage 3: The 2-Second Inspection Shortcut ('Keep Up to First 1, Flip the Rest')",
+          ruleSummary: "Scan bits from Right to Left (<- from LSB towards MSB). Keep all trailing 0s and the very first 1 completely unchanged. Invert all bits to the left of that first 1.",
+          whyItWorks: "Why does this shortcut work? In binary arithmetic, adding +1 to a string of 1s turns them into 0s with a ripple carry until the first 0 turns into 1. In 1's complement, original trailing 0s became 1s, and the first 1 became 0. Adding +1 ripples carries through those 1s, turning them back into 0s, and turns that first 0 back into 1! Bits to the left receive no carry, so they stay inverted."
+        }
       },
+
       models: [
         {
           id: "model-2a",
           label: "Model 2A: 8-Bit Integer with Trailing Zeros",
+          question: "Find the 1's complement and 2's complement of the 8-bit binary number (10110100)₂. Show the complete standard addition method with ripple carries, followed by shortcut verification.",
           inputNumber: "10110100",
           base: 2,
           conceptTag: "8-Bit Trailing Zeros",
           bits: ["1", "0", "1", "1", "0", "1", "0", "0"],
-          onesResult: "01001011",
-          twosStandard: {
-            ones: "01001011",
-            addOne: "+ 1",
-            sum: "01001100"
+          columns: ["b7", "b6", "b5", "b4", "b3", "b2", "b1", "b0"],
+          standardMethodGrid: {
+            rowOriginal: ["1", "0", "1", "1", "0", "1", "0", "0"],
+            rowOnesComp: ["0", "1", "0", "0", "1", "0", "1", "1"],
+            rowCarries: ["0", "0", "0", "0", "1", "1", "1", "-"],
+            rowAddOne: ["", "", "", "", "", "", "", "+1"],
+            rowTwosComp: ["0", "1", "0", "0", "1", "1", "0", "0"]
           },
-          twosShortcut: {
+          carryExplanation: "Notice how +1 at b0 ripples across b0 and b1: (1 + 1 = 10₂ -> write 0, carry 1), (1 + 1 = 10₂ -> write 0, carry 1), and at b2 (0 + 1 = 1), halting the carry!",
+          onesResult: "01001011",
+          twosResult: "01001100",
+          shortcutCheck: {
+            methodName: "First-1 Latch Inspection",
             keptBits: "100",
             keptDescription: "Rightmost trailing zeros and the very first '1' stay UNCHANGED (100)",
             flippedBits: "01001",
             flippedDescription: "All bits to the left of the first '1' (10110) are INVERTED -> 01001",
             combined: "01001100"
+          },
+          proofCheck: {
+            onesSum: "10110100₂ + 01001011₂ = 11111111₂ (All 1s Milestone = 255₁₀)",
+            twosSum: "10110100₂ + 01001100₂ = 100000000₂ = 2⁸ = 256₁₀ (Next Power of 2)"
           },
           verification: {
             method: "Base-10 Arithmetic Verification",
@@ -296,22 +431,33 @@ export const section15Data = {
         {
           id: "model-2b",
           label: "Model 2B: Binary Number Ending in 1",
+          question: "Find the 1's complement and 2's complement of the binary integer (1100101)₂. Show both the standard addition method and the 1-step shortcut.",
           inputNumber: "1100101",
           base: 2,
           conceptTag: "Odd Binary Integer",
           bits: ["1", "1", "0", "0", "1", "0", "1"],
-          onesResult: "0011010",
-          twosStandard: {
-            ones: "0011010",
-            addOne: "+ 1",
-            sum: "0011011"
+          columns: ["b6", "b5", "b4", "b3", "b2", "b1", "b0"],
+          standardMethodGrid: {
+            rowOriginal: ["1", "1", "0", "0", "1", "0", "1"],
+            rowOnesComp: ["0", "0", "1", "1", "0", "1", "0"],
+            rowCarries: ["0", "0", "0", "0", "0", "0", "-"],
+            rowAddOne: ["", "", "", "", "", "", "+1"],
+            rowTwosComp: ["0", "0", "1", "1", "0", "1", "1"]
           },
-          twosShortcut: {
+          carryExplanation: "Since the 1's complement ends in 0, adding +1 produces NO carries! The LSB simply becomes 1.",
+          onesResult: "0011010",
+          twosResult: "0011011",
+          shortcutCheck: {
+            methodName: "First-1 Latch Inspection",
             keptBits: "1",
             keptDescription: "LSB is already 1, so only the LSB '1' is kept unchanged",
             flippedBits: "001101",
             flippedDescription: "All 6 preceding bits (110010) are INVERTED -> 001101",
             combined: "0011011"
+          },
+          proofCheck: {
+            onesSum: "1100101₂ + 0011010₂ = 1111111₂ (All 1s Milestone = 127₁₀)",
+            twosSum: "1100101₂ + 0011011₂ = 10000000₂ = 2⁷ = 128₁₀ (Next Power of 2)"
           },
           verification: {
             method: "Base-10 Arithmetic Verification",
@@ -324,22 +470,32 @@ export const section15Data = {
         {
           id: "model-2c",
           label: "Model 2C: Combined Integer and Fractional Binary Number",
+          question: "Find the 1's complement and 2's complement of the fractional binary number (1011.0110)₂. Add +1 at the least significant fractional bit.",
           inputNumber: "1011.0110",
           base: 2,
           conceptTag: "Fractional Binary",
           bits: ["1", "0", "1", "1", ".", "0", "1", "1", "0"],
-          onesResult: "0100.1001",
-          twosStandard: {
-            ones: "0100.1001",
-            addOne: "+ 0.0001 (at LSB 2^-4)",
-            sum: "0100.1010"
+          columns: ["b3", "b2", "b1", "b0", ".", "b-1", "b-2", "b-3", "b-4"],
+          standardMethodGrid: {
+            rowOriginal: ["1", "0", "1", "1", ".", "0", "1", "1", "0"],
+            rowOnesComp: ["0", "1", "0", "0", ".", "1", "0", "0", "1"],
+            rowCarries: ["0", "0", "0", "0", ".", "0", "0", "1", "-"],
+            rowAddOne: ["", "", "", "", ".", "", "", "", "+1"],
+            rowTwosComp: ["0", "1", "0", "0", ".", "1", "0", "1", "0"]
           },
-          twosShortcut: {
+          onesResult: "0100.1001",
+          twosResult: "0100.1010",
+          shortcutCheck: {
+            methodName: "Fractional First-1 Latch Inspection",
             keptBits: "10",
             keptDescription: "Trailing fractional zero and first '1' kept unchanged (.10)",
             flippedBits: "0100.10",
             flippedDescription: "All bits to the left are INVERTED -> 0100.10",
             combined: "0100.1010"
+          },
+          proofCheck: {
+            onesSum: "1011.0110₂ + 0100.1001₂ = 1111.1111₂ (All 1s Fractional Milestone)",
+            twosSum: "1011.0110₂ + 0100.1010₂ = 10000.0000₂ = 2⁴ = 16.0₁₀"
           },
           verification: {
             method: "Base-10 Arithmetic Verification",
@@ -352,6 +508,7 @@ export const section15Data = {
         {
           id: "model-2d",
           label: "Model 2D: Critical Edge Cases (All 1s and Power-of-2 Single 1)",
+          question: "Find the 1's complement and 2's complement of the boundary edge cases (1111)₂ and (1000)₂. Explain their special properties in computer hardware.",
           inputNumber: "1111 and 1000",
           base: 2,
           conceptTag: "Boundary Edge Cases",
@@ -361,7 +518,7 @@ export const section15Data = {
               name: "Case A: All 1s Number (1111)₂ = 15₁₀",
               ones: "0000",
               twos: "0000 + 1 = 0001",
-              note: "2's complement of (2^n - 1) is always 1 (in binary 000...001)."
+              note: "The 2's complement of (2^n - 1) is always 1 (in binary 000...001). Adding 1 to (1111)₂ reaches 10000₂ (16)."
             },
             {
               name: "Case B: Power of 2 (Single 1 at MSB) (1000)₂ = 8₁₀",
@@ -371,7 +528,19 @@ export const section15Data = {
             }
           ],
           onesResult: "See Cases",
-          twosStandard: { ones: "See Cases", addOne: "", sum: "See Cases" },
+          twosResult: "See Cases",
+          shortcutCheck: {
+            methodName: "Edge Case Verification",
+            keptBits: "N/A",
+            keptDescription: "For 1111: first 1 is at LSB, flip rest -> 0001. For 1000: first 1 is at MSB, keep all 1000 -> 1000.",
+            flippedBits: "N/A",
+            flippedDescription: "Demonstrates mathematical boundary consistency.",
+            combined: "0001 and 1000"
+          },
+          proofCheck: {
+            onesSum: "1111₂ + 0001₂ = 10000₂ (16); 1000₂ + 1000₂ = 10000₂ (16)",
+            tensSum: "Both reach 2⁴ = 16₁₀"
+          },
           verification: {
             method: "Base-10 Arithmetic Verification",
             originalDec: "15 and 8",
@@ -435,30 +604,39 @@ export const section15Data = {
     heroTitle: "Decimal Subtraction Using 9's and 10's Complements",
     heroSubtitle: "Subtraction M - N is computed by converting N into its complement and adding: S = M + Complement(N). The end carry determines the algebraic sign and final result representation.",
 
-    flowchartSteps: [
-      { step: "1", title: "Equalize Digits", desc: "Count digits in M and N. Pad leading zeros (in Amber) to the shorter number so both have the exact same number of digits n." },
-      { step: "2", title: "Complement Subtrahend N", desc: "For 9's complement subtraction, find 9's comp of N. For 10's complement subtraction, find 10's comp of N." },
-      { step: "3", title: "Add S = M + Comp(N)", desc: "Perform standard decimal addition of M and the complement of N." },
-      { step: "4", title: "Examine End-Around Carry", desc: "If Carry = 1: M >= N (Positive result). If Carry = 0: M < N (Negative result)." }
+    subtractionTheory: {
+      title: "How Complement Subtraction Works & Why Carry Decides the Sign",
+      subtitle: "The mathematical proof behind complement subtraction: why carry = 1 guarantees a positive result and carry = 0 guarantees a negative result.",
+      formulaProof: "When we compute M - N using r's complement, the hardware computes: Sum = M + (r^n - N) = r^n + (M - N)",
+      caseOne: {
+        title: "Case 1: M >= N (Positive Result -> Carry = 1 Generated)",
+        explanation: "Since M - N >= 0, the sum r^n + (M - N) is greater than or equal to r^n. This produces an extra 1 in the r^n place value (an End Carry out of the MSB)!",
+        handlingNines: "In 9's complement, we actually added (r^n - 1 - N), so the sum is r^n - 1 + (M - N). Dropping r^n leaves (M - N) - 1, which is 1 short! Wrapping the carry around to add +1 to the LSB (End-Around Carry) restores the exact difference.",
+        handlingTens: "In 10's complement, the r^n carry is simply discarded, leaving the true positive magnitude (M - N) directly."
+      },
+      caseTwo: {
+        title: "Case 2: M < N (Negative Result -> No Carry Generated, Carry = 0)",
+        explanation: "Since M - N < 0, let M - N = -(N - M). Then Sum = r^n - (N - M). Because (N - M) > 0, the sum is strictly less than r^n, so NO carry is produced out of the MSB!",
+        meaning: "The sum itself is standing in the complement form of (N - M). To find the true negative magnitude: take the complement of the sum and prefix a minus sign (-)."
+      }
+    },
+
+    classroomAlgorithm5Steps: [
+      { step: "Step 1", title: "Length Check & Zero-Padding", desc: "Count digits in M and N. Pad leading zeros (in Amber) to the shorter number so both have the exact same number of digits n." },
+      { step: "Step 2", title: "Find Complement of Subtrahend N", desc: "For 9's complement subtraction, find the 9's complement of padded N. For 10's complement subtraction, find the 10's complement of padded N." },
+      { step: "Step 3", title: "Perform Decimal Addition", desc: "Compute Raw Sum S = M + Complement(N) using standard column-by-column addition." },
+      { step: "Step 4", title: "Analyze MSB Carry-Out", desc: "Examine whether an end carry out of the most significant digit (MSB) was generated." },
+      { step: "Step 5", title: "Apply Carry Rule", desc: "If Carry = 1: Result is positive (EAC in 9's; Discard in 10's). If Carry = 0: Result is negative (Take complement of sum and prefix '-')." }
     ],
 
     // SUB-TAB 1: 9's COMPLEMENT SUBTRACTION
     subtraction9s: {
       ruleBadge: "End-Around Carry +1",
-      carryRules: {
-        carryOne: {
-          title: "When Carry = 1 (M >= N, Result is Positive)",
-          action: "An end-around carry is produced out of the MSB. Remove this carry and ADD 1 to the least significant digit (LSB) of the sum. The resulting number is the final positive answer."
-        },
-        carryZero: {
-          title: "When Carry = 0 (M < N, Result is Negative)",
-          action: "No carry is generated. The answer is negative. Take the 9's complement of the resulting sum and prefix a minus sign (-) to obtain the true magnitude."
-        }
-      },
       models: [
         {
           id: "model-3a",
           label: "Model 3A: Case 1 (M > N, Equal Digits) with End-Around Carry",
+          question: "Perform the subtraction (72532 - 13250)₁₀ using 9's complement arithmetic. Show all 5 classroom steps.",
           conceptTag: "Case 1: M > N (Carry = 1)",
           minuend: "72532",
           subtrahend: "13250",
@@ -488,12 +666,13 @@ export const section15Data = {
         {
           id: "model-3b",
           label: "Model 3B: Case 1 (M > N, Unequal Digits Requiring Leading Zero Padding)",
+          question: "Subtract (627)₁₀ from (8435)₁₀ using 9's complement arithmetic. Show the zero-padding on the subtrahend before complementing.",
           conceptTag: "Unequal Digit Padding on N",
           minuend: "8435",
           subtrahend: "627",
           paddedM: "8435",
           paddedN: "0627",
-          paddingNote: "N has 3 digits while M has 4 digits. Pad 1 leading zero to N: 627 -> 0627.",
+          paddingNote: "N has 3 digits while M has 4 digits. Pad 1 leading zero to N: 627 -> 0627 BEFORE taking the 9's complement!",
           digitsCount: 4,
           ninesCompN: "9372",
           additionGrid: {
@@ -518,6 +697,7 @@ export const section15Data = {
         {
           id: "model-3c",
           label: "Model 3C: Case 2 (M < N, No Carry) Producing Negative Result",
+          question: "Perform the subtraction (13250 - 72532)₁₀ using 9's complement arithmetic. Explain the negative result handling when Carry = 0.",
           conceptTag: "Case 2: M < N (No Carry)",
           minuend: "13250",
           subtrahend: "72532",
@@ -534,8 +714,8 @@ export const section15Data = {
             remainingSum: "40717"
           },
           negativeHandling: {
-            rule: "No end-carry generated -> Result is NEGATIVE.",
-            action: "Take 9's complement of the sum 40717 and add a minus sign.",
+            rule: "No end-carry generated (Carry = 0) -> Result is NEGATIVE (-).",
+            action: "Take the 9's complement of the sum 40717 and attach a minus sign:",
             compStep: "99999 - 40717 = 59282",
             finalResult: "-59282"
           },
@@ -548,6 +728,7 @@ export const section15Data = {
         {
           id: "model-3d",
           label: "Model 3D: Fractional Decimal Complement Subtraction",
+          question: "Perform the subtraction (456.75 - 189.50)₁₀ using 9's complement arithmetic. Show the end-around carry addition at the fractional LSB.",
           conceptTag: "Fractional Complement",
           minuend: "456.75",
           subtrahend: "189.50",
@@ -565,7 +746,7 @@ export const section15Data = {
           },
           eacAddition: {
             sum: "267.24",
-            addCarry: "+ 0.01 (at LSB)",
+            addCarry: "+ 0.01 (at LSB 10^-2)",
             finalResult: "+267.25"
           },
           finalAnswer: "+267.25",
@@ -634,20 +815,11 @@ export const section15Data = {
     // SUB-TAB 2: 10's COMPLEMENT SUBTRACTION
     subtraction10s: {
       ruleBadge: "Discard Carry",
-      carryRules: {
-        carryOne: {
-          title: "When Carry = 1 (M >= N, Result is Positive)",
-          action: "An end carry is generated out of the MSB. Simply DISCARD the carry. The remaining digits form the final positive answer. No end-around addition needed!"
-        },
-        carryZero: {
-          title: "When Carry = 0 (M < N, Result is Negative)",
-          action: "No carry is generated. The answer is negative. Take the 10's complement of the resulting sum and prefix a minus sign (-) to obtain the true magnitude."
-        }
-      },
       models: [
         {
           id: "model-4a",
           label: "Model 4A: Case 1 (M > N, Equal Digits) with Discard Carry",
+          question: "Perform the subtraction (72532 - 13250)₁₀ using 10's complement arithmetic. Explain the carry discard action.",
           conceptTag: "Case 1: M > N (Discard Carry)",
           minuend: "72532",
           subtrahend: "13250",
@@ -665,7 +837,7 @@ export const section15Data = {
           },
           carryAction: {
             rule: "Carry = 1 out of MSB -> DISCARD CARRY.",
-            note: "Remaining 5 digits represent the final positive answer directly.",
+            note: "Discard the leading 1. The remaining 5 digits represent the final positive answer directly.",
             finalResult: "+59282"
           },
           finalAnswer: "+59282",
@@ -677,12 +849,13 @@ export const section15Data = {
         {
           id: "model-4b",
           label: "Model 4B: Case 1 (M > N, Unequal Digits Requiring Leading Zero Padding)",
+          question: "Subtract (409)₁₀ from (6428)₁₀ using 10's complement arithmetic. Show the zero-padding on N.",
           conceptTag: "Unequal Digit Padding on N",
           minuend: "6428",
           subtrahend: "409",
           paddedM: "6428",
           paddedN: "0409",
-          paddingNote: "N has 3 digits, M has 4 digits. Pad leading zero to N: 409 -> 0409.",
+          paddingNote: "N has 3 digits, M has 4 digits. Pad leading zero to N: 409 -> 0409 BEFORE taking the 10's complement!",
           digitsCount: 4,
           tensCompN: "9591",
           additionGrid: {
@@ -707,6 +880,7 @@ export const section15Data = {
         {
           id: "model-4c",
           label: "Model 4C: Case 2 (M < N, No Carry) Producing Negative Result",
+          question: "Perform the subtraction (13250 - 72532)₁₀ using 10's complement arithmetic. Show the re-complementing of the sum.",
           conceptTag: "Case 2: M < N (No Carry)",
           minuend: "13250",
           subtrahend: "72532",
@@ -723,8 +897,8 @@ export const section15Data = {
             remainingSum: "40718"
           },
           negativeHandling: {
-            rule: "No end-carry generated -> Result is NEGATIVE.",
-            action: "Take 10's complement of the sum 40718 and prefix a minus sign.",
+            rule: "No end-carry generated (Carry = 0) -> Result is NEGATIVE (-).",
+            action: "Take the 10's complement of the sum 40718 and prefix a minus sign:",
             compStep: "100000 - 40718 = 59282 (or 99999 - 40718 + 1 = 59282)",
             finalResult: "-59282"
           },
@@ -737,12 +911,13 @@ export const section15Data = {
         {
           id: "model-4d",
           label: "Model 4D: Case 2 (M < N, Unequal Digits Requiring Padding on M)",
+          question: "Subtract (6428)₁₀ from (409)₁₀ using 10's complement arithmetic. Explain why padding must be applied to the minuend M.",
           conceptTag: "Unequal Digit Padding on M",
           minuend: "409",
           subtrahend: "6428",
           paddedM: "0409",
           paddedN: "6428",
-          paddingNote: "M has 3 digits, N has 4 digits. Pad leading zero to M: 409 -> 0409.",
+          paddingNote: "M has 3 digits while N has 4 digits. Pad leading zero to M: 409 -> 0409 to match the 4-digit width of N.",
           digitsCount: 4,
           tensCompN: "3572",
           additionGrid: {
@@ -754,8 +929,8 @@ export const section15Data = {
             remainingSum: "3981"
           },
           negativeHandling: {
-            rule: "No end-carry generated -> Result is NEGATIVE.",
-            action: "Take 10's complement of the sum 3981 and prefix minus sign.",
+            rule: "No end-carry generated (Carry = 0) -> Result is NEGATIVE (-).",
+            action: "Take the 10's complement of the sum 3981 and prefix minus sign:",
             compStep: "10000 - 3981 = 6019",
             finalResult: "-6019"
           },
@@ -831,6 +1006,31 @@ export const section15Data = {
     heroTitle: "Binary Subtraction Using 1's and 2's Complements",
     heroSubtitle: "The core arithmetic mechanism inside modern CPU ALUs. Binary complement subtraction unifies addition and subtraction onto a single hardware adder.",
 
+    subtractionTheory: {
+      title: "How Binary Complement Subtraction Works & Why Carry Decides the Sign",
+      subtitle: "The mathematical proof behind ALU complement subtraction in digital computers.",
+      formulaProof: "In 2's complement hardware, subtraction M - N is calculated as: Sum = M + (2^n - N) = 2^n + (M - N)",
+      caseOne: {
+        title: "Case 1: M >= N (Positive Result -> Carry = 1 Generated)",
+        explanation: "Since M - N >= 0, the sum 2^n + (M - N) is greater than or equal to 2^n, generating a carry bit out of the MSB (C_out = 1).",
+        handlingOnes: "In 1's complement, we added (2^n - 1 - N), so the sum is 2^n - 1 + (M - N). Discarding 2^n leaves the result 1 unit short. Adding the End-Around Carry (+1) to the LSB produces the true difference.",
+        handlingTwos: "In 2's complement, discarding the MSB overflow carry 2^n directly leaves the positive answer +(M - N). This is why 2's complement is faster in hardware (single-pass addition)!"
+      },
+      caseTwo: {
+        title: "Case 2: M < N (Negative Result -> No Carry, Carry = 0)",
+        explanation: "Since M - N < 0, let M - N = -(N - M). The hardware produces Sum = 2^n - (N - M) < 2^n. No carry is generated out of the MSB (C_out = 0).",
+        meaning: "The sum itself is standing in 2's (or 1's) complement form of the magnitude (N - M). To obtain the true magnitude: take the complement of the sum and prefix a minus sign (-)."
+      }
+    },
+
+    classroomAlgorithm5Steps: [
+      { step: "Step 1", title: "Bit Length Equalization", desc: "Count bits in M and N. Pad leading zeros (in Amber) to the shorter binary number so both have the exact same bit width n." },
+      { step: "Step 2", title: "Complement Subtrahend N", desc: "Find the 1's complement (invert all bits) or 2's complement (invert + 1) of the padded subtrahend N." },
+      { step: "Step 3", title: "Perform Parallel Binary Addition", desc: "Compute Raw Sum S = M + Complement(N) using bit-by-bit binary addition rules, recording carry propagation." },
+      { step: "Step 4", title: "Check Extra Carry Cell (C_out)", desc: "Examine whether an extra carry bit was produced out of the most significant bit (MSB)." },
+      { step: "Step 5", title: "Apply Carry Rule", desc: "If C_out = 1: Result is positive (1's: Add EAC +1 to LSB; 2's: Discard carry). If C_out = 0: Result is negative (Take complement of sum and prefix '-')." }
+    ],
+
     // SUB-TAB 1: 1's COMPLEMENT SUBTRACTION
     subtraction1s: {
       ruleBadge: "EAC: Add Carry +1 to LSB",
@@ -839,6 +1039,7 @@ export const section15Data = {
         {
           id: "model-5a",
           label: "Model 5A: Case 1 (M > N, Equal Bit Width) with End-Around Carry",
+          question: "Perform the binary subtraction (1010100)₂ - (1000011)₂ using 1's complement arithmetic. Show the End-Around Carry wrap-around addition.",
           conceptTag: "Case 1: M > N (Carry = 1)",
           minuend: "1010100",
           subtrahend: "1000011",
@@ -868,6 +1069,7 @@ export const section15Data = {
         {
           id: "model-5b",
           label: "Model 5B: Case 2 (M < N, Equal Bit Width) Producing Negative Result",
+          question: "Perform the binary subtraction (1000011)₂ - (1010100)₂ using 1's complement arithmetic. Explain the handling when C_out = 0.",
           conceptTag: "Case 2: M < N (No Carry)",
           minuend: "1000011",
           subtrahend: "1010100",
@@ -882,7 +1084,7 @@ export const section15Data = {
           rawSumBits: ["1", "1", "0", "1", "1", "1", "0"],
           cout: "0",
           negativeHandling: {
-            action: "Carry = 0 out of MSB (No Carry) -> Result is NEGATIVE.",
+            action: "Carry = 0 out of MSB (No Carry) -> Result is NEGATIVE (-).",
             step: "Take 1's complement of raw sum (invert all bits) and prefix '-':",
             compResult: "Invert (1101110)₂ -> (0010001)₂",
             finalBinary: "-(0010001)₂"
@@ -898,6 +1100,7 @@ export const section15Data = {
         {
           id: "model-5c",
           label: "Model 5C: Unequal Bit Widths (Must Pad Subtrahend N Before Complementing)",
+          question: "Subtract (1101)₂ from (110101)₂ using 1's complement arithmetic. Emphasize why leading zero padding on N must occur before bit inversion.",
           conceptTag: "Unequal Bit-Width Padding",
           minuend: "110101",
           subtrahend: "1101",
@@ -928,6 +1131,7 @@ export const section15Data = {
         {
           id: "model-5d",
           label: "Model 5D: Combined Integer and Fractional Binary Subtraction",
+          question: "Perform (1101.10)₂ - (0110.01)₂ using 1's complement arithmetic. Wrap the end-around carry to the least significant fractional bit.",
           conceptTag: "Fractional Complement",
           minuend: "1101.10",
           subtrahend: "0110.01",
@@ -957,6 +1161,7 @@ export const section15Data = {
         {
           id: "model-5e",
           label: "Model 5E: Fractional Subtraction Where M < N (Negative Result)",
+          question: "Perform (0101.10)₂ - (1100.11)₂ using 1's complement arithmetic. Show how the fractional sum is re-complemented when C_out = 0.",
           conceptTag: "Fractional M < N (No Carry)",
           minuend: "0101.10",
           subtrahend: "1100.11",
@@ -971,7 +1176,7 @@ export const section15Data = {
           rawSumBits: ["1", "0", "0", "0", ".", "1", "0"],
           cout: "0",
           negativeHandling: {
-            action: "Carry = 0 out of MSB -> Result is NEGATIVE.",
+            action: "Carry = 0 out of MSB -> Result is NEGATIVE (-).",
             step: "Take 1's complement of sum (invert all bits) and prefix '-':",
             compResult: "Invert (1000.10)₂ -> (0111.01)₂",
             finalBinary: "-(0111.01)₂"
@@ -1049,6 +1254,7 @@ export const section15Data = {
         {
           id: "model-6a",
           label: "Model 6A: Case 1 (M > N, Equal Bit Width) with Discarded Carry",
+          question: "Perform the binary subtraction (1010100)₂ - (1000011)₂ using 2's complement arithmetic. Explain why the carry is discarded.",
           conceptTag: "Case 1: M > N (Discard Carry)",
           minuend: "1010100",
           subtrahend: "1000011",
@@ -1078,6 +1284,7 @@ export const section15Data = {
         {
           id: "model-6b",
           label: "Model 6B: Case 2 (M < N, Equal Bit Width) Producing Negative Result",
+          question: "Perform the binary subtraction (1000011)₂ - (1010100)₂ using 2's complement arithmetic. Show the 2's complement re-conversion of the negative sum.",
           conceptTag: "Case 2: M < N (No Carry)",
           minuend: "1000011",
           subtrahend: "1010100",
@@ -1092,7 +1299,7 @@ export const section15Data = {
           rawSumBits: ["1", "1", "0", "1", "1", "1", "1"],
           cout: "0",
           negativeHandling: {
-            action: "Carry = 0 out of MSB (No Carry) -> Result is NEGATIVE.",
+            action: "Carry = 0 out of MSB (No Carry) -> Result is NEGATIVE (-).",
             step: "Take 2's complement of sum (1101111)₂ and prefix '-':",
             compResult: "1's comp = 0010000 -> add 1 = (0010001)₂",
             finalBinary: "-(0010001)₂"
@@ -1108,6 +1315,7 @@ export const section15Data = {
         {
           id: "model-6c",
           label: "Model 6C: Unequal Bit Widths (Padding N Before Taking 2's Complement)",
+          question: "Subtract (111)₂ from (101100)₂ using 2's complement arithmetic. Highlight the 3 leading zeros padded to N.",
           conceptTag: "Unequal Bit-Width Padding",
           minuend: "101100",
           subtrahend: "111",
@@ -1138,13 +1346,14 @@ export const section15Data = {
         {
           id: "model-6d",
           label: "Model 6D: Unequal Bit Widths Where M < N (Padding M)",
+          question: "Subtract (100110)₂ from (1101)₂ using 2's complement arithmetic. Show the leading zero padding on minuend M.",
           conceptTag: "Unequal Bit-Width (M < N)",
           minuend: "1101",
           subtrahend: "100110",
           bitWidth: 6,
           paddedM: "001101",
           paddedN: "100110",
-          paddingNote: "M has 4 bits, N has 6 bits. Pad 2 leading zeros to M: 1101 -> 001101.",
+          paddingNote: "M has 4 bits, N has 6 bits. Pad 2 leading zeros to M: 1101 -> 001101 to match N's 6-bit width.",
           compN: "011010",
           columns: ["b5", "b4", "b3", "b2", "b1", "b0"],
           carriesIn: ["0", "1", "1", "0", "0", "0"],
@@ -1153,7 +1362,7 @@ export const section15Data = {
           rawSumBits: ["1", "0", "0", "1", "1", "1"],
           cout: "0",
           negativeHandling: {
-            action: "Carry = 0 out of MSB -> Result is NEGATIVE.",
+            action: "Carry = 0 out of MSB -> Result is NEGATIVE (-).",
             step: "Take 2's complement of sum (100111)₂ and prefix '-':",
             compResult: "1's comp = 011000 -> add 1 = (011001)₂",
             finalBinary: "-(011001)₂"
@@ -1169,6 +1378,7 @@ export const section15Data = {
         {
           id: "model-6e",
           label: "Model 6E: Combined Integer and Fractional 2's Complement Subtraction",
+          question: "Perform (10110.10)₂ - (01101.11)₂ using 2's complement arithmetic. Add +1 at the fractional LSB.",
           conceptTag: "Fractional 2's Complement",
           minuend: "10110.10",
           subtrahend: "01101.11",

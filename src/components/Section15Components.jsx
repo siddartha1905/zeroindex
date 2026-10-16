@@ -4,15 +4,452 @@ import {
   AlertTriangle, 
   AlertCircle, 
   Cpu, 
-  ArrowRight 
+  ArrowRight,
+  BookOpen,
+  Sparkles,
+  HelpCircle,
+  Calculator,
+  ShieldCheck,
+  Layers
 } from 'lucide-react';
 
 /**
- * Section 1.5 Graphical Hardware & Complement Components
+ * Section 1.5 Graphical Hardware & Pedagogical Complement Components
  * Strict formatting: ZERO em-dashes and ZERO en-dashes.
  */
 
-// Visual Silicon ALU Hardware Comparison (Dual Subtractor vs Unified Parallel Adder)
+// 1. "What is a Complement in Simple Words?" Visual Intuition Card
+export const ComplementIntuitionCard = ({ intuitionData }) => {
+  if (!intuitionData) return null;
+  return (
+    <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center text-[#4F46E5]">
+            <Sparkles className="w-4 h-4" />
+          </span>
+          <div>
+            <h3 className="text-sm font-bold text-[#1E293B]">{intuitionData.title}</h3>
+            <span className="text-[11px] font-mono text-[#64748B]">{intuitionData.subtitle}</span>
+          </div>
+        </div>
+        <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] text-[10px] font-mono font-bold uppercase text-[#2E6F40]">
+          Core Intuition First
+        </span>
+      </div>
+
+      {/* Bullet Points */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {intuitionData.intuitionPoints.map((pt, idx) => (
+          <div key={idx} className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] text-xs font-mono text-[#334155] space-y-1">
+            <span className="w-5 h-5 rounded-md bg-[#2E6F40] text-white flex items-center justify-center text-[10px] font-bold">
+              {idx + 1}
+            </span>
+            <p className="leading-relaxed pt-1">{pt}</p>
+          </div>
+        ))}
+      </div>
+
+      {/* Two Visual Mini-Examples Side-by-Side */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 pt-1">
+        {intuitionData.miniExamples.map((ex, idx) => (
+          <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 font-mono text-xs">
+            <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+              <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+                <span className={`w-2 h-2 rounded-full ${idx === 0 ? "bg-[#D97706]" : "bg-[#4F46E5]"}`} />
+                {ex.baseName}
+              </span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-[#1E293B] border border-[#DCE7E1]">
+                N = {ex.givenNumber}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+              {/* Milestone 1 */}
+              <div className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[10px] font-bold text-[#64748B] block">{ex.milestoneOne.goal}</span>
+                <div className="text-[#334155] font-semibold">{ex.milestoneOne.calc}</div>
+                <div className="text-[#2E6F40] font-bold pt-0.5">{ex.milestoneOne.name}: {ex.milestoneOne.val}</div>
+              </div>
+
+              {/* Milestone 2 */}
+              <div className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[10px] font-bold text-[#64748B] block">{ex.milestoneTwo.goal}</span>
+                <div className="text-[#334155] font-semibold">{ex.milestoneTwo.calc}</div>
+                <div className="text-[#4F46E5] font-bold pt-0.5">{ex.milestoneTwo.name}: {ex.milestoneTwo.val}</div>
+              </div>
+            </div>
+
+            {/* Balance check equation */}
+            <div className="p-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-center font-bold text-[#15803D] text-[11px]">
+              Balance Equation: {ex.balanceCheck} (Full Capacity Match)
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// 2. Stage 2 Normal Classroom Method Flowchart (3 Steps with Arrows)
+export const ClassroomFlowchart3Steps = ({ stageData }) => {
+  if (!stageData) return null;
+  return (
+    <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 font-mono">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <span className="text-xs font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-2">
+          <BookOpen className="w-4 h-4 text-[#2E6F40]" />
+          {stageData.title}
+        </span>
+        <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
+          Theory Exam Standard
+        </span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+        {stageData.steps.map((st, i) => (
+          <div key={i} className="p-3.5 rounded-xl bg-white border border-[#DCE7E1] space-y-1 relative shadow-2xs">
+            <div className="flex items-center justify-between">
+              <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                {st.stepNum}
+              </span>
+              {i < 2 && (
+                <span className="hidden md:inline text-[#94A3B8] font-black text-sm">&rarr;</span>
+              )}
+            </div>
+            <span className="font-bold text-xs text-[#1E293B] block pt-1">{st.title}</span>
+            <p className="text-[11px] text-[#475569] leading-relaxed">{st.desc}</p>
+          </div>
+        ))}
+      </div>
+
+      {stageData.theoryTip && (
+        <div className="p-3 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] text-xs text-[#92400E] flex items-start gap-2">
+          <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#D97706]" />
+          <span>{stageData.theoryTip}</span>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 3. Subtraction Theory & Why Carry Decides the Sign Card
+export const SubtractionWhyCarryCard = ({ theoryData, algorithmSteps }) => {
+  if (!theoryData) return null;
+  return (
+    <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-xl bg-[#DCFCE7] border border-[#86EFAC] flex items-center justify-center text-[#15803D]">
+            <Calculator className="w-4 h-4" />
+          </span>
+          <div>
+            <h3 className="text-sm font-bold text-[#1E293B]">{theoryData.title}</h3>
+            <span className="text-[11px] font-mono text-[#64748B]">{theoryData.subtitle}</span>
+          </div>
+        </div>
+        <span className="px-2.5 py-1 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] text-[10px] font-mono font-bold uppercase text-[#4F46E5]">
+          Mathematical Proof
+        </span>
+      </div>
+
+      {/* Formula Proof Banner */}
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 text-center font-mono space-y-1">
+        <span className="text-[11px] text-[#64748B] block">Universal Hardware Equation:</span>
+        <span className="text-sm font-black text-[#4F46E5]">{theoryData.formulaProof}</span>
+      </div>
+
+      {/* Case 1 vs Case 2 Comparison Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+        {/* Case 1: Positive */}
+        <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] space-y-2">
+          <div className="flex items-center gap-2 text-[#15803D] font-bold text-xs pb-1 border-b border-[#86EFAC]">
+            <CheckCircle2 className="w-4 h-4" />
+            <span>{theoryData.caseOne.title}</span>
+          </div>
+          <p className="text-[#166534] text-[11px] leading-relaxed">{theoryData.caseOne.explanation}</p>
+          <div className="p-2.5 rounded-lg bg-white border border-[#BBF7D0] space-y-1 text-[11px]">
+            {theoryData.caseOne.handlingNines && (
+              <div><strong className="text-[#2E6F40]">9's Rule: </strong>{theoryData.caseOne.handlingNines}</div>
+            )}
+            {theoryData.caseOne.handlingTens && (
+              <div><strong className="text-[#4F46E5]">10's Rule: </strong>{theoryData.caseOne.handlingTens}</div>
+            )}
+            {theoryData.caseOne.handlingOnes && (
+              <div><strong className="text-[#2E6F40]">1's Rule: </strong>{theoryData.caseOne.handlingOnes}</div>
+            )}
+            {theoryData.caseOne.handlingTwos && (
+              <div><strong className="text-[#4F46E5]">2's Rule: </strong>{theoryData.caseOne.handlingTwos}</div>
+            )}
+          </div>
+        </div>
+
+        {/* Case 2: Negative */}
+        <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2">
+          <div className="flex items-center gap-2 text-[#DC2626] font-bold text-xs pb-1 border-b border-[#FCA5A5]">
+            <AlertCircle className="w-4 h-4" />
+            <span>{theoryData.caseTwo.title}</span>
+          </div>
+          <p className="text-[#991B1B] text-[11px] leading-relaxed">{theoryData.caseTwo.explanation}</p>
+          <div className="p-2.5 rounded-lg bg-white border border-[#FECACA] text-[11px] text-[#7F1D1D]">
+            <strong>Action: </strong>{theoryData.caseTwo.meaning}
+          </div>
+        </div>
+      </div>
+
+      {/* 5-Step Classroom Algorithm */}
+      {algorithmSteps && algorithmSteps.length > 0 && (
+        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 font-mono">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#1E293B] block">
+            The 5 Standard Classroom Steps (Write These in Exams):
+          </span>
+          <div className="grid grid-cols-1 sm:grid-cols-5 gap-2">
+            {algorithmSteps.map((st, i) => (
+              <div key={i} className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1 text-xs">
+                <span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] block w-fit">
+                  {st.step}
+                </span>
+                <span className="font-bold text-[11px] text-[#1E293B] block">{st.title}</span>
+                <p className="text-[10px] text-[#64748B]">{st.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 4. Standard Classroom Method Grid for Finding Complements (with Carry Rows & Verification)
+export const StandardClassroomMethodGrid = ({
+  modelType = "decimal", // "decimal" or "binary"
+  model
+}) => {
+  if (!model) return null;
+  const isDec = modelType === "decimal";
+
+  return (
+    <div className="space-y-4">
+      {/* Question Banner */}
+      <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1 font-mono text-xs">
+        <div className="flex items-center gap-2 text-[#4F46E5] font-bold">
+          <span className="px-2 py-0.5 rounded bg-[#EEF2FF] text-[10px] uppercase border border-[#C7D2FE]">Question</span>
+          <span>{model.conceptTag}</span>
+        </div>
+        <p className="text-xs font-bold text-[#1E293B] pt-1">{model.question}</p>
+      </div>
+
+      {/* Part A: Standard Classroom Method */}
+      <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+        <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+          <span className="text-xs font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#2E6F40]" />
+            Solution Part A: Standard Classroom Method (Step-by-Step Addition)
+          </span>
+          <span className="text-[11px] text-[#64748B]">Full Vertical Grid</span>
+        </div>
+
+        {/* Full Vertical Grid */}
+        <div className="overflow-x-auto pb-2">
+          <div className="inline-flex flex-col min-w-full">
+            {/* Header Columns */}
+            {model.columns && (
+              <div className="flex items-center gap-1.5 pb-1 border-b border-[#DCE7E1]">
+                <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#64748B]">Weight Column</div>
+                {model.columns.map((col, idx) => (
+                  <div key={idx} className="w-9 sm:w-11 flex-shrink-0 text-center text-[10px] font-bold text-[#64748B]">
+                    {col}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Row of 9s (Decimal only) */}
+            {isDec && model.standardMethodGrid?.rowNines && (
+              <div className="flex items-center gap-1.5 py-1 text-xs">
+                <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] text-[#64748B]">Radix Max (9s):</div>
+                {model.standardMethodGrid.rowNines.map((v, idx) => (
+                  <div key={idx} className="w-9 sm:w-11 flex-shrink-0 text-center font-bold text-[#64748B]">
+                    {v}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Original Number N */}
+            <div className="flex items-center gap-1.5 py-1 text-xs">
+              <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#1E293B]">
+                {isDec ? "- Original N:" : "Original N:"}
+              </div>
+              {model.standardMethodGrid?.rowOriginal?.map((v, idx) => (
+                <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
+                  {v === "." ? (
+                    <span className="font-black text-sm text-[#1E293B]">.</span>
+                  ) : (
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-white text-[#1E293B] border border-[#DCE7E1] rounded-xl shadow-2xs">
+                      {v}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
+            {/* Complement (9's or 1's) */}
+            <div className="flex items-center gap-1.5 py-1 text-xs">
+              <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#2E6F40]">
+                {isDec ? "= 9's Comp:" : "1's Comp (Invert):"}
+              </div>
+              {(isDec ? model.standardMethodGrid?.rowNinesComp : model.standardMethodGrid?.rowOnesComp)?.map((v, idx) => (
+                <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
+                  {v === "." ? (
+                    <span className="font-black text-sm text-[#2E6F40]">.</span>
+                  ) : (
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-[#F2F7F4] text-[#2E6F40] border border-[#A7F3D0] rounded-xl shadow-2xs">
+                      {v}
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="pl-3 font-bold text-[#2E6F40]">
+                = {isDec ? model.ninesResult : model.onesResult}
+              </div>
+            </div>
+
+            {/* Carry Propagation Row for +1 */}
+            {model.standardMethodGrid?.rowCarries && (
+              <div className="flex items-center gap-1.5 py-1 text-xs pt-2 mt-1 border-t border-dashed border-[#DCE7E1]">
+                <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#D97706]">Carry Ripple (+1):</div>
+                {model.standardMethodGrid.rowCarries.map((c, idx) => (
+                  <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
+                    {c === "." ? (
+                      <span className="font-bold text-gray-400">.</span>
+                    ) : c === "1" ? (
+                      <span className="inline-flex items-center justify-center w-6 h-5 rounded bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] font-bold text-[10px]">
+                        1
+                      </span>
+                    ) : c === "-" ? (
+                      <span className="text-[10px] text-[#94A3B8]">-</span>
+                    ) : (
+                      <span className="text-[10px] text-[#94A3B8]">0</span>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Explicit +1 Row */}
+            {model.standardMethodGrid?.rowAddOne && (
+              <div className="flex items-center gap-1.5 py-1 text-xs">
+                <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#4F46E5]">+ 1 to LSB:</div>
+                {model.standardMethodGrid.rowAddOne.map((v, idx) => (
+                  <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
+                    {v ? (
+                      <div className="w-9 sm:w-11 h-8 flex items-center justify-center font-bold text-xs bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] rounded-lg">
+                        {v}
+                      </div>
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Divider */}
+            <div className="my-1 border-b-2 border-[#1E293B] ml-36 max-w-fit" />
+
+            {/* Radix Complement (10's or 2's) */}
+            <div className="flex items-center gap-1.5 py-1 text-xs">
+              <div className="w-36 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#4F46E5]">
+                {isDec ? "= 10's Comp:" : "= 2's Comp:"}
+              </div>
+              {(isDec ? model.standardMethodGrid?.rowTensComp : model.standardMethodGrid?.rowTwosComp)?.map((v, idx) => (
+                <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
+                  {v === "." ? (
+                    <span className="font-black text-sm text-[#4F46E5]">.</span>
+                  ) : (
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] rounded-xl shadow-2xs">
+                      {v}
+                    </div>
+                  )}
+                </div>
+              ))}
+              <div className="pl-3 font-bold text-[#4338CA]">
+                = {isDec ? model.tensResult : model.twosResult}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Carry Ripple Explanation Note */}
+        {model.carryExplanation && (
+          <div className="p-3 rounded-xl bg-[#FFFBEB] border border-[#FDE68A] text-xs text-[#92400E] flex items-start gap-2">
+            <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#D97706]" />
+            <span>{model.carryExplanation}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Part B: Shortcut Verification Strip */}
+      {model.shortcutCheck && (
+        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 font-mono text-xs">
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#4F46E5]" />
+              Solution Part B: 2-Second Shortcut Inspection ({model.shortcutCheck.methodName})
+            </span>
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
+              Instant Verification
+            </span>
+          </div>
+
+          {model.shortcutCheck.walkthrough && (
+            <p className="text-[#475569]">{model.shortcutCheck.walkthrough}</p>
+          )}
+
+          {model.shortcutCheck.keptBits && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] pt-1">
+              <div className="p-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D]">
+                <strong className="block">Kept Unchanged: {model.shortcutCheck.keptBits}</strong>
+                <span>{model.shortcutCheck.keptDescription}</span>
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3]">
+                <strong className="block">Flipped Bits: {model.shortcutCheck.flippedBits}</strong>
+                <span>{model.shortcutCheck.flippedDescription}</span>
+              </div>
+            </div>
+          )}
+
+          <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-between text-xs font-bold text-[#15803D]">
+            <span>Shortcut Result:</span>
+            <span>{model.shortcutCheck.combined || model.tensResult} (Exact Match)</span>
+          </div>
+        </div>
+      )}
+
+      {/* Part C: Proof Check & 5-Second Base-10 Verification */}
+      <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] space-y-2 font-mono text-xs text-[#166534]">
+        <div className="flex items-center gap-2 font-bold">
+          <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
+          <span>Solution Part C: Mathematical Proof &amp; Capacity Check</span>
+        </div>
+        {model.proofCheck && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+            <div className="p-2 rounded bg-white border border-[#BBF7D0]">
+              {model.proofCheck.ninesSum || model.proofCheck.onesSum}
+            </div>
+            <div className="p-2 rounded bg-white border border-[#BBF7D0]">
+              {model.proofCheck.tensSum || model.proofCheck.twosSum}
+            </div>
+          </div>
+        )}
+        <div className="pt-1 text-[11px] text-[#15803D]">
+          <strong>Verification Formula: </strong>{model.verification?.formula || model.verification?.sumCheck}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 5. Silicon Architecture Inline SVG (Existing)
 export const HardwareLogicDiagram = () => (
   <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
@@ -103,10 +540,11 @@ export const HardwareLogicDiagram = () => (
   </div>
 );
 
-// Dedicated Component for Full-Width Graphical Complement Bit-Alignment Grid
+// 6. Dedicated Component for Full-Width Graphical Complement Bit-Alignment Grid
 export const ComplementBitGrid = ({
   modelType = "1s",
   conceptTag,
+  question,
   minuend,
   subtrahend,
   bitWidth,
@@ -126,22 +564,33 @@ export const ComplementBitGrid = ({
   verification
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-mono text-xs">
+      {/* Explicit Question Box */}
+      {question && (
+        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+          <div className="flex items-center gap-2 text-[#4F46E5] font-bold">
+            <span className="px-2 py-0.5 rounded bg-[#EEF2FF] text-[10px] uppercase border border-[#C7D2FE]">Question</span>
+            <span>{conceptTag}</span>
+          </div>
+          <p className="text-xs font-bold text-[#1E293B] pt-1">{question}</p>
+        </div>
+      )}
+
       {/* Equalization and Transformation Strip */}
       <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-          <span className="text-xs font-mono font-bold text-[#1E293B] flex items-center gap-2">
+          <span className="text-xs font-bold text-[#1E293B] flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#4F46E5]" />
             Step 1 &amp; 2: Bit-Width Equalization &amp; Complement Transformation
           </span>
           {conceptTag && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
               {conceptTag}
             </span>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
             <div className="flex items-center justify-between text-[#64748B]">
               <span>Minuend M:</span>
@@ -166,15 +615,15 @@ export const ComplementBitGrid = ({
         </div>
 
         {paddingNote && (
-          <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-xs font-mono text-[#92400E] flex items-start gap-2">
+          <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] flex items-start gap-2">
             <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#D97706]" />
             <span>{paddingNote}</span>
           </div>
         )}
 
-        <div className="p-3 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+        <div className="p-3 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex flex-wrap items-center justify-between gap-2">
           <span className="text-[#3730A3] font-bold">
-            {modelType === "1s" ? "1's Complement" : "2's Complement"} of N:
+            {modelType === "1s" ? "1's Complement" : "2's Complement"} of Subtrahend N:
           </span>
           <span className="px-2 py-0.5 rounded bg-white text-[#4338CA] font-bold border border-[#C7D2FE]">
             {compN}
@@ -185,11 +634,11 @@ export const ComplementBitGrid = ({
       {/* Bit-by-Bit Addition Grid */}
       <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-mono font-bold text-[#1E293B] uppercase tracking-wider flex items-center gap-2">
+          <span className="text-xs font-bold text-[#1E293B] uppercase tracking-wider flex items-center gap-2">
             <span className="w-2.5 h-2.5 rounded-full bg-[#2E6F40]" />
             Step 3: Bit-by-Bit Parallel Addition [ M + Comp(N) ]
           </span>
-          <span className="text-[11px] font-mono text-[#64748B]">
+          <span className="text-[11px] text-[#64748B]">
             {modelType === "1s" ? "End-Around Carry Logic" : "Discard Carry Logic"}
           </span>
         </div>
@@ -198,10 +647,10 @@ export const ComplementBitGrid = ({
           <div className="inline-flex flex-col min-w-full">
             {/* Header: Column labels */}
             <div className="flex items-center gap-1.5 pb-1 border-b border-[#DCE7E1]">
-              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono text-[#64748B] font-semibold">Row</div>
-              <div className="w-9 sm:w-11 flex-shrink-0 text-center font-mono text-[10px] font-bold text-[#D97706]">C_out</div>
+              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] text-[#64748B] font-semibold">Row</div>
+              <div className="w-9 sm:w-11 flex-shrink-0 text-center text-[10px] font-bold text-[#D97706]">C_out</div>
               {columns.map((col, idx) => (
-                <div key={idx} className="w-9 sm:w-11 flex-shrink-0 text-center font-mono text-[11px] font-bold text-[#64748B]">
+                <div key={idx} className="w-9 sm:w-11 flex-shrink-0 text-center text-[11px] font-bold text-[#64748B]">
                   {col}
                 </div>
               ))}
@@ -209,9 +658,9 @@ export const ComplementBitGrid = ({
 
             {/* Carry-In Row */}
             <div className="flex items-center gap-1.5 py-1">
-              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-bold text-[#D97706]">Carry-In</div>
+              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#D97706]">Carry-In</div>
               <div className="w-9 sm:w-11 flex-shrink-0 text-center">
-                <span className={`inline-flex items-center justify-center w-7 h-6 rounded-md font-mono text-[10px] font-bold ${
+                <span className={`inline-flex items-center justify-center w-7 h-6 rounded-md text-[10px] font-bold ${
                   cout === "1" ? "bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]" : "text-[#94A3B8]"
                 }`}>
                   {cout}
@@ -220,13 +669,13 @@ export const ComplementBitGrid = ({
               {carriesIn.map((carry, idx) => (
                 <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                   {carry === "." ? (
-                    <span className="font-mono font-bold text-gray-400">.</span>
+                    <span className="font-bold text-gray-400">.</span>
                   ) : carry === "1" ? (
-                    <span className="inline-flex items-center justify-center w-7 h-6 rounded-md bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] font-mono text-[11px] font-bold">
+                    <span className="inline-flex items-center justify-center w-7 h-6 rounded-md bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] text-[11px] font-bold">
                       1
                     </span>
                   ) : (
-                    <span className="font-mono text-[11px] text-[#94A3B8]">0</span>
+                    <span className="text-[11px] text-[#94A3B8]">0</span>
                   )}
                 </div>
               ))}
@@ -234,14 +683,14 @@ export const ComplementBitGrid = ({
 
             {/* Minuend M */}
             <div className="flex items-center gap-1.5 py-1">
-              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-semibold text-[#1E293B]">M</div>
+              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-semibold text-[#1E293B]">M</div>
               <div className="w-9 sm:w-11 flex-shrink-0" />
               {mBits.map((b, idx) => (
                 <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                   {b === "." ? (
-                    <span className="font-mono font-black text-sm text-[#1E293B]">.</span>
+                    <span className="font-black text-sm text-[#1E293B]">.</span>
                   ) : (
-                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-mono font-bold text-sm bg-white text-[#1E293B] border border-[#DCE7E1] rounded-xl shadow-2xs">
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-white text-[#1E293B] border border-[#DCE7E1] rounded-xl shadow-2xs">
                       {b}
                     </div>
                   )}
@@ -251,14 +700,14 @@ export const ComplementBitGrid = ({
 
             {/* Complement(N) */}
             <div className="flex items-center gap-1.5 py-1">
-              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-semibold text-[#4F46E5]">+ Comp(N)</div>
-              <div className="w-9 sm:w-11 flex-shrink-0 text-center font-mono font-black text-[#4F46E5] text-xs">+</div>
+              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-semibold text-[#4F46E5]">+ Comp(N)</div>
+              <div className="w-9 sm:w-11 flex-shrink-0 text-center font-black text-[#4F46E5] text-xs">+</div>
               {compNBits.map((b, idx) => (
                 <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                   {b === "." ? (
-                    <span className="font-mono font-black text-sm text-[#4F46E5]">.</span>
+                    <span className="font-black text-sm text-[#4F46E5]">.</span>
                   ) : (
-                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-mono font-bold text-sm bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] rounded-xl shadow-2xs">
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE] rounded-xl shadow-2xs">
                       {b}
                     </div>
                   )}
@@ -271,14 +720,14 @@ export const ComplementBitGrid = ({
 
             {/* Raw Sum */}
             <div className="flex items-center gap-1.5 py-1">
-              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-bold text-[#2E6F40]">Raw Sum S</div>
+              <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#2E6F40]">Raw Sum S</div>
               <div className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                 {cout === "1" ? (
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#DCFCE7] text-[#15803D] font-mono font-bold text-xs border border-[#86EFAC]">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#DCFCE7] text-[#15803D] font-bold text-xs border border-[#86EFAC]">
                     1
                   </span>
                 ) : (
-                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#F1F5F9] text-[#64748B] font-mono text-xs">
+                  <span className="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-[#F1F5F9] text-[#64748B] text-xs">
                     0
                   </span>
                 )}
@@ -286,9 +735,9 @@ export const ComplementBitGrid = ({
               {rawSumBits.map((b, idx) => (
                 <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                   {b === "." ? (
-                    <span className="font-mono font-black text-sm text-[#2E6F40]">.</span>
+                    <span className="font-black text-sm text-[#2E6F40]">.</span>
                   ) : (
-                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-mono font-bold text-sm bg-[#F0FDF4] text-[#15803D] border border-[#86EFAC] rounded-xl shadow-2xs">
+                    <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-bold text-sm bg-[#F0FDF4] text-[#15803D] border border-[#86EFAC] rounded-xl shadow-2xs">
                       {b}
                     </div>
                   )}
@@ -300,20 +749,20 @@ export const ComplementBitGrid = ({
             {modelType === "1s" && cout === "1" && endAroundCarry && (
               <div className="space-y-1 pt-2 mt-1 border-t border-dashed border-[#DCE7E1]">
                 <div className="flex items-center gap-1.5 py-1">
-                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-bold text-[#16A34A]">EAC (+1)</div>
+                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#16A34A]">EAC (+1)</div>
                   <div className="w-9 sm:w-11 flex-shrink-0 text-center">
-                    <span className="text-[10px] text-[#64748B] font-mono line-through">1</span>
+                    <span className="text-[10px] text-[#64748B] line-through">1</span>
                   </div>
                   {columns.map((col, idx) => {
                     const isLast = idx === columns.length - 1;
                     return (
                       <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                         {isLast ? (
-                          <div className="w-9 sm:w-11 h-8 flex items-center justify-center font-mono font-bold text-xs bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] rounded-lg">
+                          <div className="w-9 sm:w-11 h-8 flex items-center justify-center font-bold text-xs bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D] rounded-lg">
                             +1
                           </div>
                         ) : col === "." ? (
-                          <span className="font-mono text-gray-300">.</span>
+                          <span className="text-gray-300">.</span>
                         ) : null}
                       </div>
                     );
@@ -321,20 +770,20 @@ export const ComplementBitGrid = ({
                 </div>
 
                 <div className="flex items-center gap-1.5 py-1">
-                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-bold text-[#15803D]">Final (+):</div>
+                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#15803D]">Final (+):</div>
                   <div className="w-9 sm:w-11 flex-shrink-0" />
                   {endAroundCarry.eacBits.map((b, idx) => (
                     <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                       {b === "." ? (
-                        <span className="font-mono font-black text-sm text-[#15803D]">.</span>
+                        <span className="font-black text-sm text-[#15803D]">.</span>
                       ) : (
-                        <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-mono font-black text-sm bg-[#16A34A] text-white rounded-xl shadow-xs">
+                        <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-black text-sm bg-[#16A34A] text-white rounded-xl shadow-xs">
                           {b}
                         </div>
                       )}
                     </div>
                   ))}
-                  <div className="pl-3 font-mono font-bold text-sm text-[#15803D]">
+                  <div className="pl-3 font-bold text-sm text-[#15803D]">
                     = {endAroundCarry.finalBinary}
                   </div>
                 </div>
@@ -345,24 +794,24 @@ export const ComplementBitGrid = ({
             {modelType === "2s" && cout === "1" && discardCarryAction && (
               <div className="pt-2 mt-1 border-t border-dashed border-[#DCE7E1]">
                 <div className="flex items-center gap-1.5 py-1">
-                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-mono font-bold text-[#15803D]">Final (+):</div>
+                  <div className="w-16 sm:w-20 flex-shrink-0 text-right pr-2 text-[10px] font-bold text-[#15803D]">Final (+):</div>
                   <div className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
-                    <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-bold line-through bg-[#FEE2E2] text-[#DC2626] border border-[#FCA5A5]">
+                    <span className="px-1.5 py-0.5 rounded text-[9px] font-bold line-through bg-[#FEE2E2] text-[#DC2626] border border-[#FCA5A5]">
                       Drop 1
                     </span>
                   </div>
                   {rawSumBits.map((b, idx) => (
                     <div key={idx} className="w-9 sm:w-11 flex-shrink-0 flex items-center justify-center">
                       {b === "." ? (
-                        <span className="font-mono font-black text-sm text-[#15803D]">.</span>
+                        <span className="font-black text-sm text-[#15803D]">.</span>
                       ) : (
-                        <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-mono font-black text-sm bg-[#16A34A] text-white rounded-xl shadow-xs">
+                        <div className="w-9 sm:w-11 h-9 sm:h-10 flex items-center justify-center font-black text-sm bg-[#16A34A] text-white rounded-xl shadow-xs">
                           {b}
                         </div>
                       )}
                     </div>
                   ))}
-                  <div className="pl-3 font-mono font-bold text-sm text-[#15803D]">
+                  <div className="pl-3 font-bold text-sm text-[#15803D]">
                     = {discardCarryAction.finalBinary}
                   </div>
                 </div>
@@ -373,7 +822,7 @@ export const ComplementBitGrid = ({
 
         {/* Negative Handling Card (when cout === "0") */}
         {cout === "0" && negativeHandling && (
-          <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2 font-mono text-xs text-[#991B1B]">
+          <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2 text-[#991B1B]">
             <div className="flex items-center gap-2 font-bold text-sm text-[#DC2626]">
               <AlertCircle className="w-4 h-4" />
               <span>{negativeHandling.action}</span>
@@ -389,7 +838,7 @@ export const ComplementBitGrid = ({
 
       {/* 5-Second Base-10 Verification Bar */}
       {verification && (
-        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex flex-wrap items-center justify-between gap-2 shadow-2xs font-mono text-xs text-[#166534]">
+        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex flex-wrap items-center justify-between gap-2 shadow-2xs text-[#166534]">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
             <span className="font-bold">5-Second Base-10 Verification:</span>
@@ -406,10 +855,11 @@ export const ComplementBitGrid = ({
   );
 };
 
-// Dedicated Component for Graphical Decimal (9's & 10's) Subtraction
+// 7. Dedicated Component for Graphical Decimal (9's & 10's) Subtraction
 export const ComplementDecimalGrid = ({
   modelType = "9s",
   conceptTag,
+  question,
   minuend,
   subtrahend,
   paddedM,
@@ -424,22 +874,33 @@ export const ComplementDecimalGrid = ({
   verification
 }) => {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 font-mono text-xs">
+      {/* Question Box */}
+      {question && (
+        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+          <div className="flex items-center gap-2 text-[#4F46E5] font-bold">
+            <span className="px-2 py-0.5 rounded bg-[#EEF2FF] text-[10px] uppercase border border-[#C7D2FE]">Question</span>
+            <span>{conceptTag}</span>
+          </div>
+          <p className="text-xs font-bold text-[#1E293B] pt-1">{question}</p>
+        </div>
+      )}
+
       {/* Equalization and Transformation Strip */}
       <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-          <span className="text-xs font-mono font-bold text-[#1E293B] flex items-center gap-2">
+          <span className="text-xs font-bold text-[#1E293B] flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#D97706]" />
             Step 1 &amp; 2: Digit Equalization &amp; Decimal Complement of Subtrahend N
           </span>
           {conceptTag && (
-            <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]">
+            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]">
               {conceptTag}
             </span>
           )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
             <div className="flex items-center justify-between text-[#64748B]">
               <span>Minuend M:</span>
@@ -464,15 +925,15 @@ export const ComplementDecimalGrid = ({
         </div>
 
         {paddingNote && (
-          <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-xs font-mono text-[#92400E] flex items-start gap-2">
+          <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] flex items-start gap-2">
             <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5 text-[#D97706]" />
             <span>{paddingNote}</span>
           </div>
         )}
 
-        <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
+        <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center justify-between gap-2">
           <span className="text-[#1E293B] font-bold">
-            {modelType === "9s" ? "9's Complement" : "10's Complement"} of N ({paddedN}):
+            {modelType === "9s" ? "9's Complement" : "10's Complement"} of Subtrahend N ({paddedN}):
           </span>
           <span className="px-2.5 py-1 rounded bg-[#EEF2FF] text-[#4338CA] font-bold border border-[#C7D2FE]">
             {modelType === "9s" ? ninesCompN : tensCompN}
@@ -484,16 +945,16 @@ export const ComplementDecimalGrid = ({
       {additionGrid && (
         <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-mono font-bold text-[#1E293B] uppercase tracking-wider flex items-center gap-2">
+            <span className="text-xs font-bold text-[#1E293B] uppercase tracking-wider flex items-center gap-2">
               <span className="w-2.5 h-2.5 rounded-full bg-[#2E6F40]" />
               Step 3: Decimal Addition [ M + Comp(N) ]
             </span>
-            <span className="text-[11px] font-mono text-[#64748B]">
+            <span className="text-[11px] text-[#64748B]">
               {modelType === "9s" ? "End-Around Carry (+1)" : "Discard End Carry"}
             </span>
           </div>
 
-          <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] max-w-md font-mono text-sm space-y-1.5">
+          <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] max-w-md space-y-1.5">
             <div className="flex justify-between items-center text-xs text-[#D97706]">
               <span>Carry row:</span>
               <span>{additionGrid.carries.join(" ")}</span>
@@ -514,7 +975,7 @@ export const ComplementDecimalGrid = ({
 
           {/* End Carry Handling */}
           {modelType === "9s" && additionGrid.endCarry === "1" && eacAddition && (
-            <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] space-y-2 font-mono text-xs text-[#166534]">
+            <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] space-y-2 text-[#166534]">
               <div className="flex items-center gap-2 font-bold text-sm text-[#15803D]">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>End-Around Carry = 1 &rarr; Result is POSITIVE (+)</span>
@@ -528,7 +989,7 @@ export const ComplementDecimalGrid = ({
           )}
 
           {modelType === "10s" && additionGrid.endCarry === "1" && carryAction && (
-            <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] space-y-2 font-mono text-xs text-[#166534]">
+            <div className="p-4 rounded-xl bg-[#F0FDF4] border border-[#86EFAC] space-y-2 text-[#166534]">
               <div className="flex items-center gap-2 font-bold text-sm text-[#15803D]">
                 <CheckCircle2 className="w-4 h-4" />
                 <span>{carryAction.rule}</span>
@@ -542,7 +1003,7 @@ export const ComplementDecimalGrid = ({
           )}
 
           {additionGrid.endCarry === "0" && negativeHandling && (
-            <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2 font-mono text-xs text-[#991B1B]">
+            <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2 text-[#991B1B]">
               <div className="flex items-center gap-2 font-bold text-sm text-[#DC2626]">
                 <AlertCircle className="w-4 h-4" />
                 <span>{negativeHandling.rule}</span>
@@ -559,7 +1020,7 @@ export const ComplementDecimalGrid = ({
 
       {/* 5-Second Base-10 Verification Bar */}
       {verification && (
-        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 shadow-2xs font-mono text-xs text-[#166534]">
+        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 shadow-2xs text-[#166534]">
           <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
           <div>
             <span className="font-bold mr-1.5">5-Second Base-10 Verification:</span>

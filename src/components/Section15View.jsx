@@ -18,7 +18,11 @@ import {
 import { 
   HardwareLogicDiagram, 
   ComplementBitGrid, 
-  ComplementDecimalGrid 
+  ComplementDecimalGrid,
+  ComplementIntuitionCard,
+  ClassroomFlowchart3Steps,
+  SubtractionWhyCarryCard,
+  StandardClassroomMethodGrid
 } from './Section15Components';
 
 /**
@@ -144,6 +148,9 @@ export const Section15View = ({ section }) => {
             </p>
           </div>
 
+          {/* "What is a Complement in Simple Words?" Visual Intuition Card */}
+          <ComplementIntuitionCard intuitionData={section.overviewHardware.whatIsAComplement} />
+
           {/* Visual Silicon Hardware Logic Diagram */}
           <HardwareLogicDiagram />
 
@@ -202,6 +209,9 @@ export const Section15View = ({ section }) => {
       {/* ===================================================================== */}
       {activeTab === "1.5A" && section.findingComplements && (
         <div className="space-y-6">
+          {/* Visual Intuition First: What is a Complement in Simple Words? */}
+          <ComplementIntuitionCard intuitionData={section.overviewHardware?.whatIsAComplement} />
+
           {/* Inner 2-Tab Switcher */}
           <div className="flex border-b border-[#DCE7E1] gap-4">
             <button
@@ -229,104 +239,101 @@ export const Section15View = ({ section }) => {
           {/* SUB-TAB 1: DECIMAL 9's & 10's */}
           {subTab15A === "decimal" && (
             <div className="space-y-6">
-              {/* Rules Blueprint */}
-              <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-3">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FFFBEB] px-2 py-0.5 rounded">
-                    Decimal Blueprint
-                  </span>
-                  <h3 className="text-sm font-bold text-[#1E293B]">
-                    {section.findingComplements.decimal.title}
-                  </h3>
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
-                    <span className="font-bold text-[#1E293B] block">9's Complement Rule:</span>
-                    <p className="text-[#475569]">{section.findingComplements.decimal.rules.ninesRule}</p>
+              {/* Stage 1: Formal Mathematical Definition & Formula Box */}
+              {section.findingComplements.decimal.threeStages?.stage1 && (
+                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#D97706] flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-[#D97706]" />
+                      {section.findingComplements.decimal.threeStages.stage1.title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
+                      Rigorous Mathematics
+                    </span>
                   </div>
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
-                    <span className="font-bold text-[#1E293B] block">10's Complement (2 Ways):</span>
-                    <p className="text-[#475569] mb-1">{section.findingComplements.decimal.rules.tensRuleStandard}</p>
-                    <div className="p-2 rounded bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3]">
-                      <span className="font-bold block">Fast Exam Shortcut:</span>
-                      <span>{section.findingComplements.decimal.rules.tensRuleShortcut}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
-              {/* 4 Worked Models */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40]">
-                  Worked Engineering Models: 9's &amp; 10's Complements
-                </h4>
-
-                {section.findingComplements.decimal.models.map((model) => (
-                  <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                      <span className="text-xs font-mono font-bold text-[#1E293B]">{model.label}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                        {model.conceptTag}
-                      </span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#D97706]/30 space-y-2">
+                      <span className="text-xs font-bold text-[#1E293B] block">9's Complement Formula (r - 1 Radix):</span>
+                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#D97706] text-center">
+                        {section.findingComplements.decimal.threeStages.stage1.ninesFormula}
+                      </div>
+                      <p className="text-[11px] text-[#475569] leading-relaxed">
+                        {section.findingComplements.decimal.threeStages.stage1.ninesDesc}
+                      </p>
                     </div>
 
-                    {/* Horizontal Digit-Aligned Strip */}
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
-                      <span className="text-[11px] font-mono font-bold text-[#64748B] block">
-                        9's Complement Digit-Aligned Subtraction Strip:
-                      </span>
-                      <div className="overflow-x-auto">
-                        <div className="inline-flex flex-col min-w-full">
-                          {model.ninesRows.map((row, rIdx) => (
-                            <div key={rIdx} className="flex items-center gap-2 py-1">
-                              <div className="w-32 flex-shrink-0 text-[11px] font-mono font-semibold text-[#64748B]">
-                                {row.label}:
-                              </div>
-                              <div className="flex items-center gap-1.5 font-mono font-bold text-sm">
-                                {row.values.map((v, cIdx) => (
-                                  <div
-                                    key={cIdx}
-                                    className={`w-8 h-8 flex items-center justify-center rounded-lg border ${
-                                      rIdx === 2
-                                        ? "bg-[#DCFCE7] text-[#15803D] border-[#86EFAC]"
-                                        : "bg-white text-[#1E293B] border-[#DCE7E1]"
-                                    }`}
-                                  >
-                                    {v}
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ))}
+                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-2">
+                      <span className="text-xs font-bold text-[#1E293B] block">10's Complement Formula (r Radix):</span>
+                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#4F46E5] text-center">
+                        {section.findingComplements.decimal.threeStages.stage1.tensFormula}
+                      </div>
+                      <p className="text-[11px] text-[#475569] leading-relaxed">
+                        {section.findingComplements.decimal.threeStages.stage1.tensDesc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Variable Legend */}
+                  {section.findingComplements.decimal.threeStages.stage1.variables && (
+                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center gap-4 text-xs">
+                      <span className="font-bold text-[#64748B]">Where:</span>
+                      {section.findingComplements.decimal.threeStages.stage1.variables.map((v, i) => (
+                        <div key={i} className="flex items-center gap-1.5">
+                          <span className="px-1.5 py-0.5 rounded bg-white font-bold text-[#1E293B] border border-[#DCE7E1]">
+                            {v.symbol}
+                          </span>
+                          <span className="text-[#475569]">{v.meaning}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Stage 2: The Standard Classroom Method (Normal Step-by-Step Method) Flowchart */}
+              {section.findingComplements.decimal.threeStages?.stage2 && (
+                <ClassroomFlowchart3Steps stageData={section.findingComplements.decimal.threeStages.stage2} />
+              )}
+
+              {/* Stage 3: The 2-Second Inspection Shortcut */}
+              {section.findingComplements.decimal.threeStages?.stage3 && (
+                <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-3 font-mono">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5] flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+                      {section.findingComplements.decimal.threeStages.stage3.title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                      Fast Verification
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                    {section.findingComplements.decimal.threeStages.stage3.rules.map((r, i) => (
+                      <div key={i} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+                        <span className="font-bold text-[#1E293B] block">{r.name}:</span>
+                        <p className="text-[11px] text-[#475569] leading-relaxed">{r.rule}</p>
+                        <div className="text-[11px] text-[#2E6F40] font-semibold pt-1">
+                          Mechanism: {r.example}
                         </div>
                       </div>
-                    </div>
-
-                    {/* 10's Complement Steps */}
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 font-mono text-xs">
-                      <span className="font-bold text-[#1E293B] block">10's Complement Derivation:</span>
-                      <div className="space-y-1.5">
-                        {model.tensSteps.map((st, sIdx) => (
-                          <div key={sIdx} className="flex items-start gap-2 text-[#475569]">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#4F46E5] mt-1.5 flex-shrink-0" />
-                            <span>
-                              <strong className="text-[#1E293B]">{st.step}: </strong>
-                              {st.val}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* 5-Second Base-10 Verification Bar */}
-                    <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 shadow-2xs font-mono text-xs text-[#166534]">
-                      <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
-                      <div>
-                        <span className="font-bold mr-1.5">5-Second Verification ({model.verification.method}):</span>
-                        <span>{model.verification.formula} (Exact Match)</span>
-                      </div>
-                    </div>
+                    ))}
                   </div>
+                </div>
+              )}
+
+              {/* 4 Worked Models with StandardClassroomMethodGrid */}
+              <div className="space-y-6">
+                <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40]">
+                    Worked Engineering Models: 9's &amp; 10's Complements
+                  </h4>
+                  <span className="text-[10px] font-mono text-[#64748B]">Question &rarr; Normal Method &rarr; Shortcut &rarr; Proof</span>
+                </div>
+
+                {section.findingComplements.decimal.models.map((model) => (
+                  <StandardClassroomMethodGrid key={model.id} modelType="decimal" model={model} />
                 ))}
               </div>
 
@@ -386,125 +393,147 @@ export const Section15View = ({ section }) => {
           {/* SUB-TAB 2: BINARY 1's & 2's */}
           {subTab15A === "binary" && (
             <div className="space-y-6">
-              {/* Rules Blueprint */}
-              <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-mono font-bold uppercase text-[#2E6F40] bg-[#F2F7F4] px-2 py-0.5 rounded">
-                    Binary Blueprint
-                  </span>
-                  <h3 className="text-sm font-bold text-[#1E293B]">
-                    {section.findingComplements.binary.title}
-                  </h3>
-                </div>
+              {/* Stage 1: Formal Mathematical Definition & Formula Box */}
+              {section.findingComplements.binary.threeStages?.stage1 && (
+                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-[#2E6F40]" />
+                      {section.findingComplements.binary.threeStages.stage1.title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
+                      Rigorous Mathematics
+                    </span>
+                  </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
-                    <span className="font-bold text-[#1E293B] block">1's Complement Rule:</span>
-                    <p className="text-[#475569]">{section.findingComplements.binary.rules.onesRule}</p>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
-                    <span className="font-bold text-[#1E293B] block">2's Complement (2 Methods):</span>
-                    <p className="text-[#475569] mb-1">{section.findingComplements.binary.rules.twosRuleStandard}</p>
-                    <div className="p-2 rounded bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3]">
-                      <span className="font-bold block">2-Second Exam Shortcut:</span>
-                      <span>{section.findingComplements.binary.rules.twosRuleShortcut}</span>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#2E6F40]/30 space-y-2">
+                      <span className="text-xs font-bold text-[#1E293B] block">1's Complement Formula (r - 1 Radix, r = 2):</span>
+                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#2E6F40] text-center">
+                        {section.findingComplements.binary.threeStages.stage1.onesFormula}
+                      </div>
+                      <p className="text-[11px] text-[#475569] leading-relaxed">
+                        {section.findingComplements.binary.threeStages.stage1.onesDesc}
+                      </p>
                     </div>
-                  </div>
-                </div>
 
-                {/* Right-to-Left Scan Strip Visual Banner */}
-                <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] space-y-2">
-                  <span className="text-xs font-mono font-bold text-[#3730A3] flex items-center gap-2">
-                    <ArrowRight className="w-4 h-4 transform rotate-180" />
-                    Right-to-Left 2's Complement Scan Mechanics (&larr; from LSB to MSB)
-                  </span>
-                  <div className="flex flex-wrap items-center gap-2 font-mono text-xs">
-                    <div className="p-2 rounded-lg bg-white border border-[#C7D2FE] text-[#4338CA]">
-                      <span className="font-bold">Bits to the Left: </span>
-                      <span className="text-[#4F46E5] font-black">INVERT (0 &harr; 1)</span>
-                    </div>
-                    <span className="font-bold text-[#64748B]">&larr; Scan &larr;</span>
-                    <div className="p-2 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D]">
-                      <span className="font-bold">First 1 and Trailing 0s: </span>
-                      <span className="font-black">KEEP UNCHANGED</span>
+                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-2">
+                      <span className="text-xs font-bold text-[#1E293B] block">2's Complement Formula (r Radix, r = 2):</span>
+                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#4F46E5] text-center">
+                        {section.findingComplements.binary.threeStages.stage1.twosFormula}
+                      </div>
+                      <p className="text-[11px] text-[#475569] leading-relaxed">
+                        {section.findingComplements.binary.threeStages.stage1.twosDesc}
+                      </p>
                     </div>
                   </div>
+
+                  {/* Variable Legend */}
+                  {section.findingComplements.binary.threeStages.stage1.variables && (
+                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center gap-4 text-xs">
+                      <span className="font-bold text-[#64748B]">Where:</span>
+                      {section.findingComplements.binary.threeStages.stage1.variables.map((v, i) => (
+                        <div key={i} className="flex items-center gap-1.5">
+                          <span className="px-1.5 py-0.5 rounded bg-white font-bold text-[#1E293B] border border-[#DCE7E1]">
+                            {v.symbol}
+                          </span>
+                          <span className="text-[#475569]">{v.meaning}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-              </div>
+              )}
+
+              {/* Stage 2: Standard Classroom Method Flowchart */}
+              {section.findingComplements.binary.threeStages?.stage2 && (
+                <ClassroomFlowchart3Steps stageData={section.findingComplements.binary.threeStages.stage2} />
+              )}
+
+              {/* Stage 3: The 2-Second Inspection Shortcut */}
+              {section.findingComplements.binary.threeStages?.stage3 && (
+                <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5] flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+                      {section.findingComplements.binary.threeStages.stage3.title}
+                    </span>
+                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                      2-Second Scan Strip
+                    </span>
+                  </div>
+
+                  {/* Scan Strip Visual Banner */}
+                  <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] space-y-2">
+                    <span className="text-xs font-bold text-[#3730A3] flex items-center gap-2">
+                      <ArrowRight className="w-4 h-4 transform rotate-180" />
+                      Right-to-Left Scan Mechanics (&larr; from LSB to MSB)
+                    </span>
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <div className="p-2 rounded-lg bg-white border border-[#C7D2FE] text-[#4338CA]">
+                        <span className="font-bold">Bits to the Left: </span>
+                        <span className="text-[#4F46E5] font-black">INVERT (0 &harr; 1)</span>
+                      </div>
+                      <span className="font-bold text-[#64748B]">&larr; Scan &larr;</span>
+                      <div className="p-2 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D]">
+                        <span className="font-bold">First 1 and Trailing 0s: </span>
+                        <span className="font-black">KEEP UNCHANGED</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Why the Shortcut Works */}
+                  {section.findingComplements.binary.threeStages.stage3.whyItWorks && (
+                    <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5 text-xs text-[#334155]">
+                      <span className="font-bold text-[#1E293B] block">Why the Shortcut Works Mathematically:</span>
+                      <p className="leading-relaxed">{section.findingComplements.binary.threeStages.stage3.whyItWorks}</p>
+                    </div>
+                  )}
+                </div>
+              )}
 
               {/* 4 Worked Models */}
-              <div className="space-y-4">
-                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40]">
-                  Worked Engineering Models: 1's &amp; 2's Complements
-                </h4>
+              <div className="space-y-6">
+                <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+                  <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40]">
+                    Worked Engineering Models: 1's &amp; 2's Complements
+                  </h4>
+                  <span className="text-[10px] font-mono text-[#64748B]">Question &rarr; Normal Method &rarr; Shortcut &rarr; Proof</span>
+                </div>
 
                 {section.findingComplements.binary.models.map((model) => (
-                  <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                      <span className="text-xs font-mono font-bold text-[#1E293B]">{model.label}</span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                        {model.conceptTag}
-                      </span>
-                    </div>
-
-                    {/* Edge Cases for 2D */}
+                  <React.Fragment key={model.id}>
                     {model.edgeCases ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
-                        {model.edgeCases.map((ec, ecIdx) => (
-                          <div key={ecIdx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
-                            <span className="font-bold text-[#1E293B] block">{ec.name}</span>
-                            <div className="text-[#64748B]">1's Comp: <strong className="text-[#1E293B]">{ec.ones}</strong></div>
-                            <div className="text-[#64748B]">2's Comp: <strong className="text-[#2E6F40]">{ec.twos}</strong></div>
-                            <p className="text-[11px] text-[#4F46E5] pt-1 border-t border-[#DCE7E1]">{ec.note}</p>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <>
-                        {/* 1's Complement Row */}
-                        <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center justify-between gap-2 font-mono text-xs">
-                          <span className="text-[#64748B]">
-                            1's Complement of ({model.inputNumber})₂:
-                          </span>
-                          <span className="px-2.5 py-1 rounded bg-[#EEF2FF] text-[#4338CA] font-bold border border-[#C7D2FE]">
-                            {model.onesResult}
+                      <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                        <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                          <span className="text-xs font-bold text-[#1E293B]">{model.label}</span>
+                          <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                            {model.conceptTag}
                           </span>
                         </div>
-
-                        {/* 2's Complement Shortcut Strip */}
-                        {model.twosShortcut && (
-                          <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 font-mono text-xs">
-                            <span className="font-bold text-[#1E293B] block">
-                              2's Complement (Fast Scan Strip Verification):
-                            </span>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
-                              <div className="p-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#15803D]">
-                                <span className="font-bold block">Kept Bits: {model.twosShortcut.keptBits}</span>
-                                <span>{model.twosShortcut.keptDescription}</span>
-                              </div>
-                              <div className="p-2.5 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3]">
-                                <span className="font-bold block">Flipped Bits: {model.twosShortcut.flippedBits}</span>
-                                <span>{model.twosShortcut.flippedDescription}</span>
-                              </div>
+                        <p className="text-xs font-bold text-[#1E293B]">{model.question}</p>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                          {model.edgeCases.map((ec, ecIdx) => (
+                            <div key={ecIdx} className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
+                              <span className="font-bold text-[#1E293B] block">{ec.name}</span>
+                              <div className="text-[#64748B]">1's Comp: <strong className="text-[#1E293B]">{ec.ones}</strong></div>
+                              <div className="text-[#64748B]">2's Comp: <strong className="text-[#2E6F40]">{ec.twos}</strong></div>
+                              <p className="text-[11px] text-[#4F46E5] pt-1 border-t border-[#DCE7E1]">{ec.note}</p>
                             </div>
-                            <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-between">
-                              <span className="text-[#64748B]">Combined Result:</span>
-                              <span className="font-black text-sm text-[#15803D]">({model.twosShortcut.combined})₂</span>
-                            </div>
+                          ))}
+                        </div>
+                        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 shadow-2xs text-xs text-[#166534]">
+                          <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
+                          <div>
+                            <span className="font-bold mr-1.5">5-Second Base-10 Verification:</span>
+                            <span>{model.verification.sumCheck}</span>
                           </div>
-                        )}
-                      </>
-                    )}
-
-                    {/* 5-Second Base-10 Verification Bar */}
-                    <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 shadow-2xs font-mono text-xs text-[#166534]">
-                      <CheckCircle2 className="w-4 h-4 text-[#15803D] flex-shrink-0" />
-                      <div>
-                        <span className="font-bold mr-1.5">5-Second Base-10 Verification:</span>
-                        <span>{model.verification.sumCheck}</span>
+                        </div>
                       </div>
-                    </div>
-                  </div>
+                    ) : (
+                      <StandardClassroomMethodGrid modelType="binary" model={model} />
+                    )}
+                  </React.Fragment>
                 ))}
               </div>
 
@@ -568,6 +597,12 @@ export const Section15View = ({ section }) => {
       {/* ===================================================================== */}
       {activeTab === "1.5B" && section.decimalSubtraction && (
         <div className="space-y-6">
+          {/* Subtraction Theory: Why Carry Decides the Sign & 5 Classroom Steps */}
+          <SubtractionWhyCarryCard
+            theoryData={section.decimalSubtraction.subtractionTheory}
+            algorithmSteps={section.decimalSubtraction.classroomAlgorithm5Steps}
+          />
+
           {/* Inner 2-Tab Switcher */}
           <div className="flex border-b border-[#DCE7E1] gap-4">
             <button
@@ -774,6 +809,12 @@ export const Section15View = ({ section }) => {
       {/* ===================================================================== */}
       {activeTab === "1.5C" && section.binarySubtraction && (
         <div className="space-y-6">
+          {/* Subtraction Theory: Why Carry Decides the Sign & 5 Classroom Steps */}
+          <SubtractionWhyCarryCard
+            theoryData={section.binarySubtraction.subtractionTheory}
+            algorithmSteps={section.binarySubtraction.classroomAlgorithm5Steps}
+          />
+
           {/* Inner 2-Tab Switcher */}
           <div className="flex border-b border-[#DCE7E1] gap-4">
             <button
