@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
 import { 
   ArrowRight, 
-  Cpu, 
-  Sparkles, 
-  Terminal, 
-  Network, 
-  Database, 
-  BrainCircuit, 
-  Compass 
+  Cpu 
 } from 'lucide-react';
 import { ViitCrest } from './ViitCrest';
 import {
-  LeftCourseJourneyWing,
-  RightExamBlueprintWing,
+  LeftPortalDirectoryWing,
+  RightPortalToolsWing,
   MobileAppInstallModal,
   MobileQuickActionBadge
 } from './ZeroIndexSideWings';
@@ -68,9 +62,9 @@ export const PortalLanding = ({ onSelectDld, onSelectRoadmaps }) => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
           {/* ================================================================= */}
-          {/* COMBINED LEFT SIDE WING ("Course Journey & Digital Pulse")         */}
+          {/* GENERALIZED LEFT WING: "Portal Pulse & Subject Directory"          */}
           {/* ================================================================= */}
-          <LeftCourseJourneyWing onUnitClick={() => onSelectDld()} />
+          <LeftPortalDirectoryWing onSelectDld={onSelectDld} />
 
           {/* ================================================================= */}
           {/* CENTERPIECE: ZeroIndex Hand-Drawn Ink Sketch & Hero Typography    */}
@@ -233,17 +227,20 @@ export const PortalLanding = ({ onSelectDld, onSelectRoadmaps }) => {
             </div>
 
             {/* Mobile Viewport Quick Action & Metadata */}
-            <MobileQuickActionBadge onOpenInstallModal={() => setIsInstallModalOpen(true)} />
+            <MobileQuickActionBadge 
+              onOpenInstallModal={() => setIsInstallModalOpen(true)}
+              metadataText="ZeroIndex Platform v2.0 · Maintained by J. Siddartha Varma · Dept of CSE-DS, VIIT(A)"
+            />
 
           </main>
 
           {/* ================================================================= */}
-          {/* COMBINED RIGHT SIDE WING ("Exam Blueprint & Mobile App PWA Guide")*/}
+          {/* GENERALIZED RIGHT WING: "Portal Tools & Mobile App"               */}
           {/* ================================================================= */}
-          <RightExamBlueprintWing 
+          <RightPortalToolsWing 
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
-            onNavigateSyllabus={onSelectDld}
-            onNavigateRoadmaps={onSelectRoadmaps}
+            onSelectDld={onSelectDld}
+            onSelectRoadmaps={onSelectRoadmaps}
           />
 
         </div>
