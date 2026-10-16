@@ -169,12 +169,18 @@ export const Section15View = ({ section }) => {
                   <p className="text-xs text-[#475569] leading-relaxed">{fam.explanation}</p>
 
                   {/* Formula Box */}
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-2 border-[#2E6F40]/30 space-y-1 font-mono text-center">
+                  <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#2E6F40]/30 space-y-2 font-mono text-center">
                     <div className="text-xs font-bold text-[#1E293B]">General Mathematical Formula:</div>
-                    <div className="text-sm font-black text-[#2E6F40]">{fam.baseFormula}</div>
+                    <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm sm:text-base font-bold text-[#0F172A] shadow-2xs">
+                      {fam.familyId === "diminished" ? (
+                        <span>C<sub>r-1</sub>(N) = (r<sup>n</sup> - r<sup>-m</sup>) - N</span>
+                      ) : (
+                        <span>C<sub>r</sub>(N) = r<sup>n</sup> - N</span>
+                      )}
+                    </div>
                     {fam.relationFormula && (
-                      <div className="text-xs font-bold text-[#4F46E5] pt-1">
-                        Relation: {fam.relationFormula}
+                      <div className="text-xs font-bold text-[#4F46E5] pt-0.5">
+                        Relation: C<sub>r</sub>(N) = [(r - 1)'s Complement] + 1 (at LSB)
                       </div>
                     )}
                     <div className="text-[10px] text-[#64748B]">{fam.parameters}</div>
@@ -241,53 +247,111 @@ export const Section15View = ({ section }) => {
             <div className="space-y-6">
               {/* Stage 1: Formal Mathematical Definition & Formula Box */}
               {section.findingComplements.decimal.threeStages?.stage1 && (
-                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5 font-mono">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
                     <span className="text-xs font-bold uppercase tracking-wider text-[#D97706] flex items-center gap-2">
                       <BookOpen className="w-4 h-4 text-[#D97706]" />
-                      {section.findingComplements.decimal.threeStages.stage1.title}
+                      Stage 1: Formal Mathematical Definition &amp; Formula
                     </span>
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
                       Rigorous Mathematics
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#D97706]/30 space-y-2">
-                      <span className="text-xs font-bold text-[#1E293B] block">9's Complement Formula (r - 1 Radix):</span>
-                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#D97706] text-center">
-                        {section.findingComplements.decimal.threeStages.stage1.ninesFormula}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Left Box: 9's Complement Formula */}
+                    <div className="p-5 rounded-xl bg-[#FAF8F5] border-2 border-[#D97706]/30 space-y-3">
+                      <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B]">
+                          9's Complement Formula (r - 1 Radix):
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]">
+                          r = 10
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#475569] leading-relaxed">
-                        {section.findingComplements.decimal.threeStages.stage1.ninesDesc}
-                      </p>
+
+                      {/* For an n-digit Integer */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-digit Integer:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          9's Complement = (10<sup>n</sup> - 1) - N
+                        </div>
+                      </div>
+
+                      {/* General Formula with fraction */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">General Formula (with n integer &amp; m fraction digits):</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
+                          9's Complement = (10<sup>n</sup> - 10<sup>-m</sup>) - N
+                        </div>
+                      </div>
+
+                      {/* Formula Example */}
+                      <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs">
+                        <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
+                        <span>For N = 37 (n = 2): (10<sup>2</sup> - 1) - 37 = 99 - 37 = <strong className="font-black text-[#B45309]">62</strong></span>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-2">
-                      <span className="text-xs font-bold text-[#1E293B] block">10's Complement Formula (r Radix):</span>
-                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#4F46E5] text-center">
-                        {section.findingComplements.decimal.threeStages.stage1.tensFormula}
+                    {/* Right Box: 10's Complement Formula */}
+                    <div className="p-5 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-3">
+                      <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B]">
+                          10's Complement Formula (r Radix):
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                          r = 10
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#475569] leading-relaxed">
-                        {section.findingComplements.decimal.threeStages.stage1.tensDesc}
-                      </p>
+
+                      {/* For an n-digit Integer */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-digit Integer:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          10's Complement = 10<sup>n</sup> - N = (9's Complement) + 1
+                        </div>
+                      </div>
+
+                      {/* General Formula with fraction */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">General Formula (with fraction):</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
+                          10's Complement = 10<sup>n</sup> - N = (9's Complement) + 10<sup>-m</sup>
+                        </div>
+                      </div>
+
+                      {/* Formula Example */}
+                      <div className="p-2.5 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3] text-xs">
+                        <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
+                        <span>For N = 37 (n = 2): 10<sup>2</sup> - 37 = 100 - 37 = <strong className="font-black text-[#4338CA]">63</strong> (or 62 + 1 = <strong className="font-black text-[#4338CA]">63</strong>)</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Variable Legend */}
-                  {section.findingComplements.decimal.threeStages.stage1.variables && (
-                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center gap-4 text-xs">
-                      <span className="font-bold text-[#64748B]">Where:</span>
-                      {section.findingComplements.decimal.threeStages.stage1.variables.map((v, i) => (
-                        <div key={i} className="flex items-center gap-1.5">
-                          <span className="px-1.5 py-0.5 rounded bg-white font-bold text-[#1E293B] border border-[#DCE7E1]">
-                            {v.symbol}
-                          </span>
-                          <span className="text-[#475569]">{v.meaning}</span>
-                        </div>
-                      ))}
+                  {/* Compact Variable Legend Pill Strip */}
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block">
+                      Mathematical Variable Definitions:
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4F46E5] font-black border border-[#C7D2FE]">r</span>
+                        <span className="text-[#334155]">Base / Radix (10 for Decimal)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] font-black border border-[#86EFAC]">n</span>
+                        <span className="text-[#334155]">Integer Digits (left of point)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] font-black border border-[#FCD34D]">m</span>
+                        <span className="text-[#334155]">Fractional Digits (right of point)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#FAF8F5] text-[#1E293B] font-black border border-[#DCE7E1]">N</span>
+                        <span className="text-[#334155]">Given Decimal Number</span>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
 
@@ -413,53 +477,111 @@ export const Section15View = ({ section }) => {
             <div className="space-y-6">
               {/* Stage 1: Formal Mathematical Definition & Formula Box */}
               {section.findingComplements.binary.threeStages?.stage1 && (
-                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5 font-mono">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-2">
-                      <BookOpen className="w-4 h-4 text-[#2E6F40]" />
-                      {section.findingComplements.binary.threeStages.stage1.title}
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#15803D] flex items-center gap-2">
+                      <BookOpen className="w-4 h-4 text-[#15803D]" />
+                      Stage 1: Formal Mathematical Definition &amp; Formula
                     </span>
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
                       Rigorous Mathematics
                     </span>
                   </div>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#2E6F40]/30 space-y-2">
-                      <span className="text-xs font-bold text-[#1E293B] block">1's Complement Formula (r - 1 Radix, r = 2):</span>
-                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#2E6F40] text-center">
-                        {section.findingComplements.binary.threeStages.stage1.onesFormula}
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    {/* Left Box: 1's Complement Formula */}
+                    <div className="p-5 rounded-xl bg-[#FAF8F5] border-2 border-[#15803D]/30 space-y-3">
+                      <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B]">
+                          1's Complement Formula (r - 1 Radix):
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
+                          r = 2
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#475569] leading-relaxed">
-                        {section.findingComplements.binary.threeStages.stage1.onesDesc}
-                      </p>
+
+                      {/* For an n-bit Integer */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-bit Integer:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          1's Complement = (2<sup>n</sup> - 1) - N
+                        </div>
+                      </div>
+
+                      {/* General Formula with fraction */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">General Formula (with n integer &amp; m fractional bits):</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
+                          1's Complement = (2<sup>n</sup> - 2<sup>-m</sup>) - N
+                        </div>
+                      </div>
+
+                      {/* Formula Example */}
+                      <div className="p-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#14532D] text-xs">
+                        <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
+                        <span>For N = (1010)<sub>2</sub> (n = 4, where 2<sup>4</sup> - 1 = 15<sub>10</sub> = 1111<sub>2</sub>): 1111<sub>2</sub> - 1010<sub>2</sub> = <strong className="font-black text-[#15803D]">(0101)<sub>2</sub></strong></span>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-2">
-                      <span className="text-xs font-bold text-[#1E293B] block">2's Complement Formula (r Radix, r = 2):</span>
-                      <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm font-black text-[#4F46E5] text-center">
-                        {section.findingComplements.binary.threeStages.stage1.twosFormula}
+                    {/* Right Box: 2's Complement Formula */}
+                    <div className="p-5 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 space-y-3">
+                      <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B]">
+                          2's Complement Formula (r Radix):
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[9px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                          r = 2
+                        </span>
                       </div>
-                      <p className="text-[11px] text-[#475569] leading-relaxed">
-                        {section.findingComplements.binary.threeStages.stage1.twosDesc}
-                      </p>
+
+                      {/* For an n-bit Integer */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-bit Integer:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          2's Complement = 2<sup>n</sup> - N = (1's Complement) + 1 (at LSB)
+                        </div>
+                      </div>
+
+                      {/* General Formula with fraction */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">General Formula (with fraction):</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
+                          2's Complement = 2<sup>n</sup> - N = (1's Complement) + 2<sup>-m</sup>
+                        </div>
+                      </div>
+
+                      {/* Formula Example */}
+                      <div className="p-2.5 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-[#3730A3] text-xs">
+                        <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
+                        <span>For N = (1010)<sub>2</sub> (n = 4): 0101<sub>2</sub> + 1 = <strong className="font-black text-[#4338CA]">(0110)<sub>2</sub></strong></span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Variable Legend */}
-                  {section.findingComplements.binary.threeStages.stage1.variables && (
-                    <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-center gap-4 text-xs">
-                      <span className="font-bold text-[#64748B]">Where:</span>
-                      {section.findingComplements.binary.threeStages.stage1.variables.map((v, i) => (
-                        <div key={i} className="flex items-center gap-1.5">
-                          <span className="px-1.5 py-0.5 rounded bg-white font-bold text-[#1E293B] border border-[#DCE7E1]">
-                            {v.symbol}
-                          </span>
-                          <span className="text-[#475569]">{v.meaning}</span>
-                        </div>
-                      ))}
+                  {/* Compact Variable Legend Pill Strip */}
+                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
+                    <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#64748B] block">
+                      Mathematical Variable Definitions:
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] font-black border border-[#86EFAC]">r</span>
+                        <span className="text-[#334155]">Base / Radix (2 for Binary)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] font-black border border-[#86EFAC]">n</span>
+                        <span className="text-[#334155]">Integer Bits (left of point)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#FEF3C7] text-[#92400E] font-black border border-[#FCD34D]">m</span>
+                        <span className="text-[#334155]">Fractional Bits (right of point)</span>
+                      </div>
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] flex items-center gap-2 shadow-2xs">
+                        <span className="px-2 py-0.5 rounded bg-[#FAF8F5] text-[#1E293B] font-black border border-[#DCE7E1]">N</span>
+                        <span className="text-[#334155]">Given Binary Number</span>
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
               )}
 

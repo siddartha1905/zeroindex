@@ -154,9 +154,18 @@ export const section15Data = {
       threeStages: {
         stage1: {
           title: "Stage 1: Formal Mathematical Definition & Formula",
-          formulaNines: "C_9(N) = (10^n - 1) - N   [for integers]  or  (10^n - 10^-m) - N  [with m fraction digits]",
-          formulaTens: "C_{10}(N) = 10^n - N = C_9(N) + 1  (added at the LSB position)",
-          glossary: "where r = 10 (base), n = number of integer digits, m = number of fractional digits, N = given number."
+          ninesFormulaInteger: "9's Complement = (10^n - 1) - N",
+          ninesFormulaGeneral: "9's Complement = (10^n - 10^-m) - N",
+          ninesExample: "For N = 37 (n = 2): (10^2 - 1) - 37 = 99 - 37 = 62",
+          tensFormulaInteger: "10's Complement = 10^n - N = (9's Complement) + 1",
+          tensFormulaGeneral: "10's Complement = 10^n - N = (9's Complement) + 10^-m",
+          tensExample: "For N = 37 (n = 2): 10^2 - 37 = 100 - 37 = 63 (or 62 + 1 = 63)",
+          variables: [
+            { symbol: "r", meaning: "Base / Radix (10 for Decimal)" },
+            { symbol: "n", meaning: "Number of Integer Digits (left of decimal point)" },
+            { symbol: "m", meaning: "Number of Fractional Digits (right of decimal point)" },
+            { symbol: "N", meaning: "Given Decimal Number" }
+          ]
         },
         stage2: {
           title: "Stage 2: The Standard Classroom Method (Normal Step-by-Step Method)",
@@ -380,9 +389,18 @@ export const section15Data = {
       threeStages: {
         stage1: {
           title: "Stage 1: Formal Mathematical Definition & Formula",
-          formulaOnes: "C_1(N) = (2^n - 1) - N   [for n-bit integer]  or  (2^n - 2^-m) - N  [with m fraction bits]",
-          formulaTwos: "C_2(N) = 2^n - N = C_1(N) + 1  (added at the LSB position)",
-          glossary: "where r = 2 (base), n = number of integer bits, m = number of fractional bits, N = given binary number."
+          onesFormulaInteger: "1's Complement = (2^n - 1) - N",
+          onesFormulaGeneral: "1's Complement = (2^n - 2^-m) - N",
+          onesExample: "For N = (1010)₂ (n = 4, where 2⁴ - 1 = 15₁₀ = 1111₂): 1111₂ - 1010₂ = (0101)₂",
+          twosFormulaInteger: "2's Complement = 2^n - N = (1's Complement) + 1 (at LSB)",
+          twosFormulaGeneral: "2's Complement = 2^n - N = (1's Complement) + 2^-m",
+          twosExample: "For N = (1010)₂ (n = 4): 0101₂ + 1 = (0110)₂",
+          variables: [
+            { symbol: "r", meaning: "Base / Radix (2 for Binary)" },
+            { symbol: "n", meaning: "Number of Integer Bits (left of binary point)" },
+            { symbol: "m", meaning: "Number of Fractional Bits (right of binary point)" },
+            { symbol: "N", meaning: "Given Binary Number" }
+          ]
         },
         stage2: {
           title: "Stage 2: The Standard Classroom Method (Normal Step-by-Step Method)",

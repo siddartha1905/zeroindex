@@ -154,9 +154,11 @@ export const SubtractionWhyCarryCard = ({ theoryData, algorithmSteps }) => {
       </div>
 
       {/* Formula Proof Banner */}
-      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 text-center font-mono space-y-1">
-        <span className="text-[11px] text-[#64748B] block">Universal Hardware Equation:</span>
-        <span className="text-sm font-black text-[#4F46E5]">{theoryData.formulaProof}</span>
+      <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-2 border-[#4F46E5]/30 text-center font-mono space-y-1.5">
+        <span className="text-[11px] text-[#64748B] block font-semibold">Universal Hardware Equation:</span>
+        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-xs sm:text-sm font-bold text-[#0F172A] shadow-2xs">
+          {theoryData.formulaProof}
+        </div>
       </div>
 
       {/* Case 1 vs Case 2 Comparison Cards */}
