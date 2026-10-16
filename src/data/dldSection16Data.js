@@ -68,6 +68,42 @@ export const section16Data = {
   // TAB 2: 1.6A THE THREE SIGNED REPRESENTATIONS
   // ---------------------------------------------------------------------------
   threeRepresentations: {
+    leadingZeroRule: {
+      title: "Why is bit b6 = 1 in -45? (The Leading-Zero Complement Rule)",
+      subtitle: "Clearing the Number 1 Student Misconception in Signed Binary Numbers",
+      studentDilemma: "Since 45 is strictly less than 64, why is the 64-weight bit (b6) equal to 1 in the 8-bit 2's complement of -45 (11010011), instead of 0 (10100011)?",
+      ladderAnalogy: {
+        title: "The 'Climbing the Ladder' Silicon Principle",
+        explanation: "In an 8-bit 2's complement register, the MSB b7 carries a massive negative positional weight of -128. To represent -45, the register starts at -128 and must climb +83 upward to reach -45 (-128 + 83 = -45).",
+        whyB6IsMandatory: "The remaining bits b5..b0 only total 32 + 16 + 8 + 4 + 2 + 1 = +63! Without b6 = +64, the maximum value you could ever reach from -128 is -128 + 63 = -65. It is mathematically impossible to reach -45 without setting b6 = +64!"
+      },
+      wrongPitfall: {
+        mistakenPattern: "10100011",
+        mistakenCalc: "(-128 * 1) + (64 * 0) + (32 * 1) + (16 * 0) + (8 * 0) + (4 * 0) + (2 * 1) + (1 * 1) = -128 + 35 = -93",
+        verdict: "WRONG! An error of 48! Leaving b6 = 0 gives -93, not -45."
+      },
+      threeWaysMinus45: [
+        {
+          scheme: "Sign-Magnitude",
+          pattern: "1 0101101",
+          b6Val: "0",
+          reason: "b6..b0 holds the pure positive magnitude 45 (0101101). b6 is 0 because 45 < 64."
+        },
+        {
+          scheme: "Signed 1's Complement",
+          pattern: "1 1010010",
+          b6Val: "1",
+          reason: "All 8 bits are inverted. The leading zero at b6 in +45 (00101101) flips to 1."
+        },
+        {
+          scheme: "Signed 2's Complement",
+          pattern: "1 1010011",
+          b6Val: "1",
+          reason: "All 8 bits inverted then +1. b6 stays 1 to provide the +64 needed to climb up to -45."
+        }
+      ]
+    },
+
     signMagnitude: {
       id: "sign-magnitude",
       name: "Sign-Magnitude Form",
@@ -102,6 +138,24 @@ export const section16Data = {
           id: "sm-model-1",
           conceptTag: "8-Bit Positive & Negative Pair",
           question: "Represent +45 and -45 in 8-bit Sign-Magnitude form.",
+          posBits: ["0", "0", "1", "0", "1", "1", "0", "1"],
+          posDec: "+45",
+          negBits: ["1", "0", "1", "0", "1", "1", "0", "1"],
+          negDec: "-45",
+          transformation: {
+            scheme: "signmag",
+            description: "Only Sign Bit b7 toggles from 0 to 1. The remaining 7 magnitude bits b6..b0 (0101101 = 45) drop straight down completely unchanged.",
+            flips: [
+              { bit: "b7", from: "0", to: "1", note: "Sign bit flips: 0 -> 1" },
+              { bit: "b6", from: "0", to: "0", note: "Unchanged magnitude bit" },
+              { bit: "b5", from: "1", to: "1", note: "Unchanged magnitude bit" },
+              { bit: "b4", from: "0", to: "0", note: "Unchanged magnitude bit" },
+              { bit: "b3", from: "1", to: "1", note: "Unchanged magnitude bit" },
+              { bit: "b2", from: "1", to: "1", note: "Unchanged magnitude bit" },
+              { bit: "b1", from: "0", to: "0", note: "Unchanged magnitude bit" },
+              { bit: "b0", from: "1", to: "1", note: "Unchanged magnitude bit" }
+            ]
+          },
           stepByStep: [
             "1. Find binary representation of magnitude 45: 45 = 32 + 8 + 4 + 1 = (0101101)₂ (7 magnitude bits).",
             "2. For +45: Set Sign Bit b7 = 0. Magnitude bits b6..b0 = 0101101. Register: [0 0101101] = 00101101.",
@@ -200,6 +254,24 @@ export const section16Data = {
           id: "ones-model-1",
           conceptTag: "8-Bit Positive & Negative Pair",
           question: "Represent +45 and -45 in 8-bit Signed 1's Complement form.",
+          posBits: ["0", "0", "1", "0", "1", "1", "0", "1"],
+          posDec: "+45",
+          negBits: ["1", "1", "0", "1", "0", "0", "1", "0"],
+          negDec: "-45",
+          transformation: {
+            scheme: "ones",
+            description: "Every single bit across all 8 positions is inverted (0 <-> 1). Inverting the leading zero at b6 turns it into 1!",
+            flips: [
+              { bit: "b7", from: "0", to: "1", note: "Sign bit inverts: 0 -> 1" },
+              { bit: "b6", from: "0", to: "1", note: "Leading zero inverts: 0 -> 1" },
+              { bit: "b5", from: "1", to: "0", note: "Bit inverts: 1 -> 0" },
+              { bit: "b4", from: "0", to: "1", note: "Bit inverts: 0 -> 1" },
+              { bit: "b3", from: "1", to: "0", note: "Bit inverts: 1 -> 0" },
+              { bit: "b2", from: "1", to: "0", note: "Bit inverts: 1 -> 0" },
+              { bit: "b1", from: "0", to: "1", note: "Bit inverts: 0 -> 1" },
+              { bit: "b0", from: "1", to: "0", note: "Bit inverts: 1 -> 0" }
+            ]
+          },
           stepByStep: [
             "1. Express +45 as an 8-bit number: 45 = (00101101)₂ with MSB = 0.",
             "2. For +45: Register is 00101101.",
@@ -298,6 +370,27 @@ export const section16Data = {
           id: "twos-model-1",
           conceptTag: "8-Bit Positive & Negative Pair",
           question: "Represent +45 and -45 in 8-bit Signed 2's Complement form.",
+          posBits: ["0", "0", "1", "0", "1", "1", "0", "1"],
+          posDec: "+45",
+          negBits: ["1", "1", "0", "1", "0", "0", "1", "1"],
+          negDec: "-45",
+          transformation: {
+            scheme: "twos",
+            description: "Two-stage standard classroom transformation: Step 1 invert all 8 bits to 1's complement, then Step 2 add 1 to the LSB.",
+            onesCompBits: ["1", "1", "0", "1", "0", "0", "1", "0"],
+            classroomSteps: [
+              { label: "+45 Positive Register", bits: ["0", "0", "1", "0", "1", "1", "0", "1"], val: "+45" },
+              { label: "1's Complement (Invert all bits)", bits: ["1", "1", "0", "1", "0", "0", "1", "0"], val: "b6 flipped 0 -> 1" },
+              { label: "+ 1 at LSB", bits: [" ", " ", " ", " ", " ", " ", " ", "1"], val: "+1" },
+              { label: "-45 Signed 2's Complement", bits: ["1", "1", "0", "1", "0", "0", "1", "1"], val: "-45" }
+            ],
+            fastScan: {
+              rule: "Fast Right-to-Left Scan Shortcut",
+              description: "Scan from right (LSB) to left: Keep the first '1' unchanged (b0 = 1), then invert all bits to its left (b7..b1 flip from 0010110 to 1101001).",
+              keptBitIndex: 7,
+              invertedIndices: [0, 1, 2, 3, 4, 5, 6]
+            }
+          },
           stepByStep: [
             "1. Write +45 in 8 bits: 45 = 32 + 8 + 4 + 1 = 00101101.",
             "2. For +45: Register is 00101101 (Identical to Sign-Magnitude and 1's Comp).",
@@ -483,6 +576,24 @@ export const section16Data = {
           title: "Model 1 (Case 1: Positive + Positive)",
           conceptTag: "Case 1: (+A) + (+B)",
           question: "Perform (+35) + (+42) in 8-bit signed 2's complement arithmetic.",
+          operandPrep: [
+            {
+              op: "+35",
+              type: "positive",
+              steps: [
+                "+35 is positive. Direct 8-bit binary: 35 = 32 + 2 + 1 = 00100011.",
+                "Sign bit b7 = 0. Positive numbers are identical across all schemes (no inversion!)."
+              ]
+            },
+            {
+              op: "+42",
+              type: "positive",
+              steps: [
+                "+42 is positive. Direct 8-bit binary: 42 = 32 + 8 + 2 = 00101010.",
+                "Sign bit b7 = 0. Positive numbers are identical across all schemes (no inversion!)."
+              ]
+            }
+          ],
           aDec: "+35",
           aBin: "00100011",
           bDec: "+42",
@@ -514,6 +625,26 @@ export const section16Data = {
           title: "Model 2 (Case 2: Positive + Smaller Negative)",
           conceptTag: "Case 2: (+A) + (-B) [Result > 0]",
           question: "Perform (+45) + (-27) in 8-bit signed 2's complement arithmetic.",
+          operandPrep: [
+            {
+              op: "+45",
+              type: "positive",
+              steps: [
+                "+45 is positive. Direct 8-bit binary: 45 = 32 + 8 + 4 + 1 = 00101101.",
+                "Sign bit b7 = 0. No complementation required."
+              ]
+            },
+            {
+              op: "-27",
+              type: "negative",
+              steps: [
+                "1. Express magnitude in 8 bits: +27 = 16 + 8 + 2 + 1 = 00011011",
+                "2. 1's complement (invert all bits): NOT(00011011) = 11100100",
+                "3. Add 1 to LSB: 11100100 + 1 = 11100101 (-27)",
+                "4. Check: -128 + 64 + 32 + 4 + 1 = -128 + 101 = -27"
+              ]
+            }
+          ],
           aDec: "+45",
           aBin: "00101101",
           bDec: "-27",
@@ -548,6 +679,45 @@ export const section16Data = {
           title: "Model 3 (Case 3: Positive + Larger Negative)",
           conceptTag: "Case 3: (+A) + (-B) [Result < 0]",
           question: "Perform (+27) + (-45) in 8-bit signed 2's complement arithmetic.",
+          operandPrep: [
+            {
+              op: "+27",
+              type: "positive",
+              steps: [
+                "+27 is positive. Direct 8-bit binary: 27 = 16 + 8 + 2 + 1 = 00011011.",
+                "Sign bit b7 = 0. No complementation required."
+              ]
+            },
+            {
+              op: "-45",
+              type: "negative",
+              steps: [
+                "1. Express magnitude in 8 bits: +45 = 32 + 8 + 4 + 1 = 00101101",
+                "2. 1's complement (invert all bits): NOT(00101101) = 11010010",
+                "3. Add 1 to LSB: 11010010 + 1 = 11010011 (-45)",
+                "4. Check: -128 + 64 + 16 + 2 + 1 = -128 + 83 = -45"
+              ]
+            }
+          ],
+          dualDecode: {
+            method1: {
+              name: "Method 1: Standard Classroom Reversal (Take 2's Complement)",
+              steps: [
+                "Since MSB b7 = 1, result is Negative (-).",
+                "Invert all bits of sum 11101110 -> 00010001.",
+                "Add 1: 00010001 + 1 = 00010010 = 16 + 2 = 18.",
+                "Prepend minus sign: Result = -18."
+              ]
+            },
+            method2: {
+              name: "Method 2: Fast Negative MSB Weight Shortcut",
+              steps: [
+                "Direct summation using weights: -128, +64, +32, +16, +8, +4, +2, +1",
+                "-128 + 64 + 32 + 0 + 8 + 4 + 2 + 0 = -128 + 110 = -18.",
+                "Verified in 2 seconds without inverting!"
+              ]
+            }
+          },
           aDec: "+27",
           aBin: "00011011",
           bDec: "-45",
@@ -582,6 +752,47 @@ export const section16Data = {
           title: "Model 4 (Case 4: Negative + Negative)",
           conceptTag: "Case 4: (-A) + (-B)",
           question: "Perform (-35) + (-42) in 8-bit signed 2's complement arithmetic.",
+          operandPrep: [
+            {
+              op: "-35",
+              type: "negative",
+              steps: [
+                "1. +35 = 32 + 2 + 1 = 00100011",
+                "2. 1's complement: Invert -> 11011100",
+                "3. Add 1 to LSB: 11011100 + 1 = 11011101 (-35)",
+                "4. Check: -128 + 64 + 16 + 8 + 4 + 1 = -35"
+              ]
+            },
+            {
+              op: "-42",
+              type: "negative",
+              steps: [
+                "1. +42 = 32 + 8 + 2 = 00101010",
+                "2. 1's complement: Invert -> 11010101",
+                "3. Add 1 to LSB: 11010101 + 1 = 11010110 (-42)",
+                "4. Check: -128 + 64 + 16 + 4 + 2 = -42"
+              ]
+            }
+          ],
+          dualDecode: {
+            method1: {
+              name: "Method 1: Standard Classroom Reversal (Take 2's Complement)",
+              steps: [
+                "Since MSB b7 = 1, result is Negative (-). (C8 = 1 was discarded).",
+                "Invert all bits of sum 10110011 -> 01001100.",
+                "Add 1: 01001100 + 1 = 01001101 = 64 + 8 + 4 + 1 = 77.",
+                "Prepend minus sign: Result = -77."
+              ]
+            },
+            method2: {
+              name: "Method 2: Fast Negative MSB Weight Shortcut",
+              steps: [
+                "Direct summation using weights: -128, +64, +32, +16, +8, +4, +2, +1",
+                "-128 + 0 + 32 + 16 + 0 + 0 + 2 + 1 = -128 + 51 = -77.",
+                "Verified in 2 seconds without inverting!"
+              ]
+            }
+          },
           aDec: "-35",
           aBin: "11011101",
           bDec: "-42",
@@ -742,7 +953,8 @@ export const section16Data = {
       explanation: "When copying a k-bit signed number into an n-bit register (where n > k), the value must not change. In 2's complement, this is accomplished by SIGN-BIT EXTENSION: Replicate the Sign Bit (MSB) into all newly added bit positions on the left.",
       examples: [
         { original: "4-bit: 0101 (+5)", extended: "8-bit: 0000 0101 (+5)", rule: "MSB was 0, so pad four 0s on the left." },
-        { original: "4-bit: 1011 (-5)", extended: "8-bit: 1111 1011 (-5)", rule: "MSB was 1, so pad four 1s on the left. Check: -128 + 64 + 32 + 16 + 8 + 2 + 1 = -5!" }
+        { original: "4-bit: 1011 (-5)", extended: "8-bit: 1111 1011 (-5)", rule: "MSB was 1, so pad four 1s on the left. Check: -128 + 64 + 32 + 16 + 8 + 2 + 1 = -5!" },
+        { original: "7-bit: 1010011 (-45)", extended: "8-bit: 11010011 (-45)", rule: "In 7 bits, -45 is 1010011 (range -64 to +63). Extending to 8 bits: replicate MSB 1 into b7 -> 11010011. Notice that 6 bits (range -32 to +31) CANNOT represent -45!" }
       ]
     },
     models: [

@@ -5,6 +5,7 @@ import {
   AlertCircle, 
   Cpu, 
   ArrowRight,
+  ArrowDown,
   BookOpen,
   Sparkles,
   HelpCircle,
@@ -12,7 +13,9 @@ import {
   Layers,
   Binary,
   Hash,
-  CornerDownRight
+  CornerDownRight,
+  TrendingUp,
+  Zap
 } from 'lucide-react';
 
 /**
@@ -27,15 +30,14 @@ export const Register8BitStrip = ({
   label = "8-Bit Register",
   sublabel = "",
   highlightSign = true,
-  decodedValue = ""
+  decodedValue = "",
+  highlightIndices = []
 }) => {
-  // Ensure array has at least 8 elements, pad or slice
   const bitArr = [...bits];
   while (bitArr.length < 8) bitArr.unshift("0");
   const displayBits = bitArr.slice(-8);
 
   const getWeight = (idx) => {
-    // idx 0 is MSB (b7), idx 7 is LSB (b0)
     const bitPos = 7 - idx;
     if (bitPos === 7) {
       if (mode === "twos") return "-128";
@@ -66,18 +68,23 @@ export const Register8BitStrip = ({
         {displayBits.map((b, idx) => {
           const bitPos = 7 - idx;
           const isSignBit = bitPos === 7 && highlightSign;
+          const isCustomHighlight = highlightIndices.includes(idx);
+          const isLeadingZero = bitPos === 6 && b === "0" && label.includes("+");
+
           return (
             <div key={idx} className="flex flex-col items-center">
-              {/* Bit Index */}
               <span className="text-[10px] text-[#64748B] font-semibold mb-1">
                 b{bitPos}
               </span>
 
-              {/* Bit Cell Box */}
               <div
                 className={`w-full aspect-square max-w-[50px] flex items-center justify-center rounded-lg border-2 text-base font-black shadow-xs transition-transform ${
                   isSignBit
                     ? "bg-[#FEF3C7] border-[#F59E0B] text-[#92400E]"
+                    : isCustomHighlight
+                    ? "bg-[#EEF2FF] border-[#6366F1] text-[#4338CA] ring-2 ring-[#C7D2FE]"
+                    : isLeadingZero
+                    ? "bg-[#F1F5F9] border-[#94A3B8] text-[#475569]"
                     : b === "1"
                     ? "bg-[#DCFCE7] border-[#22C55E] text-[#15803D]"
                     : "bg-[#F8FAFC] border-[#CBD5E1] text-[#64748B]"
@@ -86,7 +93,6 @@ export const Register8BitStrip = ({
                 {b}
               </div>
 
-              {/* Positional Weight */}
               <span 
                 className={`text-[10px] mt-1 font-bold ${
                   isSignBit ? "text-[#D97706]" : "text-[#475569]"
@@ -95,7 +101,6 @@ export const Register8BitStrip = ({
                 {getWeight(idx)}
               </span>
 
-              {/* Role tag */}
               <span className="text-[9px] text-[#94A3B8] uppercase">
                 {isSignBit ? "SIGN" : `2^${bitPos}`}
               </span>
@@ -109,7 +114,7 @@ export const Register8BitStrip = ({
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded bg-[#FEF3C7] border border-[#F59E0B]" />
-            Amber = Sign Bit (b7: 0 = Positive, 1 = Negative)
+            Amber = Sign Bit (b7: 0 = Pos, 1 = Neg)
           </span>
           <span className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded bg-[#DCFCE7] border border-[#22C55E]" />
@@ -124,7 +129,383 @@ export const Register8BitStrip = ({
   );
 };
 
-// 2. Full-Width Bit-Aligned Signed 2's Complement Addition Grid
+// 2. Stacked "Positive -> Transformation -> Negative" Register Card
+export const StackedSignedTransformationCard = ({
+  model = {
+    question: "Represent +45 and -45 in 8-bit Signed 2's Complement form.",
+    posBits: ["0", "0", "1", "0", "1", "1", "0", "1"],
+    posDec: "+45",
+    negBits: ["1", "1", "0", "1", "0", "0", "1", "1"],
+    negDec: "-45",
+    transformation: null,
+    finalValue: "-45 in Signed 2's Complement: 11010011",
+    verification: "-128 + 64 + 16 + 2 + 1 = -45"
+  },
+  scheme = "twos" // "twos", "ones", "signmag"
+}) => {
+  const posBits = model.posBits || ["0", "0", "1", "0", "1", "1", "0", "1"];
+  const negBits = model.negBits || ["1", "1", "0", "1", "0", "0", "1", "1"];
+  const transform = model.transformation;
+
+  return (
+    <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 font-mono">
+      {/* Title Banner */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+        <span className="text-xs font-bold text-[#1E293B] flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#2E6F40]" />
+          {model.question}
+        </span>
+        <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+          Stacked Transformation Architecture
+        </span>
+      </div>
+
+      {/* STACK 1: TOP REGISTER STRIP (Positive Representation) */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-bold text-[#166534] flex items-center gap-1.5">
+            <span className="px-2 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC] text-[10px] uppercase font-bold">
+              Step 1: Positive Form (+N)
+            </span>
+            {model.posDec || "+45"} in 8 Bits:
+          </span>
+          <span className="text-[11px] text-[#64748B]">
+            Sign bit b7 = 0; b6 is leading padding zero
+          </span>
+        </div>
+        <Register8BitStrip 
+          bits={posBits}
+          mode="unsigned"
+          label={`${model.posDec || "+45"} Positive Register`}
+          sublabel="MSB b7 = 0, b6 = 0 leading pad"
+          highlightSign={true}
+          decodedValue={`${model.posDec || "+45"} (32 + 8 + 4 + 1)`}
+        />
+      </div>
+
+      {/* STACK 2: MIDDLE VISUAL TRANSFORMATION CONNECTOR BAR */}
+      <div className="p-4 rounded-xl bg-[#FAF8F5] border-2 border-[#DCE7E1] space-y-3">
+        <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+          <span className="text-xs font-bold uppercase text-[#4F46E5] flex items-center gap-1.5">
+            <Sparkles className="w-4 h-4 text-[#4F46E5]" />
+            Hardware Transformation Pipeline: {model.posDec || "+45"} &rarr; {model.negDec || "-45"}
+          </span>
+          <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white text-[#1E293B] border border-[#DCE7E1]">
+            {scheme === "twos" ? "Invert + 1 Rule" : scheme === "ones" ? "Invert All Rule" : "Toggle MSB Only"}
+          </span>
+        </div>
+
+        {/* Scheme-Specific Transformation Visuals */}
+        {scheme === "signmag" && (
+          <div className="space-y-2 text-xs">
+            <p className="text-[#334155] leading-relaxed">
+              <strong>The Sign-Magnitude Rule: </strong> Only the Sign Bit (b7) toggles from 0 to 1. The remaining 7 magnitude bits (b6 down to b0: 0101101 = 45) drop straight down completely unchanged!
+            </p>
+            <div className="grid grid-cols-8 gap-1 text-center py-1">
+              {posBits.map((b, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <span className="text-[10px] text-[#64748B]">b{7 - i}</span>
+                  <div className="w-8 h-8 rounded bg-white border border-[#CBD5E1] flex items-center justify-center font-bold text-xs mt-0.5">
+                    {b}
+                  </div>
+                  <ArrowDown className={`w-3.5 h-3.5 my-1 ${i === 0 ? "text-[#D97706]" : "text-[#94A3B8]"}`} />
+                  <div className={`w-8 h-8 rounded border flex items-center justify-center font-bold text-xs ${
+                    i === 0 ? "bg-[#FEF3C7] border-[#F59E0B] text-[#92400E]" : "bg-white border-[#CBD5E1] text-[#1E293B]"
+                  }`}>
+                    {negBits[i]}
+                  </div>
+                  <span className={`text-[9px] mt-0.5 font-bold ${i === 0 ? "text-[#D97706]" : "text-[#64748B]"}`}>
+                    {i === 0 ? "Flip 0->1" : "Keep"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {scheme === "ones" && (
+          <div className="space-y-2 text-xs">
+            <p className="text-[#334155] leading-relaxed">
+              <strong>The Signed 1's Complement Rule: </strong> Every single bit across all 8 positions is inverted (0 &harr; 1). Notice specifically that the leading padding zero at b6 flips from 0 to 1!
+            </p>
+            <div className="grid grid-cols-8 gap-1 text-center py-1">
+              {posBits.map((b, i) => (
+                <div key={i} className="flex flex-col items-center">
+                  <span className="text-[10px] text-[#64748B]">b{7 - i}</span>
+                  <div className="w-8 h-8 rounded bg-white border border-[#CBD5E1] flex items-center justify-center font-bold text-xs mt-0.5">
+                    {b}
+                  </div>
+                  <ArrowDown className="w-3.5 h-3.5 my-1 text-[#4F46E5]" />
+                  <div className="w-8 h-8 rounded bg-[#EEF2FF] border border-[#818CF8] text-[#312E81] flex items-center justify-center font-bold text-xs">
+                    {negBits[i]}
+                  </div>
+                  <span className="text-[9px] text-[#4F46E5] font-bold mt-0.5">
+                    {b === "0" ? "0->1" : "1->0"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {scheme === "twos" && (
+          <div className="space-y-4 text-xs">
+            {/* Panel A: Classroom 2-Step Method */}
+            <div className="p-3.5 rounded-lg bg-white border border-[#DCE7E1] space-y-2">
+              <span className="font-bold text-[#1E293B] block">
+                Standard Classroom Method (2 Steps):
+              </span>
+              <div className="overflow-x-auto">
+                <table className="w-full text-center border-collapse text-xs">
+                  <tbody>
+                    <tr className="border-b border-[#F1F5F9]">
+                      <td className="text-left font-semibold text-[#64748B] py-1">1. Positive Number (+45):</td>
+                      {posBits.map((b, i) => (
+                        <td key={i} className="py-1 px-1 font-bold text-[#1E293B]">{b}</td>
+                      ))}
+                      <td className="text-right text-[11px] text-[#166534] font-bold pl-2">+45</td>
+                    </tr>
+                    <tr className="border-b border-[#F1F5F9] bg-[#FFFBEB]">
+                      <td className="text-left font-bold text-[#D97706] py-1">2. 1's Complement (Invert all):</td>
+                      {["1", "1", "0", "1", "0", "0", "1", "0"].map((b, i) => (
+                        <td key={i} className={`py-1 px-1 font-bold ${i === 1 ? "bg-[#FEF3C7] text-[#92400E] rounded" : "text-[#D97706]"}`}>
+                          {b}
+                        </td>
+                      ))}
+                      <td className="text-right text-[11px] text-[#B45309] font-bold pl-2">b6 flips 0&rarr;1!</td>
+                    </tr>
+                    <tr className="border-b-2 border-[#1E293B]">
+                      <td className="text-left font-semibold text-[#4F46E5] py-1">3. Add 1 to LSB:</td>
+                      <td colSpan={7} className="text-right pr-2 text-[#94A3B8] font-bold">+</td>
+                      <td className="py-1 px-1 font-black text-[#4F46E5]">1</td>
+                      <td className="text-right text-[11px] text-[#4F46E5] font-bold pl-2">+1</td>
+                    </tr>
+                    <tr className="bg-[#FAF8F5]">
+                      <td className="text-left font-black text-[#2E6F40] py-1.5">4. Result 2's Complement (-45):</td>
+                      {negBits.map((b, i) => (
+                        <td key={i} className={`py-1.5 px-1 font-black ${i === 0 ? "bg-[#FEF3C7] text-[#92400E]" : "text-[#1E293B]"}`}>
+                          {b}
+                        </td>
+                      ))}
+                      <td className="text-right text-xs text-[#2E6F40] font-black pl-2">-45</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Panel B: Fast Right-to-Left Scan Shortcut */}
+            <div className="p-3.5 rounded-lg bg-[#FAF8F5] border border-[#CBD5E1] space-y-1.5">
+              <span className="font-bold text-[#4F46E5] block flex items-center gap-1.5">
+                <Zap className="w-3.5 h-3.5 text-[#4F46E5]" />
+                Fast Right-to-Left Scan Shortcut (Instant 2-Second Verification):
+              </span>
+              <p className="text-[11px] text-[#475569] leading-relaxed">
+                Scan from right (LSB) to left: Keep bits identical up to and including the <strong>first '1' bit</strong> (b0 = 1). Invert every bit to the left of that first '1' (b7..b1 flip from 0010110 &rarr; 1101001)!
+              </p>
+              <div className="flex items-center justify-center gap-1 font-bold text-xs pt-1">
+                <span className="px-2 py-0.5 rounded bg-[#EEF2FF] text-[#4338CA] border border-[#C7D2FE]">
+                  b7..b1: 1101001 (Inverted)
+                </span>
+                <span className="text-[#64748B]">&larr;</span>
+                <span className="px-2 py-0.5 rounded bg-[#DCFCE7] text-[#15803D] border border-[#86EFAC]">
+                  b0: 1 (Kept first 1)
+                </span>
+                <span className="text-[#1E293B] pl-2">= 11010011</span>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* STACK 3: BOTTOM REGISTER STRIP (Negative Representation) */}
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <span className="font-bold text-[#991B1B] flex items-center gap-1.5">
+            <span className="px-2 py-0.5 rounded bg-[#FEE2E2] text-[#DC2626] border border-[#FCA5A5] text-[10px] uppercase font-bold">
+              Step 2: Negative Form (-N)
+            </span>
+            {model.negDec || "-45"} in 8-Bit Register:
+          </span>
+          <span className="text-[11px] text-[#D97706] font-bold">
+            MSB b7 = 1 (Negative)
+          </span>
+        </div>
+        <Register8BitStrip 
+          bits={negBits}
+          mode={scheme}
+          label={`${model.negDec || "-45"} Negative Register`}
+          sublabel={model.finalValue}
+          highlightSign={true}
+          decodedValue={model.negDec || "-45"}
+        />
+      </div>
+
+      {/* 5-Second Base-10 Verification Proof Bar */}
+      {model.verification && (
+        <div className="p-3.5 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
+          <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
+          <div>
+            <strong className="font-bold">5-Second Base-10 Verification: </strong>
+            <span>{model.verification}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// 3. High-Impact Callout: "Why is Bit b6 = 1 in -45? (Leading-Zero Rule)"
+export const LeadingZeroMisconceptionCard = ({ data }) => {
+  if (!data) return null;
+
+  return (
+    <div className="p-6 rounded-2xl bg-white border-2 border-[#F59E0B] shadow-soft space-y-5 font-mono">
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#FDE68A]">
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-xl bg-[#FEF3C7] border border-[#FCD34D] flex items-center justify-center text-[#D97706]">
+            <HelpCircle className="w-4 h-4" />
+          </span>
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#92400E]">
+              {data.title}
+            </h3>
+            <span className="text-[11px] text-[#B45309] font-sans font-semibold">
+              {data.subtitle}
+            </span>
+          </div>
+        </div>
+        <span className="px-2.5 py-0.5 rounded text-[10px] font-bold uppercase bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
+          Student Dilemma Solved
+        </span>
+      </div>
+
+      {/* Student Question Box */}
+      <div className="p-4 rounded-xl bg-[#FFFBEB] border border-[#FCD34D] space-y-1 text-xs">
+        <span className="font-bold text-[#92400E] block flex items-center gap-1.5">
+          <span className="w-2 h-2 rounded-full bg-[#D97706]" />
+          The Common Student Question:
+        </span>
+        <p className="text-[#78350F] italic leading-relaxed">
+          "{data.studentDilemma}"
+        </p>
+      </div>
+
+      {/* The 2-Part Silicon Explanation */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Part A: The "Climbing the Ladder" Intuition */}
+        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
+          <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+            <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+              <TrendingUp className="w-3.5 h-3.5 text-[#2E6F40]" />
+              {data.ladderAnalogy.title}
+            </span>
+            <span className="text-[10px] font-bold text-[#2E6F40] bg-[#DCFCE7] px-2 py-0.5 rounded border border-[#86EFAC]">
+              Correct Math
+            </span>
+          </div>
+          <p className="text-[#475569] leading-relaxed">
+            {data.ladderAnalogy.explanation}
+          </p>
+          <div className="p-2.5 rounded-lg bg-[#F0FDF4] border border-[#BBF7D0] text-[#14532D] text-[11px] font-semibold leading-relaxed">
+            {data.ladderAnalogy.whyB6IsMandatory}
+          </div>
+        </div>
+
+        {/* Part B: The Common Pitfall Calculation (-93 Error) */}
+        <div className="p-4 rounded-xl bg-[#FEF2F2] border border-[#FCA5A5] space-y-2 text-xs">
+          <div className="flex items-center justify-between pb-1 border-b border-[#FCA5A5]">
+            <span className="font-bold text-[#991B1B] flex items-center gap-1.5">
+              <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626]" />
+              The "Forgot to Pad" Exam Trap
+            </span>
+            <span className="text-[10px] font-bold text-[#DC2626] bg-[#FEE2E2] px-2 py-0.5 rounded border border-[#FCA5A5]">
+              Common Exam Error
+            </span>
+          </div>
+          <p className="text-[#7F1D1D] leading-relaxed">
+            If a student forgets to pad +45 to 8 bits first and mistakenly leaves b6 as 0, writing <strong>{data.wrongPitfall.mistakenPattern}</strong>:
+          </p>
+          <div className="p-2.5 rounded-lg bg-white border border-[#FCA5A5] font-mono text-[11px] text-[#991B1B] space-y-1">
+            <span className="block font-bold">Calculation in 2's Complement:</span>
+            <span>{data.wrongPitfall.mistakenCalc}</span>
+          </div>
+          <span className="text-[11px] text-[#DC2626] font-bold block pt-1">
+            {data.wrongPitfall.verdict}
+          </span>
+        </div>
+      </div>
+
+      {/* Side-by-Side 3-Scheme Comparison of -45 */}
+      <div className="space-y-2 text-xs">
+        <span className="font-bold text-[#1E293B] block">
+          Side-by-Side Comparison: How -45 is Represented in All 3 Forms
+        </span>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {data.threeWaysMinus45.map((way, idx) => (
+            <div key={idx} className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
+              <span className="font-bold text-[#1E293B] block text-[11px]">{way.scheme}</span>
+              <div className="p-2 rounded bg-white border border-[#CBD5E1] text-center font-bold text-sm text-[#1E293B]">
+                {way.pattern}
+              </div>
+              <div className="flex items-center justify-between text-[11px] pt-1">
+                <span className="text-[#64748B]">Bit b6 status:</span>
+                <span className={`px-1.5 py-0.5 rounded font-bold ${
+                  way.b6Val === "1" ? "bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]" : "bg-[#F1F5F9] text-[#475569]"
+                }`}>
+                  b6 = {way.b6Val}
+                </span>
+              </div>
+              <p className="text-[11px] text-[#475569] leading-relaxed pt-1">
+                {way.reason}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// 4. Operand Preparation Card for 1.6B Additions
+export const OperandPrepCard = ({ operandPrep = [] }) => {
+  if (!operandPrep || operandPrep.length === 0) return null;
+
+  return (
+    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 font-mono text-xs">
+      <div className="flex items-center justify-between pb-1 border-b border-[#DCE7E1]">
+        <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+          <Layers className="w-3.5 h-3.5 text-[#2E6F40]" />
+          Step 1: 8-Bit Operand Preparation (Register Encoding)
+        </span>
+        <span className="text-[10px] text-[#64748B]">Encode operands before addition</span>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        {operandPrep.map((op, idx) => (
+          <div key={idx} className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1.5">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-sm text-[#1E293B]">{op.op}</span>
+              <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                op.type === "positive" ? "bg-[#DCFCE7] text-[#15803D]" : "bg-[#FEF3C7] text-[#92400E]"
+              }`}>
+                {op.type === "positive" ? "Positive (Direct)" : "Negative (2's Comp)"}
+              </span>
+            </div>
+            <div className="space-y-1 text-[11px] text-[#475569]">
+              {op.steps.map((st, sIdx) => (
+                <div key={sIdx} className="leading-relaxed">{st}</div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// 5. Full-Width Bit-Aligned Signed 2's Complement Addition Grid
 export const BitAlignedSignedAdditionGrid = ({
   model = {
     aDec: "+35",
@@ -146,10 +527,10 @@ export const BitAlignedSignedAdditionGrid = ({
   const sumBits = model.sumBin.split("");
   const carryBits = model.carryRow || ["0", "0", "0", "0", "0", "0", "0", "0"];
 
-  // Carry into b7 is carryBits[0] (or index 0 from left)
   const cinToSign = carryBits[0] || "0";
   const coutFromSign = model.carryOut || "0";
   const xorFlag = model.overflow ? "1" : "0";
+  const isResultNegative = sumBits[0] === "1" && !model.overflow;
 
   return (
     <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
@@ -288,7 +669,6 @@ export const BitAlignedSignedAdditionGrid = ({
 
       {/* Discarded Carry & Hardware Flags Callout */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
-        {/* Discarded Carry Explanation */}
         <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1 text-xs">
           <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
             <Cpu className="w-3.5 h-3.5 text-[#2E6F40]" />
@@ -299,7 +679,6 @@ export const BitAlignedSignedAdditionGrid = ({
           </p>
         </div>
 
-        {/* Hardware Flag Registers */}
         <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5 text-xs">
           <span className="font-bold text-[#1E293B] block">
             Hardware Status Flags:
@@ -323,6 +702,30 @@ export const BitAlignedSignedAdditionGrid = ({
         </div>
       </div>
 
+      {/* Dual-Method Negative Result Decoder (When b7 = 1) */}
+      {isResultNegative && model.dualDecode && (
+        <div className="p-4 rounded-xl bg-[#EFF6FF] border border-[#93C5FD] space-y-2 text-xs">
+          <span className="font-bold text-[#1E40AF] block flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#2563EB]" />
+            Dual-Method Negative Result Decoder (Since MSB b7 = 1):
+          </span>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-1">
+            <div className="p-3 rounded-lg bg-white border border-[#BFDBFE] space-y-1">
+              <strong className="text-[#1D4ED8] block text-[11px]">{model.dualDecode.method1.name}:</strong>
+              {model.dualDecode.method1.steps.map((st, i) => (
+                <div key={i} className="text-[#334155] text-[11px]">{st}</div>
+              ))}
+            </div>
+            <div className="p-3 rounded-lg bg-white border border-[#BFDBFE] space-y-1">
+              <strong className="text-[#1D4ED8] block text-[11px]">{model.dualDecode.method2.name}:</strong>
+              {model.dualDecode.method2.steps.map((st, i) => (
+                <div key={i} className="text-[#334155] text-[11px]">{st}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 5-Second Base-10 Verification Bar */}
       {model.verification && (
         <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
@@ -337,7 +740,7 @@ export const BitAlignedSignedAdditionGrid = ({
   );
 };
 
-// 3. Hardware Overflow Detector Diagram (SVG XOR Schematic)
+// 6. Hardware Overflow Detector Diagram (SVG XOR Schematic)
 export const OverflowDetectorDiagram = () => {
   return (
     <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
@@ -363,7 +766,6 @@ export const OverflowDetectorDiagram = () => {
       {/* SVG Diagram */}
       <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex justify-center">
         <svg viewBox="0 0 620 220" className="w-full max-w-[620px] h-auto select-none">
-          {/* Definitions */}
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
               <path d="M 0 1 L 10 5 L 0 9 z" fill="#475569" />
@@ -373,59 +775,46 @@ export const OverflowDetectorDiagram = () => {
             </marker>
           </defs>
 
-          {/* Full Adder Stage Box (b7) */}
           <rect x="180" y="40" width="160" height="130" rx="12" fill="#FFFFFF" stroke="#CBD5E1" strokeWidth="2" />
           <text x="260" y="70" textAnchor="middle" fill="#1E293B" fontSize="13" fontWeight="bold">MSB Full Adder</text>
           <text x="260" y="88" textAnchor="middle" fill="#D97706" fontSize="11" fontWeight="bold">Bit 7 Stage (Sign Bit)</text>
 
-          {/* Inputs A7 and B7 */}
           <line x1="220" y1="5" x2="220" y2="40" stroke="#475569" strokeWidth="2" markerEnd="url(#arrow)" />
           <text x="220" y="0" textAnchor="middle" fill="#1E293B" fontSize="11" fontWeight="bold">A7</text>
 
           <line x1="290" y1="5" x2="290" y2="40" stroke="#475569" strokeWidth="2" markerEnd="url(#arrow)" />
           <text x="290" y="0" textAnchor="middle" fill="#1E293B" fontSize="11" fontWeight="bold">B7</text>
 
-          {/* Carry-In from b6 stage: C7 (Cin) */}
           <line x1="390" y1="110" x2="340" y2="110" stroke="#2563EB" strokeWidth="2.5" markerEnd="url(#arrow)" />
           <text x="400" y="105" textAnchor="start" fill="#2563EB" fontSize="11" fontWeight="bold">Cin (C7)</text>
           <text x="400" y="122" textAnchor="start" fill="#64748B" fontSize="9">from Bit 6</text>
 
-          {/* Sum S7 Output downwards */}
           <line x1="260" y1="170" x2="260" y2="205" stroke="#16A34A" strokeWidth="2.5" markerEnd="url(#arrow)" />
           <text x="260" y="218" textAnchor="middle" fill="#16A34A" fontSize="11" fontWeight="bold">Sum Bit S7 (Sign)</text>
 
-          {/* Carry-Out to the left: C8 (Cout) */}
           <line x1="180" y1="110" x2="90" y2="110" stroke="#DC2626" strokeWidth="2.5" markerEnd="url(#arrow-red)" />
           <text x="75" y="105" textAnchor="end" fill="#DC2626" fontSize="11" fontWeight="bold">Cout (C8)</text>
           <text x="75" y="122" textAnchor="end" fill="#94A3B8" fontSize="9">Discarded Carry</text>
 
-          {/* Branch from Cin (C7) into XOR Gate */}
-          {/* Point 1 on Cin line: (370, 110) -> down to y=150 -> down to y=160 -> x=460 -> y=125 */}
           <circle cx="365" cy="110" r="3.5" fill="#2563EB" />
           <path d="M 365 110 L 365 160 L 460 160 L 460 125" fill="none" stroke="#2563EB" strokeWidth="2" strokeDasharray="3,3" />
 
-          {/* Branch from Cout (C8) into XOR Gate */}
           <circle cx="130" cy="110" r="3.5" fill="#DC2626" />
           <path d="M 130 110 L 130 180 L 480 180 L 480 95" fill="none" stroke="#DC2626" strokeWidth="2" strokeDasharray="3,3" />
 
-          {/* XOR Gate Symbol */}
-          {/* Position XOR at x=470..540, y=85..135 */}
           <g transform="translate(480, 85)">
-            {/* Input arc */}
             <path d="M 0 5 Q 12 25 0 45" fill="none" stroke="#4F46E5" strokeWidth="2" />
             <path d="M 5 5 Q 17 25 5 45 Q 35 45 45 25 Q 35 5 5 5 Z" fill="#EEF2FF" stroke="#4F46E5" strokeWidth="2" />
             <text x="22" y="29" textAnchor="middle" fill="#4F46E5" fontSize="10" fontWeight="black">XOR</text>
-            {/* Output line */}
             <line x1="45" y1="25" x2="80" y2="25" stroke="#7C3AED" strokeWidth="2.5" markerEnd="url(#arrow)" />
           </g>
 
-          {/* V Output Flag */}
           <rect x="565" y="95" width="50" height="30" rx="6" fill="#FDF4FF" stroke="#A855F7" strokeWidth="1.5" />
           <text x="590" y="115" textAnchor="middle" fill="#7E22CE" fontSize="12" fontWeight="black">V Flag</text>
         </svg>
       </div>
 
-      {/* Truth Table for V = Cin ⊕ Cout */}
+      {/* Truth Table */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs">
         <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
           <div className="flex items-center justify-between">
@@ -463,98 +852,123 @@ export const OverflowDetectorDiagram = () => {
   );
 };
 
-// 4. Sign-Bit Extension Visualizer (Replicating MSB)
-export const SignExtensionVisualizer = ({
-  originalBits = "1011",
-  originalVal = "-5",
-  extendedBits = "11111011",
-  extendedVal = "-5"
-}) => {
-  const origArr = originalBits.split("");
-  const extArr = extendedBits.split("");
-  const newPositionsCount = extArr.length - origArr.length;
-
+// 7. Upgraded Sign-Bit Extension Visualizer
+export const SignExtensionVisualizer = () => {
   return (
-    <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+    <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5 font-mono">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-        <span className="text-xs font-bold uppercase tracking-wider text-[#4F46E5] flex items-center gap-1.5">
-          <Layers className="w-4 h-4 text-[#4F46E5]" />
-          Sign-Bit Extension Architecture ({origArr.length}-Bit to {extArr.length}-Bit)
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="w-8 h-8 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center text-[#4F46E5]">
+            <Layers className="w-4 h-4" />
+          </span>
+          <div>
+            <h3 className="text-xs font-bold uppercase tracking-wider text-[#1E293B]">
+              Sign-Bit Extension Architecture (Replicating the MSB to the Left)
+            </h3>
+            <span className="text-[11px] text-[#64748B]">
+              Widening signed numbers into larger registers while strictly preserving decimal value
+            </span>
+          </div>
+        </div>
         <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
           Replicate the MSB
         </span>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Original k-Bit Register */}
-        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#1E293B]">Original {origArr.length}-Bit Register</span>
-            <span className="font-bold text-[#D97706]">Value: {originalVal}</span>
-          </div>
-          <div className="flex gap-1.5 justify-center py-2">
-            {origArr.map((b, i) => (
-              <div
-                key={i}
-                className={`w-10 h-10 rounded-lg flex items-center justify-center font-black text-sm border-2 ${
-                  i === 0
-                    ? "bg-[#FEF3C7] border-[#F59E0B] text-[#92400E]"
-                    : "bg-white border-[#CBD5E1] text-[#1E293B]"
-                }`}
-              >
-                {b}
-              </div>
-            ))}
-          </div>
-          <span className="text-[11px] text-[#64748B] text-center block">
-            MSB Sign Bit = {origArr[0]} ({origArr[0] === "1" ? "Negative" : "Positive"})
-          </span>
-        </div>
+      {/* Visual SVG Schematic with Curved Replication Arrows */}
+      <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex justify-center">
+        <svg viewBox="0 0 680 180" className="w-full max-w-[680px] h-auto select-none">
+          {/* Top 4-bit Register */}
+          <text x="140" y="25" textAnchor="middle" fill="#1E293B" fontSize="11" fontWeight="bold">Original 4-Bit Register (-5 = 1011)</text>
+          <g transform="translate(40, 35)">
+            <rect x="0" y="0" width="50" height="40" rx="6" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
+            <text x="25" y="25" textAnchor="middle" fill="#92400E" fontSize="16" fontWeight="bold">1</text>
+            <text x="25" y="52" textAnchor="middle" fill="#D97706" fontSize="9">MSB (Sign)</text>
 
-        {/* Extended n-Bit Register */}
-        <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
-          <div className="flex items-center justify-between text-xs">
-            <span className="font-bold text-[#1E293B]">Extended {extArr.length}-Bit Register</span>
-            <span className="font-bold text-[#15803D]">Value: {extendedVal} (Preserved!)</span>
-          </div>
-          <div className="flex gap-1.5 justify-center py-2 flex-wrap">
-            {extArr.map((b, i) => {
-              const isPadded = i < newPositionsCount;
-              return (
-                <div
-                  key={i}
-                  className={`w-9 h-9 rounded-lg flex items-center justify-center font-black text-sm border-2 ${
-                    isPadded
-                      ? "bg-[#EEF2FF] border-[#6366F1] text-[#4338CA] animate-pulse"
-                      : i === newPositionsCount
-                      ? "bg-[#FEF3C7] border-[#F59E0B] text-[#92400E]"
-                      : "bg-white border-[#CBD5E1] text-[#1E293B]"
-                  }`}
-                  title={isPadded ? "Padded Sign Replica" : "Original Bit"}
-                >
-                  {b}
-                </div>
-              );
-            })}
-          </div>
-          <span className="text-[11px] text-[#4338CA] text-center block font-semibold">
-            Left {newPositionsCount} bits copied from original MSB ({origArr[0]})
-          </span>
-        </div>
+            <rect x="55" y="0" width="50" height="40" rx="6" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5" />
+            <text x="80" y="25" textAnchor="middle" fill="#475569" fontSize="16" fontWeight="bold">0</text>
+            <text x="80" y="52" textAnchor="middle" fill="#94A3B8" fontSize="9">2^2</text>
+
+            <rect x="110" y="0" width="50" height="40" rx="6" fill="#DCFCE7" stroke="#22C55E" strokeWidth="1.5" />
+            <text x="135" y="25" textAnchor="middle" fill="#15803D" fontSize="16" fontWeight="bold">1</text>
+            <text x="135" y="52" textAnchor="middle" fill="#94A3B8" fontSize="9">2^1</text>
+
+            <rect x="165" y="0" width="50" height="40" rx="6" fill="#DCFCE7" stroke="#22C55E" strokeWidth="1.5" />
+            <text x="190" y="25" textAnchor="middle" fill="#15803D" fontSize="16" fontWeight="bold">1</text>
+            <text x="190" y="52" textAnchor="middle" fill="#94A3B8" fontSize="9">LSB</text>
+          </g>
+
+          {/* Curved Copy Arrows */}
+          <path d="M 65 80 C 65 100, 110 100, 110 115" fill="none" stroke="#6366F1" strokeWidth="2" strokeDasharray="3,3" markerEnd="url(#arrow)" />
+          <path d="M 65 80 C 65 100, 165 100, 165 115" fill="none" stroke="#6366F1" strokeWidth="2" strokeDasharray="3,3" markerEnd="url(#arrow)" />
+          <path d="M 65 80 C 65 100, 220 100, 220 115" fill="none" stroke="#6366F1" strokeWidth="2" strokeDasharray="3,3" markerEnd="url(#arrow)" />
+          <path d="M 65 80 L 65 115" fill="none" stroke="#D97706" strokeWidth="2.5" markerEnd="url(#arrow)" />
+
+          {/* Extended 8-bit Register */}
+          <text x="500" y="105" textAnchor="middle" fill="#1E293B" fontSize="11" fontWeight="bold">Extended 8-Bit Register: 1111 1011 (Value = -5 Preserved!)</text>
+          <g transform="translate(40, 120)">
+            {/* New bits b7..b4 replicated */}
+            <rect x="0" y="0" width="48" height="38" rx="6" fill="#FEF3C7" stroke="#F59E0B" strokeWidth="2" />
+            <text x="24" y="24" textAnchor="middle" fill="#92400E" fontSize="15" fontWeight="bold">1</text>
+            <text x="24" y="48" textAnchor="middle" fill="#D97706" fontSize="8">b7 (Sign)</text>
+
+            <rect x="52" y="0" width="48" height="38" rx="6" fill="#EEF2FF" stroke="#6366F1" strokeWidth="2" />
+            <text x="76" y="24" textAnchor="middle" fill="#4338CA" fontSize="15" fontWeight="bold">1</text>
+            <text x="76" y="48" textAnchor="middle" fill="#6366F1" fontSize="8">b6 (Pad)</text>
+
+            <rect x="104" y="0" width="48" height="38" rx="6" fill="#EEF2FF" stroke="#6366F1" strokeWidth="2" />
+            <text x="128" y="24" textAnchor="middle" fill="#4338CA" fontSize="15" fontWeight="bold">1</text>
+            <text x="128" y="48" textAnchor="middle" fill="#6366F1" fontSize="8">b5 (Pad)</text>
+
+            <rect x="156" y="0" width="48" height="38" rx="6" fill="#EEF2FF" stroke="#6366F1" strokeWidth="2" />
+            <text x="180" y="24" textAnchor="middle" fill="#4338CA" fontSize="15" fontWeight="bold">1</text>
+            <text x="180" y="48" textAnchor="middle" fill="#6366F1" fontSize="8">b4 (Pad)</text>
+
+            {/* Original 4 bits b3..b0 */}
+            <rect x="208" y="0" width="48" height="38" rx="6" fill="#FEF3C7" stroke="#CBD5E1" strokeWidth="1.5" />
+            <text x="232" y="24" textAnchor="middle" fill="#92400E" fontSize="15" fontWeight="bold">1</text>
+            <text x="232" y="48" textAnchor="middle" fill="#94A3B8" fontSize="8">b3</text>
+
+            <rect x="260" y="0" width="48" height="38" rx="6" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5" />
+            <text x="284" y="24" textAnchor="middle" fill="#475569" fontSize="15" fontWeight="bold">0</text>
+            <text x="284" y="48" textAnchor="middle" fill="#94A3B8" fontSize="8">b2</text>
+
+            <rect x="312" y="0" width="48" height="38" rx="6" fill="#DCFCE7" stroke="#22C55E" strokeWidth="1.5" />
+            <text x="336" y="24" textAnchor="middle" fill="#15803D" fontSize="15" fontWeight="bold">1</text>
+            <text x="336" y="48" textAnchor="middle" fill="#94A3B8" fontSize="8">b1</text>
+
+            <rect x="364" y="0" width="48" height="38" rx="6" fill="#DCFCE7" stroke="#22C55E" strokeWidth="1.5" />
+            <text x="388" y="24" textAnchor="middle" fill="#15803D" fontSize="15" fontWeight="bold">1</text>
+            <text x="388" y="48" textAnchor="middle" fill="#94A3B8" fontSize="8">b0</text>
+          </g>
+        </svg>
       </div>
 
-      <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] text-xs text-[#166534] space-y-1">
-        <strong className="block">Why Sign Extension Preserves Value Mathematically:</strong>
-        <p className="leading-relaxed">
-          For negative numbers, padding three 1s adds weights -128 + 64 + 32 + 16 = -16, which exactly matches and offsets the former 4-bit MSB weight (-16). The total value remains strictly identical!
-        </p>
+      {/* 3 Real-World Hardware Extension Cases */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
+          <span className="font-bold text-[#1E293B] block">Case A: 4-Bit to 8-Bit (+5)</span>
+          <div className="text-[11px] text-[#475569]">4-bit: 0101 &rarr; 8-bit: 0000 0101</div>
+          <div className="text-[10px] text-[#166534] font-semibold">MSB was 0, so pad four 0s. Value +5 stays +5.</div>
+        </div>
+
+        <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
+          <span className="font-bold text-[#1E293B] block">Case B: 4-Bit to 8-Bit (-5)</span>
+          <div className="text-[11px] text-[#475569]">4-bit: 1011 &rarr; 8-bit: 1111 1011</div>
+          <div className="text-[10px] text-[#166534] font-semibold">MSB was 1, so pad four 1s. Value -5 stays -5.</div>
+        </div>
+
+        <div className="p-3.5 rounded-xl bg-[#EFF6FF] border border-[#93C5FD] space-y-1.5">
+          <span className="font-bold text-[#1E40AF] block">Case C: 7-Bit to 8-Bit (-45)</span>
+          <div className="text-[11px] text-[#1E3A8A]">7-bit: 1010011 &rarr; 8-bit: 11010011</div>
+          <div className="text-[10px] text-[#1D4ED8] font-semibold">In 7 bits, -45 is 1010011. Replicating MSB gives 11010011 (-45). (Notice 6 bits cannot hold -45!).</div>
+        </div>
       </div>
     </div>
   );
 };
 
-// 5. Master 4-Bit Comparison Table (+7 to -8)
+// 8. Master 4-Bit Comparison Table (+7 to -8)
 export const FourBitMasterTable = ({ tableData = [] }) => {
   return (
     <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
@@ -591,7 +1005,6 @@ export const FourBitMasterTable = ({ tableData = [] }) => {
           </thead>
           <tbody>
             {tableData.map((row, idx) => {
-              const isPositive = !row.decimal.startsWith("-");
               const isZero = row.decimal.includes("0");
               const isAsymmetricMin = row.decimal.includes("-8");
 
@@ -643,7 +1056,7 @@ export const FourBitMasterTable = ({ tableData = [] }) => {
   );
 };
 
-// 6. Classroom Flowchart 3-Steps for Signed Representation
+// 9. Classroom Flowchart 3-Steps for Signed Representation
 export const ClassroomFlowchart3StepsSigned = ({ 
   stageData = {
     title: "Stage 2: The Standard Classroom Method",

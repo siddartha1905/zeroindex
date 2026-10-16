@@ -21,6 +21,9 @@ import {
 } from 'lucide-react';
 import { 
   Register8BitStrip, 
+  StackedSignedTransformationCard,
+  LeadingZeroMisconceptionCard,
+  OperandPrepCard,
   BitAlignedSignedAdditionGrid, 
   OverflowDetectorDiagram, 
   SignExtensionVisualizer, 
@@ -260,6 +263,9 @@ export const Section16View = ({ section }) => {
       {/* ===================================================================== */}
       {activeTab === "1.6A" && section.threeRepresentations && (
         <div className="space-y-6">
+          {/* High-Impact Callout: Leading Zero Rule (Why is b6 = 1 in -45?) */}
+          <LeadingZeroMisconceptionCard data={section.threeRepresentations.leadingZeroRule} />
+
           {/* Inner 3-Tab Switcher */}
           <div className="flex border-b border-[#DCE7E1] gap-4">
             <button
@@ -395,53 +401,54 @@ export const Section16View = ({ section }) => {
                     Worked Engineering Models: Signed 2's Complement
                   </h4>
                   <span className="text-[10px] font-mono text-[#64748B]">
-                    Question &rarr; Register Strip &rarr; Step-by-Step &rarr; Verification
+                    Question &rarr; Stacked Registers &rarr; Derivation &rarr; Verification
                   </span>
                 </div>
 
                 {section.threeRepresentations.signedTwos.models.map((model) => (
-                  <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                      <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#2E6F40]" />
-                        {model.question}
-                      </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                        {model.conceptTag}
-                      </span>
-                    </div>
+                  model.posBits && model.negBits ? (
+                    <StackedSignedTransformationCard key={model.id} model={model} scheme="twos" />
+                  ) : (
+                    <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#2E6F40]" />
+                          {model.question}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                          {model.conceptTag}
+                        </span>
+                      </div>
 
-                    {/* Register Strip */}
-                    <Register8BitStrip 
-                      bits={model.registerBits}
-                      mode="twos"
-                      label="8-Bit Register Layout"
-                      sublabel={model.finalValue}
-                      highlightSign={true}
-                      decodedValue={model.finalValue}
-                    />
+                      <Register8BitStrip 
+                        bits={model.registerBits}
+                        mode="twos"
+                        label="8-Bit Register Layout"
+                        sublabel={model.finalValue}
+                        highlightSign={true}
+                        decodedValue={model.finalValue}
+                      />
 
-                    {/* Step-by-Step Derivation */}
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
-                      <span className="text-[10px] font-bold uppercase text-[#64748B] block">
-                        Step-by-Step Silicon Derivation:
-                      </span>
-                      {model.stepByStep.map((st, i) => (
-                        <div key={i} className="text-[#334155] leading-relaxed">
-                          {st}
+                      <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
+                        <span className="text-[10px] font-bold uppercase text-[#64748B] block">
+                          Step-by-Step Silicon Derivation:
+                        </span>
+                        {model.stepByStep.map((st, i) => (
+                          <div key={i} className="text-[#334155] leading-relaxed">
+                            {st}
+                          </div>
+                        ))}
+                      </div>
+
+                      <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
+                        <div>
+                          <strong className="font-bold">5-Second Verification: </strong>
+                          <span>{model.verification}</span>
                         </div>
-                      ))}
-                    </div>
-
-                    {/* 5-Second Base-10 Verification */}
-                    <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
-                      <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
-                      <div>
-                        <strong className="font-bold">5-Second Verification: </strong>
-                        <span>{model.verification}</span>
                       </div>
                     </div>
-                  </div>
+                  )
                 ))}
               </div>
             </div>
@@ -515,40 +522,44 @@ export const Section16View = ({ section }) => {
                   Worked Engineering Models: Sign-Magnitude
                 </h4>
                 {section.threeRepresentations.signMagnitude.models.map((model) => (
-                  <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                      <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#D97706]" />
-                        {model.question}
-                      </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
-                        {model.conceptTag}
-                      </span>
-                    </div>
+                  model.posBits && model.negBits ? (
+                    <StackedSignedTransformationCard key={model.id} model={model} scheme="signmag" />
+                  ) : (
+                    <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#D97706]" />
+                          {model.question}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#FEF3C7] text-[#92400E] border border-[#FCD34D]">
+                          {model.conceptTag}
+                        </span>
+                      </div>
 
-                    <Register8BitStrip 
-                      bits={model.registerBits}
-                      mode="signmag"
-                      label="Sign-Magnitude Register"
-                      sublabel={model.finalValue}
-                      highlightSign={true}
-                      decodedValue={model.finalValue}
-                    />
+                      <Register8BitStrip 
+                        bits={model.registerBits}
+                        mode="signmag"
+                        label="Sign-Magnitude Register"
+                        sublabel={model.finalValue}
+                        highlightSign={true}
+                        decodedValue={model.finalValue}
+                      />
 
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
-                      <span className="text-[10px] font-bold uppercase text-[#64748B] block">
-                        Derivation Steps:
-                      </span>
-                      {model.stepByStep.map((st, i) => (
-                        <div key={i} className="text-[#334155] leading-relaxed">{st}</div>
-                      ))}
-                    </div>
+                      <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
+                        <span className="text-[10px] font-bold uppercase text-[#64748B] block">
+                          Derivation Steps:
+                        </span>
+                        {model.stepByStep.map((st, i) => (
+                          <div key={i} className="text-[#334155] leading-relaxed">{st}</div>
+                        ))}
+                      </div>
 
-                    <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
-                      <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
-                      <span>{model.verification}</span>
+                      <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
+                        <span>{model.verification}</span>
+                      </div>
                     </div>
-                  </div>
+                  )
                 ))}
               </div>
             </div>
@@ -608,40 +619,44 @@ export const Section16View = ({ section }) => {
                   Worked Engineering Models: Signed 1's Complement
                 </h4>
                 {section.threeRepresentations.signedOnes.models.map((model) => (
-                  <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
-                      <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
-                        <span className="w-2 h-2 rounded-full bg-[#4F46E5]" />
-                        {model.question}
-                      </span>
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
-                        {model.conceptTag}
-                      </span>
-                    </div>
+                  model.posBits && model.negBits ? (
+                    <StackedSignedTransformationCard key={model.id} model={model} scheme="ones" />
+                  ) : (
+                    <div key={model.id} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4 font-mono">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-[#DCE7E1]">
+                        <span className="text-xs font-bold text-[#1E293B] flex items-center gap-1.5">
+                          <span className="w-2 h-2 rounded-full bg-[#4F46E5]" />
+                          {model.question}
+                        </span>
+                        <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-[#EEF2FF] text-[#4F46E5] border border-[#C7D2FE]">
+                          {model.conceptTag}
+                        </span>
+                      </div>
 
-                    <Register8BitStrip 
-                      bits={model.registerBits}
-                      mode="ones"
-                      label="1's Complement Register"
-                      sublabel={model.finalValue}
-                      highlightSign={true}
-                      decodedValue={model.finalValue}
-                    />
+                      <Register8BitStrip 
+                        bits={model.registerBits}
+                        mode="ones"
+                        label="1's Complement Register"
+                        sublabel={model.finalValue}
+                        highlightSign={true}
+                        decodedValue={model.finalValue}
+                      />
 
-                    <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
-                      <span className="text-[10px] font-bold uppercase text-[#64748B] block">
-                        Derivation Steps:
-                      </span>
-                      {model.stepByStep.map((st, i) => (
-                        <div key={i} className="text-[#334155] leading-relaxed">{st}</div>
-                      ))}
-                    </div>
+                      <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
+                        <span className="text-[10px] font-bold uppercase text-[#64748B] block">
+                          Derivation Steps:
+                        </span>
+                        {model.stepByStep.map((st, i) => (
+                          <div key={i} className="text-[#334155] leading-relaxed">{st}</div>
+                        ))}
+                      </div>
 
-                    <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
-                      <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
-                      <span>{model.verification}</span>
+                      <div className="p-3 rounded-xl bg-[#F0FDF4] border border-[#BBF7D0] flex items-center gap-2.5 text-xs text-[#166534]">
+                        <CheckCircle2 className="w-4 h-4 shrink-0 text-[#16A34A]" />
+                        <span>{model.verification}</span>
+                      </div>
                     </div>
-                  </div>
+                  )
                 ))}
               </div>
             </div>
@@ -743,7 +758,12 @@ export const Section16View = ({ section }) => {
                   <span className="text-[#2E6F40] font-bold">{cs.example}</span>
                 </div>
 
-                {/* Grid */}
+                {/* Step 1: 8-Bit Operand Preparation */}
+                {cs.model.operandPrep && (
+                  <OperandPrepCard operandPrep={cs.model.operandPrep} />
+                )}
+
+                {/* Addition Grid */}
                 <BitAlignedSignedAdditionGrid model={cs.model} />
 
                 {/* Step-by-Step Derivation */}
@@ -858,13 +878,8 @@ export const Section16View = ({ section }) => {
           {/* Hardware Overflow Detector Diagram */}
           <OverflowDetectorDiagram />
 
-          {/* Sign Extension Visualizer */}
-          <SignExtensionVisualizer 
-            originalBits="1011"
-            originalVal="-5"
-            extendedBits="11111011"
-            extendedVal="-5"
-          />
+          {/* Upgraded Sign Extension Visualizer */}
+          <SignExtensionVisualizer />
 
           {/* 4 Worked Models for Overflow & Sign Extension */}
           <div className="space-y-6">
@@ -889,7 +904,7 @@ export const Section16View = ({ section }) => {
                   </span>
                 </div>
 
-                {/* If it has carryRow, render grid or comparison */}
+                {/* If it has carryRow, render grid */}
                 {model.carryRow && (
                   <BitAlignedSignedAdditionGrid model={{
                     aDec: model.aDec,
