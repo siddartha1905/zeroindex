@@ -12,7 +12,7 @@ import { dldSyllabus } from '../data/dldSyllabus';
 import { dldUnit1 } from '../data/dldUnit1';
 import { dldUnit1Master } from '../data/dldUnit1Master';
 import { UnitWorkspace } from './UnitWorkspace';
-import { SolversHub } from './SolversHub';
+import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
 
@@ -257,7 +257,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
 
         {/* TAB 2: Interactive Solvers Hub */}
         {activeTab === 'solvers' && (
-          <SolversHub onNavigate={() => {}} />
+          <InteractiveSolvers onNavigate={() => {}} />
         )}
 
         {/* TAB 3: Practice Arena */}
