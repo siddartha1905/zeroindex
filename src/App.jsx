@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { ConfigProvider } from 'antd';
 import { antdThemeConfig } from './theme/pastelTheme';
-import { PortalLanding } from './components/PortalLanding';
+import { MainHome } from './components/MainHome';
 import { DldSubjectHome } from './components/DldSubjectHome';
 import { DldWorkspace } from './components/DldWorkspace';
 import { RoadmapsView } from './components/RoadmapsView';
@@ -43,9 +43,10 @@ export function App() {
         
         {/* LEVEL 1: ZeroIndex Main Portal Landing Page */}
         {currentLevel === 'portal' && (
-          <PortalLanding 
+          <MainHome 
             onSelectDld={goToDldHome}
             onSelectRoadmaps={goToRoadmaps}
+            onOpenWorkspaceTab={goToDldWorkspace}
           />
         )}
 
