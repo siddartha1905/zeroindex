@@ -807,9 +807,53 @@ const UniversalBaseConverterSolver = () => {
                     </table>
                   </div>
 
-                  <div className="p-3 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] text-xs font-mono text-[#065F46] font-bold flex items-center justify-between">
-                    <span>Read from bottom (MSB) to top (LSB):</span>
-                    <span className="text-sm">({divisionSteps.divData.resultStr})_{toBase}</span>
+                  {/* Visual Upward Remainder Collector Strip */}
+                  <div className="p-4 rounded-xl bg-[#ECFDF5] border border-[#A7F3D0] space-y-3 font-mono">
+                    <div className="flex items-center justify-between text-xs text-[#065F46] font-bold">
+                      <span className="flex items-center gap-1.5 uppercase">
+                        <ArrowUp className="w-4 h-4 text-[#2E6F40]" />
+                        Upward Remainder Collector: Bottom Step (MSB) &rarr; Top Step (LSB)
+                      </span>
+                      <span className="text-[10px] text-[#2E6F40] bg-white px-2 py-0.5 rounded border border-[#A7F3D0]">
+                        Read Order: Upwards (&uarr;)
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-[#065F46] leading-relaxed">
+                      Always collect remainders starting from the bottom row (MSB, Most Significant Digit) up to the top row (LSB, Least Significant Digit) so digits are never written backwards!
+                    </p>
+                    <div className="flex flex-wrap items-center gap-2 pt-1">
+                      <span className="text-xs font-bold text-[#2E6F40] flex items-center gap-1 mr-1">
+                        <span className="px-2 py-0.5 rounded bg-emerald-200 text-emerald-900 text-[10px] uppercase font-black">Collect:</span>
+                      </span>
+                      {[...divisionSteps.divData.steps].reverse().map((st, sIdx, arr) => (
+                        <div key={st.step} className="flex items-center gap-1.5">
+                          <div className={`flex flex-col items-center justify-center p-2 rounded-xl border min-w-[50px] text-center shadow-2xs ${
+                            sIdx === 0 
+                              ? "bg-emerald-100 border-emerald-400 text-emerald-900 ring-2 ring-emerald-300" 
+                              : sIdx === arr.length - 1
+                              ? "bg-amber-100 border-amber-400 text-amber-900"
+                              : "bg-white border-[#DCE7E1] text-[#1E293B]"
+                          }`}>
+                            <span className="text-[9px] font-black uppercase tracking-wider block">
+                              {sIdx === 0 ? "MSB" : sIdx === arr.length - 1 ? "LSB" : `d${arr.length - 1 - sIdx}`}
+                            </span>
+                            <span className="text-base font-black">
+                              {st.hexSymbol}
+                            </span>
+                            <span className="text-[8px] text-[#64748B]">
+                              Step {st.step}
+                            </span>
+                          </div>
+                          {sIdx < arr.length - 1 && (
+                            <span className="text-xs font-bold text-[#2E6F40]">&larr;</span>
+                          )}
+                        </div>
+                      ))}
+                      <span className="text-xs font-bold text-[#2E6F40] mx-1">&rarr;</span>
+                      <span className="text-sm font-black text-[#2E6F40] bg-white px-3 py-1.5 rounded-xl border border-[#A7F3D0] shadow-2xs">
+                        ({divisionSteps.divData.resultStr})_{toBase}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -858,10 +902,52 @@ const UniversalBaseConverterSolver = () => {
                     </div>
                   )}
 
+                  {/* Visual Downward Carry Collector Strip */}
                   {divisionSteps.mulData.steps.length > 0 && (
-                    <div className="p-3 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] text-xs font-mono text-[#3730A3] font-bold flex items-center justify-between">
-                      <span>Read from top to bottom:</span>
-                      <span className="text-sm">(0.{divisionSteps.mulData.resultStr})_{toBase}</span>
+                    <div className="p-4 rounded-xl bg-[#EEF2FF] border border-[#C7D2FE] space-y-3 font-mono">
+                      <div className="flex items-center justify-between text-xs text-[#3730A3] font-bold">
+                        <span className="flex items-center gap-1.5 uppercase">
+                          <ArrowDown className="w-4 h-4 text-[#4F46E5]" />
+                          Downward Carry Collector: Top Step (b-1) &rarr; Bottom Step
+                        </span>
+                        <span className="text-[10px] text-[#4F46E5] bg-white px-2 py-0.5 rounded border border-[#C7D2FE]">
+                          Read Order: Downwards (&darr;)
+                        </span>
+                      </div>
+                      <p className="text-[11px] text-[#3730A3] leading-relaxed">
+                        Extracted carries from successive multiplication are written sequentially downwards starting immediately after the radix point.
+                      </p>
+                      <div className="flex flex-wrap items-center gap-2 pt-1">
+                        <span className="text-xs font-bold text-[#4F46E5] flex items-center gap-1 mr-1">
+                          <span className="px-2 py-0.5 rounded bg-indigo-200 text-indigo-900 text-[10px] uppercase font-black">Collect:</span>
+                        </span>
+                        {divisionSteps.mulData.steps.map((st, sIdx, arr) => (
+                          <div key={st.step} className="flex items-center gap-1.5">
+                            <div className={`flex flex-col items-center justify-center p-2 rounded-xl border min-w-[50px] text-center shadow-2xs ${
+                              sIdx === 0 
+                                ? "bg-indigo-100 border-indigo-400 text-indigo-900 ring-2 ring-indigo-300" 
+                                : "bg-white border-[#DCE7E1] text-[#1E293B]"
+                            }`}>
+                              <span className="text-[9px] font-black uppercase tracking-wider block">
+                                {sIdx === 0 ? "b-1" : `b-${sIdx + 1}`}
+                              </span>
+                              <span className="text-base font-black">
+                                {st.hexSymbol}
+                              </span>
+                              <span className="text-[8px] text-[#64748B]">
+                                Step {st.step}
+                              </span>
+                            </div>
+                            {sIdx < arr.length - 1 && (
+                              <span className="text-xs font-bold text-[#4F46E5]">&rarr;</span>
+                            )}
+                          </div>
+                        ))}
+                        <span className="text-xs font-bold text-[#4F46E5] mx-1">&rarr;</span>
+                        <span className="text-sm font-black text-[#4F46E5] bg-white px-3 py-1.5 rounded-xl border border-[#C7D2FE] shadow-2xs">
+                          (0.{divisionSteps.mulData.resultStr})_{toBase}
+                        </span>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -1699,9 +1785,14 @@ const BinaryArithmeticGridSolver = () => {
           </div>
 
           {arithmeticResult.effNote && (
-            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-mono flex items-center gap-2">
-              <Info className="w-4 h-4 text-rose-600 flex-shrink-0" />
-              <span>{arithmeticResult.effNote}</span>
+            <div className="p-4 rounded-xl bg-rose-50 border-2 border-rose-300 text-rose-900 text-xs font-mono space-y-1">
+              <div className="flex items-center gap-2 font-bold text-sm text-rose-800">
+                <AlertCircle className="w-4 h-4 text-rose-600 flex-shrink-0" />
+                <span>Negative Binary Subtraction Rule: A &lt; B ({arithmeticResult.decA} &lt; {arithmeticResult.decB})</span>
+              </div>
+              <p className="leading-relaxed">
+                Since A &lt; B, we compute -(B - A) by swapping the larger number B on top and attaching a negative (-) sign to the final difference!
+              </p>
             </div>
           )}
 
@@ -1717,13 +1808,33 @@ const BinaryArithmeticGridSolver = () => {
                   <div className="flex items-start gap-1 sm:gap-2">
                     
                     {/* Far Left Operator Indicator Column */}
-                    <div className="flex flex-col items-center w-8 sm:w-10 text-center font-bold text-xs text-[#64748B] pt-8 space-y-3">
+                    <div className="flex flex-col items-center w-12 sm:w-14 text-center font-bold text-xs text-[#64748B] pt-8 space-y-3">
                       <div className="h-6" /> {/* Spacer for Carry/Borrow row */}
-                      <div className="h-10 flex items-center justify-center font-mono text-sm text-[#64748B]">A</div>
-                      <div className="h-10 flex items-center justify-center font-mono text-base font-black text-[#2E6F40]">{op}</div>
+                      <div className="h-10 flex items-center justify-center font-mono text-xs font-bold text-[#1E293B]">
+                        {op === "-" && arithmeticResult.isNegative ? "B (Min)" : "A"}
+                      </div>
+                      <div className="h-10 flex items-center justify-center font-mono text-xs font-black text-[#2E6F40]">
+                        {op === "-" && arithmeticResult.isNegative ? "- A (Sub)" : op}
+                      </div>
                       <div className="w-full border-t-2 border-[#1E293B] my-1" />
                       <div className="h-11 flex items-center justify-center font-mono text-base font-black text-[#2E6F40]">=</div>
                     </div>
+
+                    {/* Dedicated Negative Sign Column when A < B */}
+                    {op === "-" && arithmeticResult.isNegative && (
+                      <div className="flex flex-col items-center w-10 sm:w-12 text-center space-y-1.5">
+                        <span className="text-[10px] text-rose-700 font-bold h-6 flex items-center justify-center bg-rose-50 px-1.5 rounded border border-rose-200 w-full">
+                          SIGN
+                        </span>
+                        <div className="h-6" />
+                        <div className="h-10" />
+                        <div className="h-10" />
+                        <div className="w-full border-t-2 border-[#1E293B] my-1" />
+                        <div className="w-10 h-11 sm:w-12 sm:h-11 rounded-xl border-2 border-rose-500 bg-rose-100 text-rose-800 flex items-center justify-center font-black text-2xl shadow-2xs">
+                          -
+                        </div>
+                      </div>
+                    )}
 
                     {/* Columns Stack */}
                     {arithmeticResult.orderedCols.map((col, cIdx) => {
@@ -1815,7 +1926,7 @@ const BinaryArithmeticGridSolver = () => {
                   {/* Bottom Grand Result Bar */}
                   <div className="mt-4 pt-3 border-t border-[#DCE7E1] flex items-center justify-between w-full max-w-xl text-xs">
                     <span className="font-bold text-[#64748B]">Final Aligned Result:</span>
-                    <span className="text-base font-black text-[#2E6F40]">
+                    <span className={`text-base font-black ${arithmeticResult.isNegative ? "text-rose-600" : "text-[#2E6F40]"}`}>
                       ({arithmeticResult.binRes})₂
                     </span>
                     <span className="text-[#64748B]">
@@ -2125,6 +2236,66 @@ const ComplementsSubtractorSolver = () => {
       };
     }
 
+    // Step 2 Detailed per-bit/digit transformation columns
+    const charsN = fullPadN.split('');
+    let step2GridCols = [];
+
+    if (compType === "ones") {
+      step2GridCols = charsN.map(ch => {
+        if (ch === '.') return { isRadix: true };
+        const flip = ch === '0' ? '1' : '0';
+        return { orig: ch, flip, finalDigit: flip };
+      });
+    } else if (compType === "twos") {
+      const nonDotFlips = charsN.filter(c => c !== '.').map(c => c === '0' ? '1' : '0');
+      let c = 1;
+      const add1CarryArr = Array(nonDotFlips.length).fill(0);
+      const twosDigits = Array(nonDotFlips.length).fill('0');
+      for (let i = nonDotFlips.length - 1; i >= 0; i--) {
+        const s = parseInt(nonDotFlips[i], 2) + c;
+        twosDigits[i] = (s % 2).toString();
+        add1CarryArr[i] = c;
+        c = Math.floor(s / 2);
+      }
+      let digitIdx = 0;
+      step2GridCols = charsN.map(ch => {
+        if (ch === '.') return { isRadix: true };
+        const flip = ch === '0' ? '1' : '0';
+        const cIn = add1CarryArr[digitIdx];
+        const isLsb = digitIdx === nonDotFlips.length - 1;
+        const finalDigit = twosDigits[digitIdx];
+        digitIdx++;
+        return { orig: ch, flip, cIn, isLsb, finalDigit };
+      });
+    } else if (compType === "nines") {
+      step2GridCols = charsN.map(ch => {
+        if (ch === '.') return { isRadix: true };
+        const finalDigit = (9 - parseInt(ch, 10)).toString();
+        return { orig: ch, topNine: "9", finalDigit };
+      });
+    } else if (compType === "tens") {
+      const nonDotNines = charsN.filter(c => c !== '.').map(c => (9 - parseInt(c, 10)).toString());
+      let c = 1;
+      const add1CarryArr = Array(nonDotNines.length).fill(0);
+      const tensDigits = Array(nonDotNines.length).fill('0');
+      for (let i = nonDotNines.length - 1; i >= 0; i--) {
+        const s = parseInt(nonDotNines[i], 10) + c;
+        tensDigits[i] = (s % 10).toString();
+        add1CarryArr[i] = c;
+        c = Math.floor(s / 10);
+      }
+      let digitIdx = 0;
+      step2GridCols = charsN.map(ch => {
+        if (ch === '.') return { isRadix: true };
+        const ninesDigit = (9 - parseInt(ch, 10)).toString();
+        const cIn = add1CarryArr[digitIdx];
+        const isLsb = digitIdx === nonDotNines.length - 1;
+        const finalDigit = tensDigits[digitIdx];
+        digitIdx++;
+        return { orig: ch, topNine: "9", ninesDigit, cIn, isLsb, finalDigit };
+      });
+    }
+
     // Step 3: Perform Addition M + Comp(N) column by column
     const noDotM = fullPadM.replace('.', '');
     const noDotCompN = compNStr.replace('.', '');
@@ -2182,9 +2353,11 @@ const ComplementsSubtractorSolver = () => {
       }
     }
 
-    // Step 4: Decision Diamond Evaluation
+    // Step 4: Decision Diamond Evaluation & Graphical Re-Complementation Calculations
     let finalAnswer = "";
     let step4Details = null;
+    let step4RecompCols = [];
+    let fastScanData = null;
 
     if (hasCarry) {
       if (compType === "twos" || compType === "tens") {
@@ -2206,20 +2379,95 @@ const ComplementsSubtractorSolver = () => {
     } else {
       // Negative result: Re-complement sum
       let reCompStr = "";
+      const charsS = rawSumFormatted.split('');
+
       if (compType === "ones") {
         reCompStr = rawSumFormatted.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
+        step4RecompCols = charsS.map(ch => {
+          if (ch === '.') return { isRadix: true };
+          const flip = ch === '0' ? '1' : '0';
+          return { digitS: ch, flip, magDigit: flip };
+        });
       } else if (compType === "twos") {
         const ones = rawSumFormatted.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
         const onesNoDot = ones.replace('.', '');
         const twosVal = (parseInt(onesNoDot, 2) + 1).toString(2).padStart(onesNoDot.length, '0');
         reCompStr = maxFrac > 0 ? `${twosVal.slice(0, maxInt)}.${twosVal.slice(maxInt)}` : twosVal;
+
+        const nonDotFlips = charsS.filter(c => c !== '.').map(c => c === '0' ? '1' : '0');
+        let c = 1;
+        const add1CarryArr = Array(nonDotFlips.length).fill(0);
+        const magDigits = Array(nonDotFlips.length).fill('0');
+        for (let i = nonDotFlips.length - 1; i >= 0; i--) {
+          const s = parseInt(nonDotFlips[i], 2) + c;
+          magDigits[i] = (s % 2).toString();
+          add1CarryArr[i] = c;
+          c = Math.floor(s / 2);
+        }
+
+        const nonDotS = charsS.filter(c => c !== '.');
+        let firstOneIdx = -1;
+        for (let i = nonDotS.length - 1; i >= 0; i--) {
+          if (nonDotS[i] === '1') {
+            firstOneIdx = i;
+            break;
+          }
+        }
+
+        let digitIdx = 0;
+        step4RecompCols = charsS.map(ch => {
+          if (ch === '.') return { isRadix: true };
+          const flip = ch === '0' ? '1' : '0';
+          const cIn = add1CarryArr[digitIdx];
+          const isLsb = digitIdx === nonDotFlips.length - 1;
+          const magDigit = magDigits[digitIdx];
+          const isKeep = firstOneIdx !== -1 && digitIdx >= firstOneIdx;
+          digitIdx++;
+          return { digitS: ch, flip, cIn, isLsb, magDigit, isKeep };
+        });
+
+        fastScanData = {
+          firstOneIdx,
+          items: nonDotS.map((bit, idx) => ({
+            bit,
+            isKeep: firstOneIdx !== -1 && idx >= firstOneIdx,
+            outBit: firstOneIdx !== -1 && idx >= firstOneIdx ? bit : (bit === '0' ? '1' : '0')
+          }))
+        };
       } else if (compType === "nines") {
         reCompStr = rawSumFormatted.split('').map(ch => ch === '.' ? '.' : (9 - parseInt(ch, 10)).toString()).join('');
+        step4RecompCols = charsS.map(ch => {
+          if (ch === '.') return { isRadix: true };
+          const magDigit = (9 - parseInt(ch, 10)).toString();
+          return { digitS: ch, topNine: "9", magDigit };
+        });
       } else if (compType === "tens") {
         const nines = rawSumFormatted.split('').map(ch => ch === '.' ? '.' : (9 - parseInt(ch, 10)).toString()).join('');
         const ninesNoDot = nines.replace('.', '');
         const tensVal = (parseInt(ninesNoDot, 10) + 1).toString(10).padStart(ninesNoDot.length, '0');
         reCompStr = maxFrac > 0 ? `${tensVal.slice(0, maxInt)}.${tensVal.slice(maxInt)}` : tensVal;
+
+        const nonDotNines = charsS.filter(c => c !== '.').map(c => (9 - parseInt(c, 10)).toString());
+        let c = 1;
+        const add1CarryArr = Array(nonDotNines.length).fill(0);
+        const magDigits = Array(nonDotNines.length).fill('0');
+        for (let i = nonDotNines.length - 1; i >= 0; i--) {
+          const s = parseInt(nonDotNines[i], 10) + c;
+          magDigits[i] = (s % 10).toString();
+          add1CarryArr[i] = c;
+          c = Math.floor(s / 10);
+        }
+
+        let digitIdx = 0;
+        step4RecompCols = charsS.map(ch => {
+          if (ch === '.') return { isRadix: true };
+          const ninesDigit = (9 - parseInt(ch, 10)).toString();
+          const cIn = add1CarryArr[digitIdx];
+          const isLsb = digitIdx === nonDotNines.length - 1;
+          const magDigit = magDigits[digitIdx];
+          digitIdx++;
+          return { digitS: ch, topNine: "9", ninesDigit, cIn, isLsb, magDigit };
+        });
       }
 
       finalAnswer = `-${reCompStr}`;
@@ -2239,6 +2487,7 @@ const ComplementsSubtractorSolver = () => {
       decN,
       decDiff,
       step2Visual,
+      step2GridCols,
       compNStr,
       addCols,
       coutBit,
@@ -2247,6 +2496,8 @@ const ComplementsSubtractorSolver = () => {
       eacResult,
       eacAddCols,
       step4Details,
+      step4RecompCols,
+      fastScanData,
       finalAnswer
     };
   }, [minuendM, subtrahendN, compType]);
@@ -2685,7 +2936,7 @@ const ComplementsSubtractorSolver = () => {
               </div>
 
               {/* Step 2: Compute Complement of N (Visual Transformation Pipeline) */}
-              <div className="p-5 rounded-xl bg-white border border-[#DCE7E1] space-y-3">
+              <div className="p-5 rounded-xl bg-white border border-[#DCE7E1] space-y-4">
                 <span className="font-bold text-[#1E293B] uppercase text-xs block">
                   Step 2: Compute {compType.toUpperCase()} Complement of Equalized N
                 </span>
@@ -2717,6 +2968,187 @@ const ComplementsSubtractorSolver = () => {
                     <strong className="text-[#D97706]">{subtractionResult.compNStr}</strong>
                   </div>
                 </div>
+
+                {/* Individual Aligned Bit/Digit Complementation Grid */}
+                {subtractionResult.step2GridCols && (
+                  <div className="overflow-x-auto pt-1">
+                    <div className="inline-flex flex-col items-center min-w-full justify-center p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1]">
+                      <span className="text-[11px] font-bold text-[#64748B] pb-2 text-center uppercase tracking-wider block">
+                        Bit-by-Bit Complementation Grid ({compType.toUpperCase()} Complement):
+                      </span>
+                      <div className="flex items-start gap-1 sm:gap-1.5">
+                        
+                        {/* Row Labels on left */}
+                        <div className="flex flex-col items-end w-24 sm:w-28 text-right font-bold text-[10px] text-[#64748B] pt-0 space-y-1">
+                          <div className="h-8 flex items-center justify-end">Equalized N:</div>
+                          {compType === "ones" && (
+                            <>
+                              <div className="h-5 flex items-center justify-end text-[#4F46E5]">Flip:</div>
+                              <div className="w-full border-t border-[#1E293B] my-0.5" />
+                              <div className="h-9 flex items-center justify-end text-[#D97706] font-black">1's Comp:</div>
+                            </>
+                          )}
+                          {compType === "twos" && (
+                            <>
+                              <div className="h-8 flex items-center justify-end text-[#4F46E5]">Invert (1's):</div>
+                              <div className="h-6 flex items-center justify-end text-[#D97706]">+1 LSB:</div>
+                              <div className="w-full border-t border-[#1E293B] my-0.5" />
+                              <div className="h-9 flex items-center justify-end text-[#2E6F40] font-black">2's Comp:</div>
+                            </>
+                          )}
+                          {compType === "nines" && (
+                            <>
+                              <div className="h-8 flex items-center justify-end text-[#64748B]">All 9s:</div>
+                              <div className="h-8 flex items-center justify-end text-[#4F46E5]">- N:</div>
+                              <div className="w-full border-t border-[#1E293B] my-0.5" />
+                              <div className="h-9 flex items-center justify-end text-[#D97706] font-black">9's Comp:</div>
+                            </>
+                          )}
+                          {compType === "tens" && (
+                            <>
+                              <div className="h-8 flex items-center justify-end text-[#64748B]">9's Comp:</div>
+                              <div className="h-6 flex items-center justify-end text-[#D97706]">+1 LSB:</div>
+                              <div className="w-full border-t border-[#1E293B] my-0.5" />
+                              <div className="h-9 flex items-center justify-end text-[#2E6F40] font-black">10's Comp:</div>
+                            </>
+                          )}
+                        </div>
+
+                        {/* Columns */}
+                        {subtractionResult.step2GridCols.map((col, idx) => {
+                          if (col.isRadix) {
+                            return (
+                              <div key={idx} className="flex flex-col items-center w-6 text-center">
+                                <div className="h-8 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                {compType === "ones" && (
+                                  <>
+                                    <div className="h-5" />
+                                    <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                    <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                  </>
+                                )}
+                                {compType === "twos" && (
+                                  <>
+                                    <div className="h-8 flex items-center justify-center text-xl font-black text-indigo-700">.</div>
+                                    <div className="h-6" />
+                                    <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                    <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                  </>
+                                )}
+                                {compType === "nines" && (
+                                  <>
+                                    <div className="h-8 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                    <div className="h-8" />
+                                    <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                    <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                  </>
+                                )}
+                                {compType === "tens" && (
+                                  <>
+                                    <div className="h-8 flex items-center justify-center text-xl font-black text-indigo-700">.</div>
+                                    <div className="h-6" />
+                                    <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                    <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                  </>
+                                )}
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div key={idx} className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                              {/* Row 1: Equalized N */}
+                              <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#1E293B]">
+                                {col.orig}
+                              </div>
+
+                              {/* 1's Complement */}
+                              {compType === "ones" && (
+                                <>
+                                  <div className="h-5 flex items-center justify-center text-[10px] text-[#4F46E5] font-bold">
+                                    &darr;
+                                  </div>
+                                  <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                  <div className="w-full h-9 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-black text-sm text-[#3730A3]">
+                                    {col.finalDigit}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* 2's Complement */}
+                              {compType === "twos" && (
+                                <>
+                                  <div className="w-full h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-bold text-sm text-[#3730A3]">
+                                    {col.flip}
+                                  </div>
+                                  <div className="h-6 flex items-center justify-center">
+                                    {col.isLsb ? (
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black">
+                                        +1
+                                      </span>
+                                    ) : col.cIn === 1 ? (
+                                      <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-bold">
+                                        (1)
+                                      </span>
+                                    ) : (
+                                      <span className="text-[9px] text-gray-300">0</span>
+                                    )}
+                                  </div>
+                                  <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                  <div className="w-full h-9 rounded-lg bg-[#FEF3C7] border-2 border-amber-400 flex items-center justify-center font-black text-sm text-[#92400E]">
+                                    {col.finalDigit}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* 9's Complement */}
+                              {compType === "nines" && (
+                                <>
+                                  <div className="w-full h-8 rounded-lg bg-[#FAF8F5] border border-gray-300 flex items-center justify-center font-bold text-sm text-gray-600">
+                                    9
+                                  </div>
+                                  <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#4F46E5]">
+                                    {col.orig}
+                                  </div>
+                                  <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                  <div className="w-full h-9 rounded-lg bg-[#FEF3C7] border border-amber-300 flex items-center justify-center font-black text-sm text-[#92400E]">
+                                    {col.finalDigit}
+                                  </div>
+                                </>
+                              )}
+
+                              {/* 10's Complement */}
+                              {compType === "tens" && (
+                                <>
+                                  <div className="w-full h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-bold text-sm text-[#3730A3]">
+                                    {col.ninesDigit}
+                                  </div>
+                                  <div className="h-6 flex items-center justify-center">
+                                    {col.isLsb ? (
+                                      <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black">
+                                        +1
+                                      </span>
+                                    ) : col.cIn === 1 ? (
+                                      <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-bold">
+                                        (1)
+                                      </span>
+                                    ) : (
+                                      <span className="text-[9px] text-gray-300">0</span>
+                                    )}
+                                  </div>
+                                  <div className="w-full border-t border-[#1E293B] my-0.5" />
+                                  <div className="w-full h-9 rounded-lg bg-[#FEF3C7] border-2 border-amber-400 flex items-center justify-center font-black text-sm text-[#92400E]">
+                                    {col.finalDigit}
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Step 3: Column-Aligned Addition Grid with Graphical Carry Pipeline */}
@@ -2880,24 +3312,272 @@ const ComplementsSubtractorSolver = () => {
                   </div>
                 )}
 
-                {/* Branch C: Carry = 0 (Negative Result, M < N) */}
+                {/* Branch C: Carry = 0 (Negative Result, M < N) -> Graphical Step 4 Re-Complementation Grid */}
                 {!subtractionResult.hasCarry && (
-                  <div className="p-4 bg-white rounded-xl border-2 border-amber-500 space-y-2">
-                    <div className="flex items-center justify-between text-xs font-bold text-[#92400E]">
+                  <div className="p-5 bg-white rounded-xl border-2 border-amber-500 space-y-4">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#92400E] border-b border-[#DCE7E1] pb-2">
                       <span className="flex items-center gap-1.5">
                         <AlertCircle className="w-4 h-4 text-[#D97706]" />
-                        End Carry = 0 indicates Negative Result (M &lt; N) &rarr; Re-Complement Sum!
+                        End Carry = 0 indicates Negative Result (M &lt; N) &rarr; Re-Complement Intermediate Sum!
                       </span>
                       <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded border border-amber-300 font-bold">
-                        Carry = 0
+                        Carry = 0 &rarr; Negative Result (-)
                       </span>
                     </div>
-                    <p className="text-[#475569] text-xs">
-                      Since no end carry was generated, the true answer is negative.
-                      Take the {compType.toUpperCase()} complement of the intermediate sum ({subtractionResult.rawSumFormatted}) and attach an explicit negative (-) sign.
+
+                    <p className="text-[#475569] text-xs leading-relaxed">
+                      Since no end carry was generated, the true answer is negative. We take the {compType.toUpperCase()} complement of the intermediate sum ({subtractionResult.rawSumFormatted}) to reveal its true positive magnitude, and prefix it with an explicit negative (-) sign.
                     </p>
-                    <div className="text-right text-sm font-black text-[#DC2626] pt-1 border-t border-[#DCE7E1]">
-                      Final Negative Result: {subtractionResult.finalAnswer} ({subtractionResult.decDiff}₁₀)
+
+                    {/* Aligned Re-Complementation Column Grid */}
+                    <div className="overflow-x-auto py-2">
+                      <div className="inline-flex flex-col items-center min-w-full justify-center">
+                        <div className="flex items-start gap-1 sm:gap-1.5">
+                          
+                          {/* Row Labels on Left */}
+                          <div className="flex flex-col items-end w-28 sm:w-32 text-right font-bold text-xs text-[#64748B] pt-0 space-y-1">
+                            <div className="h-8 flex items-center justify-end font-mono">Sum (S):</div>
+                            {compType === "ones" && (
+                              <>
+                                <div className="h-5 flex items-center justify-end text-[#4F46E5] text-[10px]">Flip (1's):</div>
+                                <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                <div className="h-9 flex items-center justify-end text-rose-600 font-black">Magnitude:</div>
+                              </>
+                            )}
+                            {compType === "twos" && (
+                              <>
+                                <div className="h-8 flex items-center justify-end text-[#4F46E5] text-[11px]">Invert (1's):</div>
+                                <div className="h-6 flex items-center justify-end text-[#D97706] text-[10px]">+1 LSB:</div>
+                                <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                <div className="h-9 flex items-center justify-end text-rose-600 font-black">Magnitude:</div>
+                              </>
+                            )}
+                            {compType === "nines" && (
+                              <>
+                                <div className="h-8 flex items-center justify-end text-[#64748B] text-[11px]">All 9s:</div>
+                                <div className="h-8 flex items-center justify-end text-[#4F46E5] text-[11px]">- Sum (S):</div>
+                                <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                <div className="h-9 flex items-center justify-end text-rose-600 font-black">Magnitude:</div>
+                              </>
+                            )}
+                            {compType === "tens" && (
+                              <>
+                                <div className="h-8 flex items-center justify-end text-[#4F46E5] text-[11px]">9's Comp:</div>
+                                <div className="h-6 flex items-center justify-end text-[#D97706] text-[10px]">+1 LSB:</div>
+                                <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                <div className="h-9 flex items-center justify-end text-rose-600 font-black">Magnitude:</div>
+                              </>
+                            )}
+                          </div>
+
+                          {/* Dedicated Bold Rose [-] Sign Box in Magnitude Row */}
+                          <div className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                            <div className="h-8" />
+                            {compType === "ones" && <div className="h-5" />}
+                            {compType === "twos" && (
+                              <>
+                                <div className="h-8" />
+                                <div className="h-6" />
+                              </>
+                            )}
+                            {compType === "nines" && (
+                              <>
+                                <div className="h-8" />
+                                <div className="h-8" />
+                              </>
+                            )}
+                            {compType === "tens" && (
+                              <>
+                                <div className="h-8" />
+                                <div className="h-6" />
+                              </>
+                            )}
+                            <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                            {/* Bold Rose [-] Sign Box */}
+                            <div className="w-full h-9 rounded-lg bg-rose-100 border-2 border-rose-500 text-rose-700 font-black text-xl flex items-center justify-center shadow-2xs">
+                              -
+                            </div>
+                          </div>
+
+                          {/* Aligned Intermediate Sum Digits */}
+                          {subtractionResult.step4RecompCols.map((col, idx) => {
+                            if (col.isRadix) {
+                              return (
+                                <div key={idx} className="flex flex-col items-center w-6 text-center">
+                                  <div className="h-8 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                  {compType === "ones" && (
+                                    <>
+                                      <div className="h-5" />
+                                      <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                      <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                    </>
+                                  )}
+                                  {compType === "twos" && (
+                                    <>
+                                      <div className="h-8 flex items-center justify-center text-xl font-black text-indigo-700">.</div>
+                                      <div className="h-6" />
+                                      <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                      <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                    </>
+                                  )}
+                                  {compType === "nines" && (
+                                    <>
+                                      <div className="h-8 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                      <div className="h-8" />
+                                      <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                      <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                    </>
+                                  )}
+                                  {compType === "tens" && (
+                                    <>
+                                      <div className="h-8 flex items-center justify-center text-xl font-black text-indigo-700">.</div>
+                                      <div className="h-6" />
+                                      <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                      <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                                    </>
+                                  )}
+                                </div>
+                              );
+                            }
+
+                            return (
+                              <div key={idx} className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                                
+                                {/* Row 1: Intermediate Sum digit */}
+                                <div className="w-full h-8 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#1E293B]">
+                                  {col.digitS}
+                                </div>
+
+                                {/* 1's Complement */}
+                                {compType === "ones" && (
+                                  <>
+                                    <div className="h-5 flex items-center justify-center text-[9px] text-[#4F46E5] font-bold">
+                                      &darr; ({col.digitS}&rarr;{col.flip})
+                                    </div>
+                                    <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                    <div className="w-full h-9 rounded-lg bg-emerald-50 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-sm shadow-2xs">
+                                      {col.magDigit}
+                                    </div>
+                                  </>
+                                )}
+
+                                {/* 2's Complement */}
+                                {compType === "twos" && (
+                                  <>
+                                    <div className="w-full h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-bold text-sm text-[#3730A3]">
+                                      {col.flip}
+                                    </div>
+                                    <div className="h-6 flex items-center justify-center">
+                                      {col.isLsb ? (
+                                        <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black">
+                                          +1
+                                        </span>
+                                      ) : col.cIn === 1 ? (
+                                        <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-bold">
+                                          (1)
+                                        </span>
+                                      ) : (
+                                        <span className="text-[9px] text-gray-300">0</span>
+                                      )}
+                                    </div>
+                                    <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                    <div className="w-full h-9 rounded-lg bg-emerald-50 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-sm shadow-2xs">
+                                      {col.magDigit}
+                                    </div>
+                                  </>
+                                )}
+
+                                {/* 9's Complement */}
+                                {compType === "nines" && (
+                                  <>
+                                    <div className="w-full h-8 rounded-lg bg-[#FAF8F5] border border-gray-300 flex items-center justify-center font-bold text-sm text-gray-600">
+                                      9
+                                    </div>
+                                    <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#4F46E5]">
+                                      {col.digitS}
+                                    </div>
+                                    <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                    <div className="w-full h-9 rounded-lg bg-emerald-50 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-sm shadow-2xs">
+                                      {col.magDigit}
+                                    </div>
+                                  </>
+                                )}
+
+                                {/* 10's Complement */}
+                                {compType === "tens" && (
+                                  <>
+                                    <div className="w-full h-8 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-bold text-sm text-[#3730A3]">
+                                      {col.ninesDigit}
+                                    </div>
+                                    <div className="h-6 flex items-center justify-center">
+                                      {col.isLsb ? (
+                                        <span className="px-1.5 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[10px] font-black">
+                                          +1
+                                        </span>
+                                      ) : col.cIn === 1 ? (
+                                        <span className="px-1 py-0.2 rounded bg-amber-50 text-amber-800 border border-amber-200 text-[9px] font-bold">
+                                          (1)
+                                        </span>
+                                      ) : (
+                                        <span className="text-[9px] text-gray-300">0</span>
+                                      )}
+                                    </div>
+                                    <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                                    <div className="w-full h-9 rounded-lg bg-emerald-50 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-sm shadow-2xs">
+                                      {col.magDigit}
+                                    </div>
+                                  </>
+                                )}
+
+                              </div>
+                            );
+                          })}
+
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2's Complement Fast Scan Check Strip */}
+                    {compType === "twos" && subtractionResult.fastScanData && (
+                      <div className="p-3 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] font-bold text-[#1E293B]">
+                          <span>Fast Scan Check Strip (Right-to-Left Scan on Intermediate Sum S):</span>
+                          <span className="text-[#64748B] text-[10px]">Emerald = Keep up to first 1 | Indigo = Flip left bits</span>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                          <span className="text-xs text-[#64748B] font-bold mr-1">Scan:</span>
+                          {subtractionResult.fastScanData.items.map((it, idx) => (
+                            <div
+                              key={idx}
+                              className={`flex flex-col items-center justify-center w-8 h-10 rounded-lg border text-center shadow-2xs ${
+                                it.isKeep
+                                  ? "bg-emerald-100 border-emerald-400 text-emerald-900 font-black"
+                                  : "bg-indigo-100 border-indigo-400 text-indigo-900 font-black"
+                              }`}
+                            >
+                              <span className="text-[8px] uppercase tracking-wider block text-[#64748B]">
+                                {it.isKeep ? "keep" : "flip"}
+                              </span>
+                              <span className="text-sm">
+                                {it.outBit}
+                              </span>
+                            </div>
+                          ))}
+                          <span className="text-xs text-[#64748B] font-bold mx-1">&rarr;</span>
+                          <span className="text-xs font-black text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-300">
+                            True Magnitude = {subtractionResult.step4Details.reCompStr}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-sm font-black text-[#DC2626] pt-2 border-t border-[#DCE7E1]">
+                      <span className="text-xs text-[#64748B] font-normal">
+                        True Magnitude prefixed with [-]:
+                      </span>
+                      <span>
+                        Final Negative Result: {subtractionResult.finalAnswer} ({subtractionResult.decDiff}₁₀)
+                      </span>
                     </div>
                   </div>
                 )}
@@ -3001,6 +3681,42 @@ const SignedRegisterOverflowSolver = () => {
     const resultBin = sumBits.join('');
     const decodedVal = sumBits[0] === 1 ? parseInt(resultBin, 2) - 256 : parseInt(resultBin, 2);
 
+    let magData = null;
+    if (sumBits[0] === 1 && vFlag === 0) {
+      const invBits = resultBin.split('').map(b => b === '0' ? '1' : '0');
+      let c = 1;
+      const carryArrAdd1 = [];
+      const magBits = [];
+      for (let i = 7; i >= 0; i--) {
+        const s = (invBits[i] === '1' ? 1 : 0) + c;
+        carryArrAdd1.unshift(c);
+        magBits.unshift(s % 2);
+        c = Math.floor(s / 2);
+      }
+      const magStr = magBits.join('');
+      const absDec = Math.abs(decodedVal);
+
+      const bitWeights = [64, 32, 16, 8, 4, 2, 1];
+      const activeWeights = [];
+      for (let i = 1; i <= 7; i++) {
+        if (resultBin[i] === '1') {
+          activeWeights.push({ pos: 7 - i, weight: bitWeights[i - 1] });
+        }
+      }
+      const sumPosWeights = activeWeights.reduce((acc, w) => acc + w.weight, 0);
+
+      magData = {
+        resultBin,
+        invBits,
+        carryArrAdd1,
+        magBits,
+        magStr,
+        absDec,
+        activeWeights,
+        sumPosWeights
+      };
+    }
+
     return {
       a,
       b,
@@ -3012,6 +3728,7 @@ const SignedRegisterOverflowSolver = () => {
       vFlag,
       resultBin,
       decodedVal,
+      magData,
       isOverflow: vFlag === 1
     };
   }, [numA, numB]);
@@ -3185,6 +3902,122 @@ const SignedRegisterOverflowSolver = () => {
                   : `Mathematical sum ${overflowData.trueSum} is within the 8-bit signed range [-128, +127]. Decoded register value matches ${overflowData.decodedVal} exactly.`}
               </p>
             </div>
+
+            {/* Graphical Magnitude Decoder Box for Negative Result (b7 = 1, V = 0) */}
+            {overflowData.magData && (
+              <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4 font-mono">
+                <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+                  <div className="flex items-center gap-2 font-bold text-xs text-[#1E293B] uppercase">
+                    <span className="w-2.5 h-2.5 rounded-full bg-rose-500" />
+                    <span>Graphical Magnitude Decoder: Why ({overflowData.resultBin})₂ = {overflowData.decodedVal}₁₀</span>
+                  </div>
+                  <span className="text-[11px] font-bold text-rose-600 bg-rose-50 px-2 py-0.5 rounded border border-rose-200">
+                    Sign Bit b7 = 1 (Negative)
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                  {/* Left: 2's Complement Inversion & +1 Adder Grid */}
+                  <div className="p-4 bg-white rounded-xl border border-[#DCE7E1] space-y-3 shadow-2xs">
+                    <span className="text-xs font-bold text-[#1E293B] block">
+                      Method 1: Invert Bits (1's Comp) + 1 at LSB
+                    </span>
+
+                    <div className="overflow-x-auto py-1">
+                      <div className="inline-flex flex-col items-center min-w-full justify-center">
+                        <div className="flex items-start gap-1">
+                          
+                          {/* Row labels */}
+                          <div className="flex flex-col items-end w-20 text-right text-[10px] font-bold text-[#64748B] space-y-1">
+                            <div className="h-7 flex items-center justify-end">8-Bit Sum:</div>
+                            <div className="h-7 flex items-center justify-end text-[#4F46E5]">Invert:</div>
+                            <div className="h-5 flex items-center justify-end text-[#D97706]">+1 LSB:</div>
+                            <div className="w-full border-t border-[#1E293B] my-0.5" />
+                            <div className="h-8 flex items-center justify-end text-emerald-700">Magnitude:</div>
+                          </div>
+
+                          {/* [-] sign box in magnitude row */}
+                          <div className="flex flex-col items-center w-8 space-y-1">
+                            <div className="h-7" />
+                            <div className="h-7" />
+                            <div className="h-5" />
+                            <div className="w-full border-t border-[#1E293B] my-0.5" />
+                            <div className="w-full h-8 rounded-lg bg-rose-100 border border-rose-400 text-rose-700 font-black text-sm flex items-center justify-center">
+                              -
+                            </div>
+                          </div>
+
+                          {/* 8 Bits */}
+                          {overflowData.magData.resultBin.split('').map((b, idx) => (
+                            <div key={idx} className="flex flex-col items-center w-8 sm:w-9 space-y-1 text-xs">
+                              {/* Sum bit */}
+                              <div className={`w-full h-7 rounded border flex items-center justify-center font-bold ${
+                                idx === 0 ? "bg-amber-100 border-amber-300 text-amber-900" : "bg-white border-[#DCE7E1] text-[#1E293B]"
+                              }`}>
+                                {b}
+                              </div>
+                              {/* Inverted bit */}
+                              <div className="w-full h-7 rounded border border-[#C7D2FE] bg-[#EEF2FF] text-[#3730A3] flex items-center justify-center font-bold">
+                                {overflowData.magData.invBits[idx]}
+                              </div>
+                              {/* Carry in */}
+                              <div className="h-5 flex items-center justify-center">
+                                {idx === 7 ? (
+                                  <span className="px-1 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-black">+1</span>
+                                ) : overflowData.magData.carryArrAdd1[idx] === 1 ? (
+                                  <span className="text-[9px] font-bold text-amber-600">(1)</span>
+                                ) : (
+                                  <span className="text-[9px] text-gray-300">0</span>
+                                )}
+                              </div>
+                              {/* Divider */}
+                              <div className="w-full border-t border-[#1E293B] my-0.5" />
+                              {/* Mag bit */}
+                              <div className="w-full h-8 rounded-lg border border-emerald-400 bg-emerald-50 text-emerald-900 flex items-center justify-center font-black">
+                                {overflowData.magData.magBits[idx]}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right text-xs font-bold text-emerald-700 pt-1 border-t border-[#DCE7E1]">
+                      Magnitude = ({overflowData.magData.magStr})₂ = {overflowData.magData.absDec}₁₀ &rarr; Result: -{overflowData.magData.absDec}₁₀
+                    </div>
+                  </div>
+
+                  {/* Right: -128 + Positive Weights Bar */}
+                  <div className="p-4 bg-white rounded-xl border border-[#DCE7E1] space-y-3 shadow-2xs">
+                    <span className="text-xs font-bold text-[#1E293B] block">
+                      Method 2: Weighted Sum (-128 + &Sigma; Positive Weights)
+                    </span>
+
+                    <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 text-xs">
+                      <div className="flex flex-wrap gap-1 items-center justify-between">
+                        <span className="text-amber-800 font-bold bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                          b7 &times; (-128) = -128
+                        </span>
+                        <span className="text-[#64748B] text-[10px]">Active positive bits:</span>
+                      </div>
+
+                      <div className="text-xs font-mono space-y-1">
+                        <div className="text-[#475569]">
+                          Sum = -128 + {overflowData.magData.activeWeights.length > 0 ? overflowData.magData.activeWeights.map(w => `${w.weight} (b${w.pos})`).join(' + ') : '0'}
+                        </div>
+                        <div className="text-sm font-black text-[#1E293B]">
+                          = -128 + {overflowData.magData.sumPosWeights} = <span className="text-rose-600">{overflowData.decodedVal}₁₀</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <p className="text-[11px] text-[#64748B] leading-relaxed">
+                      In 2's complement hardware, MSB bit b7 contributes a negative weight of -2⁷ (-128). Both the inversion method and the positional weight summation yield {overflowData.decodedVal}₁₀!
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
           </div>
         </div>

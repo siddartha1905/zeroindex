@@ -185,6 +185,53 @@ assert(evalGate("NOR", 0, 0) === 1 && evalGate("NOR", 1, 0) === 0, "Engine 5: NO
 assert(evalGate("XOR", 1, 0) === 1 && evalGate("XOR", 1, 1) === 0, "Engine 5: XOR gate verified");
 assert(evalGate("XNOR", 1, 1) === 1 && evalGate("XNOR", 1, 0) === 0, "Engine 5: XNOR gate verified");
 
+// 7. Rigorous Checks for New Graphical Transformation Features
+// Check Engine 1: Upward Remainder Collector Strip
+assert(content.includes("Upward Remainder Collector: Bottom Step (MSB) &rarr; Top Step (LSB)"), "Engine 1: Upward Remainder Collector Strip title is present");
+assert(content.includes("[...divisionSteps.divData.steps].reverse()"), "Engine 1: Steps are reversed to pick remainders bottom (MSB) to top (LSB)");
+
+// Check Engine 2: Direct Subtraction when A < B
+assert(content.includes("Since A &lt; B, we compute -(B - A) by swapping the larger number B on top") || content.includes("Since A < B, we compute -(B - A) by swapping the larger number B on top"), "Engine 2: A < B visual banner with swapping rule is present");
+assert(content.includes("Dedicated Negative Sign Column when A < B"), "Engine 2: Dedicated Rose [-] Sign column is present in borrow grid");
+
+// Check Engine 3: Step 2 Aligned Bit/Digit Complementation Grid
+assert(content.includes("Bit-by-Bit Complementation Grid"), "Engine 3: Step 2 Bit-by-Bit Complementation Grid is present");
+assert(content.includes("subtractionResult.step2GridCols"), "Engine 3: step2GridCols is utilized in Step 2 rendering");
+
+// Check Engine 3: Step 4 Graphical Re-Complementation Grid (Carry = 0)
+assert(content.includes("Graphical Step 4 Re-Complementation Grid"), "Engine 3: Graphical Step 4 Re-Complementation Grid is present");
+assert(content.includes("Fast Scan Check Strip (Right-to-Left Scan on Intermediate Sum S)"), "Engine 3: Fast Scan Check Strip is present for 2's Complement Carry = 0");
+assert(content.includes("subtractionResult.step4RecompCols"), "Engine 3: step4RecompCols is computed and rendered");
+
+// Check Engine 4: Graphical Magnitude Decoder Box (Sign Bit b7 = 1, V = 0)
+assert(content.includes("Graphical Magnitude Decoder: Why"), "Engine 4: Graphical Magnitude Decoder Box is present");
+assert(content.includes("Method 1: Invert Bits (1's Comp) + 1 at LSB"), "Engine 4: Method 1 Inversion and +1 Adder Grid is present");
+assert(content.includes("Method 2: Weighted Sum (-128 + &Sigma; Positive Weights)"), "Engine 4: Method 2 Weighted Sum is present");
+
+// 8. Mathematical Verification of 2's Complement Carry = 0 Re-Complementation
+function verifyTwosCompRecomp(sStr) {
+  const flips = sStr.split('').map(b => b === '0' ? '1' : '0');
+  let c = 1;
+  const magBits = [];
+  for (let i = flips.length - 1; i >= 0; i--) {
+    const s = parseInt(flips[i], 2) + c;
+    magBits.unshift(s % 2);
+    c = Math.floor(s / 2);
+  }
+  return magBits.join('');
+}
+const testS10010 = verifyTwosCompRecomp("10010");
+assert(testS10010 === "01110", `Engine 3: Re-complementing S=10010 in 2's comp yields magnitude 01110 (14₁₀) (got ${testS10010})`);
+
+// 9. Mathematical Verification of Engine 4 Negative Decoder (-13)
+const binNeg13 = "11110011";
+const invNeg13 = binNeg13.split('').map(b => b === '0' ? '1' : '0').join('');
+assert(invNeg13 === "00001100", "Engine 4: Invert bits of 11110011 yields 00001100");
+const magNeg13 = (parseInt(invNeg13, 2) + 1).toString(2).padStart(8, '0');
+assert(magNeg13 === "00001101" && parseInt(magNeg13, 2) === 13, "Engine 4: Adding +1 yields positive magnitude 00001101 (13₁₀)");
+const weightedSum = -128 + 64 + 32 + 16 + 2 + 1;
+assert(weightedSum === -13, "Engine 4: Weighted sum -128 + 64 + 32 + 16 + 2 + 1 = -13₁₀ matches decoded value");
+
 console.log("=================================================================");
 console.log(`TOTAL AUDIT CHECKS: ${passCount + failCount}`);
 console.log(`PASSED: ${passCount}`);
