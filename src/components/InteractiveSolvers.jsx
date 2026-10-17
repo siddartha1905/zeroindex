@@ -1899,36 +1899,37 @@ const BinaryArithmeticGridSolver = () => {
 // SOLVER 3: COMPLEMENTS & COMPLEMENT SUBTRACTOR (1's, 2's, 9's, 10's)
 // ============================================================================
 const ComplementsSubtractorSolver = () => {
-  const [activeTab, setActiveTab] = useState("subtractor"); // "finder" or "subtractor"
+  // Part A (Finding Complements) comes FIRST!
+  const [activeTab, setActiveTab] = useState("finder"); // "finder" (Part A) or "subtractor" (Part B)
 
-  // Finder state (Tab 3A)
+  // Finder state (Part A)
   const [findBase, setFindBase] = useState("binary");
   const [findInput, setFindInput] = useState("10110100");
 
-  // Subtractor state (Tab 3B)
+  // Subtractor state (Part B)
   const [minuendM, setMinuendM] = useState("11010");
   const [subtrahendN, setSubtrahendN] = useState("01101");
-  const [compType, setCompType] = useState("twos"); // "ones", "twos", "nines", "tens"
+  const [compType, setCompType] = useState("ones"); // "ones", "twos", "nines", "tens"
 
   const presetsFinder = [
-    { label: "Binary Trailing Zeros: 10110100", val: "10110100", base: "binary" },
-    { label: "Binary Fractional: 1011.011", val: "1011.011", base: "binary" },
-    { label: "Decimal Standard: 5472", val: "5472", base: "decimal" },
-    { label: "Decimal Trailing Zeros: 24600", val: "24600", base: "decimal" },
-    { label: "Decimal Fractional: 384.62", val: "384.62", base: "decimal" }
+    { label: "Binary: 10110100 (180₁₀)", val: "10110100", base: "binary" },
+    { label: "Binary Fraction: 1011.011 (11.375₁₀)", val: "1011.011", base: "binary" },
+    { label: "Decimal: 5472₁₀", val: "5472", base: "decimal" },
+    { label: "Decimal Trailing Zeros: 24600₁₀", val: "24600", base: "decimal" },
+    { label: "Decimal Fraction: 384.62₁₀", val: "384.62", base: "decimal" }
   ];
 
   const presetsSubtractor = [
-    { label: "Case 1 (M >= N): 2's Comp 11010 - 01101 (26 - 13)", m: "11010", n: "01101", type: "twos" },
-    { label: "Case 2 (M < N): 2's Comp 01100 - 10101 (12 - 21)", m: "01100", n: "10101", type: "twos" },
-    { label: "1's Comp End-Around: 10110 - 01001 (22 - 9)", m: "10110", n: "01001", type: "ones" },
-    { label: "1's Comp Negative: 01001 - 10110 (9 - 22)", m: "01001", n: "10110", type: "ones" },
-    { label: "10's Comp Decimal: 72532 - 03250", m: "72532", n: "03250", type: "tens" },
-    { label: "9's Comp End-Around: 450 - 230", m: "450", n: "230", type: "nines" },
-    { label: "Unequal Length Padding: 11010 - 110", m: "11010", n: "110", type: "twos" }
+    { label: "Case 1 (M > N, End-Around Carry): 11010 (26₁₀) - 01101 (13₁₀)", m: "11010", n: "01101", type: "ones" },
+    { label: "Case 1 (M > N, Discard Carry): 11010 (26₁₀) - 01101 (13₁₀)", m: "11010", n: "01101", type: "twos" },
+    { label: "Case 2 (M < N, Negative Result): 01101 (13₁₀) - 11010 (26₁₀)", m: "01101", n: "11010", type: "twos" },
+    { label: "Case 2 (M < N, 1's Comp Negative): 01101 (13₁₀) - 11010 (26₁₀)", m: "01101", n: "11010", type: "ones" },
+    { label: "Unequal Bit Lengths (Padding Needed): 110101 (53₁₀) - 1101 (13₁₀)", m: "110101", n: "1101", type: "twos" },
+    { label: "Decimal 9's Comp (M > N): 72532 (72532₁₀) - 13250 (13250₁₀)", m: "72532", n: "13250", type: "nines" },
+    { label: "Decimal 10's Comp (M < N): 13250 (13250₁₀) - 72532 (72532₁₀)", m: "13250", n: "72532", type: "tens" }
   ];
 
-  // Helper for Complement Finder
+  // Helper for Complement Finder (Part A)
   const finderResult = useMemo(() => {
     const clean = findInput.trim();
     if (!clean) return null;
@@ -1943,6 +1944,9 @@ const ComplementsSubtractorSolver = () => {
     const n = intPart.length;
     const m = fracPart.length;
 
+    // Decimal equivalent
+    const decVal = parseToDecimalParts(clean, base).totalDec;
+
     // Standard Complements
     let rMinusOneComp = "";
     let rComp = "";
@@ -1951,7 +1955,6 @@ const ComplementsSubtractorSolver = () => {
       // 1's Complement: bitwise inversion
       rMinusOneComp = clean.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
       // 2's Complement: 1's comp + 1 at LSB
-      // Convert to integer scale
       const cleanWithoutRadix = clean.replace('.', '');
       const onesWithoutRadix = rMinusOneComp.replace('.', '');
       const twosIntVal = (parseInt(onesWithoutRadix, 2) + 1).toString(2).padStart(onesWithoutRadix.length, '0');
@@ -1965,8 +1968,40 @@ const ComplementsSubtractorSolver = () => {
       rComp = m > 0 ? `${tensIntVal.slice(0, n)}.${tensIntVal.slice(n)}` : tensIntVal;
     }
 
-    // Shortcut Scan Data
-    // From right to left: trailing zeros and first non-zero
+    // Addition grid for Step 2 (+1 at LSB)
+    const noDotComp1 = rMinusOneComp.replace('.', '');
+    const len = noDotComp1.length;
+    const carryTrack = Array(len).fill(0);
+    const sumDigits = Array(len).fill(0);
+    let carry = 1; // Adding +1 at LSB
+    for (let i = len - 1; i >= 0; i--) {
+      const d = parseInt(noDotComp1[i], base);
+      const s = d + carry;
+      sumDigits[i] = DIGITS[s % base];
+      carryTrack[i] = carry;
+      carry = Math.floor(s / base);
+    }
+
+    // Step 2 columns array
+    const step2Cols = [];
+    let noDotIdx = 0;
+    for (let i = 0; i < rMinusOneComp.length; i++) {
+      const ch = rMinusOneComp[i];
+      if (ch === '.') {
+        step2Cols.push({ isRadix: true });
+      } else {
+        step2Cols.push({
+          isRadix: false,
+          carry: carryTrack[noDotIdx],
+          comp1Digit: ch,
+          add1Digit: noDotIdx === len - 1 ? "1" : "",
+          comp2Digit: sumDigits[noDotIdx]
+        });
+        noDotIdx++;
+      }
+    }
+
+    // Shortcut Scan Data (Right to Left)
     const charArray = clean.split('');
     const shortcutItems = [];
     let seenFirstNonZero = false;
@@ -1981,17 +2016,16 @@ const ComplementsSubtractorSolver = () => {
       const digitNum = parseInt(ch, 10);
       if (!seenFirstNonZero) {
         if (digitNum === 0) {
-          shortcutItems.unshift({ ch, action: "Keep Unchanged (0)", color: "EMERALD", res: "0" });
+          shortcutItems.unshift({ ch, action: "Keep 0 unchanged", color: "EMERALD", res: "0" });
         } else {
           seenFirstNonZero = true;
           if (isBin) {
-            shortcutItems.unshift({ ch, action: "Keep First 1", color: "EMERALD", res: "1" });
+            shortcutItems.unshift({ ch, action: "Keep First 1 unchanged", color: "EMERALD", res: "1" });
           } else {
             shortcutItems.unshift({ ch, action: `Subtract from 10 (${10 - digitNum})`, color: "AMBER", res: (10 - digitNum).toString() });
           }
         }
       } else {
-        // All digits to the left
         if (isBin) {
           shortcutItems.unshift({ ch, action: `Invert (${ch === '0' ? '1' : '0'})`, color: "INDIGO", res: ch === '0' ? '1' : '0' });
         } else {
@@ -2004,15 +2038,17 @@ const ComplementsSubtractorSolver = () => {
       isValid: true,
       clean,
       isBin,
+      decVal,
       n,
       m,
       rMinusOneComp,
       rComp,
+      step2Cols,
       shortcutItems
     };
   }, [findBase, findInput]);
 
-  // Subtraction Execution Pipeline Engine
+  // Subtraction Execution Pipeline Engine (Part B)
   const subtractionResult = useMemo(() => {
     const isBin = compType === "ones" || compType === "twos";
     const base = isBin ? 2 : 10;
@@ -2044,22 +2080,49 @@ const ComplementsSubtractorSolver = () => {
     const decN = parseToDecimalParts(cleanN, base).totalDec;
     const decDiff = decM - decN;
 
-    // Step 2: Calculate Complement of N on equalized string
+    // Step 2: Compute Complement of N on equalized string with intermediate steps
+    let comp1N = "";
     let compNStr = "";
+    let step2Visual = null;
+
     if (compType === "ones") {
       compNStr = fullPadN.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
+      step2Visual = {
+        title: "1's Complement (Bitwise Inversion)",
+        formula: "Invert every bit (0 <-> 1)",
+        intermediate: null,
+        finalComp: compNStr
+      };
     } else if (compType === "twos") {
-      const ones = fullPadN.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
-      const onesNoDot = ones.replace('.', '');
+      comp1N = fullPadN.split('').map(ch => ch === '.' ? '.' : (ch === '0' ? '1' : '0')).join('');
+      const onesNoDot = comp1N.replace('.', '');
       const twosVal = (parseInt(onesNoDot, 2) + 1).toString(2).padStart(onesNoDot.length, '0');
       compNStr = maxFrac > 0 ? `${twosVal.slice(0, maxInt)}.${twosVal.slice(maxInt)}` : twosVal;
+      step2Visual = {
+        title: "2's Complement = 1's Complement + 1 at LSB",
+        formula: "Step 2A (Invert bits) -> Step 2B (Add +1 to LSB)",
+        intermediate: comp1N,
+        finalComp: compNStr
+      };
     } else if (compType === "nines") {
       compNStr = fullPadN.split('').map(ch => ch === '.' ? '.' : (9 - parseInt(ch, 10)).toString()).join('');
+      step2Visual = {
+        title: "9's Complement (Subtract from 9)",
+        formula: "Subtract each digit from 9 (9 - d)",
+        intermediate: null,
+        finalComp: compNStr
+      };
     } else if (compType === "tens") {
-      const nines = fullPadN.split('').map(ch => ch === '.' ? '.' : (9 - parseInt(ch, 10)).toString()).join('');
-      const ninesNoDot = nines.replace('.', '');
+      comp1N = fullPadN.split('').map(ch => ch === '.' ? '.' : (9 - parseInt(ch, 10)).toString()).join('');
+      const ninesNoDot = comp1N.replace('.', '');
       const tensVal = (parseInt(ninesNoDot, 10) + 1).toString(10).padStart(ninesNoDot.length, '0');
       compNStr = maxFrac > 0 ? `${tensVal.slice(0, maxInt)}.${tensVal.slice(maxInt)}` : tensVal;
+      step2Visual = {
+        title: "10's Complement = 9's Complement + 1 at LSB",
+        formula: "Step 2A (Subtract from 9) -> Step 2B (Add +1 to LSB)",
+        intermediate: comp1N,
+        finalComp: compNStr
+      };
     }
 
     // Step 3: Perform Addition M + Comp(N) column by column
@@ -2076,8 +2139,8 @@ const ComplementsSubtractorSolver = () => {
       const resDigit = s % base;
       const cOut = Math.floor(s / base);
       addCols.unshift({
-        digitM: dM,
-        digitCompN: dN,
+        digitM: noDotM[i],
+        digitCompN: noDotCompN[i],
         carryIn: carry,
         resDigit: DIGITS[resDigit],
         carryOut: cOut
@@ -2092,30 +2155,52 @@ const ComplementsSubtractorSolver = () => {
       ? `${rawSumNoCarry.slice(0, maxInt)}.${rawSumNoCarry.slice(maxInt)}` 
       : rawSumNoCarry;
 
+    // End-Around Carry (EAC) wrap-around addition grid calculation
+    let eacResult = "";
+    let eacAddCols = [];
+    if (hasCarry && (compType === "ones" || compType === "nines")) {
+      let eCarry = 1;
+      const eacDigits = Array(totalDigits).fill(0);
+      const eacCarryArr = Array(totalDigits).fill(0);
+      for (let i = totalDigits - 1; i >= 0; i--) {
+        const d = parseInt(rawSumNoCarry[i], base);
+        const s = d + eCarry;
+        eacDigits[i] = DIGITS[s % base];
+        eacCarryArr[i] = eCarry;
+        eCarry = Math.floor(s / base);
+      }
+      const rawEac = eacDigits.join('');
+      eacResult = maxFrac > 0 ? `${rawEac.slice(0, maxInt)}.${rawEac.slice(maxInt)}` : rawEac;
+
+      for (let i = 0; i < totalDigits; i++) {
+        eacAddCols.push({
+          sumDigit: rawSumNoCarry[i],
+          add1Digit: i === totalDigits - 1 ? "1" : "",
+          carryIn: eacCarryArr[i],
+          resDigit: eacDigits[i]
+        });
+      }
+    }
+
     // Step 4: Decision Diamond Evaluation
     let finalAnswer = "";
     let step4Details = null;
 
     if (hasCarry) {
-      // Positive result
       if (compType === "twos" || compType === "tens") {
         finalAnswer = `+${rawSumFormatted}`;
         step4Details = {
           type: "DISCARD",
           title: "Discard End Carry 1",
-          desc: "In r's complement (2's or 10's), discard the extra MSB carry. The remaining digits form the final exact positive answer."
+          desc: "In r's complement (2's or 10's), DISCARD the extra MSB carry. The remaining digits form the final exact positive answer."
         };
       } else {
-        // 1's or 9's: End-Around Carry
-        const noDotSum = rawSumNoCarry;
-        const eacVal = (parseInt(noDotSum, base) + 1).toString(base).padStart(noDotSum.length, '0');
-        const formattedEAC = maxFrac > 0 ? `${eacVal.slice(0, maxInt)}.${eacVal.slice(maxInt)}` : eacVal;
-        finalAnswer = `+${formattedEAC}`;
+        finalAnswer = `+${eacResult}`;
         step4Details = {
           type: "EAC",
           title: "End-Around Carry (EAC) +1 Addition",
           desc: "In (r-1)'s complement (1's or 9's), wrap the extra MSB carry 1 around and add +1 to the LSB.",
-          eacVal: formattedEAC
+          eacVal: eacResult
         };
       }
     } else {
@@ -2153,11 +2238,14 @@ const ComplementsSubtractorSolver = () => {
       decM,
       decN,
       decDiff,
+      step2Visual,
       compNStr,
       addCols,
       coutBit,
       hasCarry,
       rawSumFormatted,
+      eacResult,
+      eacAddCols,
       step4Details,
       finalAnswer
     };
@@ -2171,16 +2259,16 @@ const ComplementsSubtractorSolver = () => {
         engineNum={3}
         title="Complements & Complement Subtractor"
         steps={[
-          { title: "Select Sub-Tool", desc: "Choose Sub-Tab 3A to generate 1's, 2's, 9's, 10's complements with formulas and 2-second shortcuts, or Sub-Tab 3B to execute full M - N subtraction." },
+          { title: "Select Sub-Tool", desc: "Choose Part A to generate 1's, 2's, 9's, 10's complements with formulas and 2-second shortcuts, or Part B to execute full M - N subtraction." },
           { title: "Input Operands", desc: "Type your values or pick an exam preset covering Case 1 (M >= N, Carry = 1) or Case 2 (M < N, Carry = 0)." },
           { title: "Inspect Visual Pipeline", desc: "Follow Amber Zero-Padding, Subtrahend Complementation, Column-Aligned Addition, and the Decision Diamond." }
         ]}
         formulaTitle="Governing Complements & Decision Rules"
-        formulaBadge={activeTab === "finder" ? "Complement Generator" : `Subtraction Mode: ${compType.toUpperCase()}`}
+        formulaBadge={activeTab === "finder" ? "Part A: Generator" : `Part B: ${compType.toUpperCase()}`}
         formulaContent={
           activeTab === "finder"
             ? "Formulas: (r-1)'s Comp = (rⁿ - r⁻ᵐ) - N.  r's Comp = rⁿ - N. Shortcut: Scan right-to-left, keep trailing 0s and first non-zero unchanged, invert the rest."
-            : "Decision Diamond: If Carry = 1 (Positive): Discard carry in r's comp (2's, 10's); Add End-Around Carry in (r-1)'s comp (1's, 9's). If Carry = 0 (Negative): Re-complement sum & attach (-) sign."
+            : "Decision Diamond: If Carry = 1 (Positive): Discard carry in r's comp (2's, 10's); Add End-Around Carry (+1 to LSB) in (r-1)'s comp (1's, 9's). If Carry = 0 (Negative): Re-complement sum & attach (-) sign."
         }
         rulesList={[
           "Zero-Padding First: Never complement before padding! Pad leading and trailing Amber zeros onto raw N first.",
@@ -2188,42 +2276,43 @@ const ComplementsSubtractorSolver = () => {
         ]}
       />
 
-      {/* Sub-Tab Navigation Switcher */}
+      {/* 2-TAB PILL SWITCHER: FINDING COMPLEMENTS COMES FIRST! */}
       <div className="flex gap-2 p-1.5 bg-white rounded-2xl border border-[#DCE7E1] shadow-2xs">
         <button
-          onClick={() => setActiveTab("subtractor")}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
-            activeTab === "subtractor"
-              ? "bg-[#2E6F40] text-white shadow-2xs"
-              : "text-[#64748B] hover:text-[#1E293B]"
-          }`}
-        >
-          <Calculator className="w-4 h-4" />
-          <span>Sub-Tab 3B: Complement Subtraction Pipeline (M - N)</span>
-        </button>
-        <button
           onClick={() => setActiveTab("finder")}
-          className={`flex-1 py-2.5 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
+          className={`flex-1 py-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
             activeTab === "finder"
               ? "bg-[#2E6F40] text-white shadow-2xs"
               : "text-[#64748B] hover:text-[#1E293B]"
           }`}
         >
           <Layers className="w-4 h-4" />
-          <span>Sub-Tab 3A: 3-Stage Complement Generator &amp; Exam Shortcuts</span>
+          <span>Part A: Find Complements (1's, 2's, 9's &amp; 10's Generator)</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("subtractor")}
+          className={`flex-1 py-3 rounded-xl text-xs font-mono font-bold transition-all flex items-center justify-center gap-2 ${
+            activeTab === "subtractor"
+              ? "bg-[#2E6F40] text-white shadow-2xs"
+              : "text-[#64748B] hover:text-[#1E293B]"
+          }`}
+        >
+          <Calculator className="w-4 h-4" />
+          <span>Part B: Complement Subtraction Visualizer (M - N)</span>
         </button>
       </div>
 
       {/* ==================================================================== */}
-      {/* SUB-TAB 3A: 3-STAGE COMPLEMENT GENERATOR */}
+      {/* SUB-TAB 1: PART A: FIND COMPLEMENTS (1's, 2's, 9's & 10's GENERATOR) */}
       {/* ==================================================================== */}
       {activeTab === "finder" && (
         <div className="space-y-6">
           
-          {/* Presets */}
+          {/* Preset Buttons with Decimal Equivalents */}
           <div className="p-4 bg-white rounded-2xl border border-[#DCE7E1] shadow-2xs space-y-2">
             <span className="text-[11px] font-mono font-bold text-[#64748B] uppercase tracking-wider block">
-              Load Complement Generator Presets:
+              Load Classic Exam Complements Presets:
             </span>
             <div className="flex flex-wrap gap-2">
               {presetsFinder.map((p, idx) => (
@@ -2241,10 +2330,10 @@ const ComplementsSubtractorSolver = () => {
             </div>
           </div>
 
-          {/* Controls */}
+          {/* Controls with Live Decimal Badge */}
           <div className="p-6 bg-white rounded-2xl border border-[#DCE7E1] shadow-soft space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="space-y-1.5">
+            <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 items-center">
+              <div className="sm:col-span-4 space-y-1.5">
                 <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Base Family:</label>
                 <select
                   value={findBase}
@@ -2256,13 +2345,20 @@ const ComplementsSubtractorSolver = () => {
                 </select>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Input Number N:</label>
+              <div className="sm:col-span-8 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Input Number N:</label>
+                  {finderResult && finderResult.isValid && (
+                    <span className="text-xs font-mono font-bold text-[#2E6F40] bg-[#ECFDF5] px-2.5 py-0.5 rounded-md border border-[#A7F3D0]">
+                      Decimal Equivalent: {finderResult.decVal}₁₀
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={findInput}
                   onChange={(e) => setFindInput(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2E6F40]"
                 />
               </div>
             </div>
@@ -2276,10 +2372,10 @@ const ComplementsSubtractorSolver = () => {
           </div>
 
           {finderResult && finderResult.isValid && (
-            <div className="p-6 bg-white rounded-2xl border border-[#DCE7E1] shadow-soft space-y-6 font-mono text-xs">
+            <div className="space-y-6 font-mono text-xs">
               
-              {/* STAGE 1: Formal Formula Box */}
-              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+              {/* STAGE 1: Formal Mathematical Formulas */}
+              <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-3">
                 <div className="flex items-center justify-between border-b border-[#DCE7E1] pb-2">
                   <span className="font-bold text-[#2E6F40] uppercase text-xs flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#2E6F40]" />
@@ -2289,85 +2385,178 @@ const ComplementsSubtractorSolver = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
-                  <div className="p-3 bg-white rounded-lg border border-[#DCE7E1] space-y-1">
+                  <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-1.5">
                     <span className="font-bold text-[#4F46E5] block text-[11px]">
                       {finderResult.isBin ? "1's Complement Formula: (2ⁿ - 2⁻ᵐ) - N" : "9's Complement Formula: (10ⁿ - 10⁻ᵐ) - N"}
                     </span>
-                    <p className="text-[#64748B] text-[11px]">
+                    <p className="text-[#64748B] text-xs">
                       = ({finderResult.isBin ? "2" : "10"}<sup>{finderResult.n}</sup> - {finderResult.isBin ? "2" : "10"}<sup>-{finderResult.m}</sup>) - {finderResult.clean}
                     </p>
-                    <div className="text-sm font-black text-[#4F46E5] pt-1">
+                    <div className="text-base font-black text-[#4F46E5] pt-1">
                       = {finderResult.rMinusOneComp}
                     </div>
                   </div>
 
-                  <div className="p-3 bg-white rounded-lg border border-[#DCE7E1] space-y-1">
+                  <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-1.5">
                     <span className="font-bold text-[#2E6F40] block text-[11px]">
                       {finderResult.isBin ? "2's Complement Formula: 2ⁿ - N" : "10's Complement Formula: 10ⁿ - N"}
                     </span>
-                    <p className="text-[#64748B] text-[11px]">
+                    <p className="text-[#64748B] text-xs">
                       = ({finderResult.isBin ? "2" : "10"}<sup>{finderResult.n}</sup>) - {finderResult.clean}
                     </p>
-                    <div className="text-sm font-black text-[#2E6F40] pt-1">
+                    <div className="text-base font-black text-[#2E6F40] pt-1">
                       = {finderResult.rComp}
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* STAGE 2: Standard Classroom Method */}
-              <div className="p-5 rounded-xl bg-white border border-[#DCE7E1] space-y-4">
+              {/* STAGE 2: Standard Classroom Method (Bitwise Invert / 9s Subtraction -> Aligned +1 at LSB) */}
+              <div className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
                 <span className="font-bold text-[#1E293B] uppercase text-xs block">
-                  Stage 2: Standard Classroom Method (Inversion / 9s Subtraction &rarr; Add +1 at LSB)
+                  Stage 2: Standard Classroom Method (Step 2A: {finderResult.isBin ? "Bitwise Inversion" : "9s Subtraction"} &rarr; Step 2B: Aligned + 1 at LSB Grid)
                 </span>
 
-                <div className="max-w-md mx-auto p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-2 text-right">
-                  <div className="text-left font-bold text-[11px] text-[#64748B] pb-1 border-b border-[#DCE7E1]">
-                    {finderResult.isBin ? "Step 2A: Bitwise Invert 0 <-> 1" : "Step 2A: Subtract each digit from 9"}
+                {/* Step 2A: Bitwise Invert Grid */}
+                <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-3">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-[#64748B]">
+                    <span>Step 2A: {finderResult.isBin ? "Invert every bit (0 <-> 1)" : "Subtract each digit from 9 (9 - d)"}</span>
+                    <span className="text-[#4F46E5] font-black">{finderResult.isBin ? "1's Complement" : "9's Complement"} = {finderResult.rMinusOneComp}</span>
                   </div>
-                  <div className="text-sm font-bold text-[#64748B]">Given N: {finderResult.clean}</div>
-                  <div className="text-base font-black text-[#4F46E5]">
-                    {finderResult.isBin ? "1's Comp:" : "9's Comp:"} {finderResult.rMinusOneComp}
+
+                  <div className="overflow-x-auto pb-1">
+                    <div className="flex items-center justify-center gap-1.5">
+                      {finderResult.clean.split('').map((ch, idx) => {
+                        if (ch === '.') {
+                          return <span key={idx} className="text-xl font-black text-amber-700 px-1">.</span>;
+                        }
+                        const inv = finderResult.isBin ? (ch === '0' ? '1' : '0') : (9 - parseInt(ch, 10)).toString();
+                        return (
+                          <div key={idx} className="flex flex-col items-center w-10 sm:w-11">
+                            <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#1E293B]">
+                              {ch}
+                            </div>
+                            <ArrowDown className="w-3.5 h-3.5 text-[#4F46E5] my-1" />
+                            <div className="w-full h-9 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] flex items-center justify-center font-black text-sm text-[#3730A3]">
+                              {inv}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
-                  <div className="text-sm font-bold text-[#D97706]">+ 1 (Add to LSB)</div>
-                  <div className="border-t-2 border-[#1E293B] pt-1" />
-                  <div className="text-lg font-black text-[#2E6F40]">
-                    {finderResult.isBin ? "2's Comp:" : "10's Comp:"} {finderResult.rComp}
+                </div>
+
+                {/* Step 2B: Aligned + 1 at LSB Grid */}
+                <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-3">
+                  <div className="flex items-center justify-between text-[11px] font-bold text-[#64748B]">
+                    <span>Step 2B: Add + 1 to the rightmost LSB with Carry Propagation</span>
+                    <span className="text-[#2E6F40] font-black">{finderResult.isBin ? "2's Complement" : "10's Complement"} = {finderResult.rComp}</span>
+                  </div>
+
+                  <div className="overflow-x-auto pb-1">
+                    <div className="inline-flex flex-col items-center min-w-full justify-center">
+                      <div className="flex items-start gap-1.5">
+                        
+                        {/* Operator label */}
+                        <div className="flex flex-col items-center w-8 text-right font-bold text-xs text-[#64748B] pt-5 space-y-2">
+                          <div className="h-5" />
+                          <div className="h-8 flex items-center justify-end">{finderResult.isBin ? "1's" : "9's"}</div>
+                          <div className="h-8 flex items-center justify-end text-[#D97706]">+</div>
+                          <div className="w-full border-t-2 border-[#1E293B] my-1" />
+                          <div className="h-9 flex items-center justify-end text-[#2E6F40]">=</div>
+                        </div>
+
+                        {/* Column stack */}
+                        {finderResult.step2Cols.map((col, cIdx) => {
+                          if (col.isRadix) {
+                            return (
+                              <div key={cIdx} className="flex flex-col items-center w-5 text-center">
+                                <div className="h-5" />
+                                <div className="h-8 flex items-center justify-center text-lg font-black text-amber-700">.</div>
+                                <div className="h-8 flex items-center justify-center text-lg font-black text-amber-700">.</div>
+                                <div className="w-full border-t-2 border-[#1E293B] my-1" />
+                                <div className="h-9 flex items-center justify-center text-xl font-black text-amber-700">.</div>
+                              </div>
+                            );
+                          }
+
+                          return (
+                            <div key={cIdx} className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                              {/* Carry row */}
+                              <div className="h-5 flex items-center justify-center">
+                                {col.carry === 1 ? (
+                                  <span className="px-1 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-black">
+                                    +1
+                                  </span>
+                                ) : (
+                                  <span className="text-[9px] text-gray-300">0</span>
+                                )}
+                              </div>
+
+                              {/* Complement 1 row */}
+                              <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#3730A3]">
+                                {col.comp1Digit}
+                              </div>
+
+                              {/* Add 1 row */}
+                              <div className={`w-full h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
+                                col.add1Digit ? "bg-amber-50 text-amber-900 border border-amber-300 font-black" : "text-gray-300"
+                              }`}>
+                                {col.add1Digit || "0"}
+                              </div>
+
+                              {/* Divider */}
+                              <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+
+                              {/* Result row */}
+                              <div className="w-full h-9 rounded-lg bg-emerald-100 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-base shadow-2xs">
+                                {col.comp2Digit}
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* STAGE 3: 2-Second Exam Shortcut Strip */}
-              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+              {/* STAGE 3: 2-Second Exam Shortcut Strip (Right-to-Left Scan) */}
+              <div className="p-5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] shadow-soft space-y-3">
                 <div className="flex items-center justify-between border-b border-[#DCE7E1] pb-2">
                   <span className="font-bold text-[#D97706] uppercase text-xs flex items-center gap-1.5">
                     <Zap className="w-3.5 h-3.5 text-[#D97706]" />
                     Stage 3: 2-Second Exam Shortcut Strip (&larr; Scan Right-to-Left)
                   </span>
                   <span className="text-[#64748B]">
-                    {finderResult.isBin ? "Scan right-to-left: Keep trailing 0s and first 1, invert rest" : "9-9-9-10 Rule: Subtract first non-zero from 10, preceding from 9"}
+                    {finderResult.isBin ? "Rule: Keep trailing 0s and first 1 unchanged (Emerald); invert all bits to the left (Indigo)!" : "9-9-9-10 Rule: Subtract last non-zero digit from 10, keep trailing 0s, subtract preceding from 9!"}
                   </span>
                 </div>
 
                 <div className="flex flex-wrap gap-2 items-center justify-center py-2">
-                  <span className="text-xs font-bold text-[#64748B] mr-2">&larr; Scan:</span>
+                  <span className="text-xs font-bold text-[#64748B] mr-2">&larr; Scan Direction:</span>
                   {finderResult.shortcutItems.map((item, i) => {
                     if (item.type === "RADIX") {
                       return <span key={i} className="text-xl font-black text-amber-700 px-1">.</span>;
                     }
                     return (
-                      <div key={i} className={`p-2.5 rounded-xl border text-center space-y-1 shadow-2xs ${
+                      <div key={i} className={`p-2.5 rounded-xl border text-center space-y-1 shadow-2xs min-w-[70px] ${
                         item.color === "EMERALD" 
                           ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
                           : item.color === "AMBER"
                           ? "bg-[#FEF3C7] border-[#FDE68A] text-[#92400E]"
                           : "bg-[#EEF2FF] border-[#C7D2FE] text-[#3730A3]"
                       }`}>
-                        <div className="text-[10px] opacity-75">{item.action}</div>
+                        <div className="text-[9px] font-bold opacity-80 uppercase">{item.action}</div>
                         <div className="text-base font-black">{item.ch} &rarr; {item.res}</div>
                       </div>
                     );
                   })}
+                </div>
+
+                <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] text-[#2E6F40] font-bold text-center text-xs">
+                  Shortcut Verified: Final {finderResult.isBin ? "2's" : "10's"} Complement = ({finderResult.rComp})_{finderResult.isBin ? "2" : "10"}
                 </div>
               </div>
 
@@ -2378,15 +2567,15 @@ const ComplementsSubtractorSolver = () => {
       )}
 
       {/* ==================================================================== */}
-      {/* SUB-TAB 3B: FULL COMPLEMENT SUBTRACTION (M - N) */}
+      {/* SUB-TAB 2: PART B: COMPLEMENT SUBTRACTION VISUALIZER (M - N) */}
       {/* ==================================================================== */}
       {activeTab === "subtractor" && (
         <div className="space-y-6">
           
-          {/* Presets */}
+          {/* Preset Buttons with Decimal Equivalents */}
           <div className="p-4 bg-white rounded-2xl border border-[#DCE7E1] shadow-2xs space-y-2">
             <span className="text-[11px] font-mono font-bold text-[#64748B] uppercase tracking-wider block">
-              Load Subtraction Presets:
+              Load Subtraction Presets with Expected Decimal Differences:
             </span>
             <div className="flex flex-wrap gap-2">
               {presetsSubtractor.map((p, idx) => (
@@ -2405,26 +2594,40 @@ const ComplementsSubtractorSolver = () => {
             </div>
           </div>
 
-          {/* Controls */}
+          {/* Controls with Live Decimal Helper Badges */}
           <div className="p-6 bg-white rounded-2xl border border-[#DCE7E1] shadow-soft space-y-4">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div className="space-y-1.5">
-                <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Minuend (M):</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Minuend (M):</label>
+                  {subtractionResult && subtractionResult.isValid && (
+                    <span className="text-xs font-mono font-bold text-[#2E6F40] bg-[#ECFDF5] px-2 py-0.2 rounded border border-[#A7F3D0]">
+                      M = {subtractionResult.decM}₁₀
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={minuendM}
                   onChange={(e) => setMinuendM(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2E6F40]"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Subtrahend (N):</label>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold text-[#1E293B] uppercase">Subtrahend (N):</label>
+                  {subtractionResult && subtractionResult.isValid && (
+                    <span className="text-xs font-mono font-bold text-[#4F46E5] bg-[#EEF2FF] px-2 py-0.2 rounded border border-[#C7D2FE]">
+                      N = {subtractionResult.decN}₁₀
+                    </span>
+                  )}
+                </div>
                 <input
                   type="text"
                   value={subtrahendN}
                   onChange={(e) => setSubtrahendN(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-base font-bold text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2E6F40]"
                 />
               </div>
 
@@ -2433,15 +2636,27 @@ const ComplementsSubtractorSolver = () => {
                 <select
                   value={compType}
                   onChange={(e) => setCompType(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-sm font-bold text-[#1E293B]"
+                  className="w-full px-4 py-2.5 rounded-xl border border-[#DCE7E1] bg-[#FAF8F5] font-mono text-sm font-bold text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#2E6F40]"
                 >
-                  <option value="twos">Binary 2's Complement</option>
-                  <option value="ones">Binary 1's Complement</option>
-                  <option value="tens">Decimal 10's Complement</option>
-                  <option value="nines">Decimal 9's Complement</option>
+                  <option value="ones">Binary 1's Complement (End-Around Carry)</option>
+                  <option value="twos">Binary 2's Complement (Discard Carry)</option>
+                  <option value="nines">Decimal 9's Complement (End-Around Carry)</option>
+                  <option value="tens">Decimal 10's Complement (Discard Carry)</option>
                 </select>
               </div>
             </div>
+
+            {/* Expected Decimal Difference Check Banner */}
+            {subtractionResult && subtractionResult.isValid && (
+              <div className="p-3 bg-[#EEF2FF] rounded-xl border border-[#C7D2FE] text-xs font-mono text-[#3730A3] flex flex-wrap items-center justify-between gap-2">
+                <span className="font-bold">
+                  Expected Base 10 Check: M ({subtractionResult.decM}) - N ({subtractionResult.decN}) = {subtractionResult.decDiff > 0 ? `+${subtractionResult.decDiff}` : subtractionResult.decDiff}₁₀
+                </span>
+                <span className="font-bold text-[#2E6F40] bg-white px-2 py-0.5 rounded border border-[#C7D2FE]">
+                  Target Result: {subtractionResult.decDiff >= 0 ? "+" : "-"}{Math.abs(subtractionResult.decDiff)}₁₀
+                </span>
+              </div>
+            )}
 
             {subtractionResult && !subtractionResult.isValid && (
               <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-mono flex items-center gap-2">
@@ -2469,36 +2684,227 @@ const ComplementsSubtractorSolver = () => {
                 </div>
               </div>
 
-              {/* Step 2: Complement of N */}
-              <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] space-y-2">
+              {/* Step 2: Compute Complement of N (Visual Transformation Pipeline) */}
+              <div className="p-5 rounded-xl bg-white border border-[#DCE7E1] space-y-3">
                 <span className="font-bold text-[#1E293B] uppercase text-xs block">
                   Step 2: Compute {compType.toUpperCase()} Complement of Equalized N
                 </span>
-                <div className="text-sm">
-                  Comp(N) = <strong className="text-[#D97706]">{subtractionResult.compNStr}</strong>
+
+                <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] flex flex-wrap items-center justify-center gap-3 text-sm">
+                  <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-center">
+                    <span className="text-[10px] text-[#64748B] block">Equalized N</span>
+                    <strong className="text-[#1E293B]">{subtractionResult.fullPadN}</strong>
+                  </div>
+
+                  <ArrowRight className="w-4 h-4 text-[#4F46E5]" />
+
+                  {subtractionResult.step2Visual.intermediate && (
+                    <>
+                      <div className="p-2.5 rounded-lg bg-[#EEF2FF] border border-[#C7D2FE] text-center">
+                        <span className="text-[10px] text-[#3730A3] block">
+                          {compType === "twos" ? "1's Comp (Inverted)" : "9's Comp (9 - d)"}
+                        </span>
+                        <strong className="text-[#3730A3]">{subtractionResult.step2Visual.intermediate}</strong>
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-[#D97706]" />
+                    </>
+                  )}
+
+                  <div className="p-2.5 rounded-lg bg-[#FEF3C7] border border-[#FDE68A] text-center">
+                    <span className="text-[10px] text-[#92400E] block">
+                      {compType.toUpperCase()} Complement
+                    </span>
+                    <strong className="text-[#D97706]">{subtractionResult.compNStr}</strong>
+                  </div>
                 </div>
               </div>
 
-              {/* Step 3: Column-Aligned Addition Grid */}
-              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 max-w-sm mx-auto text-right">
-                <span className="font-bold text-[#1E293B] uppercase text-[11px] block text-left">
-                  Step 3: Perform Addition M + Comp(N)
+              {/* Step 3: Column-Aligned Addition Grid with Graphical Carry Pipeline */}
+              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
+                <span className="font-bold text-[#1E293B] uppercase text-xs block">
+                  Step 3: Perform Column-Aligned Addition M + Comp(N)
                 </span>
-                <div className="text-sm font-bold text-[#2E6F40]">{subtractionResult.fullPadM}</div>
-                <div className="text-sm font-bold text-[#D97706]">+ {subtractionResult.compNStr}</div>
-                <div className="border-t-2 border-[#1E293B] pt-1" />
-                <div className="text-base font-black flex items-center justify-end gap-1">
-                  <span className={`px-1.5 py-0.5 rounded text-xs border ${
-                    subtractionResult.hasCarry ? "bg-amber-100 text-amber-900 border-amber-300" : "bg-gray-100 text-gray-500 border-gray-300"
-                  }`}>
-                    Carry: {subtractionResult.coutBit}
-                  </span>
-                  <span>{subtractionResult.rawSumFormatted}</span>
+
+                {/* Main Addition Stack */}
+                <div className="overflow-x-auto pb-2">
+                  <div className="inline-flex flex-col items-center min-w-full justify-center">
+                    <div className="flex items-start gap-1.5">
+                      
+                      {/* Operator column */}
+                      <div className="flex flex-col items-center w-8 text-right font-bold text-xs text-[#64748B] pt-6 space-y-2">
+                        <div className="h-5" />
+                        <div className="h-8 flex items-center justify-end font-mono">M</div>
+                        <div className="h-8 flex items-center justify-end text-[#D97706]">+</div>
+                        <div className="w-full border-t-2 border-[#1E293B] my-1" />
+                        <div className="h-9 flex items-center justify-end text-[#2E6F40]">=</div>
+                      </div>
+
+                      {/* Extra MSB Carry Column */}
+                      <div className="flex flex-col items-center w-12 space-y-1">
+                        <span className="text-[9px] text-[#64748B] font-bold h-5 flex items-center">MSB C</span>
+                        <div className="h-8 flex items-center justify-center">
+                          {subtractionResult.coutBit === 1 ? (
+                            <span className="px-1.5 py-0.5 rounded-md bg-amber-100 text-amber-900 border border-amber-300 font-black text-xs">
+                              (1)
+                            </span>
+                          ) : (
+                            <span className="px-1.5 py-0.5 rounded-md bg-gray-100 text-gray-500 border border-gray-300 font-bold text-xs">
+                              (0)
+                            </span>
+                          )}
+                        </div>
+                        <div className="h-8" />
+                        <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+                        <div className={`w-full h-9 rounded-lg flex items-center justify-center font-black text-sm border-2 ${
+                          subtractionResult.hasCarry ? "bg-amber-100 border-amber-500 text-amber-900" : "bg-gray-100 border-gray-300 text-gray-400"
+                        }`}>
+                          {subtractionResult.coutBit}
+                        </div>
+                      </div>
+
+                      {/* Main Digits */}
+                      {subtractionResult.addCols.map((col, idx) => (
+                        <div key={idx} className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                          {/* Carry row */}
+                          <div className="h-5 flex items-center justify-center">
+                            {col.carryIn === 1 ? (
+                              <span className="px-1 py-0.2 rounded bg-amber-100 text-amber-900 border border-amber-300 text-[9px] font-black">
+                                +1
+                              </span>
+                            ) : (
+                              <span className="text-[9px] text-gray-300">0</span>
+                            )}
+                          </div>
+
+                          {/* Minuend digit */}
+                          <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#2E6F40]">
+                            {col.digitM}
+                          </div>
+
+                          {/* Subtrahend complement digit */}
+                          <div className="w-full h-8 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#D97706]">
+                            {col.digitCompN}
+                          </div>
+
+                          {/* Divider */}
+                          <div className="w-full border-t-2 border-[#1E293B] my-0.5" />
+
+                          {/* Sum digit */}
+                          <div className="w-full h-9 rounded-lg bg-white border border-[#DCE7E1] flex items-center justify-center font-black text-sm text-[#1E293B]">
+                            {col.resDigit}
+                          </div>
+                        </div>
+                      ))}
+
+                    </div>
+                  </div>
                 </div>
+
+                {/* GRAPHICAL POST-PROCESSING CARRY PIPELINE */}
+                {/* Branch A: End-Around Carry (EAC) for 1's and 9's complement with Carry = 1 */}
+                {subtractionResult.hasCarry && (compType === "ones" || compType === "nines") && (
+                  <div className="p-4 bg-white rounded-xl border-2 border-emerald-500 space-y-3">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#065F46] border-b border-[#DCE7E1] pb-2">
+                      <span className="flex items-center gap-1.5">
+                        <CornerDownRight className="w-4 h-4 text-[#2E6F40]" />
+                        End-Around Carry (EAC) Wrap-Around: Extra MSB Carry (1) wraps around and adds +1 to LSB!
+                      </span>
+                      <span className="bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded border border-emerald-300">
+                        Result is Positive (+)
+                      </span>
+                    </div>
+
+                    {/* Second Aligned Addition Stack */}
+                    <div className="overflow-x-auto py-1">
+                      <div className="inline-flex flex-col items-center min-w-full justify-center">
+                        <div className="flex items-start gap-1.5">
+                          <div className="flex flex-col items-center w-12 text-right font-bold text-xs text-[#64748B] pt-2 space-y-2">
+                            <div className="h-8 flex items-center justify-end font-mono">Sum</div>
+                            <div className="h-8 flex items-center justify-end text-[#2E6F40] font-black">+1</div>
+                            <div className="w-full border-t-2 border-[#2E6F40] my-1" />
+                            <div className="h-9 flex items-center justify-end text-[#2E6F40]">=</div>
+                          </div>
+
+                          {subtractionResult.eacAddCols.map((col, idx) => (
+                            <div key={idx} className="flex flex-col items-center w-10 sm:w-11 space-y-1">
+                              {/* Intermediate sum */}
+                              <div className="w-full h-8 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-center font-bold text-sm text-[#1E293B]">
+                                {col.sumDigit}
+                              </div>
+
+                              {/* +1 at LSB */}
+                              <div className={`w-full h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
+                                col.add1Digit ? "bg-amber-100 text-amber-900 border border-amber-300 font-black" : "text-gray-300"
+                              }`}>
+                                {col.add1Digit || "0"}
+                              </div>
+
+                              {/* Divider */}
+                              <div className="w-full border-t-2 border-[#2E6F40] my-0.5" />
+
+                              {/* Final EAC Sum */}
+                              <div className="w-full h-9 rounded-lg bg-emerald-100 border-2 border-emerald-500 text-emerald-900 flex items-center justify-center font-black text-base shadow-2xs">
+                                {col.resDigit}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-right text-sm font-black text-[#2E6F40]">
+                      Final Positive Result after EAC: +{subtractionResult.eacResult} (+{subtractionResult.decDiff}₁₀)
+                    </div>
+                  </div>
+                )}
+
+                {/* Branch B: Discard Carry for 2's and 10's complement with Carry = 1 */}
+                {subtractionResult.hasCarry && (compType === "twos" || compType === "tens") && (
+                  <div className="p-4 bg-white rounded-xl border-2 border-emerald-500 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#065F46]">
+                      <span className="flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-[#2E6F40]" />
+                        End Carry = 1 indicates Positive Result &rarr; Discard End Carry!
+                      </span>
+                      <span className="line-through text-red-500 font-black text-sm px-2 py-0.5 bg-red-50 rounded border border-red-200">
+                        Drop MSB Carry (1)
+                      </span>
+                    </div>
+                    <p className="text-[#475569] text-xs">
+                      In r's complement (2's or 10's), the extra end carry is discarded without adding to the LSB.
+                      The remaining digits directly form the final exact positive difference.
+                    </p>
+                    <div className="text-right text-sm font-black text-[#2E6F40] pt-1 border-t border-[#DCE7E1]">
+                      Final Positive Result: +{subtractionResult.rawSumFormatted} (+{subtractionResult.decDiff}₁₀)
+                    </div>
+                  </div>
+                )}
+
+                {/* Branch C: Carry = 0 (Negative Result, M < N) */}
+                {!subtractionResult.hasCarry && (
+                  <div className="p-4 bg-white rounded-xl border-2 border-amber-500 space-y-2">
+                    <div className="flex items-center justify-between text-xs font-bold text-[#92400E]">
+                      <span className="flex items-center gap-1.5">
+                        <AlertCircle className="w-4 h-4 text-[#D97706]" />
+                        End Carry = 0 indicates Negative Result (M &lt; N) &rarr; Re-Complement Sum!
+                      </span>
+                      <span className="bg-amber-100 text-amber-900 px-2 py-0.5 rounded border border-amber-300 font-bold">
+                        Carry = 0
+                      </span>
+                    </div>
+                    <p className="text-[#475569] text-xs">
+                      Since no end carry was generated, the true answer is negative.
+                      Take the {compType.toUpperCase()} complement of the intermediate sum ({subtractionResult.rawSumFormatted}) and attach an explicit negative (-) sign.
+                    </p>
+                    <div className="text-right text-sm font-black text-[#DC2626] pt-1 border-t border-[#DCE7E1]">
+                      Final Negative Result: {subtractionResult.finalAnswer} ({subtractionResult.decDiff}₁₀)
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Step 4: Decision Diamond Post-Processing */}
-              <div className={`p-5 rounded-xl border space-y-3 ${
+              {/* Step 4: Decision Diamond Summary */}
+              <div className={`p-5 rounded-xl border space-y-2 ${
                 subtractionResult.hasCarry
                   ? "bg-[#ECFDF5] border-[#A7F3D0] text-[#065F46]"
                   : "bg-[#FFFBEB] border-[#FDE68A] text-[#92400E]"
@@ -2518,7 +2924,7 @@ const ComplementsSubtractorSolver = () => {
                 </p>
 
                 <div className="pt-2 border-t border-current/20 flex items-center justify-between text-base font-black">
-                  <span>Final Result:</span>
+                  <span>Final Subtraction Answer:</span>
                   <span className="text-lg">{subtractionResult.finalAnswer}</span>
                 </div>
               </div>
