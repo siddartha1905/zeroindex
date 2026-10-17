@@ -4508,6 +4508,448 @@ const SignedRegisterOverflowSolver = () => {
 // ============================================================================
 // SOLVER 5: INTERACTIVE 7-GATE LOGIC & WAVEFORM WORKBENCH
 // ============================================================================
+// HELPER: INLINE IEEE LOGIC GATE SVG SYMBOL WITH WIRES & LIVE LED NODE
+// ============================================================================
+const GateCardSvg = ({ gateId, inA, inB, inC, numInputs, outVal }) => {
+  const isHigh = outVal === 1;
+  const is3In = numInputs === 3 && gateId !== "NOT";
+
+  // Gate connection coordinates
+  const gateStartX = gateId === "XOR" || gateId === "XNOR" ? 72 : (gateId === "OR" || gateId === "NOR" ? 78 : 80);
+  const bodyFill = isHigh ? "#ecfdf5" : "#f8fafc";
+
+  return (
+    <svg 
+      viewBox="0 0 220 90" 
+      className="w-full h-24 my-2 select-none" 
+      fill="none" 
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* 1. INPUT WIRES ON THE LEFT */}
+      {gateId === "NOT" ? (
+        <g>
+          {/* Wire A */}
+          <line
+            x1="50"
+            y1="45"
+            x2="80"
+            y2="45"
+            stroke={inA === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inA === 1 ? "3" : "2"}
+            strokeLinecap="round"
+          />
+          {/* Input A Badge */}
+          <rect
+            x="4"
+            y="33"
+            width="44"
+            height="24"
+            rx="6"
+            fill={inA === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inA === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.5"
+          />
+          <text
+            x="26"
+            y="49"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="10"
+            fontWeight="bold"
+            fill={inA === 1 ? "#065f46" : "#475569"}
+          >
+            A = {inA}
+          </text>
+        </g>
+      ) : !is3In ? (
+        <g>
+          {/* Wire A */}
+          <line
+            x1="50"
+            y1="30"
+            x2={gateStartX}
+            y2="30"
+            stroke={inA === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inA === 1 ? "3" : "2"}
+            strokeLinecap="round"
+          />
+          <rect
+            x="4"
+            y="19"
+            width="44"
+            height="22"
+            rx="5"
+            fill={inA === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inA === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.5"
+          />
+          <text
+            x="26"
+            y="34"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="9.5"
+            fontWeight="bold"
+            fill={inA === 1 ? "#065f46" : "#475569"}
+          >
+            A = {inA}
+          </text>
+
+          {/* Wire B */}
+          <line
+            x1="50"
+            y1="60"
+            x2={gateStartX}
+            y2="60"
+            stroke={inB === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inB === 1 ? "3" : "2"}
+            strokeLinecap="round"
+          />
+          <rect
+            x="4"
+            y="49"
+            width="44"
+            height="22"
+            rx="5"
+            fill={inB === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inB === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.5"
+          />
+          <text
+            x="26"
+            y="64"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="9.5"
+            fontWeight="bold"
+            fill={inB === 1 ? "#065f46" : "#475569"}
+          >
+            B = {inB}
+          </text>
+        </g>
+      ) : (
+        <g>
+          {/* Wire A */}
+          <line
+            x1="46"
+            y1="23"
+            x2={gateStartX}
+            y2="23"
+            stroke={inA === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inA === 1 ? "2.5" : "1.8"}
+            strokeLinecap="round"
+          />
+          <rect
+            x="3"
+            y="13"
+            width="42"
+            height="19"
+            rx="4"
+            fill={inA === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inA === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.2"
+          />
+          <text
+            x="24"
+            y="26"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="8.5"
+            fontWeight="bold"
+            fill={inA === 1 ? "#065f46" : "#475569"}
+          >
+            A = {inA}
+          </text>
+
+          {/* Wire B */}
+          <line
+            x1="46"
+            y1="45"
+            x2={gateStartX}
+            y2="45"
+            stroke={inB === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inB === 1 ? "2.5" : "1.8"}
+            strokeLinecap="round"
+          />
+          <rect
+            x="3"
+            y="35"
+            width="42"
+            height="19"
+            rx="4"
+            fill={inB === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inB === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.2"
+          />
+          <text
+            x="24"
+            y="48"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="8.5"
+            fontWeight="bold"
+            fill={inB === 1 ? "#065f46" : "#475569"}
+          >
+            B = {inB}
+          </text>
+
+          {/* Wire C */}
+          <line
+            x1="46"
+            y1="67"
+            x2={gateStartX}
+            y2="67"
+            stroke={inC === 1 ? "#10b981" : "#94a3b8"}
+            strokeWidth={inC === 1 ? "2.5" : "1.8"}
+            strokeLinecap="round"
+          />
+          <rect
+            x="3"
+            y="57"
+            width="42"
+            height="19"
+            rx="4"
+            fill={inC === 1 ? "#ecfdf5" : "#f1f5f9"}
+            stroke={inC === 1 ? "#10b981" : "#cbd5e1"}
+            strokeWidth="1.2"
+          />
+          <text
+            x="24"
+            y="70"
+            textAnchor="middle"
+            fontFamily="'JetBrains Mono', monospace"
+            fontSize="8.5"
+            fontWeight="bold"
+            fill={inC === 1 ? "#065f46" : "#475569"}
+          >
+            C = {inC}
+          </text>
+        </g>
+      )}
+
+      {/* 2. STANDARD IEEE/ANSI GATE BODY IN CENTER */}
+      {gateId === "NOT" && (
+        <g>
+          <path
+            d="M 80 20 L 80 70 L 135 45 Z"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="141"
+            cy="45"
+            r="5"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+          />
+        </g>
+      )}
+
+      {gateId === "AND" && (
+        <path
+          d="M 80 20 L 110 20 A 25 25 0 0 1 110 70 L 80 70 Z"
+          stroke="#1e293b"
+          strokeWidth="2.5"
+          fill={bodyFill}
+          strokeLinejoin="round"
+        />
+      )}
+
+      {gateId === "OR" && (
+        <path
+          d="M 75 20 Q 92 45 75 70 Q 115 70 140 45 Q 115 20 75 20 Z"
+          stroke="#1e293b"
+          strokeWidth="2.5"
+          fill={bodyFill}
+          strokeLinejoin="round"
+        />
+      )}
+
+      {gateId === "NAND" && (
+        <g>
+          <path
+            d="M 80 20 L 110 20 A 25 25 0 0 1 110 70 L 80 70 Z"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="141"
+            cy="45"
+            r="5"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+          />
+        </g>
+      )}
+
+      {gateId === "NOR" && (
+        <g>
+          <path
+            d="M 75 20 Q 92 45 75 70 Q 115 70 140 45 Q 115 20 75 20 Z"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="146"
+            cy="45"
+            r="5"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+          />
+        </g>
+      )}
+
+      {gateId === "XOR" && (
+        <g>
+          <path
+            d="M 67 20 Q 84 45 67 70"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M 75 20 Q 92 45 75 70 Q 115 70 140 45 Q 115 20 75 20 Z"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+            strokeLinejoin="round"
+          />
+        </g>
+      )}
+
+      {gateId === "XNOR" && (
+        <g>
+          <path
+            d="M 67 20 Q 84 45 67 70"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+          />
+          <path
+            d="M 75 20 Q 92 45 75 70 Q 115 70 140 45 Q 115 20 75 20 Z"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+            strokeLinejoin="round"
+          />
+          <circle
+            cx="146"
+            cy="45"
+            r="5"
+            stroke="#1e293b"
+            strokeWidth="2.5"
+            fill={bodyFill}
+          />
+        </g>
+      )}
+
+      {/* 3. OUTPUT WIRE & LIVE LED NODE ON THE RIGHT */}
+      <line
+        x1={
+          gateId === "NOT" || gateId === "NAND"
+            ? 146
+            : gateId === "NOR" || gateId === "XNOR"
+            ? 151
+            : gateId === "AND"
+            ? 135
+            : 140
+        }
+        y1="45"
+        x2="170"
+        y2="45"
+        stroke={isHigh ? "#10b981" : "#94a3b8"}
+        strokeWidth={isHigh ? "3" : "2"}
+        strokeLinecap="round"
+      />
+
+      {/* Glowing Output LED Node Badge */}
+      <g transform="translate(170, 31)">
+        <rect
+          x="0"
+          y="0"
+          width="46"
+          height="28"
+          rx="7"
+          fill={isHigh ? "#ecfdf5" : "#f8fafc"}
+          stroke={isHigh ? "#10b981" : "#cbd5e1"}
+          strokeWidth={isHigh ? "2" : "1.5"}
+        />
+        {/* LED Bulb */}
+        <circle
+          cx="11"
+          cy="14"
+          r="4.5"
+          fill={isHigh ? "#10b981" : "#94a3b8"}
+        />
+        {isHigh && (
+          <circle
+            cx="11"
+            cy="14"
+            r="2"
+            fill="#a7f3d0"
+          />
+        )}
+        <text
+          x="29"
+          y="18"
+          textAnchor="middle"
+          fontFamily="'JetBrains Mono', monospace"
+          fontSize="10"
+          fontWeight="bold"
+          fill={isHigh ? "#065f46" : "#64748b"}
+        >
+          Y={outVal}
+        </text>
+      </g>
+    </svg>
+  );
+};
+
+// ============================================================================
+// HELPER: CONTINUOUS SQUARE WAVE GENERATOR (STEP-FUNCTION POLYLINE & FILL)
+// ============================================================================
+const generateSquareWave = (bits, yHigh, yLow, xStart = 90, stepW = 95) => {
+  if (!bits || bits.length === 0) return { path: "", fillPath: "" };
+  let d = "";
+  const startY = bits[0] === 1 ? yHigh : yLow;
+  d += `M ${xStart} ${startY} `;
+
+  for (let i = 0; i < bits.length; i++) {
+    const xi = xStart + i * stepW;
+    const nextX = xi + stepW;
+    const curY = bits[i] === 1 ? yHigh : yLow;
+
+    if (i > 0) {
+      const prevY = bits[i - 1] === 1 ? yHigh : yLow;
+      if (prevY !== curY) {
+        // Vertical rising or falling edge transition
+        d += `L ${xi} ${curY} `;
+      }
+    }
+    // Horizontal plateau for this clock cycle
+    d += `L ${nextX} ${curY} `;
+  }
+
+  const endX = xStart + bits.length * stepW;
+  const fillPath = `${d} L ${endX} ${yLow} L ${xStart} ${yLow} Z`;
+
+  return { path: d, fillPath };
+};
+
+// ============================================================================
+// SOLVER 5: 7-GATE LOGIC EXPLORER & REAL-TIME TIMING WAVEFORM WORKBENCH
+// ============================================================================
 const LogicGatesWaveformSolver = () => {
   const [numInputs, setNumInputs] = useState(2);
   const [inA, setInA] = useState(1);
@@ -4516,6 +4958,7 @@ const LogicGatesWaveformSolver = () => {
 
   const [waveformA, setWaveformA] = useState([0, 0, 1, 1, 0, 0, 1, 1]);
   const [waveformB, setWaveformB] = useState([0, 1, 0, 1, 0, 1, 0, 1]);
+  const [waveformC, setWaveformC] = useState([0, 0, 0, 0, 1, 1, 1, 1]);
   const [selectedGateWave, setSelectedGateWave] = useState("AND");
 
   const toggleWaveBit = (track, idx) => {
@@ -4525,8 +4968,14 @@ const LogicGatesWaveformSolver = () => {
         next[idx] = next[idx] === 1 ? 0 : 1;
         return next;
       });
-    } else {
+    } else if (track === "B") {
       setWaveformB(prev => {
+        const next = [...prev];
+        next[idx] = next[idx] === 1 ? 0 : 1;
+        return next;
+      });
+    } else if (track === "C") {
+      setWaveformC(prev => {
         const next = [...prev];
         next[idx] = next[idx] === 1 ? 0 : 1;
         return next;
@@ -4554,9 +5003,35 @@ const LogicGatesWaveformSolver = () => {
   const computedWaveformOut = useMemo(() => {
     return waveformA.map((bitA, idx) => {
       const bitB = waveformB[idx];
-      return evalGate(selectedGateWave, bitA, bitB, 0);
+      const bitC = waveformC[idx];
+      return evalGate(selectedGateWave, bitA, bitB, bitC);
     });
-  }, [waveformA, waveformB, selectedGateWave]);
+  }, [waveformA, waveformB, waveformC, selectedGateWave, numInputs]);
+
+  // Generate Continuous Square Wave Paths for Logic Analyzer Oscilloscope
+  const waveAData = useMemo(() => {
+    const yHigh = 40;
+    const yLow = 76;
+    return generateSquareWave(waveformA, yHigh, yLow);
+  }, [waveformA]);
+
+  const waveBData = useMemo(() => {
+    const yHigh = numInputs === 3 ? 106 : 114;
+    const yLow = numInputs === 3 ? 142 : 150;
+    return generateSquareWave(waveformB, yHigh, yLow);
+  }, [waveformB, numInputs]);
+
+  const waveCData = useMemo(() => {
+    const yHigh = 172;
+    const yLow = 208;
+    return generateSquareWave(waveformC, yHigh, yLow);
+  }, [waveformC]);
+
+  const waveYData = useMemo(() => {
+    const yHigh = numInputs === 3 ? 242 : 188;
+    const yLow = numInputs === 3 ? 278 : 224;
+    return generateSquareWave(computedWaveformOut, yHigh, yLow);
+  }, [computedWaveformOut, numInputs]);
 
   const gatesList = [
     { id: "NOT", name: "Inverter", eq: "Y = A'", desc: "Inverts input logic." },
@@ -4659,7 +5134,7 @@ const LogicGatesWaveformSolver = () => {
         </div>
       </div>
 
-      {/* 7-Gate Live Simulation Cards Grid */}
+      {/* 7-Gate Live Simulation Cards Grid with Visible IEEE SVG Symbols */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
         {gatesList.map((g) => {
           const outVal = evalGate(g.id, inA, inB, inC);
@@ -4668,8 +5143,8 @@ const LogicGatesWaveformSolver = () => {
           return (
             <div
               key={g.id}
-              className={`p-5 rounded-2xl border transition-all space-y-3 ${
-                isHigh ? "bg-white border-[#2E6F40] shadow-soft" : "bg-white border-[#DCE7E1] shadow-2xs"
+              className={`p-4 sm:p-5 rounded-2xl border transition-all space-y-3 ${
+                isHigh ? "bg-white border-[#2E6F40] shadow-soft ring-1 ring-[#2E6F40]/20" : "bg-white border-[#DCE7E1] shadow-2xs"
               }`}
             >
               <div className="flex items-center justify-between">
@@ -4681,9 +5156,16 @@ const LogicGatesWaveformSolver = () => {
                 </span>
               </div>
 
-              {/* Gate SVG Icon */}
-              <div className="flex justify-center py-2">
-                <GateSymbolSvg gateName={g.id} className="w-28 h-12 text-[#1E293B]" />
+              {/* Explicit Inline Standard IEEE Logic Gate SVG Symbol */}
+              <div className="flex justify-center items-center py-1 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1]">
+                <GateCardSvg
+                  gateId={g.id}
+                  inA={inA}
+                  inB={inB}
+                  inC={inC}
+                  numInputs={numInputs}
+                  outVal={outVal}
+                />
               </div>
 
               <div className="text-center font-mono text-xs font-bold text-[#2E6F40] bg-[#FAF8F5] py-1.5 rounded-lg border border-[#DCE7E1]">
@@ -4698,8 +5180,8 @@ const LogicGatesWaveformSolver = () => {
         })}
       </div>
 
-      {/* Interactive Timing Waveform Synthesizer */}
-      <div className="p-6 bg-white rounded-2xl border border-[#DCE7E1] shadow-soft space-y-4">
+      {/* Interactive Timing Waveform Synthesizer with Continuous Digital Square Wave */}
+      <div className="p-6 bg-white rounded-2xl border border-[#DCE7E1] shadow-soft space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#DCE7E1]">
           <div>
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#4F46E5]">Timing Synthesis</span>
@@ -4721,22 +5203,22 @@ const LogicGatesWaveformSolver = () => {
         </div>
 
         <p className="text-xs text-[#64748B] leading-relaxed">
-          Click any clock cycle (T0 to T7) below to toggle the digital pulse between HIGH (1) and LOW (0). The synthesized output waveform updates instantaneously.
+          Click any clock cycle (T0 to T7) on the buttons or directly on the oscilloscope waveform below to toggle between HIGH (1) and LOW (0). The synthesized output square wave and rising/falling edges update in real time.
         </p>
 
-        {/* Waveform Grid */}
-        <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-4 font-mono text-xs">
+        {/* Clickable Cycle Bit Buttons */}
+        <div className="p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1] space-y-3 font-mono text-xs">
           
           {/* Signal A */}
           <div className="flex items-center gap-3">
-            <span className="w-16 font-bold text-[#1E293B]">Clock (A):</span>
-            <div className="flex gap-1 flex-1">
+            <span className="w-20 font-bold text-[#1E293B]">Clock (A):</span>
+            <div className="flex gap-1.5 flex-1">
               {waveformA.map((bit, idx) => (
                 <button
                   key={idx}
                   onClick={() => toggleWaveBit("A", idx)}
                   className={`flex-1 h-8 rounded-lg font-bold text-xs transition-all flex items-center justify-center ${
-                    bit === 1 ? "bg-[#2E6F40] text-white shadow-2xs" : "bg-white text-[#64748B] border border-[#DCE7E1]"
+                    bit === 1 ? "bg-[#10b981] text-white shadow-2xs" : "bg-white text-[#64748B] border border-[#DCE7E1]"
                   }`}
                 >
                   {bit}
@@ -4747,14 +5229,14 @@ const LogicGatesWaveformSolver = () => {
 
           {/* Signal B */}
           <div className="flex items-center gap-3">
-            <span className="w-16 font-bold text-[#1E293B]">Clock (B):</span>
-            <div className="flex gap-1 flex-1">
+            <span className="w-20 font-bold text-[#1E293B]">Clock (B):</span>
+            <div className="flex gap-1.5 flex-1">
               {waveformB.map((bit, idx) => (
                 <button
                   key={idx}
                   onClick={() => toggleWaveBit("B", idx)}
                   className={`flex-1 h-8 rounded-lg font-bold text-xs transition-all flex items-center justify-center ${
-                    bit === 1 ? "bg-[#4F46E5] text-white shadow-2xs" : "bg-white text-[#64748B] border border-[#DCE7E1]"
+                    bit === 1 ? "bg-[#6366f1] text-white shadow-2xs" : "bg-white text-[#64748B] border border-[#DCE7E1]"
                   }`}
                 >
                   {bit}
@@ -4763,14 +5245,34 @@ const LogicGatesWaveformSolver = () => {
             </div>
           </div>
 
-          {/* Output Signal */}
+          {/* Signal C (if 3 inputs) */}
+          {numInputs === 3 && (
+            <div className="flex items-center gap-3">
+              <span className="w-20 font-bold text-[#1E293B]">Clock (C):</span>
+              <div className="flex gap-1.5 flex-1">
+                {waveformC.map((bit, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => toggleWaveBit("C", idx)}
+                    className={`flex-1 h-8 rounded-lg font-bold text-xs transition-all flex items-center justify-center ${
+                      bit === 1 ? "bg-[#14b8a6] text-white shadow-2xs" : "bg-white text-[#64748B] border border-[#DCE7E1]"
+                    }`}
+                  >
+                    {bit}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Output Signal Y */}
           <div className="flex items-center gap-3 pt-2 border-t border-[#DCE7E1]">
-            <span className="w-16 font-black text-[#D97706]">Out (Y):</span>
-            <div className="flex gap-1 flex-1">
+            <span className="w-20 font-black text-[#d97706]">Out (Y):</span>
+            <div className="flex gap-1.5 flex-1">
               {computedWaveformOut.map((bit, idx) => (
                 <div
                   key={idx}
-                  className={`flex-1 h-10 rounded-lg font-black text-sm transition-all flex items-center justify-center border-2 ${
+                  className={`flex-1 h-9 rounded-lg font-black text-xs transition-all flex items-center justify-center border-2 ${
                     bit === 1 ? "bg-amber-100 border-amber-500 text-amber-900" : "bg-white border-[#DCE7E1] text-gray-400"
                   }`}
                 >
@@ -4780,15 +5282,206 @@ const LogicGatesWaveformSolver = () => {
             </div>
           </div>
 
-          <div className="flex justify-between text-[10px] text-[#64748B] pt-1 px-1">
-            {waveformA.map((_, idx) => (
-              <span key={idx} className="flex-1 text-center">T{idx}</span>
-            ))}
+          <div className="flex justify-between text-[10px] text-[#64748B] pt-0.5 px-1">
+            <span className="w-20"></span>
+            <div className="flex gap-1.5 flex-1">
+              {waveformA.map((_, idx) => (
+                <span key={idx} className="flex-1 text-center font-bold">T{idx}</span>
+              ))}
+            </div>
           </div>
 
+        </div>
+
+        {/* REAL CONTINUOUS DIGITAL SQUARE-WAVE OSCILLOSCOPE TRACE SVG */}
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs font-mono text-[#64748B] px-1">
+            <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+              <span className="w-2 h-2 rounded-full bg-[#10b981]" />
+              Continuous Logic Analyzer Oscilloscope Trace ({selectedGateWave} Gate)
+            </span>
+            <span>Click on any pulse to toggle that time cycle</span>
+          </div>
+
+          <div className="w-full overflow-x-auto bg-slate-950 rounded-2xl p-4 border border-slate-800 shadow-inner">
+            <svg 
+              viewBox={numInputs === 3 ? "0 0 880 320" : "0 0 880 260"}
+              className="w-full h-auto min-w-[700px] select-none"
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              {/* 8 Vertical Time-Slice Grid Lines (T0 to T7) */}
+              {Array.from({ length: 8 }).map((_, i) => {
+                const xi = 90 + i * 95;
+                const centerX = xi + 47.5;
+                return (
+                  <g key={i}>
+                    {/* Vertical Grid Line at start of slot */}
+                    <line 
+                      x1={xi} 
+                      y1="25" 
+                      x2={xi} 
+                      y2={numInputs === 3 ? "305" : "245"} 
+                      stroke="#334155" 
+                      strokeWidth="1" 
+                      strokeDasharray="4 4" 
+                    />
+                    {/* Top Time Header Label */}
+                    <text 
+                      x={centerX} 
+                      y="18" 
+                      textAnchor="middle" 
+                      fontFamily="'JetBrains Mono', monospace" 
+                      fontSize="11" 
+                      fontWeight="bold" 
+                      fill="#94a3b8"
+                    >
+                      T{i}
+                    </text>
+                  </g>
+                );
+              })}
+              {/* Final Right Boundary Line */}
+              <line 
+                x1="850" 
+                y1="25" 
+                x2="850" 
+                y2={numInputs === 3 ? "305" : "245"} 
+                stroke="#334155" 
+                strokeWidth="1" 
+                strokeDasharray="4 4" 
+              />
+
+              {/* ================= TRACK 1: INPUT A ================= */}
+              <text x="18" y="58" fontFamily="'JetBrains Mono', monospace" fontSize="11" fontWeight="bold" fill="#10b981">
+                Input A
+              </text>
+              <text x="76" y="44" textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                1
+              </text>
+              <text x="76" y="78" textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                0
+              </text>
+              <line x1="82" y1="40" x2="850" y2="40" stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+              <line x1="82" y1="76" x2="850" y2="76" stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+              
+              {/* Shaded Fill under HIGH pulses */}
+              <path d={waveAData.fillPath} fill="rgba(16, 185, 129, 0.15)" />
+              {/* Step Function Square Wave */}
+              <path d={waveAData.path} stroke="#10b981" strokeWidth="3" strokeLinecap="round" strokeLinejoin="miter" />
+
+              {/* Click targets for Track A */}
+              {waveformA.map((_, i) => (
+                <rect
+                  key={i}
+                  x={90 + i * 95}
+                  y="32"
+                  width="95"
+                  height="50"
+                  fill="transparent"
+                  className="cursor-pointer hover:fill-emerald-500/10 transition-colors"
+                  onClick={() => toggleWaveBit("A", i)}
+                >
+                  <title>Click to toggle Clock A at T{i}</title>
+                </rect>
+              ))}
+
+              {/* ================= TRACK 2: INPUT B ================= */}
+              <text x="18" y={numInputs === 3 ? "124" : "130"} fontFamily="'JetBrains Mono', monospace" fontSize="11" fontWeight="bold" fill="#818cf8">
+                Input B
+              </text>
+              <text x="76" y={numInputs === 3 ? "112" : "118"} textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                1
+              </text>
+              <text x="76" y={numInputs === 3 ? "146" : "152"} textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                0
+              </text>
+              <line x1="82" y1={numInputs === 3 ? "108" : "114"} x2="850" y2={numInputs === 3 ? "108" : "114"} stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+              <line x1="82" y1={numInputs === 3 ? "144" : "150"} x2="850" y2={numInputs === 3 ? "144" : "150"} stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+
+              {/* Shaded Fill under HIGH pulses */}
+              <path d={waveBData.fillPath} fill="rgba(99, 102, 241, 0.15)" />
+              {/* Step Function Square Wave */}
+              <path d={waveBData.path} stroke="#6366f1" strokeWidth="3" strokeLinecap="round" strokeLinejoin="miter" />
+
+              {/* Click targets for Track B */}
+              {waveformB.map((_, i) => (
+                <rect
+                  key={i}
+                  x={90 + i * 95}
+                  y={numInputs === 3 ? "100" : "106"}
+                  width="95"
+                  height="50"
+                  fill="transparent"
+                  className="cursor-pointer hover:fill-indigo-500/10 transition-colors"
+                  onClick={() => toggleWaveBit("B", i)}
+                >
+                  <title>Click to toggle Clock B at T{i}</title>
+                </rect>
+              ))}
+
+              {/* ================= OPTIONAL TRACK 3: INPUT C ================= */}
+              {numInputs === 3 && (
+                <g>
+                  <text x="18" y="190" fontFamily="'JetBrains Mono', monospace" fontSize="11" fontWeight="bold" fill="#14b8a6">
+                    Input C
+                  </text>
+                  <text x="76" y="178" textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                    1
+                  </text>
+                  <text x="76" y="212" textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                    0
+                  </text>
+                  <line x1="82" y1="174" x2="850" y2="174" stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+                  <line x1="82" y1="210" x2="850" y2="210" stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+
+                  {/* Shaded Fill */}
+                  <path d={waveCData.fillPath} fill="rgba(20, 184, 166, 0.15)" />
+                  {/* Step Function Square Wave */}
+                  <path d={waveCData.path} stroke="#14b8a6" strokeWidth="3" strokeLinecap="round" strokeLinejoin="miter" />
+
+                  {/* Click targets for Track C */}
+                  {waveformC.map((_, i) => (
+                    <rect
+                      key={i}
+                      x={90 + i * 95}
+                      y="166"
+                      width="95"
+                      height="50"
+                      fill="transparent"
+                      className="cursor-pointer hover:fill-teal-500/10 transition-colors"
+                      onClick={() => toggleWaveBit("C", i)}
+                    >
+                      <title>Click to toggle Clock C at T{i}</title>
+                    </rect>
+                  ))}
+                </g>
+              )}
+
+              {/* ================= TRACK (LAST): OUTPUT Y ================= */}
+              <text x="18" y={numInputs === 3 ? "260" : "202"} fontFamily="'JetBrains Mono', monospace" fontSize="11" fontWeight="bold" fill="#f59e0b">
+                Out Y
+              </text>
+              <text x="76" y={numInputs === 3 ? "248" : "190"} textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                1
+              </text>
+              <text x="76" y={numInputs === 3 ? "282" : "224"} textAnchor="end" fontFamily="'JetBrains Mono', monospace" fontSize="9.5" fontWeight="bold" fill="#64748b">
+                0
+              </text>
+              <line x1="82" y1={numInputs === 3 ? "244" : "186"} x2="850" y2={numInputs === 3 ? "244" : "186"} stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+              <line x1="82" y1={numInputs === 3 ? "280" : "222"} x2="850" y2={numInputs === 3 ? "280" : "222"} stroke="#1e293b" strokeWidth="0.8" strokeDasharray="2 2" />
+
+              {/* Shaded Fill under HIGH pulses */}
+              <path d={waveYData.fillPath} fill="rgba(245, 158, 11, 0.2)" />
+              {/* Step Function Square Wave */}
+              <path d={waveYData.path} stroke="#f59e0b" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="miter" />
+
+            </svg>
+          </div>
         </div>
       </div>
 
     </div>
   );
 };
+
