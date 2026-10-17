@@ -306,10 +306,10 @@ export const RightExamBlueprintWing = ({
           </div>
         </div>
 
-        {/* 2. Direct Quick-Jump Badges for Overleaf PDFs, Morris Mano, Roth */}
+        {/* 2. Direct Quick-Jump Badges for Unit Notes PDFs, Morris Mano, Roth */}
         <div className="p-3.5 rounded-xl bg-white border border-[#DCE7E1] shadow-2xs space-y-2 font-mono">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-            Direct Textbooks &amp; Overleaf PDFs:
+            Direct Textbooks &amp; Unit Notes PDFs:
           </span>
           <div className="flex flex-col gap-1.5">
             <a
@@ -320,7 +320,7 @@ export const RightExamBlueprintWing = ({
             >
               <div className="flex items-center gap-1.5">
                 <Download className="w-3.5 h-3.5 text-[#15803D]" />
-                <span>Overleaf Unit PDFs</span>
+                <span>Unit Notes PDFs</span>
               </div>
               <span className="text-[10px] group-hover:translate-x-0.5 transition-transform">Download ↗</span>
             </a>

@@ -31,7 +31,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
     { id: 'units', label: 'Units (1-5)', icon: Layers },
     { id: 'solvers', label: 'Interactive Solvers', icon: Calculator },
     { id: 'practice', label: 'Practice Questions', icon: CheckCircle2 },
-    { id: 'syllabus', label: 'Syllabus & PDFs', icon: BookOpen },
+    { id: 'syllabus', label: 'Subject Resources', icon: BookOpen },
   ];
 
   return (
@@ -265,7 +265,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
           <PracticeArena onNavigate={() => {}} />
         )}
 
-        {/* TAB 4: Syllabus & PDFs */}
+        {/* TAB 4: Subject Resources */}
         {activeTab === 'syllabus' && (
           <SyllabusView onNavigate={(tab) => setActiveTab(tab)} />
         )}

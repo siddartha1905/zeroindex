@@ -86,6 +86,9 @@ function generateQuestionPaper(allBank, trackId, mode, difficultyMix) {
 }
 
 export const PracticeArena = ({ onNavigate }) => {
+  // Unit Partition: 1 | 2 | 3 | 4 | 5 | 'all'
+  const [activeQuizUnit, setActiveQuizUnit] = useState(1);
+
   // State Machine: 'lobby' | 'active' | 'submitted'
   const [quizState, setQuizState] = useState('lobby');
 
@@ -457,9 +460,115 @@ export const PracticeArena = ({ onNavigate }) => {
     );
   };
 
+  const practiceUnits = [
+    {
+      id: 1,
+      title: "Unit 1 Quiz Arena",
+      shortTitle: "Unit 1: Number Systems & Arithmetic",
+      badge: "110 Qs Live",
+      badgeColor: "bg-[#2E6F40] text-white",
+      description: "Conversions, Binary Arithmetic, Complements & Subtraction, Signed Numbers & Unit 1 Theory"
+    },
+    {
+      id: 2,
+      title: "Unit 2 Quiz Arena",
+      shortTitle: "Unit 2: Boolean & K-Maps",
+      badge: "Upcoming",
+      badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
+      description: "Boolean Algebra Axioms, 3/4-Var K-Maps, Canonical SOP/POS, Universal NAND/NOR"
+    },
+    {
+      id: 3,
+      title: "Unit 3 Quiz Arena",
+      shortTitle: "Unit 3: Combinational Logic",
+      badge: "Upcoming",
+      badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
+      description: "Adders, Subtractors, Look-Ahead Carry, Decoders, Encoders & Multiplexers"
+    },
+    {
+      id: 4,
+      title: "Unit 4 Quiz Arena",
+      shortTitle: "Unit 4: Sequential Logic",
+      badge: "Upcoming",
+      badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
+      description: "Latches, Flip-Flops (SR, JK, D, T), Race-Around & State Transition Tables"
+    },
+    {
+      id: 5,
+      title: "Unit 5 Quiz Arena",
+      shortTitle: "Unit 5: Registers & Counters",
+      badge: "Upcoming",
+      badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
+      description: "Shift Registers (SISO, SIPO, PISO, PIPO), Ripple & Synchronous Mod-N Counters"
+    },
+    {
+      id: 'all',
+      title: "All Units (1-5) Grand Mock Exam",
+      shortTitle: "All Units (1-5) Grand Mock",
+      badge: "Sem Exam",
+      badgeColor: "bg-indigo-100 text-indigo-800 border border-indigo-200",
+      description: "Comprehensive end-of-semester exam practice across all 5 syllabus units"
+    }
+  ];
+
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
 
+      {/* Top Unit Selector Bar (Unit 1 to Unit 5 + All Units Grand Mock) */}
+      {quizState !== 'active' && (
+        <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-3">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-slate-100 px-1">
+            <div className="flex items-center gap-2">
+              <Award className="w-4 h-4 text-emerald-600" />
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-slate-600">
+                Course Practice Arena Units
+              </span>
+            </div>
+            <span className="text-[11px] font-mono text-slate-500">
+              Select a Unit Quiz Arena or the Semester Grand Mock Exam
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {practiceUnits.map((u) => {
+              const isActive = activeQuizUnit === u.id;
+              return (
+                <button
+                  key={u.id}
+                  onClick={() => setActiveQuizUnit(u.id)}
+                  className={`p-3 rounded-xl text-left transition-all flex flex-col justify-between ${
+                    isActive
+                      ? "bg-[#2E6F40] text-white shadow-md ring-2 ring-[#2E6F40]/30"
+                      : "bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200"
+                  }`}
+                >
+                  <div className="flex items-center justify-between w-full mb-1">
+                    <span className={`text-[10px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                      isActive ? "bg-white/20 text-white" : "bg-white text-slate-600 border border-slate-200"
+                    }`}>
+                      {u.id === 'all' ? 'MOCK' : `Unit ${u.id}`}
+                    </span>
+                    <span className={`text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full ${
+                      isActive ? "bg-emerald-900/40 text-emerald-100" : u.badgeColor
+                    }`}>
+                      {u.badge}
+                    </span>
+                  </div>
+                  <span className="text-xs font-bold leading-tight mt-1">
+                    {u.title}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          UNIT 1 QUIZ ARENA (ACTIVE - DEFAULT)
+      ========================================================================= */}
+      {activeQuizUnit === 1 && (
+        <>
       {/* =========================================================================
           STATE 1: PRE-QUIZ LOBBY & SETUP DASHBOARD
       ========================================================================= */}
@@ -1251,6 +1360,452 @@ export const PracticeArena = ({ onNavigate }) => {
             })}
           </div>
 
+        </div>
+      )}
+        </>
+      )}
+
+      {/* =========================================================================
+          UNIT 2 QUIZ ARENA (UPCOMING)
+      ========================================================================= */}
+      {activeQuizUnit === 2 && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2.5 rounded-xl bg-indigo-50 text-indigo-700">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-700">
+                    Unit 2 Quiz Arena · Boolean Algebra &amp; Gate-Level Minimization
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    Boolean Algebra &amp; K-Map Quiz Arena
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                100+ Question Bank in Staging
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed max-w-4xl">
+              Unit 2 practice arena tracks are being formatted with graphical step-by-step Karnaugh Map grouping solutions,
+              canonical expansions, and dual transformations. Every question includes step-by-step loop derivations and
+              algebraic verification checks.
+            </p>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-indigo-700">Track 1</span>
+                <h3 className="text-sm font-bold text-slate-900">Boolean Axioms, Postulates &amp; Theorems</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Consensus theorem, De Morgan laws, absorption, involution, and algebraic reduction practice.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-indigo-700">Track 2</span>
+                <h3 className="text-sm font-bold text-slate-900">Canonical SOP &amp; POS Representations</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Minterm expansions (Sigma m), Maxterm expansions (Pi M), standard to canonical conversions.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-indigo-700">Track 3</span>
+                <h3 className="text-sm font-bold text-slate-900">3-Variable K-Map Minimization</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  8-cell grouping, prime implicants, essential prime implicants, and Gray-code indexing.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-indigo-700">Track 4</span>
+                <h3 className="text-sm font-bold text-slate-900">4-Variable K-Maps with Don't-Cares</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  16-cell maps, corner groupings, quad/octet loops, and optimal don't-care condition inclusion.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-indigo-700">Track 5</span>
+                <h3 className="text-sm font-bold text-slate-900">Universal NAND &amp; NOR Realization</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  All-NAND and all-NOR implementations, double complement insertion, and inverter count optimization.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Need Practice Right Now?</h3>
+                  <p className="text-xs text-emerald-800 leading-relaxed mt-1">
+                    Unit 1 Practice Arena is 100% active with 110 verified questions across conversions, arithmetic, and complements.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveQuizUnit(1)}
+                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                >
+                  Start Unit 1 Quiz Arena
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          UNIT 3 QUIZ ARENA (UPCOMING)
+      ========================================================================= */}
+      {activeQuizUnit === 3 && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2.5 rounded-xl bg-teal-50 text-teal-700">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-teal-700">
+                    Unit 3 Quiz Arena · Combinational Logic Design
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    Combinational Logic Quiz Arena
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                100+ Question Bank in Staging
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed max-w-4xl">
+              Unit 3 questions cover binary adders, subtractors, decoders, priority encoders, and multiplexers with full
+              gate-level propagation delay analysis.
+            </p>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-teal-700">Track 1</span>
+                <h3 className="text-sm font-bold text-slate-900">Half &amp; Full Adders / Subtractors</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Sum, Difference, Carry, and Borrow logic implementations using basic and universal gates.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-teal-700">Track 2</span>
+                <h3 className="text-sm font-bold text-slate-900">Ripple Carry &amp; Carry Look-Ahead</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  4-bit parallel adder/subtractor, overflow flags, carry generate (Gi) and propagate (Pi) algebra.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-teal-700">Track 3</span>
+                <h3 className="text-sm font-bold text-slate-900">Decoders &amp; Demultiplexers</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  2:4 and 3:8 decoders with active-low enables, minterm generation, and logic expansion trees.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-teal-700">Track 4</span>
+                <h3 className="text-sm font-bold text-slate-900">Encoders &amp; Priority Encoders</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Octal-to-binary encoders, 8:3 priority encoders with valid output bit conditions.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-teal-700">Track 5</span>
+                <h3 className="text-sm font-bold text-slate-900">Multiplexers (2:1, 4:1, 8:1)</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Boolean function realization using MUX without additional logic gates.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Practice Unit 1 Today</h3>
+                  <p className="text-xs text-emerald-800 leading-relaxed mt-1">
+                    Try the 110-question pool for Unit 1 Number Systems, Binary Arithmetic &amp; Complements.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveQuizUnit(1)}
+                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                >
+                  Start Unit 1 Quiz Arena
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          UNIT 4 QUIZ ARENA (UPCOMING)
+      ========================================================================= */}
+      {activeQuizUnit === 4 && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2.5 rounded-xl bg-purple-50 text-purple-700">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-purple-700">
+                    Unit 4 Quiz Arena · Clocked Sequential Circuits
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    Sequential Logic &amp; Flip-Flops Quiz Arena
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                100+ Question Bank in Staging
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed max-w-4xl">
+              Unit 4 questions focus on latch/flip-flop operation, race-around prevention, excitation table lookups,
+              and clocked sequential state machine analysis.
+            </p>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-purple-700">Track 1</span>
+                <h3 className="text-sm font-bold text-slate-900">Latches vs Clocked Flip-Flops</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  SR NAND/NOR latches, forbidden states (S=1, R=1), clocked SR and D flip-flops.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-purple-700">Track 2</span>
+                <h3 className="text-sm font-bold text-slate-900">Excitation &amp; Characteristic Tables</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Characteristic equations (Qnext) and excitation tables for SR, JK, D, and T flip-flops.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-purple-700">Track 3</span>
+                <h3 className="text-sm font-bold text-slate-900">Master-Slave JK &amp; Race-Around</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Race-around condition analysis, propagation delay vs pulse width, two-phase clocking.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-purple-700">Track 4</span>
+                <h3 className="text-sm font-bold text-slate-900">Flip-Flop Conversions</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Converting between SR, JK, D, and T flip-flops with conversion logic truth tables.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-purple-700">Track 5</span>
+                <h3 className="text-sm font-bold text-slate-900">State Diagrams &amp; FSMs</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Mealy and Moore models, state transition tables, state reduction, and next-state equations.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Unit 1 Quiz Ready</h3>
+                  <p className="text-xs text-emerald-800 leading-relaxed mt-1">
+                    Master base conversions, 1s/2s complement subtraction, and signed overflow detection.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveQuizUnit(1)}
+                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                >
+                  Start Unit 1 Quiz Arena
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          UNIT 5 QUIZ ARENA (UPCOMING)
+      ========================================================================= */}
+      {activeQuizUnit === 5 && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2.5 rounded-xl bg-blue-50 text-blue-700">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-blue-700">
+                    Unit 5 Quiz Arena · Registers &amp; Counters
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    Registers &amp; Counters Quiz Arena
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-amber-50 text-amber-800 border border-amber-200">
+                100+ Question Bank in Staging
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed max-w-4xl">
+              Unit 5 questions analyze clocked register bit propagation (SISO, SIPO, PISO, PIPO), mode selections in IC 74194,
+              and state decoding in ripple and synchronous Mod-N binary counters.
+            </p>
+
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-blue-700">Track 1</span>
+                <h3 className="text-sm font-bold text-slate-900">Shift Register Topologies</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Serial-In Serial-Out, Serial-In Parallel-Out, Parallel-In Serial-Out, and Parallel-In Parallel-Out.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-blue-700">Track 2</span>
+                <h3 className="text-sm font-bold text-slate-900">Universal Shift Register (IC 74194)</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Mode control inputs (S1, S0), parallel load, bidirectional shift right and shift left logic.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-blue-700">Track 3</span>
+                <h3 className="text-sm font-bold text-slate-900">Ripple (Asynchronous) Counters</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Up/down ripple counters, cumulative propagation delay limitations, and Mod-N truncation.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-blue-700">Track 4</span>
+                <h3 className="text-sm font-bold text-slate-900">Synchronous Mod-N Binary Counters</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Synchronous clocking, excitation K-maps for T and JK flip-flops, and lock-out state avoidance.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-1.5">
+                <span className="text-[10px] font-mono font-bold uppercase text-blue-700">Track 5</span>
+                <h3 className="text-sm font-bold text-slate-900">Ring &amp; Johnson Counters</h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  N-state ring counter sequences, 2N-state Johnson (twisted ring) counter decoding and unused state recovery.
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
+                <div>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Unit 1 Practice</h3>
+                  <p className="text-xs text-emerald-800 leading-relaxed mt-1">
+                    Try the 110-question pool for Unit 1 Number Systems, Binary Arithmetic &amp; Complements.
+                  </p>
+                </div>
+                <button
+                  onClick={() => setActiveQuizUnit(1)}
+                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                >
+                  Start Unit 1 Quiz Arena
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          ALL UNITS (1-5) GRAND MOCK EXAM
+      ========================================================================= */}
+      {activeQuizUnit === 'all' && (
+        <div className="space-y-6">
+          <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 sm:p-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <span className="p-2.5 rounded-xl bg-indigo-50 text-indigo-700">
+                  <Award className="w-5 h-5" />
+                </span>
+                <div>
+                  <span className="text-xs font-mono font-bold uppercase tracking-wider text-indigo-700">
+                    Comprehensive Semester Simulator · Units 1 through 5
+                  </span>
+                  <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900">
+                    All Units (1-5) Grand Mock Exam
+                  </h2>
+                </div>
+              </div>
+              <span className="text-xs font-mono font-bold px-3 py-1.5 rounded-lg bg-indigo-50 text-indigo-800 border border-indigo-200">
+                60 Questions · 90 Minutes Timed
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm text-slate-600 mt-3 leading-relaxed max-w-4xl">
+              The Grand Mock Exam is the ultimate end-of-semester examination simulator. It samples a balanced, syllabus-weighted
+              mix of 60 questions evenly partitioned across all five course units to assess overall semester mastery.
+            </p>
+
+            {/* Exam Blueprint Matrix */}
+            <div className="mt-6 grid grid-cols-1 md:grid-cols-5 gap-3">
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[10px] font-mono font-bold text-emerald-700 uppercase">Unit 1 (12 Qs)</span>
+                <div className="font-bold text-xs text-slate-900 mt-1">Number Systems</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">Conversions, Arithmetic, Complements</div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[10px] font-mono font-bold text-indigo-700 uppercase">Unit 2 (12 Qs)</span>
+                <div className="font-bold text-xs text-slate-900 mt-1">Boolean Algebra</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">Theorems, 3/4-Var K-Maps, NAND/NOR</div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[10px] font-mono font-bold text-teal-700 uppercase">Unit 3 (12 Qs)</span>
+                <div className="font-bold text-xs text-slate-900 mt-1">Combinational Logic</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">Adders, CLA, Decoders, Multiplexers</div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[10px] font-mono font-bold text-purple-700 uppercase">Unit 4 (12 Qs)</span>
+                <div className="font-bold text-xs text-slate-900 mt-1">Sequential Logic</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">Flip-Flops, Excitation, State Tables</div>
+              </div>
+
+              <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200">
+                <span className="text-[10px] font-mono font-bold text-blue-700 uppercase">Unit 5 (12 Qs)</span>
+                <div className="font-bold text-xs text-slate-900 mt-1">Registers &amp; Counters</div>
+                <div className="text-[11px] text-slate-500 mt-0.5">Shift Registers, Synchronous Mod-N</div>
+              </div>
+            </div>
+
+            <div className="mt-6 p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs text-slate-700">
+                <span className="font-bold block text-slate-900 mb-0.5">Status: Grand Mock Simulator Pipeline</span>
+                <span>Unit 1 question pool is 100% verified. Units 2 through 5 are in staging. The full 60-question simulator unlocks upon completion of all units.</span>
+              </div>
+              <button
+                onClick={() => setActiveQuizUnit(1)}
+                className="whitespace-nowrap px-4 py-2 bg-[#2E6F40] text-white rounded-xl text-xs font-bold hover:bg-[#255A34] transition-colors"
+              >
+                Practice Unit 1 Now (110 Qs)
+              </button>
+            </div>
+          </div>
         </div>
       )}
 
