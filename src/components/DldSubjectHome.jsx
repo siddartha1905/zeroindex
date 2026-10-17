@@ -91,8 +91,8 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
           onClick={onBackToPortal}
           className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-[#DCE7E1] bg-white hover:bg-[#F2F7F4] text-xs font-semibold text-[#1E293B] transition-colors shadow-2xs cursor-pointer"
         >
-          <ArrowLeft className="w-3.5 h-3.5 text-[#2E6F40]" />
-          <span>ZeroIndex Portal</span>
+          <ArrowLeft className="w-3.5 h-3.5 text-[#245B4B]" />
+          <span>The Workbench</span>
         </button>
 
         {/* Right: Course Code & Semester Badge */}

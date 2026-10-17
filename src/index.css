@@ -3,29 +3,79 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --brand-bg: #F7F5EF;
+    --brand-surface: #FFFFFF;
+    --brand-surface2: #F0F1EB;
+    --brand-ink: #25352D;
+    --brand-text-secondary: #5F6C64;
+    --brand-text-subtle: #69766D;
+    --brand-green: #245B4B;
+    --brand-interactive: #28755E;
+    --brand-border: #DDE2DA;
+    --brand-warm: #B77B59;
+    --brand-divider: #E6E8E1;
+
+    --pillar-workbench-dark: #346C53;
+    --pillar-workbench-soft: #E0EBDF;
+    --pillar-atlas-dark: #496D91;
+    --pillar-atlas-soft: #E1EAF2;
+    --pillar-bridge-dark: #956A43;
+    --pillar-bridge-soft: #F1E5D9;
+    --pillar-readout-dark: #765C90;
+    --pillar-readout-soft: #EBE5F0;
+    --pillar-folio-dark: #935F5D;
+    --pillar-folio-soft: #F2E5E1;
+  }
+
   body {
-    background-color: #FAF8F5;
-    color: #1E293B;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--brand-bg);
+    color: var(--brand-ink);
+    font-family: 'DM Sans', 'Inter', system-ui, -apple-system, sans-serif;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Custom smooth scrolling */
   html {
     scroll-behavior: smooth;
   }
+
+  /* Accessible focus indicators */
+  :focus-visible {
+    outline: 2px solid var(--brand-interactive);
+    outline-offset: 2px;
+  }
 }
 
-/* Subtle Notebook Grid & Dotted Textures */
+/* Editorial Serif Headings */
+.font-editorial {
+  font-family: 'Source Serif 4', Georgia, serif;
+  font-feature-settings: "kern" 1, "liga" 1;
+}
+
+/* Monospace Technical Labels */
+.font-technical {
+  font-family: 'IBM Plex Mono', 'JetBrains Mono', monospace;
+}
+
+/* Warm Paper Surface */
+.paper-surface {
+  background-color: #FFFFFF;
+  border: 1px solid #DDE2DA;
+}
+
+/* Subtle Hand-Drawn Notebook Utilities */
 .notebook-grid {
   background-image: 
-    linear-gradient(to right, rgba(46, 111, 64, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(46, 111, 64, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(36, 91, 75, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(36, 91, 75, 0.035) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 
 .notebook-dots {
-  background-image: radial-gradient(rgba(46, 111, 64, 0.12) 1px, transparent 1px);
+  background-image: radial-gradient(rgba(36, 91, 75, 0.08) 1px, transparent 1px);
   background-size: 20px 20px;
 }
 
@@ -35,26 +85,26 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #FAF8F5;
+  background: #F7F5EF;
 }
 ::-webkit-scrollbar-thumb {
-  background: #DCE7E1;
+  background: #DDE2DA;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #2E6F40;
+  background: #245B4B;
 }
 
-/* Hand-sketched notebook border utilities */
+/* Hand-sketched card utilities */
 .sketch-card {
-  border: 1px solid #DCE7E1;
-  box-shadow: 2px 3px 0px 0px rgba(46, 111, 64, 0.08);
+  border: 1px solid #DDE2DA;
+  box-shadow: 2px 3px 0px 0px rgba(36, 91, 75, 0.06);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .sketch-card:hover {
-  border-color: #2E6F40;
-  box-shadow: 3px 5px 0px 0px rgba(46, 111, 64, 0.15);
+  border-color: #245B4B;
+  box-shadow: 3px 5px 0px 0px rgba(36, 91, 75, 0.12);
   transform: translateY(-2px);
 }
 
@@ -69,5 +119,5 @@
 /* Handwritten Note Highlight */
 .handwritten-annotation {
   font-family: 'Caveat', cursive;
-  color: #2E6F40;
+  color: #245B4B;
 }

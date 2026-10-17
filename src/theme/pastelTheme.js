@@ -1,24 +1,24 @@
 /**
- * ZeroIndex Pastel Theme Configuration
+ * ZeroIndex Editorial Theme Configuration
  * Built for Ant Design v5 ConfigProvider & CSS variables
  */
 
 export const pastelThemeTokens = {
-  // Brand color palette
-  creamBg: '#FAF8F5',        // Warm Alabaster Cream
-  softWhite: '#FFFFFF',      // Soft Paper White
-  sageTint: '#F2F7F4',       // Pastel Sage Tint
-  sageBorder: '#DCE7E1',     // Soft Sage Border
-  sagePrimary: '#2E6F40',    // Muted Sage Green primary accent
-  sageHover: '#255A34',      // Deep Sage Green
-  sageLight: '#E8F2EC',      // Light Sage Background
-  indigoAccent: '#4F46E5',   // Soft Indigo secondary accent
-  indigoLight: '#EEF2FF',    // Indigo Tint
-  amberBadge: '#D97706',     // Warm Amber badges
-  amberLight: '#FEF3C7',     // Amber Tint
-  technicalSlate: '#1E293B', // High-Contrast Technical Slate
-  slateMuted: '#64748B',     // Slate Secondary Text
-  slateBorder: '#334155',    // Slate Border
+  // Brand color palette (Part 4)
+  creamBg: '#F7F5EF',        // Main paper background
+  softWhite: '#FFFFFF',      // Primary surface
+  sageTint: '#F0F1EB',       // Secondary surface
+  sageBorder: '#DDE2DA',     // Soft paper border
+  sagePrimary: '#245B4B',    // Primary brand green
+  sageHover: '#28755E',      // Interactive green
+  sageLight: '#E0EBDF',      // Light workbench accent
+  indigoAccent: '#496D91',   // Muted atlas blue accent
+  indigoLight: '#E1EAF2',    // Blue tint
+  amberBadge: '#B77B59',     // Warm accent
+  amberLight: '#F1E5D9',     // Bridge tint
+  technicalSlate: '#25352D', // Primary ink
+  slateMuted: '#5F6C64',     // Secondary text
+  slateBorder: '#DDE2DA',    // Border
 };
 
 export const antdThemeConfig = {
@@ -28,22 +28,22 @@ export const antdThemeConfig = {
     colorWarning: pastelThemeTokens.amberBadge,
     colorBgBase: pastelThemeTokens.softWhite,
     colorTextBase: pastelThemeTokens.technicalSlate,
-    borderRadius: 10,
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    fontFamilyCode: "'JetBrains Mono', 'Fira Code', monospace",
+    borderRadius: 12,
+    fontFamily: "'DM Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    fontFamilyCode: "'IBM Plex Mono', 'JetBrains Mono', 'Fira Code', monospace",
   },
   components: {
     Button: {
       colorPrimary: pastelThemeTokens.sagePrimary,
       algorithm: true,
       fontWeight: 600,
-      borderRadius: 8,
-      controlHeight: 38,
+      borderRadius: 10,
+      controlHeight: 40,
     },
     Card: {
       colorBgContainer: pastelThemeTokens.softWhite,
       colorBorderSecondary: pastelThemeTokens.sageBorder,
-      borderRadiusLG: 14,
+      borderRadiusLG: 16,
     },
     Tag: {
       borderRadiusSM: 6,
