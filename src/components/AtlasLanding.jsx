@@ -3,128 +3,69 @@ import {
   ArrowLeft, 
   ArrowRight, 
   Compass, 
-  MapPin, 
-  CheckCircle, 
+  CheckCircle2, 
   Clock, 
   BookOpen, 
   Layers, 
   ChevronRight,
-  ExternalLink
+  ChevronDown,
+  Target,
+  Sparkles,
+  Search,
+  ExternalLink,
+  Code2,
+  Terminal,
+  Cpu,
+  BrainCircuit
 } from 'lucide-react';
+import { atlasRoadmaps } from '../data/atlasRoadmapsConfig';
 
-export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
-  const [selectedRoadmap, setSelectedRoadmap] = useState(0);
+export const AtlasLanding = ({ 
+  onNavigateHome, 
+  onNavigateWorkbench,
+  onNavigateSection 
+}) => {
+  const [selectedMapId, setSelectedMapId] = useState('programming-foundations');
+  const [expandedStages, setExpandedStages] = useState({
+    '01': true,
+    '02': true,
+    '03': false,
+    '04': false,
+    '05': false,
+    '06': false
+  });
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const roadmaps = [
-    {
-      id: 'systems',
-      title: 'Computer Systems & Architecture Pathway',
-      subtitle: 'From Silicon & Gates to Modern Operating Systems',
-      accent: '#496D91',
-      softAccent: '#E1EAF2',
-      status: 'Roadmap Outline',
-      target: 'Foundational CS & Systems Engineers',
-      prerequisites: 'Basic algebra and logical reasoning',
-      stages: [
-        {
-          stageNumber: '01',
-          name: 'Boolean Logic & Digital Hardware',
-          topics: ['Number Systems', 'Combinational Circuits', 'K-Maps', 'Sequential Flip-Flops'],
-          workbenchLink: 'Digital Logic Design (Unit 1 Active)',
-          status: 'Unit 1 Active'
-        },
-        {
-          stageNumber: '02',
-          name: 'Low-Level Execution & Memory in C',
-          topics: ['Pointers & Addresses', 'Stack vs Heap Frames', 'Bitwise Manipulation', 'Struct Alignment'],
-          workbenchLink: 'C Programming & Systems',
-          status: 'Planned Outline'
-        },
-        {
-          stageNumber: '03',
-          name: 'Computer Organization & Assembly',
-          topics: ['ALU Design', 'Register Files', 'Instruction Set Architectures (RISC-V)', 'Control Unit'],
-          workbenchLink: 'Computer Architecture',
-          status: 'In Blueprint'
-        },
-        {
-          stageNumber: '04',
-          name: 'Operating System Internals',
-          topics: ['Processes & Threads', 'Virtual Memory & Paging', 'File Systems', 'Concurrency & Locks'],
-          workbenchLink: 'Operating Systems',
-          status: 'In Blueprint'
-        }
-      ]
-    },
-    {
-      id: 'data-science',
-      title: 'Data Science & Machine Learning Foundations',
-      subtitle: 'Mathematical Principles to Deep Neural Representations',
-      accent: '#245B4B',
-      softAccent: '#E0EBDF',
-      status: 'Planned Pathway',
-      target: 'Data Science & Applied AI Undergraduates',
-      prerequisites: 'High-school calculus and Python fundamentals',
-      stages: [
-        {
-          stageNumber: '01',
-          name: 'Applied Linear Algebra & Calculus',
-          topics: ['Matrix Decompositions (SVD, PCA)', 'Vector Spaces', 'Partial Derivatives & Gradients'],
-          workbenchLink: 'ML Foundations',
-          status: 'Planned Outline'
-        },
-        {
-          stageNumber: '02',
-          name: 'Statistical Modeling & Classical ML',
-          topics: ['Linear Regression', 'Logistic Classification', 'Decision Trees', 'Loss Optimization'],
-          workbenchLink: 'Statistical Learning',
-          status: 'In Blueprint'
-        },
-        {
-          stageNumber: '03',
-          name: 'Deep Neural Networks & Representation',
-          topics: ['Backpropagation Proofs', 'CNNs & Spatial Filters', 'Sequence Modeling', 'Transformers'],
-          workbenchLink: 'Deep Learning',
-          status: 'In Blueprint'
-        }
-      ]
-    },
-    {
-      id: 'algorithms',
-      title: 'Core Software Engineering & Algorithms',
-      subtitle: 'Data Structures, Graph Theory & Complexity Bounds',
-      accent: '#956A43',
-      softAccent: '#F1E5D9',
-      status: 'Planned Pathway',
-      target: 'Software Engineers & Algorithm Enthusiasts',
-      prerequisites: 'C or Python basics',
-      stages: [
-        {
-          stageNumber: '01',
-          name: 'Linear Data Collections & Recursion',
-          topics: ['Dynamic Arrays', 'Linked Lists', 'Stacks & Queues', 'Divide and Conquer'],
-          workbenchLink: 'Data Structures',
-          status: 'Planned Outline'
-        },
-        {
-          stageNumber: '02',
-          name: 'Non-Linear Trees, Heaps & Hashing',
-          topics: ['Binary Search Trees', 'AVL Balancing', 'Priority Queues', 'Hash Tables & Collisions'],
-          workbenchLink: 'Data Structures',
-          status: 'In Blueprint'
-        },
-        {
-          stageNumber: '03',
-          name: 'Graph Traversal & Dynamic Programming',
-          topics: ['BFS & DFS', 'Shortest Paths (Dijkstra)', 'Memoization & Tabulation', 'Topological Sort'],
-          workbenchLink: 'Algorithms Lab',
-          status: 'In Blueprint'
-        }
-      ]
+  const currentMap = atlasRoadmaps.find(m => m.id === selectedMapId) || atlasRoadmaps[0];
+
+  const toggleStage = (stageNum) => {
+    setExpandedStages(prev => ({
+      ...prev,
+      [stageNum]: !prev[stageNum]
+    }));
+  };
+
+  const expandAll = () => {
+    const all = {};
+    currentMap.stages.forEach(s => { all[s.stageNumber] = true; });
+    setExpandedStages(all);
+  };
+
+  const collapseAll = () => {
+    const none = {};
+    currentMap.stages.forEach(s => { none[s.stageNumber] = false; });
+    setExpandedStages(none);
+  };
+
+  const handleWorkbenchLink = (route) => {
+    if (route && onNavigateWorkbench) {
+      if (route.startsWith('workspace') && onNavigateSection) {
+        onNavigateSection(route);
+      } else {
+        onNavigateWorkbench();
+      }
     }
-  ];
-
-  const currentMap = roadmaps[selectedRoadmap];
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
@@ -142,6 +83,10 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
             </button>
             <span className="text-[#DDE2DA]">/</span>
             <span className="text-[#496D91] font-bold">02 The Atlas</span>
+            <span className="text-[#DDE2DA]">/</span>
+            <span className="text-[#5F6C64] truncate max-w-[220px]">
+              {currentMap.title}
+            </span>
           </nav>
 
           <span className="font-technical text-[11px] text-[#5F6C64]">
@@ -166,12 +111,19 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
 
         {/* Cartographic Roadmap Selector Tabs */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-          {roadmaps.map((map, idx) => {
-            const isSelected = selectedRoadmap === idx;
+          {atlasRoadmaps.map((map, idx) => {
+            const isSelected = selectedMapId === map.id;
             return (
               <button
                 key={map.id}
-                onClick={() => setSelectedRoadmap(idx)}
+                onClick={() => {
+                  setSelectedMapId(map.id);
+                  const initialExp = {};
+                  map.stages.forEach((s, sIdx) => {
+                    initialExp[s.stageNumber] = sIdx < 2;
+                  });
+                  setExpandedStages(initialExp);
+                }}
                 className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   isSelected
                     ? 'bg-white border-[#496D91] shadow-soft ring-1 ring-[#496D91]'
@@ -187,17 +139,21 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
                       {map.stages.length} Stages
                     </span>
                   </div>
+
                   <h3 className="font-editorial text-base font-bold text-[#25352D] mb-1">
                     {map.title}
                   </h3>
-                  <p className="text-xs text-[#5F6C64] leading-relaxed">
+
+                  <p className="text-xs text-[#5F6C64] leading-relaxed line-clamp-2">
                     {map.subtitle}
                   </p>
                 </div>
 
                 <div className="pt-3 mt-3 border-t border-[#E6E8E1] flex items-center justify-between text-xs">
                   <span className="font-technical text-[10px] text-[#69766D]">{map.status}</span>
-                  <span className="font-semibold" style={{ color: map.accent }}>Inspect Route →</span>
+                  <span className="font-semibold text-xs" style={{ color: map.accent }}>
+                    {isSelected ? 'Active Route ●' : 'Inspect Route →'}
+                  </span>
                 </div>
               </button>
             );
@@ -205,78 +161,256 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
         </div>
 
         {/* Selected Roadmap Route Sheet */}
-        <div className="bg-white rounded-3xl border border-[#DDE2DA] shadow-soft p-6 sm:p-8 space-y-8 text-left">
+        <div className="bg-white rounded-3xl border border-[#DDE2DA] shadow-soft p-6 sm:p-10 space-y-8 text-left">
           
           {/* Route Metadata Header */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[#E6E8E1]">
-            <div>
-              <span className="font-technical text-xs font-bold text-[#496D91] uppercase tracking-wider block mb-1">
-                Active Roadmap Inspection
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#E6E8E1]">
+            <div className="space-y-2 max-w-3xl">
+              <span className="font-technical text-xs font-bold text-[#496D91] uppercase tracking-wider block">
+                {currentMap.isPrimary ? 'Core Flagship Pathway' : 'Specialized Engineering Route'}
               </span>
-              <h2 className="font-editorial text-2xl sm:text-3xl font-bold text-[#25352D]">
+              <h2 className="font-editorial text-2xl sm:text-4xl font-bold text-[#25352D]">
                 {currentMap.title}
               </h2>
-              <p className="text-sm text-[#5F6C64] mt-1">
-                {currentMap.subtitle}
+              <p className="text-sm sm:text-base text-[#5F6C64] leading-relaxed">
+                {currentMap.overview}
               </p>
             </div>
 
-            <div className="p-3 rounded-xl bg-[#F0F1EB] border border-[#DDE2DA] font-technical text-xs space-y-1 sm:text-right">
-              <div><strong className="text-[#25352D]">Audience:</strong> {currentMap.target}</div>
-              <div><strong className="text-[#25352D]">Prerequisites:</strong> {currentMap.prerequisites}</div>
+            <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#DDE2DA] font-technical text-xs space-y-2 lg:text-right shrink-0">
+              <div>
+                <strong className="text-[#25352D] block sm:inline mr-1">Target Audience:</strong>
+                <span className="text-[#5F6C64]">{currentMap.target}</span>
+              </div>
+              <div className="pt-1 border-t border-[#E6E8E1]">
+                <strong className="text-[#25352D] block sm:inline mr-1">Prerequisites:</strong>
+                <span className="text-[#5F6C64]">{currentMap.prerequisites}</span>
+              </div>
             </div>
           </div>
 
-          {/* Sequential Stages Progress Line */}
-          <div className="space-y-6">
-            <h3 className="font-technical text-xs font-bold uppercase tracking-wider text-[#5F6C64]">
-              Sequential Route Milestones
-            </h3>
-
-            <div className="relative border-l-2 border-[#DDE2DA] ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-8">
-              {currentMap.stages.map((stg, sIdx) => (
-                <div key={sIdx} className="relative group">
-                  {/* Waypoint Marker on line */}
-                  <div className="absolute -left-[35px] sm:-left-[43px] top-0 w-6 h-6 rounded-full bg-white border-2 border-[#496D91] flex items-center justify-center font-technical text-[10px] font-bold text-[#496D91] shadow-2xs">
-                    {stg.stageNumber}
-                  </div>
-
-                  <div className="p-5 rounded-2xl bg-[#F7F5EF] border border-[#DDE2DA] space-y-3">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                      <h4 className="font-editorial text-lg font-bold text-[#25352D]">
-                        {stg.name}
-                      </h4>
-                      <span className="font-technical text-xs text-[#496D91] font-semibold">
-                        {stg.status}
-                      </span>
-                    </div>
-
-                    {/* Topic Badges */}
-                    <div className="flex flex-wrap gap-2 text-xs font-technical">
-                      {stg.topics.map((tpc, tIdx) => (
-                        <span 
-                          key={tIdx}
-                          className="px-2.5 py-1 rounded-md bg-white border border-[#DDE2DA] text-[#5F6C64]"
-                        >
-                          {tpc}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Workbench Cross-link */}
-                    <div className="pt-2 text-xs font-technical flex items-center justify-between border-t border-[#E6E8E1] text-[#5F6C64]">
-                      <span>Workbench Material: <strong className="text-[#25352D]">{stg.workbenchLink}</strong></span>
-                      <button
-                        onClick={onNavigateWorkbench}
-                        className="text-[#245B4B] hover:underline font-semibold cursor-pointer"
-                      >
-                        Go to Workbench →
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
+          {/* Sequential Stages Controls */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+            <div>
+              <h3 className="font-technical text-xs font-bold uppercase tracking-wider text-[#496D91]">
+                Sequential Route Milestones ({currentMap.stages.length} Stages)
+              </h3>
+              <p className="text-xs text-[#5F6C64] mt-0.5">
+                Click any milestone to inspect learning objectives, concepts, and recommended practical exercises.
+              </p>
             </div>
+
+            <div className="flex items-center gap-2 text-xs font-technical">
+              <button
+                onClick={expandAll}
+                className="px-3 py-1 rounded-lg border border-[#DDE2DA] hover:bg-[#F0F1EB] text-[#5F6C64] cursor-pointer"
+              >
+                Expand All
+              </button>
+              <button
+                onClick={collapseAll}
+                className="px-3 py-1 rounded-lg border border-[#DDE2DA] hover:bg-[#F0F1EB] text-[#5F6C64] cursor-pointer"
+              >
+                Collapse All
+              </button>
+            </div>
+          </div>
+
+          {/* Sequential Timeline Progress Line */}
+          <div className="relative border-l-2 border-[#DDE2DA] ml-4 sm:ml-6 pl-6 sm:pl-8 space-y-8">
+            {currentMap.stages.map((stg) => {
+              const isExpanded = expandedStages[stg.stageNumber] ?? false;
+              const hasLink = stg.zeroIndexLink && stg.zeroIndexLink.available;
+
+              return (
+                <div key={stg.stageNumber} className="relative group">
+                  
+                  {/* Waypoint Marker on Line */}
+                  <button
+                    onClick={() => toggleStage(stg.stageNumber)}
+                    className={`absolute -left-[35px] sm:-left-[43px] top-4 w-7 h-7 rounded-full border-2 flex items-center justify-center font-technical text-[11px] font-bold shadow-2xs transition-all cursor-pointer ${
+                      isExpanded
+                        ? 'bg-[#496D91] text-white border-[#496D91]'
+                        : 'bg-white text-[#496D91] border-[#496D91] hover:bg-[#E1EAF2]'
+                    }`}
+                    aria-label={`Toggle stage ${stg.stageNumber}`}
+                  >
+                    {stg.stageNumber}
+                  </button>
+
+                  {/* Stage Card */}
+                  <div className="rounded-2xl border border-[#DDE2DA] bg-[#F7F5EF] hover:border-[#496D91]/60 transition-all shadow-2xs overflow-hidden">
+                    
+                    {/* Collapsible Card Header */}
+                    <div 
+                      onClick={() => toggleStage(stg.stageNumber)}
+                      className="p-5 sm:p-6 cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 select-none"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-technical text-xs font-bold text-[#496D91]">
+                            Stage {stg.stageNumber}
+                          </span>
+                          {stg.estimatedTime && (
+                            <span className="text-[11px] font-technical text-[#69766D]">
+                              · {stg.estimatedTime}
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-editorial text-xl sm:text-2xl font-bold text-[#25352D]">
+                          {stg.title}
+                        </h4>
+                        <p className="text-xs sm:text-sm text-[#5F6C64]">
+                          {stg.subtitle}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-3 shrink-0 self-start sm:self-center">
+                        <span className={`text-[10px] font-technical font-bold px-2.5 py-1 rounded-full uppercase border ${
+                          stg.statusType === 'available'
+                            ? 'bg-[#E0EBDF] text-[#245B4B] border-[#245B4B]/30'
+                            : stg.statusType === 'framework' || stg.statusType === 'synthesis'
+                            ? 'bg-[#E1EAF2] text-[#496D91] border-[#496D91]/30'
+                            : 'bg-[#FAF8F5] text-[#D97706] border-[#D97706]/30'
+                        }`}>
+                          {stg.status}
+                        </span>
+                        {isExpanded ? (
+                          <ChevronDown className="w-5 h-5 text-[#5F6C64]" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5 text-[#5F6C64]" />
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Expandable Stage Details */}
+                    {isExpanded && (
+                      <div className="px-5 pb-6 sm:px-6 sm:pb-6 pt-2 border-t border-[#E6E8E1] space-y-6 text-xs sm:text-sm">
+                        
+                        {/* Prerequisites callout */}
+                        {stg.prerequisites && (
+                          <div className="p-3 rounded-xl bg-white border border-[#DDE2DA] flex items-center gap-2 text-xs font-technical text-[#5F6C64]">
+                            <Target className="w-4 h-4 text-[#496D91] shrink-0" />
+                            <span><strong>Prerequisite Knowledge:</strong> {stg.prerequisites}</span>
+                          </div>
+                        )}
+
+                        {/* Learning Objectives */}
+                        {stg.learningObjectives && stg.learningObjectives.length > 0 && (
+                          <div className="space-y-2">
+                            <h5 className="font-technical text-xs font-bold uppercase tracking-wider text-[#496D91]">
+                              Key Learning Objectives
+                            </h5>
+                            <ul className="space-y-1.5 text-[#5F6C64]">
+                              {stg.learningObjectives.map((obj, oIdx) => (
+                                <li key={oIdx} className="flex items-start gap-2">
+                                  <span className="text-[#496D91] font-bold">✓</span>
+                                  <span>{obj}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Core Technical Concepts Chips */}
+                        {stg.coreConcepts && stg.coreConcepts.length > 0 && (
+                          <div className="space-y-2">
+                            <h5 className="font-technical text-xs font-bold uppercase tracking-wider text-[#5F6C64]">
+                              Core Concepts &amp; Vocabulary
+                            </h5>
+                            <div className="flex flex-wrap gap-1.5 font-technical text-xs">
+                              {stg.coreConcepts.map((c, cIdx) => (
+                                <span 
+                                  key={cIdx}
+                                  className="px-2.5 py-1 rounded-md bg-white border border-[#DDE2DA] text-[#25352D]"
+                                >
+                                  {c}
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Practical Milestones / Projects */}
+                        {stg.practicalMilestones && stg.practicalMilestones.length > 0 && (
+                          <div className="p-4 rounded-xl bg-white border border-[#DDE2DA] space-y-2">
+                            <div className="flex items-center gap-1.5 text-xs font-technical font-bold text-[#245B4B]">
+                              <Terminal className="w-3.5 h-3.5" />
+                              <span>Recommended Practical Exercises &amp; Milestones</span>
+                            </div>
+                            <ul className="space-y-1.5 text-xs text-[#5F6C64]">
+                              {stg.practicalMilestones.map((m, mIdx) => (
+                                <li key={mIdx} className="flex items-start gap-2">
+                                  <span className="text-[#245B4B] font-mono">[{mIdx + 1}]</span>
+                                  <span>{m}</span>
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Specialized Branches (Stage 6) */}
+                        {stg.branches && stg.branches.length > 0 && (
+                          <div className="space-y-3 pt-2">
+                            <h5 className="font-technical text-xs font-bold uppercase tracking-wider text-[#496D91]">
+                              Four Specialization Directions
+                            </h5>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {stg.branches.map((br, bIdx) => (
+                                <div key={bIdx} className="p-4 rounded-xl bg-white border border-[#DDE2DA] space-y-2">
+                                  <h6 className="font-editorial text-sm font-bold text-[#25352D]">
+                                    {br.branchTitle}
+                                  </h6>
+                                  <p className="text-xs text-[#5F6C64] leading-relaxed">
+                                    {br.target}
+                                  </p>
+                                  <div className="flex flex-wrap gap-1 pt-1 font-technical text-[10px]">
+                                    {br.keyTopics.map((top, tIdx) => (
+                                      <span key={tIdx} className="px-2 py-0.5 rounded bg-[#F0F1EB] text-[#5F6C64]">
+                                        {top}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {/* ZeroIndex Resource Link Area */}
+                        {stg.zeroIndexLink && (
+                          <div className="pt-3 border-t border-[#E6E8E1] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-technical text-xs">
+                            <div className="text-[#5F6C64]">
+                              <span>ZeroIndex Resource: </span>
+                              <strong className={hasLink ? 'text-[#245B4B]' : 'text-[#64748B]'}>
+                                {stg.zeroIndexLink.label}
+                              </strong>
+                            </div>
+
+                            {hasLink ? (
+                              <button
+                                onClick={() => handleWorkbenchLink(stg.zeroIndexLink.sectionRoute)}
+                                className="px-3.5 py-1.5 rounded-lg bg-[#245B4B] hover:bg-[#28755E] text-white font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto shadow-2xs"
+                              >
+                                <span>Open Resource</span>
+                                <span>→</span>
+                              </button>
+                            ) : (
+                              <span className="text-[11px] text-[#64748B] italic">
+                                Content planned in future milestone
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                      </div>
+                    )}
+
+                  </div>
+
+                </div>
+              );
+            })}
           </div>
 
         </div>

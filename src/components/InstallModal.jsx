@@ -1,13 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Smartphone, Check } from 'lucide-react';
 
 export const InstallModal = ({ isOpen, onClose }) => {
   const [activeTab, setActiveTab] = useState('android');
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#25352D]/50 backdrop-blur-xs flex items-center justify-center p-4">
+    <div 
+      className="fixed inset-0 z-50 bg-[#25352D]/50 backdrop-blur-xs flex items-center justify-center p-4"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
       <div 
         className="bg-white rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-lift border border-[#DDE2DA] relative animate-in fade-in zoom-in-95 duration-150 text-left space-y-5"
         role="dialog"

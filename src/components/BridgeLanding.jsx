@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   ArrowRight, 
@@ -9,63 +9,65 @@ import {
   Code2, 
   BrainCircuit, 
   HelpCircle,
-  ExternalLink
+  ExternalLink,
+  BookOpen,
+  CheckSquare,
+  Square,
+  Sparkles,
+  ChevronRight,
+  Target,
+  GraduationCap
 } from 'lucide-react';
+import { bridgePlacementDomains } from '../data/bridgePlacementConfig';
 
-export const BridgeLanding = ({ onNavigateHome }) => {
-  const [activeSection, setActiveSection] = useState('aptitude');
-
-  const categories = [
-    {
-      id: 'aptitude',
-      title: 'Quantitative & Analytical Reasoning',
-      badge: 'Curriculum Outline',
-      description: 'Systematic mathematical reasoning, probability, combinatorics, number theory, and logical deductions required for engineering assessments.',
-      tracks: [
-        { title: 'Number Systems & Base Divisibility', status: 'Planned Topic', level: 'Fundamental' },
-        { title: 'Permutations, Combinations & Probability', status: 'Planned Topic', level: 'Intermediate' },
-        { title: 'Logical Deduction & Truth Tables', status: 'Planned Topic', level: 'Fundamental' },
-        { title: 'Time, Speed, Distance & Work Equations', status: 'Planned Topic', level: 'Intermediate' },
-      ]
-    },
-    {
-      id: 'technical',
-      title: 'Core CS Interview Foundations',
-      badge: 'Interview Outline',
-      description: 'Rigorous first-principles conceptual question bank covering Operating Systems, DBMS, Computer Networks, and Computer Architecture.',
-      tracks: [
-        { title: 'Operating Systems: Concurrency & Virtual Memory', status: 'Planned Topic', level: 'Deep Dive' },
-        { title: 'DBMS: Normalization, Indexing & ACID Guarantees', status: 'Planned Topic', level: 'Deep Dive' },
-        { title: 'Computer Networks: OSI, TCP/IP & Handshakes', status: 'Planned Topic', level: 'Core' },
-        { title: 'Object-Oriented Design & Clean Abstractions', status: 'Planned Topic', level: 'Core' },
-      ]
-    },
-    {
-      id: 'coding',
-      title: 'Systematic Coding & Pattern Mastery',
-      badge: 'Pattern Outline',
-      description: 'Pattern-based problem classification rather than blind memorization: Two Pointers, Sliding Window, Tree Inversion, Dynamic Programming intervals.',
-      tracks: [
-        { title: 'Two-Pointer & Sliding Window Techniques', status: 'Planned Topic', level: 'Essential' },
-        { title: 'Binary Search & Monotonic Predicates', status: 'Planned Topic', level: 'Essential' },
-        { title: 'Graph Traversal & Topological Ordering', status: 'Planned Topic', level: 'Advanced' },
-        { title: 'Intervals & State-Space Dynamic Programming', status: 'Planned Topic', level: 'Advanced' },
-      ]
-    },
-    {
-      id: 'resume',
-      title: 'Technical Resume & Engineering Communication',
-      badge: 'Career Framework',
-      description: 'Guidelines for structuring engineering project descriptions, communicating technical tradeoffs in interviews, and portfolio architecture.',
-      tracks: [
-        { title: 'Project Impact Deconstructions (Action-Metric-Result)', status: 'Planned Guide', level: 'Guide' },
-        { title: 'Whiteboard Communication & Thought Verbalization', status: 'Planned Checklist', level: 'Framework' },
-        { title: 'Technical Portfolio & Clean Git Hygiene', status: 'Planned Standard', level: 'Guide' },
-      ]
+export const BridgeLanding = ({ 
+  onNavigateHome, 
+  onNavigateWorkbench,
+  onNavigateSection 
+}) => {
+  const [activeDomainId, setActiveDomainId] = useState('quantitative-aptitude');
+  
+  // Track completed checklist items by domain in state (backed by localStorage if available)
+  const [completedItems, setCompletedItems] = useState(() => {
+    try {
+      const saved = localStorage.getItem('zeroindex_bridge_checklist');
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
     }
-  ];
+  });
 
-  const currentCategory = categories.find(c => c.id === activeSection) || categories[0];
+  const toggleChecklistItem = (domainId, itemIndex) => {
+    setCompletedItems(prev => {
+      const domainKey = domainId;
+      const currentList = prev[domainKey] || [];
+      const updatedList = currentList.includes(itemIndex)
+        ? currentList.filter(i => i !== itemIndex)
+        : [...currentList, itemIndex];
+      
+      const newState = { ...prev, [domainKey]: updatedList };
+      try {
+        localStorage.setItem('zeroindex_bridge_checklist', JSON.stringify(newState));
+      } catch {}
+      return newState;
+    });
+  };
+
+  const currentDomain = bridgePlacementDomains.find(d => d.id === activeDomainId) || bridgePlacementDomains[0];
+  const domainCompletedIndices = completedItems[currentDomain.id] || [];
+  const completedCount = domainCompletedIndices.length;
+  const totalCount = currentDomain.checklist.length;
+  const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+
+  const handleWorkbenchLink = (route) => {
+    if (route && onNavigateWorkbench) {
+      if (route.startsWith('workspace') && onNavigateSection) {
+        onNavigateSection(route);
+      } else {
+        onNavigateWorkbench();
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
@@ -83,6 +85,10 @@ export const BridgeLanding = ({ onNavigateHome }) => {
             </button>
             <span className="text-[#DDE2DA]">/</span>
             <span className="text-[#956A43] font-bold">03 The Bridge</span>
+            <span className="text-[#DDE2DA]">/</span>
+            <span className="text-[#5F6C64] truncate max-w-[200px]">
+              {currentDomain.shortTitle}
+            </span>
           </nav>
 
           <span className="font-technical text-[11px] text-[#5F6C64]">
@@ -105,31 +111,47 @@ export const BridgeLanding = ({ onNavigateHome }) => {
           </p>
         </div>
 
-        {/* Structural Connection Category Selector */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-left">
-          {categories.map((cat) => {
-            const isSelected = activeSection === cat.id;
+        {/* 7 Preparation Domains Tab Selector Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 text-left">
+          {bridgePlacementDomains.map((dom, idx) => {
+            const isSelected = activeDomainId === dom.id;
+            const domainDone = (completedItems[dom.id] || []).length;
+            const domainTotal = dom.checklist.length;
+
             return (
               <button
-                key={cat.id}
-                onClick={() => setActiveSection(cat.id)}
-                className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                key={dom.id}
+                onClick={() => setActiveDomainId(dom.id)}
+                className={`p-4 sm:p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
                   isSelected
                     ? 'bg-white border-[#956A43] shadow-soft ring-1 ring-[#956A43]'
                     : 'bg-white/70 hover:bg-white border-[#DDE2DA] text-[#5F6C64]'
                 }`}
               >
                 <div>
-                  <span className="text-[10px] font-technical px-2 py-0.5 rounded-full bg-[#F0F1EB] text-[#5F6C64] inline-block mb-2">
-                    {cat.badge}
-                  </span>
-                  <h3 className="font-editorial text-base font-bold text-[#25352D] mb-1">
-                    {cat.title}
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-technical text-[10px] font-bold uppercase tracking-wider text-[#956A43]">
+                      Domain 0{idx + 1}
+                    </span>
+                    <span className="text-[10px] font-technical px-2 py-0.5 rounded-full bg-[#F0F1EB] text-[#5F6C64]">
+                      {domainDone}/{domainTotal} done
+                    </span>
+                  </div>
+
+                  <h3 className="font-editorial text-sm sm:text-base font-bold text-[#25352D] mb-1 line-clamp-1">
+                    {dom.shortTitle}
                   </h3>
+
+                  <p className="text-[11px] text-[#5F6C64] line-clamp-2 leading-relaxed">
+                    {dom.summary}
+                  </p>
                 </div>
-                <div className="pt-3 border-t border-[#E6E8E1] text-xs font-semibold text-[#956A43] flex items-center justify-between">
-                  <span>{cat.tracks.length} Tracks</span>
-                  <span>Select →</span>
+
+                <div className="pt-3 mt-3 border-t border-[#E6E8E1] text-xs font-semibold text-[#956A43] flex items-center justify-between">
+                  <span className="text-[11px] font-technical">{dom.badge}</span>
+                  <span className="text-[11px] font-bold">
+                    {isSelected ? 'Active ●' : 'Select →'}
+                  </span>
                 </div>
               </button>
             );
@@ -137,42 +159,164 @@ export const BridgeLanding = ({ onNavigateHome }) => {
         </div>
 
         {/* Selected Domain Workspace */}
-        <div className="bg-white rounded-3xl border border-[#DDE2DA] shadow-soft p-6 sm:p-8 space-y-6 text-left">
-          <div className="pb-4 border-b border-[#E6E8E1] space-y-1">
-            <span className="font-technical text-xs font-bold text-[#956A43] uppercase tracking-wider">
-              Preparation Track · {currentCategory.title}
-            </span>
-            <p className="text-sm text-[#5F6C64]">
-              {currentCategory.description}
-            </p>
-          </div>
+        <div className="bg-white rounded-3xl border border-[#DDE2DA] shadow-soft p-6 sm:p-10 space-y-8 text-left">
+          
+          {/* Domain Header & Overview */}
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 pb-6 border-b border-[#E6E8E1]">
+            <div className="space-y-2 max-w-3xl">
+              <span className="font-technical text-xs font-bold text-[#956A43] uppercase tracking-wider block">
+                Campus Placement Preparation Guide · {currentDomain.category}
+              </span>
+              <h2 className="font-editorial text-2xl sm:text-4xl font-bold text-[#25352D]">
+                {currentDomain.title}
+              </h2>
+              <p className="text-sm sm:text-base text-[#5F6C64] leading-relaxed">
+                {currentDomain.overview}
+              </p>
+            </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {currentCategory.tracks.map((trk, idx) => (
-              <div 
-                key={idx}
-                className="p-4 rounded-xl bg-[#F7F5EF] border border-[#DDE2DA] flex items-center justify-between gap-4"
-              >
-                <div className="space-y-1">
-                  <h4 className="text-sm font-bold text-[#25352D]">
-                    {trk.title}
-                  </h4>
-                  <div className="flex items-center gap-2 text-xs font-technical text-[#5F6C64]">
-                    <span>{trk.status}</span>
-                    <span>·</span>
-                    <span className="text-[#956A43] font-medium">{trk.level}</span>
-                  </div>
-                </div>
-                <span className="font-technical text-xs text-[#5F6C64] px-2 py-1 rounded bg-white border border-[#DDE2DA]">
-                  Outline
-                </span>
+            {/* Preparation Progress Widget */}
+            <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#DDE2DA] font-technical text-xs space-y-2 lg:text-right shrink-0 min-w-[200px]">
+              <div className="flex items-center justify-between lg:justify-end gap-2">
+                <span className="text-[#5F6C64]">Checklist Progress:</span>
+                <strong className="text-[#956A43]">{completedCount} of {totalCount}</strong>
               </div>
-            ))}
+              <div className="w-full bg-[#E6E8E1] h-2 rounded-full overflow-hidden">
+                <div 
+                  className="bg-[#956A43] h-full transition-all duration-300" 
+                  style={{ width: `${progressPercent}%` }}
+                />
+              </div>
+              <span className="text-[10px] text-[#69766D] block">
+                {progressPercent}% preparation milestones completed
+              </span>
+            </div>
           </div>
 
-          <div className="p-4 rounded-xl bg-[#F1E5D9]/50 border border-[#956A43]/20 font-technical text-xs text-[#5F6C64]">
-            Note: The Bridge tracks are currently in the curriculum framework and design phase. Dedicated problem sets, exercises, and rubrics are in active development.
+          {/* Section 1: Core Competency Breakdown */}
+          <div className="space-y-4">
+            <h3 className="font-technical text-xs font-bold uppercase tracking-wider text-[#956A43]">
+              Key Competency Tracks ({currentDomain.competencyTracks.length} Areas)
+            </h3>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {currentDomain.competencyTracks.map((tr, tIdx) => (
+                <div 
+                  key={tIdx}
+                  className="p-4 sm:p-5 rounded-2xl bg-[#F7F5EF] border border-[#DDE2DA] space-y-2 hover:border-[#956A43]/50 transition-colors"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="w-5 h-5 rounded-full bg-white border border-[#DDE2DA] flex items-center justify-center font-technical text-[10px] text-[#956A43] font-bold shrink-0">
+                      {tIdx + 1}
+                    </span>
+                    <h4 className="font-editorial text-base font-bold text-[#25352D]">
+                      {tr.trackName}
+                    </h4>
+                  </div>
+                  <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed pl-7">
+                    {tr.description}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
+
+          {/* Section 2: Formulas, Cheat Sheets & Rules of Thumb */}
+          {currentDomain.formulasAndRules && currentDomain.formulasAndRules.length > 0 && (
+            <div className="space-y-4 pt-4 border-t border-[#E6E8E1]">
+              <h3 className="font-technical text-xs font-bold uppercase tracking-wider text-[#956A43]">
+                High-Yield Formulas &amp; Frameworks
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {currentDomain.formulasAndRules.map((f, fIdx) => (
+                  <div 
+                    key={fIdx}
+                    className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DDE2DA] space-y-2.5 shadow-2xs"
+                  >
+                    <span className="font-technical text-xs font-bold text-[#25352D] block">
+                      {f.ruleTitle}
+                    </span>
+                    <div className="p-3 rounded-xl bg-[#F7F5EF] border border-[#E6E8E1] font-technical text-xs text-[#956A43] font-semibold break-words">
+                      {f.ruleFormula}
+                    </div>
+                    <p className="text-xs text-[#5F6C64] leading-relaxed">
+                      {f.ruleNote}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Section 3: Interactive Practice & Readiness Checklist */}
+          <div className="space-y-4 pt-4 border-t border-[#E6E8E1]">
+            <div className="flex items-center justify-between">
+              <h3 className="font-technical text-xs font-bold uppercase tracking-wider text-[#956A43]">
+                Practical Preparation Checklist
+              </h3>
+              <span className="font-technical text-[11px] text-[#5F6C64]">
+                Click items to toggle completion
+              </span>
+            </div>
+
+            <div className="space-y-2">
+              {currentDomain.checklist.map((item, idx) => {
+                const isChecked = domainCompletedIndices.includes(idx);
+                return (
+                  <div 
+                    key={idx}
+                    onClick={() => toggleChecklistItem(currentDomain.id, idx)}
+                    className={`p-3.5 sm:p-4 rounded-xl border transition-all cursor-pointer flex items-start gap-3 select-none ${
+                      isChecked
+                        ? 'bg-[#E0EBDF]/40 border-[#245B4B]/30 text-[#25352D]'
+                        : 'bg-[#F7F5EF] hover:bg-white border-[#DDE2DA] text-[#5F6C64]'
+                    }`}
+                  >
+                    <div className="pt-0.5 shrink-0 text-[#956A43]">
+                      {isChecked ? (
+                        <CheckSquare className="w-4 h-4 text-[#245B4B]" />
+                      ) : (
+                        <Square className="w-4 h-4 text-[#DDE2DA]" />
+                      )}
+                    </div>
+                    <span className={`text-xs sm:text-sm leading-relaxed ${
+                      isChecked ? 'line-through text-[#69766D]' : 'text-[#25352D]'
+                    }`}>
+                      {item}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Section 4: ZeroIndex Cross-Link Area */}
+          {currentDomain.zeroIndexLink && (
+            <div className="pt-4 border-t border-[#E6E8E1] flex flex-col sm:flex-row sm:items-center justify-between gap-3 font-technical text-xs">
+              <div className="text-[#5F6C64]">
+                <span>Correlated ZeroIndex Subject: </span>
+                <strong className={currentDomain.zeroIndexLink.available ? 'text-[#245B4B]' : 'text-[#64748B]'}>
+                  {currentDomain.zeroIndexLink.label}
+                </strong>
+              </div>
+
+              {currentDomain.zeroIndexLink.available && currentDomain.zeroIndexLink.sectionRoute ? (
+                <button
+                  onClick={() => handleWorkbenchLink(currentDomain.zeroIndexLink.sectionRoute)}
+                  className="px-3.5 py-1.5 rounded-lg bg-[#245B4B] hover:bg-[#28755E] text-white font-semibold transition-all inline-flex items-center gap-1.5 cursor-pointer self-start sm:self-auto shadow-2xs"
+                >
+                  <span>Open Workbench Subject</span>
+                  <span>→</span>
+                </button>
+              ) : (
+                <span className="text-[11px] text-[#64748B] italic">
+                  Additional practice modules planned
+                </span>
+              )}
+            </div>
+          )}
+
         </div>
 
       </div>
