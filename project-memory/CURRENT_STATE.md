@@ -1,7 +1,7 @@
 # Current Project State
 
 **Documentation baseline:** October 19, 2026.  
-**Git Revision:** `phase-1a-stabilization` branch (recovery baseline: `65d5ba2` / `main`).  
+**Git Revision:** `main` branch (production release).  
 **Package Version:** `2.0.0` in `package.json`.  
 **Hosting Environment:** Vercel Serverless Edge (`https://zeroindex-sigma.vercel.app/`).  
 **Local Development:** Active on `http://localhost:3002/`.  
@@ -50,6 +50,6 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Foundation Development Sprint completed on dedicated branch `phase-1a-stabilization`.
-* **Immediate Next Action**: Consolidated review and approval of the Foundation Development Sprint.
-* **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps).
+* **Current Stage**: Foundation Development Sprint merged into `main` and released to production.
+* **Immediate Next Action**: Phase 2 (Workbench and DLD Unit 1 academic review) followed by DLD Unit 2 (Boolean & K-Maps).
+* **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps) -> Phase 4 (DLD Units 3 to 5).
