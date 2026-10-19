@@ -26,7 +26,6 @@ export const dldUnit1Master = {
   courseOutcome: "CO1",
   estimatedTime: "9 Lectures / 3 Weeks",
   summary: "Foundational mathematics and physical electronics of digital computation: analog versus digital systems, positional number systems, 12 conversion methodologies, radix complements, signed arithmetic in 2's complement, and digital logic gate primitives.",
-  overleafPdfLink: "https://www.overleaf.com/read/zeroindex-dld-unit1",
   
   sections: [
     {

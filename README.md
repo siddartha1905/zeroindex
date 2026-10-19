@@ -57,7 +57,7 @@ The DLD course (`#dld` and `#workspace/:tab`) is completely self-contained and f
      - Engine 4: Signed 8-Bit Overflow (Signed magnitude, 1's and 2's complement with overflow $V = C_{in} \oplus C_{out}$).
      - Engine 5: 7-Gate Logic Explorer with inline IEEE SVG circuit schematics and continuous 8-cycle oscilloscope waveform trace.
   3. **Practice Questions** (`#workspace/practice`): 110+ syllabus-weighted questions in `src/components/PracticeArena.jsx` featuring a 3-stage state machine (Lobby / Active / Evaluation & Explanations).
-  4. **Subject Resources** (`#workspace/syllabus`): Full course overview, LTPC credits (3-0-0-3), and external Overleaf reference notes.
+  4. **Subject Resources** (`#workspace/syllabus`): Full course overview, LTPC credits (3-0-0-3), curriculum breakdown, and study material resource status.
 
 ---
 

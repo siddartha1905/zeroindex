@@ -7,11 +7,12 @@ import {
   BookOpen
 } from 'lucide-react';
 import { dldSyllabus } from '../data/dldSyllabus';
-import { dldUnit1 } from '../data/dldUnit1';
+import { dldResourceConfig } from '../data/dldResourceConfig';
 import { ViitCrest } from './ViitCrest';
 
 export const SyllabusView = ({ onNavigate }) => {
   const [selectedUnit, setSelectedUnit] = useState(1);
+  const unit1Resource = dldResourceConfig.units[1];
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8 animate-in fade-in duration-150">
@@ -21,7 +22,7 @@ export const SyllabusView = ({ onNavigate }) => {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-4">
           <div className="flex items-center gap-2">
             <ViitCrest className="w-6 h-6" />
-            <span className="text-xs font-bold text-[#2E6F40]">Vignan’s Institute of Information Technology (A)</span>
+            <span className="text-xs font-bold text-[#2E6F40]">Vignan's Institute of Information Technology (A)</span>
             <span className="text-xs text-[#64748B]">Autonomous Curriculum</span>
           </div>
           
@@ -32,16 +33,24 @@ export const SyllabusView = ({ onNavigate }) => {
             <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-[#FAF8F5] text-[#1E293B] border border-[#DCE7E1]">
               {dldSyllabus.ltpc}
             </span>
-            {/* Download Unit 1 PDF in Syllabus Tab */}
-            <a
-              href={dldUnit1.overleafPdfLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#2E6F40] text-white hover:bg-[#255A34] text-xs font-semibold shadow-sm transition-colors"
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>Download Unit 1 Notes PDF</span>
-            </a>
+            {/* Google Drive Study Materials Resource */}
+            {unit1Resource?.driveUrl ? (
+              <a
+                href={unit1Resource.driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#2E6F40] text-white hover:bg-[#255A34] text-xs font-semibold shadow-sm transition-colors"
+              >
+                <Download className="w-3.5 h-3.5" />
+                <span>{unit1Resource.resourceName}</span>
+              </a>
+            ) : (
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#FAF8F5] text-[#64748B] border border-[#DCE7E1] text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                <span className="font-semibold text-[#1E293B]">{unit1Resource?.resourceName || 'Google Drive Study Materials'}:</span>
+                <span>{unit1Resource?.statusText || 'Material link will be added soon.'}</span>
+              </div>
+            )}
           </div>
         </div>
 
@@ -239,15 +248,22 @@ export const SyllabusView = ({ onNavigate }) => {
 
                 <div className="mt-4 pt-3 border-t border-[#DCE7E1] flex items-center justify-between">
                   <span className="text-[11px] font-mono text-[#64748B]">VIIT Library Copy</span>
-                  <a
-                    href={book.driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7E1] hover:border-[#2E6F40] text-xs font-semibold text-[#2E6F40] transition-colors"
-                  >
-                    <ExternalLink className="w-3.5 h-3.5" />
-                    <span>Access on Drive</span>
-                  </a>
+                  {book.driveLink ? (
+                    <a
+                      href={book.driveLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-[#DCE7E1] hover:border-[#2E6F40] text-xs font-semibold text-[#2E6F40] transition-colors"
+                    >
+                      <ExternalLink className="w-3.5 h-3.5" />
+                      <span>Access on Drive</span>
+                    </a>
+                  ) : (
+                    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#FAF8F5] border border-[#DCE7E1] text-[11px] font-medium text-[#64748B]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      <span>{book.statusText || 'Material link will be added soon.'}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
@@ -268,15 +284,22 @@ export const SyllabusView = ({ onNavigate }) => {
                   <p className="text-[11px] text-[#475569]">{ref.authors}, {ref.publisher}.</p>
                 </div>
                 <div className="mt-3 pt-2 border-t border-[#DCE7E1]/60 flex items-center justify-end">
-                  <a
-                    href={ref.driveLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#4F46E5] hover:underline"
-                  >
-                    <span>Drive Copy</span>
-                    <ExternalLink className="w-3 h-3" />
-                  </a>
+                  {ref.driveLink ? (
+                    <a
+                      href={ref.driveLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#4F46E5] hover:underline"
+                    >
+                      <span>Drive Copy</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </a>
+                  ) : (
+                    <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-white border border-[#DCE7E1] text-[10px] font-medium text-[#64748B]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                      <span>{ref.statusText || 'Material link will be added soon.'}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}

@@ -10,7 +10,6 @@ export const dldUnit1 = {
   courseOutcome: "CO1",
   estimatedTime: "9 Lectures / 3 Weeks",
   summary: "Foundational mathematics and electronics of discrete computing: analog vs digital signals, positional number representations, base conversion algorithms, r's and (r-1)'s complements, signed binary representation (2's complement), and digital logic gate primitives.",
-  overleafPdfLink: "https://www.overleaf.com/read/zeroindex-dld-unit1",
   subModules: [
     {
       id: "1.1",

@@ -4,7 +4,7 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **48**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **50**
 - Verification script names discovered: **4**
 
 ## Selected declared dependencies
@@ -66,6 +66,8 @@
 - `src/components/ViitCrest.jsx`
 - `src/components/WorkbenchLanding.jsx`
 - `src/components/ZeroIndexSideWings.jsx`
+- `src/data/dldAvailabilityConfig.js`
+- `src/data/dldResourceConfig.js`
 - `src/data/dldSection13PracticeData.js`
 - `src/data/dldSection14Data.js`
 - `src/data/dldSection15Data.js`

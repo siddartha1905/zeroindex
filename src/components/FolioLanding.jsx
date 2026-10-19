@@ -12,47 +12,9 @@ import {
 export const FolioLanding = ({ onNavigateHome }) => {
   const [readingEssay, setReadingEssay] = useState(null);
 
-  const essays = [
-    {
-      id: 'teaching-from-index-zero',
-      title: 'On Teaching from Index Zero: Why Every Concept Deserves a Clean Starting Point',
-      date: '04 Oct 2026',
-      readTime: '6 min read',
-      topic: 'Pedagogy & Foundations',
-      summary: 'Why cognitive overload happens when textbooks skip foundational assumptions, and how deliberate first-principles instruction rebuilds academic confidence.',
-      body: `One of the most persistent observations in my classroom over the years is how frequently student anxiety originates not from intrinsic mathematical difficulty, but from unstated prerequisites.
-
-In traditional curricula, textbooks routinely present high-level algorithms or circuit syntheses as self-evident facts. When a student struggles to minimize a 4-variable K-Map, the friction is rarely with gray code ordering; it almost always stems from an incomplete physical intuition of why adjacent minterms represent single-bit differences.
-
-This is the foundational thesis of ZeroIndex. In computer science, index zero signifies the memory location where an array actually begins. In academic instruction, index zero means refusing to leave gaps in the foundation. When we take the time to trace an idea from basic voltage levels to Boolean gates before introducing complex sequential systems, students do not merely memorize formulas; they develop intellectual sovereignty over the subject.`
-    },
-    {
-      id: 'quiet-craft-engineering',
-      title: 'The Quiet Craft of Classroom Engineering',
-      date: '18 Sep 2026',
-      readTime: '5 min read',
-      topic: 'Faculty Reflections',
-      summary: 'Observations on preparing lecture models, drawing circuit schematics by hand on the blackboard, and resisting the rush toward superficial automation.',
-      body: `There is a distinct, understated craftsmanship in drawing an electrical logic diagram on a physical blackboard. As the chalk moves across the slate, establishing wire runs and gate bodies, the pacing naturally synchronizes with human cognition. Students have time to observe how the carry propagates from the half adder before the next symbol appears.
-
-In our collective haste to introduce multimedia slides and automated assessment platforms, we sometimes inadvertently destroy the very cognitive pauses that make understanding possible. 
-
-ZeroIndex is an attempt to synthesize the best of both worlds: digital tools that preserve the contemplative, paced dignity of a chalkboard derivation, paired with interactive visual solvers that let students verify their derivations on their own time.`
-    },
-    {
-      id: 'deep-reading-summaries',
-      title: 'On Reading Deeply in an Era of Summary Feeds',
-      date: '22 Aug 2026',
-      readTime: '7 min read',
-      topic: 'Books & Mindset',
-      summary: 'Why engineering students must cultivate the endurance to read primary textbooks and papers rather than relying exclusively on cheat sheets and video snippets.',
-      body: `In technical education today, there is a dangerous temptation to substitute concise summaries for foundational reading. When preparing for mid-semester exams, students naturally gravitate toward two-minute video explanations or bulleted formula lists.
-
-While summaries are valuable for rapid pre-exam recall, they cannot build architectural intuition. When an engineer encounters an unprecedented production bug or designs a novel distributed protocol, there is no prefabricated summary available. The only faculty that serves them is the endurance to read complex specifications, trace state transitions line by line, and reason through edge cases.
-
-Reading technical prose deeply is a muscle that must be exercised deliberately. It begins by sitting quietly with a challenging derivation until the underlying structure clicks into focus.`
-    }
-  ];
+  // Unpublished development archive is preserved in unpublished-archive/folio-essays-archive.json
+  // Essays will appear here only when explicitly reviewed and approved by the author.
+  const essays = [];
 
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
@@ -92,7 +54,7 @@ Reading technical prose deeply is a muscle that must be exercised deliberately. 
           </p>
         </div>
 
-        {/* Reading Essay Detail View or Essay List */}
+        {/* Reading Essay Detail View or Essay List / Empty State */}
         {readingEssay ? (
           <div className="p-6 sm:p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft space-y-8 text-left animate-in fade-in duration-150">
             <button
@@ -135,7 +97,7 @@ Reading technical prose deeply is a muscle that must be exercised deliberately. 
               </button>
             </div>
           </div>
-        ) : (
+        ) : essays.length > 0 ? (
           /* Essay Collection List */
           <div className="space-y-4 text-left">
             {essays.map((ess) => (
@@ -169,6 +131,27 @@ Reading technical prose deeply is a muscle that must be exercised deliberately. 
                 </div>
               </article>
             ))}
+          </div>
+        ) : (
+          /* Tasteful Empty State */
+          <div className="p-10 sm:p-14 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-center space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#F2E5E1] border border-[#935F5D]/30 flex items-center justify-center mx-auto text-[#935F5D]">
+              <Feather className="w-6 h-6" />
+            </div>
+            <div className="space-y-1.5 max-w-md mx-auto">
+              <h3 className="font-editorial text-2xl font-bold text-[#25352D]">
+                Writing will appear here soon.
+              </h3>
+              <p className="text-sm text-[#5F6C64] leading-relaxed">
+                Personal essays, pedagogical reflections, and intellectual notes will be published here upon author review.
+              </p>
+            </div>
+            <div className="pt-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#DDE2DA] text-xs font-technical text-[#935F5D]">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <span>Manuscripts In Preparation</span>
+              </span>
+            </div>
           </div>
         )}
 

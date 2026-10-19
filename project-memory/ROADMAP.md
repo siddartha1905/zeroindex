@@ -5,7 +5,7 @@ Status labels: `Planned`, `In Progress`, `In Review`, `Verified`, `Released`, `B
 | Stage | Status as of October 19, 2026 | Required Deliverables | Release Gate |
 |---|---|---|---|
 | **Setup: Project Memory** | **Verified** | Install documentation system, AI rules, snapshot generator, GitHub workflow | All markdown records verified, build passing, zero app code regressions |
-| **Phase 1A: Publication and Accuracy Fixes** | Planned | Remove Overleaf references, remove unverified Drive entries; unpublish 6 unapproved sample articles/essays; correct Atlas/Bridge claims | Existing 163 tests passing, production build passing, affected pages reviewed |
+| **Phase 1A: Publication and Accuracy Fixes** | **Verified** | Overleaf links removed, centralized Google Drive config created, 6 unapproved pieces archived, Atlas/Bridge honest outlines, availability config created | 163 tests passing (100%), build passing (0 errors), unpublished content verified absent from bundle |
 | **Phase 1B: Routing and Usability** | Planned | Deep links, history/back-forward navigation, semantic cards, keyboard/mobile/zoom accessibility | Direct-link URL testing, accessibility audit, DLD workspace smoke tests |
 | **Phase 1C: Four Pillar Foundations** | Planned | Clean Atlas and Bridge architecture; publication-ready Readout and Folio templates | Zero placeholder dead ends; responsive design validation |
 | **Phase 1D: First Approved Content** | Planned | Draft initial learning roadmap, placement guide, and first faculty articles | Explicit author review and written approval before publishing |

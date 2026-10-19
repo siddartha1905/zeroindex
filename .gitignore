@@ -29,3 +29,6 @@ dist-ssr/
 
 # Setup files
 setup-files/
+
+# Unpublished development archives
+unpublished-archive/

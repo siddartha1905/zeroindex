@@ -1709,7 +1709,7 @@ const GraphicalDivisionLadder = ({
   );
 };
 
-export const UnitWorkspace = ({ section, overleafPdfLink }) => {
+export const UnitWorkspace = ({ section }) => {
   const [revealedQuestions, setRevealedQuestions] = useState({});
   const [activeSubTab13, setActiveSubTab13] = useState("overview");
   const [activeConv13A, setActiveConv13A] = useState("Conversion 1");

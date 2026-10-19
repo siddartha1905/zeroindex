@@ -15,47 +15,9 @@ export const ReadoutLanding = ({ onNavigateHome }) => {
   const [selectedTag, setSelectedTag] = useState('all');
   const [readingArticle, setReadingArticle] = useState(null);
 
-  const articles = [
-    {
-      id: 'relays-to-tensors',
-      title: 'From Relays to Tensors: The Long Arc of Computing Hardware',
-      date: '12 Oct 2026',
-      readTime: '7 min read',
-      tag: 'Hardware Architecture',
-      abstract: 'How physical voltage differentials and mechanical relay logic evolved through discrete semiconductors into today’s massively parallel systolic tensor arrays.',
-      content: `The fundamental question of computer hardware has remained invariant for nearly a century: how can we represent symbolic truth states using physical phenomena?
-
-In Claude Shannon’s 1937 master’s thesis, the breakthrough was demonstrating that electrical switches arranged in series and parallel were isomorphic to the Boolean algebraic operations of AND and OR. A physical circuit was no longer merely a conduit for electrical power; it was an apparatus capable of formal logical deduction.
-
-When we examine modern tensor processing units (TPUs) and systolic arrays, the underlying premise has not changed. An 8-bit multiplier-accumulator cell is fundamentally composed of full adders and Boolean gates, exactly as studied in introductory Digital Logic Design. What has transformed is the scale, topology, and memory hierarchy. Understanding computing from index zero ensures that modern hardware abstractions remain transparent rather than magical.`
-    },
-    {
-      id: 'zero-based-indexing',
-      title: 'Why Zero-Based Indexing Matters in Memory Architecture',
-      date: '28 Sep 2026',
-      readTime: '5 min read',
-      tag: 'Systems & C',
-      abstract: 'An architectural examination of pointer arithmetic: why indexing at zero minimizes CPU machine instruction cycles and directly matches contiguous memory offsets.',
-      content: `Students frequently ask why programming languages like C, C++, and Python count array elements starting at index zero instead of one. While it may appear counterintuitive at first glance, the rationale is deeply rooted in hardware efficiency.
-
-In C, an array identifier acts as a constant pointer to the memory location of its initial element. When a program accesses arr[i], the hardware evaluates the address calculation: Address = Base + i * sizeof(Type).
-
-If indexing were one-based, the CPU would be required to execute a subtraction instruction on every single array dereference: Base + (i - 1) * sizeof(Type). By defining the initial element at offset zero, the offset becomes precisely zero, saving millions of CPU arithmetic cycles in nested loops. Index zero is not an arbitrary linguistic choice; it is an architectural optimization.`
-    },
-    {
-      id: 'attention-geometry',
-      title: 'The Geometry of Attention Mechanisms: A First-Principles Intuition',
-      date: '14 Sep 2026',
-      readTime: '9 min read',
-      tag: 'Machine Learning',
-      abstract: 'Deconstructing dot-product attention as an angle-based similarity lookup in high-dimensional vector spaces, stripped of hype and marketing vocabulary.',
-      content: `At the heart of the modern transformer architecture lies a mathematically elegant concept known as scaled dot-product attention: Attention(Q, K, V) = softmax((Q * K^T) / sqrt(d_k)) * V.
-
-Despite the anthropomorphic language often used in popular media, attention is fundamentally an exercise in linear algebra and high-dimensional geometry. When two normalized vectors have a small angle between them, their dot product approaches unity. When they are orthogonal, their dot product is zero.
-
-By computing pairwise dot products between query and key projections, the model constructs a dynamic, data-dependent weighting matrix. Understanding this mechanism through the lens of vector projections transforms deep learning from an opaque black box into an approachable continuation of undergraduate linear algebra.`
-    }
-  ];
+  // Phase 1A: Previously generated unapproved articles moved to unpublished-archive/.
+  // Only explicitly approved faculty publications will be published here.
+  const articles = [];
 
   const tags = [
     { id: 'all', label: 'All Dispatches' },
@@ -165,7 +127,7 @@ By computing pairwise dot products between query and key projections, the model 
               </button>
             </div>
           </div>
-        ) : (
+        ) : filteredArticles.length > 0 ? (
           /* Chronological Article Catalog */
           <div className="space-y-4 text-left">
             {filteredArticles.map((art) => (
@@ -199,6 +161,27 @@ By computing pairwise dot products between query and key projections, the model 
                 </div>
               </article>
             ))}
+          </div>
+        ) : (
+          /* Tasteful Empty State */
+          <div className="p-10 sm:p-14 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-center space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-[#EBE5F0] border border-[#765C90]/30 flex items-center justify-center mx-auto text-[#765C90]">
+              <Radio className="w-6 h-6" />
+            </div>
+            <div className="space-y-1.5 max-w-md mx-auto">
+              <h3 className="font-editorial text-2xl font-bold text-[#25352D]">
+                Articles are being prepared.
+              </h3>
+              <p className="text-sm text-[#5F6C64] leading-relaxed">
+                Technical publications, architectural monographs, and computing dispatches are currently in editorial preparation and review.
+              </p>
+            </div>
+            <div className="pt-2">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#DDE2DA] text-xs font-technical text-[#765C90]">
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                <span>Editorial Queue Active</span>
+              </span>
+            </div>
           </div>
         )}
 

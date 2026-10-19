@@ -164,8 +164,6 @@ export const portalConfig = {
     },
   ],
   quickLinks: {
-    overleafPdfUrl: "https://www.overleaf.com/read/zeroindex-dld-unit1",
-    googleDriveTextbooksUrl: "https://drive.google.com/drive/folders/zeroindex-dld-references",
     githubRepoUrl: "https://github.com/zeroindex-edu/zeroindex",
     collegePortalUrl: "https://vignan.ac.in",
   }

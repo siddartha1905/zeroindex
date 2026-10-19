@@ -19,48 +19,48 @@ export const BridgeLanding = ({ onNavigateHome }) => {
     {
       id: 'aptitude',
       title: 'Quantitative & Analytical Reasoning',
-      badge: 'Core Problem Sets',
+      badge: 'Curriculum Outline',
       description: 'Systematic mathematical reasoning, probability, combinatorics, number theory, and logical deductions required for engineering assessments.',
       tracks: [
-        { title: 'Number Systems & Base Divisibility', problems: '24 Problems', level: 'Fundamental' },
-        { title: 'Permutations, Combinations & Probability', problems: '30 Problems', level: 'Intermediate' },
-        { title: 'Logical Deduction & Truth Tables', problems: '20 Problems', level: 'Fundamental' },
-        { title: 'Time, Speed, Distance & Work Equations', problems: '25 Problems', level: 'Intermediate' },
+        { title: 'Number Systems & Base Divisibility', status: 'Planned Topic', level: 'Fundamental' },
+        { title: 'Permutations, Combinations & Probability', status: 'Planned Topic', level: 'Intermediate' },
+        { title: 'Logical Deduction & Truth Tables', status: 'Planned Topic', level: 'Fundamental' },
+        { title: 'Time, Speed, Distance & Work Equations', status: 'Planned Topic', level: 'Intermediate' },
       ]
     },
     {
       id: 'technical',
       title: 'Core CS Interview Foundations',
-      badge: 'Subject Review',
+      badge: 'Interview Outline',
       description: 'Rigorous first-principles conceptual question bank covering Operating Systems, DBMS, Computer Networks, and Computer Architecture.',
       tracks: [
-        { title: 'Operating Systems: Concurrency & Virtual Memory', problems: '18 Concepts', level: 'Deep Dive' },
-        { title: 'DBMS: Normalization, Indexing & ACID Guarantees', problems: '22 Concepts', level: 'Deep Dive' },
-        { title: 'Computer Networks: OSI, TCP/IP & Handshakes', problems: '16 Concepts', level: 'Core' },
-        { title: 'Object-Oriented Design & Clean Abstractions', problems: '15 Concepts', level: 'Core' },
+        { title: 'Operating Systems: Concurrency & Virtual Memory', status: 'Planned Topic', level: 'Deep Dive' },
+        { title: 'DBMS: Normalization, Indexing & ACID Guarantees', status: 'Planned Topic', level: 'Deep Dive' },
+        { title: 'Computer Networks: OSI, TCP/IP & Handshakes', status: 'Planned Topic', level: 'Core' },
+        { title: 'Object-Oriented Design & Clean Abstractions', status: 'Planned Topic', level: 'Core' },
       ]
     },
     {
       id: 'coding',
       title: 'Systematic Coding & Pattern Mastery',
-      badge: 'Algorithm Drills',
+      badge: 'Pattern Outline',
       description: 'Pattern-based problem classification rather than blind memorization: Two Pointers, Sliding Window, Tree Inversion, Dynamic Programming intervals.',
       tracks: [
-        { title: 'Two-Pointer & Sliding Window Techniques', problems: '14 Patterns', level: 'Essential' },
-        { title: 'Binary Search & Monotonic Predicates', problems: '12 Patterns', level: 'Essential' },
-        { title: 'Graph Traversal & Topological Ordering', problems: '16 Patterns', level: 'Advanced' },
-        { title: 'Intervals & State-Space Dynamic Programming', problems: '18 Patterns', level: 'Advanced' },
+        { title: 'Two-Pointer & Sliding Window Techniques', status: 'Planned Topic', level: 'Essential' },
+        { title: 'Binary Search & Monotonic Predicates', status: 'Planned Topic', level: 'Essential' },
+        { title: 'Graph Traversal & Topological Ordering', status: 'Planned Topic', level: 'Advanced' },
+        { title: 'Intervals & State-Space Dynamic Programming', status: 'Planned Topic', level: 'Advanced' },
       ]
     },
     {
       id: 'resume',
       title: 'Technical Resume & Engineering Communication',
-      badge: 'Career Blueprint',
+      badge: 'Career Framework',
       description: 'Guidelines for structuring engineering project descriptions, communicating technical tradeoffs in interviews, and portfolio architecture.',
       tracks: [
-        { title: 'Project Impact Deconstructions (Action-Metric-Result)', problems: 'Template', level: 'Guide' },
-        { title: 'Whiteboard Communication & Thought Verbalization', problems: 'Checklist', level: 'Framework' },
-        { title: 'Technical Portfolio & Clean Git Hygiene', problems: 'Standard', level: 'Guide' },
+        { title: 'Project Impact Deconstructions (Action-Metric-Result)', status: 'Planned Guide', level: 'Guide' },
+        { title: 'Whiteboard Communication & Thought Verbalization', status: 'Planned Checklist', level: 'Framework' },
+        { title: 'Technical Portfolio & Clean Git Hygiene', status: 'Planned Standard', level: 'Guide' },
       ]
     }
   ];
@@ -158,20 +158,20 @@ export const BridgeLanding = ({ onNavigateHome }) => {
                     {trk.title}
                   </h4>
                   <div className="flex items-center gap-2 text-xs font-technical text-[#5F6C64]">
-                    <span>{trk.problems}</span>
+                    <span>{trk.status}</span>
                     <span>·</span>
                     <span className="text-[#956A43] font-medium">{trk.level}</span>
                   </div>
                 </div>
                 <span className="font-technical text-xs text-[#5F6C64] px-2 py-1 rounded bg-white border border-[#DDE2DA]">
-                  Curated
+                  Outline
                 </span>
               </div>
             ))}
           </div>
 
           <div className="p-4 rounded-xl bg-[#F1E5D9]/50 border border-[#956A43]/20 font-technical text-xs text-[#5F6C64]">
-            Note: All preparation materials prioritize foundational comprehension of core algorithms and engineering aptitude rather than rote test memorization.
+            Note: The Bridge tracks are currently in the curriculum framework and design phase. Dedicated problem sets, exercises, and rubrics are in active development.
           </div>
         </div>
 

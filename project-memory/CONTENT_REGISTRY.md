@@ -12,9 +12,9 @@
 | Workbench | Future Subjects (C, DSA, ML, AI) | Planned | Outlined in Bento grid; full course modules to be developed |
 | Atlas | Core Engineering Pathways | Scaffolding / Design phase | Verified stage progression and reading references |
 | Bridge | Placement Preparation Domains | Scaffolding / Design phase | Validated practice question banks and interview rubrics |
-| Readout | Three sample technical articles | **Unapproved; unpublish in Phase 1A** | Explicit faculty review, approval of voice, and citations |
-| Folio | Three sample reflective essays | **Unapproved; unpublish in Phase 1A** | Explicit faculty review and approval of personal attribution |
-| DLD Resources | Google Drive Materials (Units 1 to 5) | URLs pending from faculty lead | Provide valid Drive links; do not use dead placeholder links |
+| Readout | Three sample technical articles | Withdrawn (archived in unpublished-archive/) | Explicit author review, approval of voice, and formal release |
+| Folio | Three sample reflective essays | Withdrawn (archived in unpublished-archive/) | Explicit author review and approval of personal attribution |
+| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldResourceConfig.js; do not use dead anchors |
 
 ---
 

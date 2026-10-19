@@ -18,8 +18,7 @@ import {
   BrainCircuit,
   Calculator,
   Compass
-} from 'lucide-react';
-import { dldUnit1 } from '../data/dldUnit1';
+import { dldResourceConfig } from '../data/dldResourceConfig';
 import { dldSyllabus } from '../data/dldSyllabus';
 
 // Curated DLD & Computer Science Engineering Trivia Snippets
@@ -309,47 +308,77 @@ export const RightExamBlueprintWing = ({
         {/* 2. Direct Quick-Jump Badges for Unit Notes PDFs, Morris Mano, Roth */}
         <div className="p-3.5 rounded-xl bg-white border border-[#DCE7E1] shadow-2xs space-y-2 font-mono">
           <span className="text-[10px] font-bold uppercase tracking-wider text-[#64748B] block">
-            Direct Textbooks &amp; Unit Notes PDFs:
+            Google Drive Study Materials:
           </span>
           <div className="flex flex-col gap-1.5">
-            <a
-              href={dldUnit1.overleafPdfLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#86EFAC] text-xs font-bold text-[#15803D] flex items-center justify-between group transition-all"
-            >
-              <div className="flex items-center gap-1.5">
-                <Download className="w-3.5 h-3.5 text-[#15803D]" />
-                <span>Unit Notes PDFs</span>
+            {dldResourceConfig.units[1]?.driveUrl ? (
+              <a
+                href={dldResourceConfig.units[1].driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-[#F0FDF4] hover:bg-[#DCFCE7] border border-[#86EFAC] text-xs font-bold text-[#15803D] flex items-center justify-between group transition-all"
+              >
+                <div className="flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5 text-[#15803D]" />
+                  <span>Unit 1 Notes PDF</span>
+                </div>
+                <span className="text-[10px] group-hover:translate-x-0.5 transition-transform">Download ↗</span>
+              </a>
+            ) : (
+              <div className="p-2 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] text-[11px] text-[#64748B] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <Download className="w-3.5 h-3.5 text-amber-500" />
+                  <span className="font-semibold text-[#1E293B]">Unit 1 Notes</span>
+                </div>
+                <span className="text-[10px] text-amber-600 font-medium">Link soon</span>
               </div>
-              <span className="text-[10px] group-hover:translate-x-0.5 transition-transform">Download ↗</span>
-            </a>
+            )}
 
-            <a
-              href="https://drive.google.com/drive/folders/zeroindex-dld-textbooks"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] text-xs font-semibold text-[#1E293B] flex items-center justify-between group transition-all"
-            >
-              <div className="flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#4F46E5]" />
-                <span>M. Morris Mano</span>
+            {dldResourceConfig.textbooks[0]?.driveUrl ? (
+              <a
+                href={dldResourceConfig.textbooks[0].driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] text-xs font-semibold text-[#1E293B] flex items-center justify-between group transition-all"
+              >
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#4F46E5]" />
+                  <span>M. Morris Mano</span>
+                </div>
+                <span className="text-[10px] text-[#64748B] group-hover:text-[#4F46E5]">5th Ed PEA ↗</span>
+              </a>
+            ) : (
+              <div className="p-2 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] text-[11px] text-[#64748B] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#4F46E5]" />
+                  <span>M. Morris Mano</span>
+                </div>
+                <span className="text-[10px] text-amber-600 font-medium">Link soon</span>
               </div>
-              <span className="text-[10px] text-[#64748B] group-hover:text-[#4F46E5]">5th Ed PEA ↗</span>
-            </a>
+            )}
 
-            <a
-              href="https://drive.google.com/drive/folders/zeroindex-dld-textbooks"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="p-2 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] text-xs font-semibold text-[#1E293B] flex items-center justify-between group transition-all"
-            >
-              <div className="flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
-                <span>C.H. Roth</span>
+            {dldResourceConfig.textbooks[1]?.driveUrl ? (
+              <a
+                href={dldResourceConfig.textbooks[1].driveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="p-2 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] text-xs font-semibold text-[#1E293B] flex items-center justify-between group transition-all"
+              >
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+                  <span>C.H. Roth</span>
+                </div>
+                <span className="text-[10px] text-[#64748B] group-hover:text-[#D97706]">5th Ed Cengage ↗</span>
+              </a>
+            ) : (
+              <div className="p-2 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] text-[11px] text-[#64748B] flex items-center justify-between">
+                <div className="flex items-center gap-1.5">
+                  <BookOpen className="w-3.5 h-3.5 text-[#D97706]" />
+                  <span>C.H. Roth</span>
+                </div>
+                <span className="text-[10px] text-amber-600 font-medium">Link soon</span>
               </div>
-              <span className="text-[10px] text-[#64748B] group-hover:text-[#D97706]">5th Ed Cengage ↗</span>
-            </a>
+            )}
           </div>
         </div>
 

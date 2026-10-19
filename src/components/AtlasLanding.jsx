@@ -22,7 +22,7 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
       subtitle: 'From Silicon & Gates to Modern Operating Systems',
       accent: '#496D91',
       softAccent: '#E1EAF2',
-      status: 'Active Route',
+      status: 'Roadmap Outline',
       target: 'Foundational CS & Systems Engineers',
       prerequisites: 'Basic algebra and logical reasoning',
       stages: [
@@ -30,15 +30,15 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
           stageNumber: '01',
           name: 'Boolean Logic & Digital Hardware',
           topics: ['Number Systems', 'Combinational Circuits', 'K-Maps', 'Sequential Flip-Flops'],
-          workbenchLink: 'Digital Logic Design (Active)',
-          status: 'Available Now'
+          workbenchLink: 'Digital Logic Design (Unit 1 Active)',
+          status: 'Unit 1 Active'
         },
         {
           stageNumber: '02',
           name: 'Low-Level Execution & Memory in C',
           topics: ['Pointers & Addresses', 'Stack vs Heap Frames', 'Bitwise Manipulation', 'Struct Alignment'],
           workbenchLink: 'C Programming & Systems',
-          status: 'Curriculum Authored'
+          status: 'Planned Outline'
         },
         {
           stageNumber: '03',
@@ -62,7 +62,7 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
       subtitle: 'Mathematical Principles to Deep Neural Representations',
       accent: '#245B4B',
       softAccent: '#E0EBDF',
-      status: 'Curated Route',
+      status: 'Planned Pathway',
       target: 'Data Science & Applied AI Undergraduates',
       prerequisites: 'High-school calculus and Python fundamentals',
       stages: [
@@ -71,14 +71,14 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
           name: 'Applied Linear Algebra & Calculus',
           topics: ['Matrix Decompositions (SVD, PCA)', 'Vector Spaces', 'Partial Derivatives & Gradients'],
           workbenchLink: 'ML Foundations',
-          status: 'Available Now'
+          status: 'Planned Outline'
         },
         {
           stageNumber: '02',
           name: 'Statistical Modeling & Classical ML',
           topics: ['Linear Regression', 'Logistic Classification', 'Decision Trees', 'Loss Optimization'],
           workbenchLink: 'Statistical Learning',
-          status: 'Curriculum Authored'
+          status: 'In Blueprint'
         },
         {
           stageNumber: '03',
@@ -95,7 +95,7 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
       subtitle: 'Data Structures, Graph Theory & Complexity Bounds',
       accent: '#956A43',
       softAccent: '#F1E5D9',
-      status: 'Curated Route',
+      status: 'Planned Pathway',
       target: 'Software Engineers & Algorithm Enthusiasts',
       prerequisites: 'C or Python basics',
       stages: [
@@ -104,14 +104,14 @@ export const AtlasLanding = ({ onNavigateHome, onNavigateWorkbench }) => {
           name: 'Linear Data Collections & Recursion',
           topics: ['Dynamic Arrays', 'Linked Lists', 'Stacks & Queues', 'Divide and Conquer'],
           workbenchLink: 'Data Structures',
-          status: 'Curriculum Authored'
+          status: 'Planned Outline'
         },
         {
           stageNumber: '02',
           name: 'Non-Linear Trees, Heaps & Hashing',
           topics: ['Binary Search Trees', 'AVL Balancing', 'Priority Queues', 'Hash Tables & Collisions'],
           workbenchLink: 'Data Structures',
-          status: 'Curriculum Authored'
+          status: 'In Blueprint'
         },
         {
           stageNumber: '03',

@@ -9,6 +9,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { dldSyllabus } from '../data/dldSyllabus';
+import { dldAvailabilityConfig } from '../data/dldAvailabilityConfig';
 import { dldUnit1 } from '../data/dldUnit1';
 import { dldUnit1Master } from '../data/dldUnit1Master';
 import { UnitWorkspace } from './UnitWorkspace';
@@ -130,7 +131,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                               ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
                               : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {isUnit1 ? 'Active' : 'Soon'}
+                            {isUnit1 ? 'Available' : 'Planned'}
                           </span>
                         </button>
 
@@ -183,7 +184,6 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
                     section={masterSection} 
-                    overleafPdfLink={dldUnit1.overleafPdfLink} 
                   />
                 ) : (
                   /* Modular study guide for remaining sections */
@@ -198,7 +198,6 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                         }
                       ] : undefined
                     }} 
-                    overleafPdfLink={dldUnit1.overleafPdfLink} 
                   />
                 )
               ) : (
@@ -206,7 +205,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
-                      Unit {currentUnitData?.unitNumber} · Unlocking Next
+                      Unit {currentUnitData?.unitNumber} · Planned (In Development)
                     </span>
                     <span className="text-xs text-[#64748B] font-mono">{currentUnitData?.hours}</span>
                   </div>
@@ -218,9 +217,9 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                   </div>
 
                   <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 is Live Now</h4>
+                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 Available</h4>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Full lecture modules for {currentUnitData?.roman} ({currentUnitData?.title}) are being prepared according to the VIIT autonomous syllabus and will unlock shortly.
+                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are currently in active development according to the curriculum blueprint.
                     </p>
                   </div>
 
