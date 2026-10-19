@@ -28,9 +28,9 @@ export const dldAvailabilityConfig = {
       title: "Boolean Algebra & Gate-Level Minimization",
       status: "in-development",
       label: "In Development",
-      sublabel: "Phase 1: Academic Foundation & First Lesson",
+      sublabel: "Complete & Verified (Preview Ready)",
       totalSections: 7,
-      completedSections: 1,
+      completedSections: 7,
       isLive: false
     },
     {

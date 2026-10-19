@@ -7,6 +7,13 @@
  * Strict formatting: Zero em-dashes and zero en-dashes
  */
 
+import { dldSection22Data } from './dldSection22Data.js';
+import { dldSection23Data } from './dldSection23Data.js';
+import { dldSection24Data } from './dldSection24Data.js';
+import { dldSection25Data } from './dldSection25Data.js';
+import { dldSection26Data } from './dldSection26Data.js';
+import { dldSection27Data } from './dldSection27Data.js';
+
 export const dldUnit2Master = {
   unitId: 2,
   unitRoman: "UNIT-II",
@@ -429,60 +436,12 @@ export const dldUnit2Master = {
       ]
     },
 
-    {
-      id: "2.2",
-      number: "2.2",
-      title: "Basic Theorems, Properties & Algebraic Simplification",
-      badge: "Core Algebraic Tool",
-      status: "Planned",
-      estimatedReadTime: "15 min read",
-      summary: "Idempotency, dominance, involution, absorption theorems, consensus theorem, De Morgan laws for n-variables, and systematic step-by-step algebraic reduction of complex Boolean expressions."
-    },
-    {
-      id: "2.3",
-      number: "2.3",
-      title: "Boolean Functions, Truth Tables & Gate-Level Realization",
-      badge: "Schematic Synthesis",
-      status: "Planned",
-      estimatedReadTime: "12 min read",
-      summary: "Representation of switching functions, multi-output networks, standard gate symbols, logic circuit schematic synthesis, and timing evaluation."
-    },
-    {
-      id: "2.4",
-      number: "2.4",
-      title: "Canonical & Standard Forms (Minterms, Maxterms, SOP, POS)",
-      badge: "Mathematical Standard",
-      status: "Planned",
-      estimatedReadTime: "15 min read",
-      summary: "Minterm (m_i) and Maxterm (M_i) algebra, canonical sum of minterms (Sigma m), canonical product of maxterms (Pi M), conversion algorithms, and standard vs non-standard forms."
-    },
-    {
-      id: "2.5",
-      number: "2.5",
-      title: "The Map Method: Two- and Three-Variable K-Maps",
-      badge: "Visual Minimization",
-      status: "Planned",
-      estimatedReadTime: "15 min read",
-      summary: "Karnaugh Map geometric topography, Gray code adjacency, cell grouping rules (singletons, pairs, quads, octets), 3-variable grid mapping, and minimal SOP/POS extraction."
-    },
-    {
-      id: "2.6",
-      number: "2.6",
-      title: "Four-Variable K-Maps, Don't-Care Conditions & Prime Implicants",
-      badge: "Optimization Core",
-      status: "Planned",
-      estimatedReadTime: "18 min read",
-      summary: "16-cell 4-variable K-Maps, corner quads, prime implicants (PI), essential prime implicants (EPI), incompletely specified functions with don't-care conditions (d), and static hazard awareness."
-    },
-    {
-      id: "2.7",
-      number: "2.7",
-      title: "Universal Gate Realization (NAND/NOR) & Exclusive-OR Logic",
-      badge: "Hardware Synthesis",
-      status: "Planned",
-      estimatedReadTime: "15 min read",
-      summary: "Two-level NAND-NAND and NOR-NOR network synthesis, bubble pushing methodologies, XOR/XNOR realizations with minimal gate counts, and parity generation networks."
-    }
+    dldSection22Data,
+    dldSection23Data,
+    dldSection24Data,
+    dldSection25Data,
+    dldSection26Data,
+    dldSection27Data
   ]
 };
 

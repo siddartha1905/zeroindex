@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **57**
-- Verification script names discovered: **5**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **74**
+- Verification script names discovered: **6**
 
 ## Selected declared dependencies
 
@@ -31,6 +31,7 @@
 - `scripts/verifySection17.mjs`
 - `scripts/verifySection21Math.mjs`
 - `scripts/verifyUnit1Math.mjs`
+- `scripts/verifyUnit2Full.mjs`
 
 ## Source file inventory
 
@@ -38,6 +39,7 @@
 - `src/components/AboutModal.jsx`
 - `src/components/AcademicsHub.jsx`
 - `src/components/AtlasLanding.jsx`
+- `src/components/BooleanLawsCheatSheet.jsx`
 - `src/components/BottomNav.jsx`
 - `src/components/BridgeLanding.jsx`
 - `src/components/DldSubjectHome.jsx`
@@ -46,6 +48,7 @@
 - `src/components/FromZeroToPossibilityIllustration.jsx`
 - `src/components/InstallModal.jsx`
 - `src/components/InteractiveSolvers.jsx`
+- `src/components/KMapCheatSheet.jsx`
 - `src/components/KnowledgeTreeIllustration.jsx`
 - `src/components/MainHome.jsx`
 - `src/components/Navbar.jsx`
@@ -60,10 +63,17 @@
 - `src/components/Section17Components.jsx`
 - `src/components/Section17View.jsx`
 - `src/components/Section21View.jsx`
+- `src/components/Section22View.jsx`
+- `src/components/Section23View.jsx`
+- `src/components/Section24View.jsx`
+- `src/components/Section25View.jsx`
+- `src/components/Section26View.jsx`
+- `src/components/Section27View.jsx`
 - `src/components/SiteFooter.jsx`
 - `src/components/SiteHeader.jsx`
 - `src/components/SolversHub.jsx`
 - `src/components/SyllabusView.jsx`
+- `src/components/Unit2Solvers.jsx`
 - `src/components/UnitWorkspace.jsx`
 - `src/components/ViitCrest.jsx`
 - `src/components/WorkbenchLanding.jsx`
@@ -78,6 +88,12 @@
 - `src/data/dldSection15Data.js`
 - `src/data/dldSection16Data.js`
 - `src/data/dldSection17Data.js`
+- `src/data/dldSection22Data.js`
+- `src/data/dldSection23Data.js`
+- `src/data/dldSection24Data.js`
+- `src/data/dldSection25Data.js`
+- `src/data/dldSection26Data.js`
+- `src/data/dldSection27Data.js`
 - `src/data/dldSyllabus.js`
 - `src/data/dldUnit1.js`
 - `src/data/dldUnit1Master.js`
@@ -87,7 +103,9 @@
 - `src/data/readoutArticlesConfig.js`
 - `src/data/unit1.js`
 - `src/data/unit1QuizBank.js`
+- `src/data/unit2QuizBank.js`
 - `src/index.css`
 - `src/main.jsx`
 - `src/theme/pastelTheme.js`
+- `src/utils/booleanEngine.js`
 - `src/utils/quizGrading.js`

@@ -15,6 +15,13 @@ import { dldUnit1Master } from '../data/dldUnit1Master';
 import { dldUnit2Master } from '../data/dldUnit2Master';
 import { UnitWorkspace } from './UnitWorkspace';
 import { Section21View } from './Section21View';
+import { Section22View } from './Section22View';
+import { Section23View } from './Section23View';
+import { Section24View } from './Section24View';
+import { Section25View } from './Section25View';
+import { Section26View } from './Section26View';
+import { Section27View } from './Section27View';
+import { Unit2Solvers } from './Unit2Solvers';
 import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
@@ -38,6 +45,7 @@ export const DldWorkspace = ({
   const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
   const [activeUnit, setActiveUnit] = useState(1);
   const [activeSubModuleId, setActiveSubModuleId] = useState(initialSubModuleId || '1.1');
+  const [solversUnit, setSolversUnit] = useState(1);
 
   // Synchronize state when props update via browser navigation or hashchange
   useEffect(() => {
@@ -289,42 +297,20 @@ export const DldWorkspace = ({
               ) : activeUnit === 2 ? (
                 activeSubModuleId === '2.1' ? (
                   <Section21View section={dldUnit2Master.sections[0]} />
+                ) : activeSubModuleId === '2.2' ? (
+                  <Section22View section={dldUnit2Master.sections[1]} />
+                ) : activeSubModuleId === '2.3' ? (
+                  <Section23View section={dldUnit2Master.sections[2]} />
+                ) : activeSubModuleId === '2.4' ? (
+                  <Section24View section={dldUnit2Master.sections[3]} />
+                ) : activeSubModuleId === '2.5' ? (
+                  <Section25View section={dldUnit2Master.sections[4]} />
+                ) : activeSubModuleId === '2.6' ? (
+                  <Section26View section={dldUnit2Master.sections[5]} />
+                ) : activeSubModuleId === '2.7' ? (
+                  <Section27View section={dldUnit2Master.sections[6]} />
                 ) : (
-                  (() => {
-                    const sec = dldUnit2Master.sections.find(s => s.id === activeSubModuleId) || dldUnit2Master.sections[0];
-                    return (
-                      <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono font-bold uppercase text-[#92400E] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
-                            Section {sec.number} · Planned
-                          </span>
-                          <span className="text-xs text-[#64748B] font-mono">{sec.estimatedReadTime}</span>
-                        </div>
-
-                        <div>
-                          <span className="text-xs font-mono text-[#64748B]">UNIT-II · Boolean Algebra & Gate-Level Minimization</span>
-                          <h2 className="text-2xl font-bold text-[#1E293B] mt-1">{sec.title}</h2>
-                          <p className="text-xs text-[#475569] mt-2 leading-relaxed">{sec.summary}</p>
-                        </div>
-
-                        <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                          <h4 className="text-xs font-bold text-[#2E6F40]">Phase 1 In Progress</h4>
-                          <p className="text-xs text-[#64748B] mt-0.5">
-                            Section 2.1 is available to study on this development branch. Section {sec.number} is planned for upcoming development phases according to the curriculum blueprint.
-                          </p>
-                        </div>
-
-                        <div className="pt-2">
-                          <button
-                            onClick={() => handleSubModuleChange('2.1')}
-                            className="px-4 py-2 rounded-lg bg-[#2E6F40] text-white text-xs font-semibold hover:bg-[#255A34] transition-colors"
-                          >
-                            ← Study Section 2.1 (Axiomatic Foundations)
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  })()
+                  <Section21View section={dldUnit2Master.sections[0]} />
                 )
               ) : (
                 /* Units 3-5 Preview Card */
@@ -382,12 +368,44 @@ export const DldWorkspace = ({
 
         {/* TAB 2: Interactive Solvers Hub */}
         {activeTab === 'solvers' && (
-          <InteractiveSolvers onNavigate={() => {}} />
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-2xl border border-[#DCE7E1] shadow-2xs">
+              <span className="text-xs font-mono font-bold text-[#64748B]">Active Course Suite:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSolversUnit(1)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
+                    solversUnit === 1
+                      ? 'bg-[#2E6F40] text-white shadow-xs'
+                      : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                  }`}
+                >
+                  Unit 1 Solvers (Conversions & Gates)
+                </button>
+                <button
+                  onClick={() => setSolversUnit(2)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
+                    solversUnit === 2
+                      ? 'bg-[#2E6F40] text-white shadow-xs'
+                      : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                  }`}
+                >
+                  Unit 2 Solvers (Boolean, K-Maps, NAND/NOR)
+                </button>
+              </div>
+            </div>
+
+            {solversUnit === 1 ? (
+              <InteractiveSolvers onNavigate={() => {}} />
+            ) : (
+              <Unit2Solvers />
+            )}
+          </div>
         )}
 
         {/* TAB 3: Practice Arena */}
         {activeTab === 'practice' && (
-          <PracticeArena onNavigate={() => {}} />
+          <PracticeArena defaultUnit={activeUnit} onNavigate={() => {}} />
         )}
 
         {/* TAB 4: Subject Resources */}
