@@ -1,0 +1,24 @@
+name: ZeroIndex project memory consistency
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Recreate technical inventory
+        run: node scripts/generateProjectSnapshot.mjs
+      - name: Check committed inventory matches source
+        run: git diff --exit-code -- project-memory/TECHNICAL_SNAPSHOT.md
+      - name: Confirm required project memory files exist
+        shell: bash
+        run: |
+          for file in AGENTS.md project-memory/INDEX.md project-memory/CURRENT_STATE.md project-memory/ROADMAP.md project-memory/AI_HANDOFF.md project-memory/CONTENT_REGISTRY.md project-memory/DECISIONS.md project-memory/CHANGELOG.md project-memory/QUALITY_CHECKS.md; do
+            test -f "$file" || { echo "Missing documentation: $file"; exit 1; }
+          done
