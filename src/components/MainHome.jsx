@@ -9,6 +9,7 @@ import {
   FileText
 } from 'lucide-react';
 import { KnowledgeTreeIllustration } from './KnowledgeTreeIllustration';
+import { MotivationIllustration } from './MotivationIllustration';
 
 export const MainHome = ({ 
   onNavigate, 
@@ -101,16 +102,8 @@ export const MainHome = ({
           {/* Left Column: Natural Editorial Story (6 cols) */}
           <div className="lg:col-span-6 space-y-6 text-left">
             
-            {/* Small Restrained Label */}
-            <div>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#DDEADD] border border-[#285C49]/25 font-technical text-xs font-semibold text-[#285C49] tracking-wide shadow-2xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#285C49]" />
-                Five sections. One framework.
-              </span>
-            </div>
-
             {/* Main Headline & Approved Descriptions */}
-            <div className="space-y-4">
+            <div className="space-y-4 pt-1 sm:pt-2">
               <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-[#293B32] leading-[1.1] max-w-xl text-balance">
                 A place to begin, and many directions to go.
               </h1>
@@ -384,36 +377,48 @@ export const MainHome = ({
       {/* =========================================================================
           SECTION 3: WHY I BUILT ZEROINDEX
       ========================================================================= */}
-      <section className="max-w-4xl mx-auto p-8 sm:p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-left space-y-6">
-        <div className="space-y-1.5 border-b border-[#E5E8E1] pb-5">
-          <span className="font-technical text-xs font-semibold uppercase tracking-wider text-[#285C49]">
-            The Motivation
-          </span>
-          <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-[#293B32]">
-            Why I built ZeroIndex
-          </h3>
-          <p className="font-technical text-xs text-[#5F6C64]">
-            Curated by J. Siddartha Varma
-          </p>
-        </div>
+      <section className="max-w-5xl mx-auto p-8 sm:p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          
+          {/* Left Column: Approved Motivation Narrative (7 cols on lg) */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="space-y-1.5 border-b border-[#E5E8E1] pb-4">
+              <span className="font-technical text-xs font-semibold uppercase tracking-wider text-[#285C49]">
+                The Motivation
+              </span>
+              <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-[#293B32]">
+                Why I built ZeroIndex
+              </h3>
+              <p className="font-technical text-xs text-[#5F6C64]">
+                Curated by J. Siddartha Varma
+              </p>
+            </div>
 
-        <div className="text-base text-[#293B32]/90 leading-relaxed space-y-4 font-normal">
-          <p>
-            I began building ZeroIndex in response to something I repeatedly noticed in technical education: many students do not struggle only because the subjects are difficult, but because the starting points are unclear, the pathways are fragmented, and the bigger picture is often missing.
-          </p>
-          <p>
-            ZeroIndex is my attempt to bring those pieces together. It is a space for academic foundations, structured learning paths, career preparation, technology writing and personal reflection, each in its own section, but all connected by a common intention: to help learners begin with clarity and move forward with direction.
-          </p>
-        </div>
+            <div className="text-base text-[#293B32]/90 leading-relaxed space-y-4 font-normal">
+              <p>
+                I began building ZeroIndex in response to something I repeatedly noticed in technical education: many students do not struggle only because the subjects are difficult, but because the starting points are unclear, the pathways are fragmented, and the bigger picture is often missing.
+              </p>
+              <p>
+                ZeroIndex is my attempt to bring those pieces together. It is a space for academic foundations, structured learning paths, career preparation, technology writing and personal reflection, each in its own section, but all connected by a common intention: to help learners begin with clarity and move forward with direction.
+              </p>
+            </div>
 
-        <div className="pt-2 flex items-center justify-between text-xs font-technical">
-          <button
-            onClick={onOpenAboutModal}
-            className="text-[#285C49] font-semibold hover:text-[#1E4738] hover:underline cursor-pointer flex items-center gap-1.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] rounded-md"
-          >
-            <span>Learn more about the platform</span>
-            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-          </button>
+            <div className="pt-2 flex items-center justify-between text-xs font-technical">
+              <button
+                onClick={onOpenAboutModal}
+                className="text-[#285C49] font-semibold hover:text-[#1E4738] hover:underline cursor-pointer flex items-center gap-1.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] rounded-md"
+              >
+                <span>Learn more about the platform</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Column: Original Hand-drawn Artwork (5 cols on lg, below on mobile) */}
+          <div className="lg:col-span-5 flex justify-center">
+            <MotivationIllustration className="w-full max-w-sm sm:max-w-md" />
+          </div>
+
         </div>
       </section>
 

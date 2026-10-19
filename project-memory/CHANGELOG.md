@@ -4,6 +4,50 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-19: Homepage Refinement Round 2
+
+- **Type**: visual / branding / layout / artwork / fixes
+- **Summary**: Implemented focused Round 2 refinements on development branch `homepage-refinement`:
+  1. **Hero Label Removal**:
+     - Completely removed the green pill label ("Five sections. One framework.") above the hero headline.
+     - Kept headline exactly as "A place to begin, and many directions to go." with balanced vertical spacing.
+     - Preserved all approved hero descriptions and buttons.
+  2. **Install App Modal URL & Copy Correction**:
+     - Corrected stale `zeroindex.edu` address across Android (Chrome) and iPhone (Safari) instructions to the official website: `https://zeroindex-sigma.vercel.app/`.
+     - Also corrected stale references in `AcademicsHub.jsx` and updated `manifest.json`.
+     - Replaced exaggerated offline claims with the preferred subtitle: "Add ZeroIndex to your home screen for quick, app-like access."
+  3. **Author and Affiliation Card Redesign**:
+     - Centered and enlarged author name `J. Siddartha Varma` in `SiteFooter.jsx`.
+     - Prominently displayed academic titles: Assistant Professor, Department of CSE (Data Science).
+     - Created a clearly distinguished institutional affiliation area underneath with small `ViitCrest` placed solely beside the institution name (`Vignan's Institute of Information Technology (Autonomous), Visakhapatnam`).
+  4. **Original Hand-drawn Artwork ("Why I built ZeroIndex")**:
+     - Created and integrated `MotivationIllustration.jsx` original vector SVG artwork.
+     - Features a scholarly stack of books and open notebook, a winding path leading through rolling foothills to snow-capped mountain peaks, a soft morning sun, an organic budding plant, a tiny solitary traveler, and the subtle caption "From index zero to what's next."
+     - Integrated in a balanced 2-column layout on desktop (7 cols text, 5 cols artwork) and natural vertical stacking on mobile.
+  5. **Symmetrical Botanical Brand Emblem**:
+     - Refined `ZeroIndexMark.jsx` and `public/icon.svg` into an organic symmetrical emblem representing "One origin. Many directions. Continuous growth."
+     - Features an origin node `[0]` with warm copper catalyst seed, central upward growth stem, and five balanced radiating branches in forest green (`#285C49`), sage (`#8EA89D`), and copper (`#C38A63`).
+     - Added SVG favicon link to `index.html`.
+  6. **Strict Content Preservation**:
+     - 100% preservation of DLD Unit 1 teaching content, mathematical formulas, and 5 interactive solvers.
+- **Affected Files**:
+  * `src/components/MainHome.jsx`
+  * `src/components/MotivationIllustration.jsx` (created)
+  * `src/components/ZeroIndexMark.jsx`
+  * `src/components/SiteFooter.jsx`
+  * `src/components/InstallModal.jsx`
+  * `src/components/AcademicsHub.jsx`
+  * `public/icon.svg`
+  * `public/manifest.json`
+  * `index.html`
+- **Verification Performed**:
+  * Production build: `npm run build` succeeded in 5.34s (3,381 modules, 0 errors).
+  * 4 mathematical verification suites: 163/163 passed (100% accuracy).
+  * Dash constraint audit: 0 em-dashes and 0 en-dashes across all modified/new files.
+- **Release State**: Completed on `homepage-refinement` branch; ready for preview.
+
+---
+
 ## 2026-10-19: Homepage Visual Refinement and Brand Identity
 
 - **Type**: visual / branding / layout / accessibility

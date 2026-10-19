@@ -1,13 +1,19 @@
 {
-  "name": "ZeroIndex — CS & Data Science Hub",
+  "name": "ZeroIndex: Five sections. One framework.",
   "short_name": "ZeroIndex",
-  "description": "Modular, data-driven educational portal curated by J. Siddartha Varma at Vignan's Institute of Information Technology (A)",
+  "description": "An independent space for learning, career preparation, technology and personal writing.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#FAF8F5",
-  "theme_color": "#FAF8F5",
+  "background_color": "#FBF8F2",
+  "theme_color": "#FBF8F2",
   "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "/icon-192.png",
       "sizes": "192x192",

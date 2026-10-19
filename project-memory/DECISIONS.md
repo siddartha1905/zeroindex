@@ -100,6 +100,14 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-013 | 2026-10-19 | Symmetrical Botanical Brand Mark, Motivation Artwork, and Modal URL Corrections
+
+- **Decision**: (1) Refine the brand identity into an organic symmetrical emblem (`ZeroIndexMark.jsx` and `public/icon.svg`) expressing "One origin. Many directions. Continuous growth." with an origin node, upward growth stem, and five balanced radiating branches; (2) Integrate original vector SVG artwork `MotivationIllustration.jsx` into the "Why I built ZeroIndex" section; (3) Completely remove the hero label above the headline; (4) Redesign the footer author card into a centered, prominent author layout with a distinct institutional affiliation area; (5) Replace stale `zeroindex.edu` URLs with official `https://zeroindex-sigma.vercel.app/` across `InstallModal.jsx`, `AcademicsHub.jsx`, and `manifest.json`, replacing exaggerated offline claims with the preferred app-like access subtitle.
+- **Rationale**: Direct response to user review in Homepage Refinement Round 2. Solves visual composition balance, ensures correct installation guidance, and establishes a memorable, mature brand emblem.
+- **Consequences**: No broken or stale domains remain in user-facing modals. 100% preservation of academic content and navigation.
+
+---
+
 ## Decision Record Template
 
 ```markdown

@@ -64,24 +64,26 @@ export const SiteFooter = ({ onNavigate, onOpenAboutModal }) => {
               Author and Affiliation
             </h4>
 
-            <div className="p-4 rounded-2xl bg-white border border-[#DDE2DA] space-y-3 shadow-2xs">
-              {/* Author Identification */}
-              <div className="space-y-0.5">
-                <p className="text-sm font-bold text-[#293B32]">
+            <div className="rounded-2xl bg-white border border-[#DDE2DA] overflow-hidden shadow-2xs">
+              {/* Upper Portion: Prominent, Centered Author Details */}
+              <div className="p-5 text-center space-y-1">
+                <p className="font-editorial text-lg sm:text-xl font-bold tracking-tight text-[#293B32]">
                   J. Siddartha Varma
                 </p>
-                <p className="text-xs text-[#5F6C64]">
-                  Assistant Professor
-                </p>
-                <p className="text-[11px] text-[#69766D] font-medium">
-                  Department of CSE (Data Science)
-                </p>
+                <div className="space-y-0.5 text-xs text-[#5F6C64]">
+                  <p className="font-medium text-[#293B32]/90">
+                    Assistant Professor
+                  </p>
+                  <p className="font-technical text-[11px] text-[#69766D]">
+                    Department of CSE (Data Science)
+                  </p>
+                </div>
               </div>
 
-              {/* Institutional Affiliation with Small Crest */}
-              <div className="pt-2.5 border-t border-[#E6E8E1] flex items-center gap-2.5">
+              {/* Lower Portion: Distinct Institutional Affiliation Area */}
+              <div className="px-4 py-3 bg-[#FBF8F2] border-t border-[#E6E8E1] flex items-center justify-center gap-2.5">
                 <ViitCrest className="w-5 h-5 flex-shrink-0" />
-                <span className="text-[11px] text-[#5F6C64] leading-tight">
+                <span className="text-[11px] text-[#5F6C64] leading-snug font-medium text-left">
                   Vignan's Institute of Information Technology (Autonomous), Visakhapatnam
                 </span>
               </div>

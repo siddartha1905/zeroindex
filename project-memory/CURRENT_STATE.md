@@ -12,14 +12,15 @@
 
 | Item | Status | Verified Evidence and Qualification |
 |---|---|---|
-| Main Website Core | Production Ready | Single Page Application built on React 18 and Vite 6. `npm run build` succeeds in under 4 seconds with zero build errors. Native browser zoom accessibility preserved. |
-| Brand Identity & Logo | Enhanced | Implemented `ZeroIndexMark.jsx` minimalist SVG mark inspired by index zero `[0]` and 5 Knowledge Tree branching pathways. Header subtitle "Educational Publication" removed. Applied consistently in header, footer, and modals. |
+| Main Website Core | Production Ready | Single Page Application built on React 18 and Vite 6. `npm run build` succeeds in ~5 seconds with zero build errors. Native browser zoom accessibility preserved. |
+| Brand Identity & Logo | Enhanced (Round 2) | Refined `ZeroIndexMark.jsx` and `public/icon.svg` into an elegant, symmetrical botanical emblem: clear origin node `[0]` with warm copper catalyst seed, upward growth stem, and five balanced radiating branches in forest green (`#285C49`), sage (`#8EA89D`), and copper (`#C38A63`). Consistent across header, footer, favicon, and modals. |
 | Sunlit Editorial Theme | Refined | Warm ivory background (`#FBF8F2`), soft white cards (`#FFFFFF`), primary green (`#285C49`), supporting sage (`#DDEADD`), warm accent (`#C38A63`), primary dark text (`#293B32`). Distinct pillar accent colors preserved. 0 em-dashes and 0 en-dashes across all source files. |
-| Homepage Hero Section | Refined | Displays subtle badge "Five sections. One framework.", exact headline "A place to begin, and many directions to go.", two approved body copy descriptions, and action buttons "Explore ZeroIndex" and "About ZeroIndex". Text wrapping optimized for medium and wide screens. |
+| Homepage Hero Section | Refined (Round 2) | Green pill label completely removed above headline with balanced vertical spacing. Main headline kept exactly as "A place to begin, and many directions to go." Approved primary and supporting descriptions and hero buttons preserved. |
 | Interactive Knowledge Tree | Enhanced | Retains original branching geometry and 5 destinations. Instruction updated to "Select a branch to preview its destination." Full keyboard accessibility (`tabIndex={0}`, `role="button"`, Enter/Space activation) and clear focus indicators added. |
-| Inside ZeroIndex Section | Refined | Balanced 6-column grid with 3 cards in row 1 (Workbench, Atlas, Bridge) and 2 equal-width cards in row 2 (Readout, Folio). Updated section helper to "Choose a section to enter its workspace." and applied exact approved descriptions across all 5 cards. |
-| Why I Built ZeroIndex | Refined | Renamed section from "A Note on ZeroIndex". Institutional crest removed from author block. Approved 2-paragraph personal narrative applied with simple "Curated by J. Siddartha Varma" attribution and "Learn more about the platform" trigger. College details omitted here as they appear in the footer. |
-| Footer | Refined | Simplified into 3 balanced columns: Col 1 (ZeroIndex mark, name, "From first principles to fresh perspectives.", description); Col 2 (Explore links to 5 pillars); Col 3 (Author and affiliation with small `ViitCrest` restricted beside institution name). Simplified copyright to "© 2026 ZeroIndex". Removed curriculum versions and redundant metadata. |
+| Inside ZeroIndex Section | Refined | Balanced 6-column grid with 3 cards in row 1 (Workbench, Atlas, Bridge) and 2 equal-width cards in row 2 (Readout, Folio). Section helper "Choose a section to enter its workspace." and approved descriptions preserved. |
+| Why I Built ZeroIndex | Enhanced (Round 2) | Preserved approved 2-paragraph motivation copy. Integrated original hand-drawn style artwork `MotivationIllustration.jsx` (stack of books, winding path to snow-capped mountains, soft sun, plant, tiny traveler, and subtle caption "From index zero to what's next."). Balanced 2-column layout on desktop (7 cols text, 5 cols artwork) and natural vertical stacking on mobile. |
+| Footer | Refined (Round 2) | Redesigned Column 3 Author and Affiliation card: centered, prominent author name `J. Siddartha Varma`, clear academic titles, and separate distinct institutional affiliation area underneath with small `ViitCrest` placed solely beside the institution name. Simplified copyright to "© 2026 ZeroIndex". |
+| Install App Modal | Corrected (Round 2) | Subtitle updated to "Add ZeroIndex to your home screen for quick, app-like access." Replaced all stale URLs with official address: `https://zeroindex-sigma.vercel.app/` across Android/Chrome and iPhone/Safari instructions and `manifest.json`. Exaggerated offline claims removed. |
 | The Workbench (Pillar 1) | Active / Functional | Houses Digital Logic Design subject, Unit 1 workspace, 5 interactive solvers, and 110+ question Practice Arena. Supports direct tab and submodule deep-linking via hash. 100% preserved. |
 | The Atlas (Pillar 2) | Functional / Active | 6-stage Programming Foundations Roadmap (`src/data/atlasRoadmapsConfig.js`, `src/components/AtlasLanding.jsx`). 100% preserved. |
 | The Bridge (Pillar 3) | Functional / Active | 7-domain Campus Placement Preparation Guide (`src/data/bridgePlacementConfig.js`, `src/components/BridgeLanding.jsx`). 100% preserved. |
@@ -37,7 +38,7 @@ The codebase has undergone automated execution and verification:
 
 1. **Production Build**:
    * Command: `npm run build`
-   * Result: 3,380 modules transformed, `dist/` bundle created in 3.31s, 0 errors. Unpublished archives verified absent from distribution bundle.
+   * Result: 3,381 modules transformed, `dist/` bundle created in 5.34s, 0 errors. Unpublished archives verified absent from distribution bundle.
 
 2. **Automated Verification Suites (163 checks passed, 0 failures)**:
    * `scripts/verifyUnit1Math.mjs`: 44 passed, 0 failed (Arithmetic, radix, and base conversions).
@@ -54,6 +55,6 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Homepage Visual Refinement and Brand Identity completed on branch `homepage-refinement`.
+* **Current Stage**: Homepage Refinement Round 2 completed on branch `homepage-refinement`.
 * **Immediate Next Action**: Review branch preview, then proceed with approved merge/release steps per working agreement.
 * **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps) -> Phase 4 (DLD Units 3 to 5).

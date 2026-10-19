@@ -837,7 +837,7 @@ export const AcademicsHub = ({
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs text-slate-700">
                   <div className="flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-mono font-bold text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                    <p>Open <strong>Chrome</strong> on your Android phone and navigate to <strong>zeroindex.edu</strong>.</p>
+                    <p>Open <strong>Chrome</strong> on your Android phone and navigate to <strong>https://zeroindex-sigma.vercel.app/</strong>.</p>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-mono font-bold text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
@@ -852,7 +852,7 @@ export const AcademicsHub = ({
                 <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 space-y-3 text-xs text-slate-700">
                   <div className="flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-mono font-bold text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                    <p>Open <strong>Safari</strong> on your iPhone or iPad and navigate to <strong>zeroindex.edu</strong>.</p>
+                    <p>Open <strong>Safari</strong> on your iPhone or iPad and navigate to <strong>https://zeroindex-sigma.vercel.app/</strong>.</p>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <span className="w-5 h-5 rounded-full bg-emerald-600 text-white font-mono font-bold text-[11px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>

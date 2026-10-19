@@ -26,6 +26,21 @@ node scripts/verifyInteractiveSolvers.mjs
 node scripts/generateProjectSnapshot.mjs
 ```
 
+### Verified Test Run: Homepage Refinement Round 2 (2026-10-19)
+
+| Test Script / Build | Scope | Result | Details |
+|---|---|---|---|
+| `npm run build` | Vite 6 Production Bundle | **PASS** | 3,381 modules transformed in 5.34s; 0 errors; unapproved archives verified absent |
+| `verifyUnit1Math.mjs` | DLD Radix & Number Systems | **PASS** | 44/44 checks passed (100% accuracy) |
+| `verifySection15Math.mjs` | Complements & Subtraction | **PASS** | 35/35 checks passed (100% accuracy) |
+| `verifySection17.mjs` | 7-Gate Logic Explorer & Waves | **PASS** | 50/50 checks passed (100% accuracy) |
+| `verifyInteractiveSolvers.mjs` | 5 Interactive Solvers Suite | **PASS** | 34/34 checks passed (100% accuracy) |
+| Dash Constraint Check | Em-dash & En-dash Scan | **PASS** | 0 em-dashes, 0 en-dashes across all modified/new files |
+| Domain URL Audit | `zeroindex.edu` scan | **PASS** | 0 instances found; replaced with `https://zeroindex-sigma.vercel.app/` |
+| Component Accessibility | Navigation & Modals | **PASS** | Full keyboard navigation (`tabIndex={0}`, `role="button"`, Escape, focus rings) |
+
+---
+
 ### Verified Test Run: Homepage Visual Refinement and Brand Identity (2026-10-19)
 
 | Test Script / Build | Scope | Result | Details |
