@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, 
   Layers, 
@@ -9,6 +9,7 @@ import {
   GraduationCap
 } from 'lucide-react';
 import { dldSyllabus } from '../data/dldSyllabus';
+import { dldAvailabilityConfig } from '../data/dldAvailabilityConfig';
 import { dldUnit1 } from '../data/dldUnit1';
 import { dldUnit1Master } from '../data/dldUnit1Master';
 import { UnitWorkspace } from './UnitWorkspace';
@@ -16,10 +17,59 @@ import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
 
-export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
-  const [activeTab, setActiveTab] = useState(initialTab || 'units');
+const normalizeWorkspaceTab = (tab) => {
+  if (!tab) return 'units';
+  const t = tab.toLowerCase();
+  if (t === 'theory' || t === 'notes' || t === 'dld-u1' || t === 'dld' || t === 'unit' || t === '1') return 'units';
+  if (t === 'solver' || t === 'solvers') return 'solvers';
+  if (t === 'quiz' || t === 'arena' || t === 'practice') return 'practice';
+  if (t === 'resources' || t === 'syllabus') return 'syllabus';
+  if (['units', 'solvers', 'practice', 'syllabus'].includes(t)) return t;
+  return 'units';
+};
+
+export const DldWorkspace = ({ 
+  onBackToDldHome, 
+  initialTab = 'units',
+  initialSubModuleId = '1.1' 
+}) => {
+  const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
   const [activeUnit, setActiveUnit] = useState(1);
-  const [activeSubModuleId, setActiveSubModuleId] = useState("1.1");
+  const [activeSubModuleId, setActiveSubModuleId] = useState(initialSubModuleId || '1.1');
+
+  // Synchronize state when props update via browser navigation or hashchange
+  useEffect(() => {
+    if (initialTab) {
+      const normalized = normalizeWorkspaceTab(initialTab);
+      setActiveTab(normalized);
+    }
+  }, [initialTab]);
+
+  useEffect(() => {
+    if (initialSubModuleId) {
+      setActiveSubModuleId(initialSubModuleId);
+      const unitNum = parseInt(initialSubModuleId.split('.')[0], 10);
+      if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5) {
+        setActiveUnit(unitNum);
+      }
+    }
+  }, [initialSubModuleId]);
+
+  const handleTabChange = (tabId) => {
+    setActiveTab(tabId);
+    const newHash = tabId === 'units' ? `workspace/units/${activeSubModuleId}` : `workspace/${tabId}`;
+    if (window.location.hash !== `#${newHash}`) {
+      window.history.pushState(null, '', `#${newHash}`);
+    }
+  };
+
+  const handleSubModuleChange = (subId) => {
+    setActiveSubModuleId(subId);
+    const newHash = `workspace/units/${subId}`;
+    if (window.location.hash !== `#${newHash}`) {
+      window.history.pushState(null, '', `#${newHash}`);
+    }
+  };
 
   const currentUnitData = dldSyllabus.units.find(u => u.unitNumber === activeUnit);
 
@@ -63,7 +113,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
               return (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
+                  onClick={() => handleTabChange(tab.id)}
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                     isActive
                       ? 'bg-white text-[#2E6F40] shadow-sm'
@@ -130,7 +180,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                               ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
                               : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {isUnit1 ? 'Active' : 'Soon'}
+                            {isUnit1 ? 'Available' : 'Planned'}
                           </span>
                         </button>
 
@@ -142,7 +192,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                               return (
                                 <button
                                   key={sub.id}
-                                  onClick={() => setActiveSubModuleId(sub.id)}
+                                  onClick={() => handleSubModuleChange(sub.id)}
                                   className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
                                     isSubActive
                                       ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
@@ -183,7 +233,6 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
                     section={masterSection} 
-                    overleafPdfLink={dldUnit1.overleafPdfLink} 
                   />
                 ) : (
                   /* Modular study guide for remaining sections */
@@ -198,7 +247,6 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                         }
                       ] : undefined
                     }} 
-                    overleafPdfLink={dldUnit1.overleafPdfLink} 
                   />
                 )
               ) : (
@@ -206,7 +254,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
-                      Unit {currentUnitData?.unitNumber} · Unlocking Next
+                      Unit {currentUnitData?.unitNumber} · Planned
                     </span>
                     <span className="text-xs text-[#64748B] font-mono">{currentUnitData?.hours}</span>
                   </div>
@@ -218,9 +266,9 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                   </div>
 
                   <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 is Live Now</h4>
+                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 Available</h4>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Full lecture modules for {currentUnitData?.roman} ({currentUnitData?.title}) are being prepared according to the VIIT autonomous syllabus and will unlock shortly.
+                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
                     </p>
                   </div>
 

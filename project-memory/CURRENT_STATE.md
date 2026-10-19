@@ -1,7 +1,7 @@
 # Current Project State
 
 **Documentation baseline:** October 19, 2026.  
-**Git Revision:** `c79f3ed` on branch `main` (synchronized with `origin/main`).  
+**Git Revision:** `phase-1a-stabilization` branch (recovery baseline: `65d5ba2` / `main`).  
 **Package Version:** `2.0.0` in `package.json`.  
 **Hosting Environment:** Vercel Serverless Edge (`https://zeroindex-sigma.vercel.app/`).  
 **Local Development:** Active on `http://localhost:3002/`.  
@@ -12,17 +12,18 @@
 
 | Item | Status | Verified Evidence and Qualification |
 |---|---|---|
-| Main Website Core | Production Ready | Single Page Application built on React 18 and Vite 6. `npm run build` succeeds in under 5 seconds with zero build errors. |
-| Editorial Design System | Implemented | Warm Alabaster (`#F8F9FA`), Slate Obsidian (`#0F172A`), Amber (`#D97706`). Knowledge Tree and From Zero to Possibility illustrations active. |
-| The Workbench (Pillar 1) | Active / Functional | Houses Digital Logic Design subject, Unit 1 workspace, 5 interactive solvers, and 110+ question Practice Arena. |
-| The Atlas (Pillar 2) | Structural landing present | `src/components/AtlasLanding.jsx` is active. Roadmap outlines exist as architectural scaffolding; full curricula not yet released. |
-| The Bridge (Pillar 3) | Structural landing present | `src/components/BridgeLanding.jsx` is active. Placement preparation categories exist; exercise banks not yet populated. |
-| The Readout (Pillar 4) | **Needs correction (Phase 1A)** | `src/components/ReadoutLanding.jsx` is active. Three prewritten sample articles in source are unapproved by author; must be unpublished in Phase 1A. |
-| The Folio (Pillar 5) | **Needs correction (Phase 1A)** | `src/components/FolioLanding.jsx` is active. Three prewritten sample essays in source are unapproved by author; must be unpublished in Phase 1A. |
-| DLD Unit 1 Curriculum | Available; academic audit complete | All 7 sections (1.1 to 1.7) fully populated in `src/data/dldUnit1Master.js` and section modules. Audited in `handover_md/DLD_UNIT_1_TECHNICAL_AND_ACADEMIC_AUDIT.md`. |
-| DLD Units 2 to 5 | Roadmap / Planned | Architectural blueprint and curriculum roadmap established in `handover_md/DLD_FUTURE_UNITS_AND_ROADMAP.md`. No false completion claims. |
-| DLD Resource Links | **Needs correction (Phase 1A)** | Overleaf references and placeholder Google Drive entries exist in source; real links pending from faculty lead. |
-| Navigation and Routing | Active; enhancements planned | Hash-based navigation in `src/App.jsx`. Deep-linking history and back/forward polish scheduled for Phase 1B. |
+| Main Website Core | Production Ready | Single Page Application built on React 18 and Vite 6. `npm run build` succeeds in under 4 seconds with zero build errors. Restored native browser zoom accessibility by removing `maximum-scale` and `user-scalable=no`. |
+| Editorial Design System | Implemented | Warm Alabaster (`#F7F5EF` / `#FBFBF9`), Slate Obsidian (`#25352D`), Amber (`#956A43`), Emerald (`#245B4B`). Knowledge Tree and From Zero to Possibility illustrations active. 0 em-dashes and 0 en-dashes across all source files. |
+| The Workbench (Pillar 1) | Active / Functional | Houses Digital Logic Design subject, Unit 1 workspace, 5 interactive solvers, and 110+ question Practice Arena. Supports direct tab and submodule deep-linking via hash. |
+| The Atlas (Pillar 2) | Functional / Active | Fully developed into a structured technical roadmap destination (`src/data/atlasRoadmapsConfig.js`, `src/components/AtlasLanding.jsx`). Contains the 6-stage **Programming Foundations Roadmap** (Stages 01 to 06: Computing Systems, Algorithms, C, Python, DSA, Advanced Directions) with prerequisites, learning objectives, concept chips, milestones, and authentic deep-links to DLD Unit 1. |
+| The Bridge (Pillar 3) | Functional / Active | Fully developed into a structured career preparation destination (`src/data/bridgePlacementConfig.js`, `src/components/BridgeLanding.jsx`). Contains the 7-domain **Campus Placement Preparation Guide** with practical interactive toggleable checklists, high-yield formulas/frameworks (STAR, 7-step coding protocol, AMR resume bullet formula), and authentic deep-links to DLD Unit 1. |
+| The Readout (Pillar 4) | Functional Infrastructure | Developed clean editorial article publishing infrastructure (`src/data/readoutArticlesConfig.js`, `src/components/ReadoutLanding.jsx`). Supports category filters, search, article slug routing (`#readout/:slug`), copy link, and reusable article detail template. 0 unapproved articles bundled; maintains professional editorial desk empty state. |
+| The Folio (Pillar 5) | Functional Infrastructure | Developed warm personal writing publishing infrastructure (`src/data/folioEssaysConfig.js`, `src/components/FolioLanding.jsx`). Supports category filters, search, essay slug routing (`#folio/:slug`), copy link, faculty author profile for J. Siddartha Varma, and reusable essay detail template. 0 unapproved essays bundled; maintains clean author desk empty state. |
+| Modals & Accessibility | Enhanced | Accessible skip-to-content link, semantic `<main id="main-content">` landmark, `:focus-visible` styling, backdrop dismiss, and keyboard `Escape` listeners added to `AboutModal` and `InstallModal`. |
+| DLD Unit 1 Curriculum | Available; verified | All 7 sections (1.1 to 1.7) fully populated in `src/data/dldUnit1Master.js` and section modules. Audited with 163/163 automated test checks passing. |
+| DLD Units 2 to 5 | Planned | Publication status set to "Planned" across `src/data/dldAvailabilityConfig.js` and workspace UI. |
+| DLD Resource Links | Stabilized | Overleaf destinations eliminated. Centralized Google Drive configuration (`src/data/dldResourceConfig.js`) with non-clickable status cards. |
+| Navigation and Routing | Active / Enhanced | Robust dual-listener hash routing in `src/App.jsx` listening to both `hashchange` and `popstate`. Supports deep-linking for all 5 pillars (`#home`, `#workbench`, `#atlas`, `#bridge`, `#readout`, `#folio`), article/essay slugs (`#readout/:slug`, `#folio/:slug`), and workspace sub-routes (`#workspace/:tab/:subId`). Full browser Back/Forward history support without external routing library. |
 
 ---
 
@@ -32,7 +33,7 @@ The codebase has undergone automated execution and verification:
 
 1. **Production Build**:
    * Command: `npm run build`
-   * Result: 3,373 modules transformed, `dist/` bundle created in 4.88s, 0 errors.
+   * Result: 3,379 modules transformed, `dist/` bundle created in 3.32s, 0 errors. Unpublished archives verified absent from distribution bundle.
 
 2. **Automated Verification Suites (163 checks passed, 0 failures)**:
    * `scripts/verifyUnit1Math.mjs`: 44 passed, 0 failed (Arithmetic, radix, and base conversions).
@@ -40,10 +41,15 @@ The codebase has undergone automated execution and verification:
    * `scripts/verifySection17.mjs`: 50 passed, 0 failed (Logic gates, switches, waveforms, and master matrix).
    * `scripts/verifyInteractiveSolvers.mjs`: 34 passed, 0 failed (5 engineering solver engines and UI elements).
 
+3. **Dash Compliance Verification**:
+   * 0 em-dashes and 0 en-dashes verified across all created and modified source files.
+
+> **Qualification on Academic Correctness**: Automated tests verify specific mathematical algorithms, conversions, truth tables, and complement arithmetic. Passing these tests does not constitute exhaustive academic approval of all instructional content, which remains subject to comprehensive faculty review.
+
 ---
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Project Memory System installed and reconciled with repository.
-* **Immediate Next Action**: Awaiting user approval to begin **Phase 1A** (Publication and Availability Corrections: unpublish 6 unapproved pieces from Readout/Folio, clean Overleaf/Drive links, and update availability flags).
-* **Downstream Progression**: Phase 1B (Routing & Usability) -> Phase 1C (Four-Pillar Foundations) -> Phase 1D (Approved Content) -> Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2).
+* **Current Stage**: Foundation Development Sprint completed on dedicated branch `phase-1a-stabilization`.
+* **Immediate Next Action**: Consolidated review and approval of the Foundation Development Sprint.
+* **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps).

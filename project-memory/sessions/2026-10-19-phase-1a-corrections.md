@@ -1,0 +1,62 @@
+# ZeroIndex Session: 2026-10-19 - Phase 1A Stabilization
+
+- **Starting Branch and Commit:** `main` at commit `65d5ba2` (clean baseline synchronized with `origin/main`).
+- **Working Branch:** `phase-1a-stabilization`
+- **Goal and Scope:** Implement Phase 1A of the ZeroIndex stabilization plan:
+  1. Remove all Overleaf URLs, buttons, and destinations; create centralized Google Drive resource config for DLD Units 1-5 with non-clickable "Material link will be added soon." status.
+  2. Correct DLD academic availability labels (Unit 1 Available pending review; Units 2-5 Planned; subject-level: "Unit 1 available. Additional units in development.").
+  3. Correct Atlas and Bridge claims (remove unsupported completion claims and fabricated question counts; frame honestly as outlines).
+  4. Unpublish six unapproved articles (3 in Readout, 3 in Folio) to an offline archive excluded from Git and production bundles; render tasteful empty states.
+- **Relevant Sources of Truth:**
+  - `AGENTS.md` and `.agents/rules/zeroindex-project-memory.md`
+  - `project-memory/CURRENT_STATE.md`, `CONTENT_REGISTRY.md`, `ROADMAP.md`, `DECISIONS.md`
+  - `src/data/portalConfig.js`, `src/data/dldUnit1Master.js`, `src/data/dldSyllabus.js`
+- **Decisions Made:**
+  - D-007: Centralized DLD study material resources in `src/data/dldResourceConfig.js` and curriculum status flags in `src/data/dldAvailabilityConfig.js`.
+  - D-008: Safe archival of unapproved articles and essays in `unpublished-archive/` excluded from git via `.gitignore`.
+- **Created Files:**
+  - `src/data/dldResourceConfig.js`: Centralized Google Drive configuration for Units 1-5 and reference books.
+  - `src/data/dldAvailabilityConfig.js`: Centralized availability status and section-based progress calculation.
+  - `unpublished-archive/readout-articles-archive.json`: Exact original text of 3 unapproved Readout articles (offline, gitignored).
+  - `unpublished-archive/folio-essays-archive.json`: Exact original text of 3 unapproved Folio essays (offline, gitignored).
+  - `project-memory/sessions/2026-10-19-phase-1a-corrections.md`: This session record.
+- **Modified Files:**
+  - `.gitignore`: Added `unpublished-archive/` to prevent committing unpublished drafts to public repository.
+  - `README.md`: Removed Overleaf reference in Subject Resources summary.
+  - `src/data/portalConfig.js`: Removed `overleafPdfUrl` and placeholder Drive URLs.
+  - `src/data/dldUnit1.js`: Removed `overleafPdfLink`.
+  - `src/data/dldUnit1Master.js`: Removed `overleafPdfLink`.
+  - `src/data/dldSyllabus.js`: Set `driveLink: null` and status "Material link will be added soon."
+  - `src/components/SyllabusView.jsx`: Integrated `dldResourceConfig`; rendered Drive status cards; disabled non-linked anchors.
+  - `src/components/ZeroIndexSideWings.jsx`: Replaced Overleaf/Drive links with `dldResourceConfig` status cards.
+  - `src/components/DldWorkspace.jsx`: Replaced hardcoded completion badges with `dldAvailabilityConfig` ("Available" / "Planned").
+  - `src/components/UnitWorkspace.jsx`: Cleaned unused parameter from signature.
+  - `src/components/AcademicsHub.jsx`: Updated badges and descriptions ("Unit 1 Available", "Units 2-5 In Dev").
+  - `src/components/DldSubjectHome.jsx`: Updated Bento cards to reflect Unit 1 availability and Drive status.
+  - `src/components/AtlasLanding.jsx`: Updated badges to "Roadmap Outline", "Planned Pathway", "In Blueprint".
+  - `src/components/BridgeLanding.jsx`: Removed fabricated question counts ("24 Problems"); updated badges to "Curriculum Outline".
+  - `src/components/ReadoutLanding.jsx`: Emptied public articles array; rendered tasteful empty state ("Articles are being prepared.").
+  - `src/components/FolioLanding.jsx`: Emptied public essays array; rendered tasteful empty state ("Writing will appear here soon.").
+  - `project-memory/CURRENT_STATE.md`: Updated with Phase 1A status.
+  - `project-memory/CONTENT_REGISTRY.md`: Updated Readout, Folio, and Drive resource statuses.
+  - `project-memory/ROADMAP.md`: Marked Phase 1A Verified.
+  - `project-memory/DECISIONS.md`: Added D-007 and D-008.
+  - `project-memory/CHANGELOG.md`: Added Phase 1A entry.
+  - `project-memory/QUALITY_CHECKS.md`: Recorded Phase 1A test results.
+  - `project-memory/TECHNICAL_SNAPSHOT.md`: Regenerated via snapshot script (50 source files).
+- **Actual Progress:** Complete. Phase 1A implemented with 100% academic integrity preserved.
+- **Tests Executed and Exact Results:**
+  - `scripts/verifyUnit1Math.mjs`: 44/44 passed (100% accuracy).
+  - `scripts/verifySection15Math.mjs`: 35/35 passed (100% accuracy).
+  - `scripts/verifySection17.mjs`: 50/50 passed (100% accuracy).
+  - `scripts/verifyInteractiveSolvers.mjs`: 34/34 passed (100% accuracy).
+  - `npm run build`: 3,375 modules transformed in 3.68s, 0 errors, unapproved content confirmed absent from bundle.
+  - Dash verification: 0 em-dashes and 0 en-dashes across all modified and created source files.
+  - Local server: Responding HTTP 200 OK on `http://localhost:3002/`.
+- **Identified Risks / Unverified Items:**
+  - Faculty Google Drive URLs are not yet available; will be plugged into `src/data/dldResourceConfig.js` when provided.
+- **Next Action:** Wait for user review and approval before merging `phase-1a-stabilization` or proceeding to Phase 1B.
+- **Commit / Preview / Release Links:**
+  - Local Preview: `http://localhost:3002/`
+- **Lesson Learned:**
+  - Centralizing resource and availability configurations in dedicated `src/data/` modules makes updates trivial and prevents link sprawl or inconsistent badges across complex UI components.

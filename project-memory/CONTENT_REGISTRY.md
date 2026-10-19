@@ -10,11 +10,14 @@
 | Workbench | DLD Unit 4 (Sequential Logic) | Planned | Complete section data, worked models, and Flip-Flop simulator |
 | Workbench | DLD Unit 5 (Registers & Counters) | Planned | Complete section data, worked models, and Counter visualizer |
 | Workbench | Future Subjects (C, DSA, ML, AI) | Planned | Outlined in Bento grid; full course modules to be developed |
-| Atlas | Core Engineering Pathways | Scaffolding / Design phase | Verified stage progression and reading references |
-| Bridge | Placement Preparation Domains | Scaffolding / Design phase | Validated practice question banks and interview rubrics |
-| Readout | Three sample technical articles | **Unapproved; unpublish in Phase 1A** | Explicit faculty review, approval of voice, and citations |
-| Folio | Three sample reflective essays | **Unapproved; unpublish in Phase 1A** | Explicit faculty review and approval of personal attribution |
-| DLD Resources | Google Drive Materials (Units 1 to 5) | URLs pending from faculty lead | Provide valid Drive links; do not use dead placeholder links |
+| Atlas | Programming Foundations Roadmap (6 Stages) | Available / Published | Curricular progression authored in src/data/atlasRoadmapsConfig.js |
+| Atlas | Specialized Advanced Pathways (Systems, AI/Data, Web) | Outlined / Planned | In atlasRoadmapsConfig.js; full syllabus modules to be authored |
+| Bridge | Campus Placement Preparation Guide (7 Domains) | Available / Published | Comprehensive guide and interactive checklists in src/data/bridgePlacementConfig.js |
+| Readout | Editorial Articles Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/readoutArticlesConfig.js; explicit author approval required before publication |
+| Readout | Three sample technical articles | Withdrawn (archived in unpublished-archive/) | Explicit author review, approval of voice, and formal release |
+| Folio | Personal Essays Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/folioEssaysConfig.js; explicit author approval required before publication |
+| Folio | Three sample reflective essays | Withdrawn (archived in unpublished-archive/) | Explicit author review and approval of personal attribution |
+| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldResourceConfig.js; do not use dead anchors |
 
 ---
 

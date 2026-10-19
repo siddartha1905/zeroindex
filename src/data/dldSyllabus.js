@@ -167,7 +167,8 @@ export const dldSyllabus = {
       edition: "5/e",
       authors: "M.Morris Mano, Michael D Ciletti",
       publisher: "PEA",
-      driveLink: "https://drive.google.com/drive/folders/zeroindex-dld-textbooks",
+      driveLink: null,
+      statusText: "Material link will be added soon.",
       description: "Primary prescribed textbook covering Boolean algebra, gate-level minimization, combinational logic design, synchronous sequential circuits, registers, and counters."
     },
     {
@@ -177,7 +178,8 @@ export const dldSyllabus = {
       edition: "5/e",
       authors: "Roth",
       publisher: "Cengage",
-      driveLink: "https://drive.google.com/drive/folders/zeroindex-dld-textbooks",
+      driveLink: null,
+      statusText: "Material link will be added soon.",
       description: "Rigorous treatment of digital systems, state machines, timing diagrams, flip-flop conversions, and sequential circuit synthesis."
     }
   ],
@@ -188,7 +190,8 @@ export const dldSyllabus = {
       title: "Digital Logic and Computer Design",
       authors: "M.Morris Mano",
       publisher: "PEA",
-      driveLink: "https://drive.google.com/drive/folders/zeroindex-dld-references"
+      driveLink: null,
+      statusText: "Material link will be added soon."
     },
     {
       id: "rb2",
@@ -196,7 +199,8 @@ export const dldSyllabus = {
       title: "Digital Logic Design",
       authors: "Leach, Malvino, Saha",
       publisher: "TMH",
-      driveLink: "https://drive.google.com/drive/folders/zeroindex-dld-references"
+      driveLink: null,
+      statusText: "Material link will be added soon."
     },
     {
       id: "rb3",
@@ -204,7 +208,8 @@ export const dldSyllabus = {
       title: "Modern Digital Electronics",
       authors: "R.P. Jain",
       publisher: "TMH",
-      driveLink: "https://drive.google.com/drive/folders/zeroindex-dld-references"
+      driveLink: null,
+      statusText: "Material link will be added soon."
     }
   ]
 };

@@ -622,7 +622,7 @@ export const AcademicsHub = ({
                 </div>
                 <span className="text-xs font-mono text-emerald-700 font-bold flex items-center gap-1">
                   <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                  Live Platform
+                  Unit 1 Available
                 </span>
               </div>
 
@@ -631,7 +631,7 @@ export const AcademicsHub = ({
                   Digital Logic Design
                 </h3>
                 <p className="text-sm text-slate-600 leading-relaxed mt-2 max-w-xl">
-                  Number systems, base conversions, complement arithmetic, Boolean algebra, K-Map minimization, combinational circuits, and clocked sequential machines.
+                  Unit 1 available. Number systems, base conversions, complement arithmetic, signed binary codes, and logic gates. Additional units planned.
                 </p>
               </div>
 
@@ -639,7 +639,7 @@ export const AcademicsHub = ({
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 pt-2">
                 <div className="p-2.5 rounded-xl bg-[#FAF8F5] border border-slate-200/80 text-xs font-semibold text-slate-800 flex items-center gap-2">
                   <BookOpen className="w-4 h-4 text-emerald-600 shrink-0" />
-                  <span>5 Modular Units</span>
+                  <span>Unit 1 Live (Units 2-5 Planned)</span>
                 </div>
                 <div className="p-2.5 rounded-xl bg-[#FAF8F5] border border-slate-200/80 text-xs font-semibold text-slate-800 flex items-center gap-2">
                   <Calculator className="w-4 h-4 text-indigo-600 shrink-0" />

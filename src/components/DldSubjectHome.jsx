@@ -42,9 +42,9 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'units',
       title: 'Course Units (1-5)',
-      description: 'Step-by-step classroom notes, derivations, worked models, and cheat sheets across all 5 units.',
+      description: 'Unit 1 available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.',
       icon: Layers,
-      badge: 'Unit 1 Live',
+      badge: 'Unit 1 Available',
       badgeColor: 'bg-[#2E6F40]/10 text-[#2E6F40] border border-[#2E6F40]/20',
       iconColor: '#2E6F40',
       action: () => onOpenWorkspaceTab('units')
@@ -54,7 +54,7 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
       title: 'Interactive Visual Solvers',
       description: 'Visual step-by-step base converters, bit-aligned arithmetic grids, and complement subtractors organized by unit.',
       icon: Calculator,
-      badge: 'Unit 1-5 Engines',
+      badge: 'Unit 1 Engines',
       badgeColor: 'bg-[#4F46E5]/10 text-[#4F46E5] border border-[#4F46E5]/20',
       iconColor: '#4F46E5',
       action: () => onOpenWorkspaceTab('solvers')
@@ -72,7 +72,7 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'syllabus',
       title: 'Subject Resources',
-      description: 'Downloadable Unit Notes PDFs, official VR23 syllabus, Course Outcomes (CO1-CO5), and standard textbooks.',
+      description: 'Google Drive Study Materials, official VR23 syllabus, Course Outcomes (CO1-CO5), and standard textbooks.',
       icon: BookOpen,
       badge: 'Notes, Syllabus & Books',
       badgeColor: 'bg-[#059669]/10 text-[#059669] border border-[#059669]/20',
