@@ -1,7 +1,7 @@
 # Current Project State
 
 **Documentation baseline:** October 19, 2026.  
-**Git Revision:** `homepage-refinement` development branch (based on `main`).  
+**Git Revision:** `main` (production release of Homepage Visual Refinement and Artwork Integration).  
 **Package Version:** `2.0.0` in `package.json`.  
 **Hosting Environment:** Vercel Serverless Edge (`https://zeroindex-sigma.vercel.app/`).  
 **Local Development:** Active on `http://localhost:3003/`.  
@@ -55,6 +55,6 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Homepage Refinement Round 2 completed on branch `homepage-refinement`.
-* **Immediate Next Action**: Review branch preview, then proceed with approved merge/release steps per working agreement.
+* **Current Stage**: Homepage Visual Refinements and Final Artwork Integration merged to `main` and deployed to production.
+* **Immediate Next Action**: Commence Phase 2 / Phase 3: DLD Unit 2 (Boolean Algebra and Logic Simplification / K-Maps).
 * **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps) -> Phase 4 (DLD Units 3 to 5).
