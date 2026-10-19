@@ -22,9 +22,15 @@
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
     <script>
+      window.addEventListener('vite:preloadError', () => {
+        window.location.reload();
+      });
+
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => {
+          navigator.serviceWorker.register('/sw.js').then((registration) => {
+            registration.update();
+          }).catch(err => {
             console.log('ServiceWorker registration failed: ', err);
           });
         });
