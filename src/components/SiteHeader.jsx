@@ -12,7 +12,7 @@ import {
   ExternalLink,
   Info
 } from 'lucide-react';
-import { ViitCrest } from './ViitCrest';
+import { ZeroIndexMark } from './ZeroIndexMark';
 
 export const SiteHeader = ({ 
   currentSection = 'home', 
@@ -49,9 +49,9 @@ export const SiteHeader = ({
   });
 
   const navigationItems = [
-    { id: 'workbench', label: 'The Workbench', number: '01', color: '#346C53' },
+    { id: 'workbench', label: 'The Workbench', number: '01', color: '#285C49' },
     { id: 'atlas', label: 'The Atlas', number: '02', color: '#496D91' },
-    { id: 'bridge', label: 'The Bridge', number: '03', color: '#956A43' },
+    { id: 'bridge', label: 'The Bridge', number: '03', color: '#C38A63' },
     { id: 'readout', label: 'The Readout', number: '04', color: '#765C90' },
     { id: 'folio', label: 'The Folio', number: '05', color: '#935F5D' },
   ];
@@ -60,8 +60,8 @@ export const SiteHeader = ({
     <header 
       className={`sticky top-0 z-40 transition-all duration-200 ${
         isScrolled 
-          ? 'bg-[#F7F5EF]/95 backdrop-blur-md border-b border-[#DDE2DA] shadow-xs' 
-          : 'bg-[#F7F5EF] border-b border-[#E6E8E1]'
+          ? 'bg-[#FBF8F2]/95 backdrop-blur-md border-b border-[#DDE2DA] shadow-xs' 
+          : 'bg-[#FBF8F2] border-b border-[#E6E8E1]'
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
@@ -70,21 +70,14 @@ export const SiteHeader = ({
         <div className="flex items-center gap-3">
           <button
             onClick={() => onNavigate('home')}
-            className="flex items-center gap-2.5 text-left group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#28755E] rounded-md px-1 py-0.5"
+            className="flex items-center gap-2.5 text-left group cursor-pointer focus-visible:ring-2 focus-visible:ring-[#285C49] rounded-lg px-1 py-0.5"
             aria-label="ZeroIndex Home"
           >
-            {/* Custom Zero Glyph Mark */}
-            <span className="w-7 h-7 rounded-md border border-[#DDE2DA] bg-white flex items-center justify-center font-technical text-xs font-bold text-[#245B4B] shadow-2xs group-hover:border-[#245B4B] transition-colors">
-              0
+            {/* Custom Zero Glyph Mark with Knowledge Tree branching */}
+            <ZeroIndexMark className="w-7 h-7 flex-shrink-0 group-hover:opacity-90 transition-opacity" size={28} />
+            <span className="font-editorial text-2xl font-bold tracking-tight text-[#293B32] group-hover:text-[#285C49] transition-colors leading-none">
+              ZeroIndex
             </span>
-            <div className="flex flex-col">
-              <span className="font-editorial text-xl font-bold tracking-tight text-[#25352D] group-hover:text-[#245B4B] transition-colors leading-none">
-                ZeroIndex
-              </span>
-              <span className="font-technical text-[9px] text-[#5F6C64] uppercase tracking-wider mt-0.5">
-                Educational Publication
-              </span>
-            </div>
           </button>
         </div>
 
@@ -119,7 +112,7 @@ export const SiteHeader = ({
           
           {/* Discreet Monospace Clock */}
           <div className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#F0F1EB] border border-[#DDE2DA] font-technical text-[11px] text-[#5F6C64]">
-            <Clock className="w-3 h-3 text-[#245B4B]" />
+            <Clock className="w-3 h-3 text-[#285C49]" />
             <span>{formattedTime} IST</span>
           </div>
 
@@ -135,10 +128,10 @@ export const SiteHeader = ({
           {/* Install as App Trigger */}
           <button
             onClick={onOpenInstallModal}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#F0F1EB] text-[#245B4B] border border-[#DDE2DA] text-xs font-medium transition-colors shadow-2xs cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white hover:bg-[#F0F1EB] text-[#285C49] border border-[#DDE2DA] text-xs font-medium transition-colors shadow-2xs cursor-pointer"
             aria-label="Install as Progressive Web App"
           >
-            <Smartphone className="w-3.5 h-3.5 text-[#245B4B]" />
+            <Smartphone className="w-3.5 h-3.5 text-[#285C49]" />
             <span className="hidden sm:inline">Install App</span>
             <span className="sm:hidden">App</span>
           </button>
@@ -185,7 +178,7 @@ export const SiteHeader = ({
                     </span>
                     <span>{item.label}</span>
                   </div>
-                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#245B4B]" />}
+                  {isActive && <span className="w-1.5 h-1.5 rounded-full bg-[#285C49]" />}
                 </button>
               );
             })}
@@ -196,7 +189,7 @@ export const SiteHeader = ({
                   if (onOpenAboutModal) onOpenAboutModal();
                   setMobileMenuOpen(false);
                 }}
-                className="font-medium text-[#245B4B] hover:underline"
+                className="font-medium text-[#285C49] hover:underline"
               >
                 About ZeroIndex
               </button>

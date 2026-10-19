@@ -4,6 +4,56 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-19: Homepage Visual Refinement and Brand Identity
+
+- **Type**: visual / branding / layout / accessibility
+- **Summary**: Implemented focused visual, brand identity, and layout refinements across the ZeroIndex homepage on development branch `homepage-refinement`:
+  1. **Brand Identity & Minimalist Mark**:
+     - Created `ZeroIndexMark.jsx` minimalist SVG mark inspired by origin index zero `[0]` and the 5 branching pathways of the Knowledge Tree.
+     - Removed the "Educational Publication" subtitle in `SiteHeader.jsx`, presenting "ZeroIndex" cleanly.
+     - Integrated `ZeroIndexMark` into header, footer, and `AboutModal.jsx`.
+  2. **Hero Section Refinement**:
+     - Retained headline "A place to begin, and many directions to go." with balanced responsive text wrapping.
+     - Replaced badge with subtle "Five sections. One framework." pill badge.
+     - Replaced previous italic quote and DLD-specific copy with approved primary and supporting body copy.
+     - Retained hero buttons "Explore ZeroIndex" and "About ZeroIndex" with working smooth-scroll and modal actions.
+  3. **Interactive Knowledge Tree**:
+     - Preserved original branching geometry, coordinates, and 5 destination nodes.
+     - Replaced helper text with "Select a branch to preview its destination."
+     - Added keyboard accessibility (`tabIndex={0}`, `role="button"`, Enter/Space activation) and focus states.
+  4. **Inside ZeroIndex 5-Card Layout**:
+     - Arranged into balanced 6-column grid: Row 1 has 3 cards (`lg:col-span-2`), Row 2 has 2 equal-width cards (`lg:col-span-3`).
+     - Applied exact approved descriptions across all 5 pillar cards.
+     - Section helper text updated to "Choose a section to enter its workspace."
+  5. **Why I Built ZeroIndex Section**:
+     - Renamed from "A Note on ZeroIndex".
+     - Removed institutional logo from author block.
+     - Applied approved two-paragraph narrative with "Curated by J. Siddartha Varma" and "Learn more about the platform" trigger.
+  6. **Footer Refinement**:
+     - Structured into 3 balanced columns: Col 1 (ZeroIndex mark, name, tagline, description); Col 2 (Explore 5 pillars); Col 3 (Author and affiliation with small `ViitCrest` restricted to institution name).
+     - Simplified bottom line to "© 2026 ZeroIndex". Removed curriculum versions and redundant metadata.
+  7. **Sunlit Editorial Design Tokens**:
+     - Harmonized color tokens with Sunlit Editorial palette: `#FBF8F2` warm ivory background, `#FFFFFF` cards, `#285C49` primary green, `#DDEADD` supporting sage, `#C38A63` warm accent, `#293B32` primary text.
+  8. **Strict Preservation**:
+     - 100% preservation of DLD Unit 1 academic content, mathematical calculations, and 5 interactive solvers.
+- **Affected Files**:
+  * `src/components/ZeroIndexMark.jsx` (created)
+  * `src/components/MainHome.jsx`
+  * `src/components/SiteHeader.jsx`
+  * `src/components/SiteFooter.jsx`
+  * `src/components/KnowledgeTreeIllustration.jsx`
+  * `src/components/AboutModal.jsx`
+  * `src/App.jsx`
+  * `src/theme/pastelTheme.js`
+  * `index.html`
+- **Verification Performed**:
+  * Production build: `npm run build` succeeded in 3.31s (3,380 modules, 0 errors).
+  * 4 mathematical verification suites: 163/163 passed (100% accuracy).
+  * Dash constraint audit: 0 em-dashes and 0 en-dashes across all modified/new files.
+- **Release State**: Completed on `homepage-refinement` branch; ready for preview.
+
+---
+
 ## 2026-10-19: Foundation Development Sprint Production Release
 
 - **Type**: release
