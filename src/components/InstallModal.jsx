@@ -33,7 +33,7 @@ export const InstallModal = ({ isOpen, onClose }) => {
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#F0F1EB] hover:bg-[#E0EBDF] text-[#25352D] flex items-center justify-center transition-colors cursor-pointer"
+          className="absolute top-5 right-5 w-8 h-8 rounded-full bg-[#F0F1EB] hover:bg-[#DDEADD] text-[#293B32] flex items-center justify-center transition-colors cursor-pointer"
           aria-label="Close dialog"
         >
           <X className="w-4 h-4" />
@@ -41,15 +41,15 @@ export const InstallModal = ({ isOpen, onClose }) => {
 
         {/* Modal Header */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-[#E0EBDF] border border-[#346C53]/30 flex items-center justify-center text-[#346C53]">
+          <div className="w-10 h-10 rounded-xl bg-[#DDEADD] border border-[#285C49]/30 flex items-center justify-center text-[#285C49]">
             <Smartphone className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="font-editorial text-xl font-bold text-[#25352D]" id="install-title">
+            <h3 className="font-editorial text-xl font-bold text-[#293B32]" id="install-title">
               Install ZeroIndex App
             </h3>
             <p className="text-xs text-[#5F6C64]">
-              Add to your phone for instant, full-screen offline access
+              Add ZeroIndex to your home screen for quick, app-like access.
             </p>
           </div>
         </div>
@@ -60,8 +60,8 @@ export const InstallModal = ({ isOpen, onClose }) => {
             onClick={() => setActiveTab('android')}
             className={`py-2 rounded-lg transition-all cursor-pointer ${
               activeTab === 'android'
-                ? 'bg-white text-[#25352D] shadow-2xs'
-                : 'text-[#5F6C64] hover:text-[#25352D]'
+                ? 'bg-white text-[#293B32] shadow-2xs'
+                : 'text-[#5F6C64] hover:text-[#293B32]'
             }`}
           >
             Android (Chrome)
@@ -70,8 +70,8 @@ export const InstallModal = ({ isOpen, onClose }) => {
             onClick={() => setActiveTab('ios')}
             className={`py-2 rounded-lg transition-all cursor-pointer ${
               activeTab === 'ios'
-                ? 'bg-white text-[#25352D] shadow-2xs'
-                : 'text-[#5F6C64] hover:text-[#25352D]'
+                ? 'bg-white text-[#293B32] shadow-2xs'
+                : 'text-[#5F6C64] hover:text-[#293B32]'
             }`}
           >
             iPhone (Safari)
@@ -80,44 +80,44 @@ export const InstallModal = ({ isOpen, onClose }) => {
 
         {/* Step-by-Step Instructions */}
         {activeTab === 'android' ? (
-          <div className="p-4 bg-[#F7F5EF] rounded-2xl border border-[#DDE2DA] space-y-3 text-xs text-[#5F6C64]">
+          <div className="p-4 bg-[#FBF8F2] rounded-2xl border border-[#DDE2DA] space-y-3 text-xs text-[#5F6C64]">
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-              <p>Open <strong>Chrome</strong> on your Android phone and navigate to <strong>zeroindex.edu</strong>.</p>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <p>Open <strong>Chrome</strong> on your Android phone and navigate to <strong className="text-[#285C49] break-all">https://zeroindex-sigma.vercel.app/</strong>.</p>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-              <p>Tap the <strong>three vertical dots (⋮)</strong> in the top-right corner.</p>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <p>Tap the <strong>three vertical dots (⋮)</strong> in the top-right corner of Chrome.</p>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
               <p>Select <strong>"Install app"</strong> or <strong>"Add to Home screen"</strong>.</p>
             </div>
           </div>
         ) : (
-          <div className="p-4 bg-[#F7F5EF] rounded-2xl border border-[#DDE2DA] space-y-3 text-xs text-[#5F6C64]">
+          <div className="p-4 bg-[#FBF8F2] rounded-2xl border border-[#DDE2DA] space-y-3 text-xs text-[#5F6C64]">
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-              <p>Open <strong>Safari</strong> on your iPhone or iPad and navigate to <strong>zeroindex.edu</strong>.</p>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
+              <p>Open <strong>Safari</strong> on your iPhone or iPad and navigate to <strong className="text-[#285C49] break-all">https://zeroindex-sigma.vercel.app/</strong>.</p>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-              <p>Tap the <strong>Share button (box with upward arrow)</strong> on the bottom toolbar.</p>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
+              <p>Tap the <strong>Share button</strong> (square box with an upward arrow) on the bottom toolbar.</p>
             </div>
             <div className="flex items-start gap-2.5">
-              <span className="w-5 h-5 rounded-full bg-[#245B4B] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
+              <span className="w-5 h-5 rounded-full bg-[#285C49] text-white font-technical font-bold text-[10px] flex items-center justify-center flex-shrink-0 mt-0.5">3</span>
               <p>Scroll down and select <strong>"Add to Home Screen" (+)</strong>.</p>
             </div>
           </div>
         )}
 
-        <div className="p-3 bg-[#E0EBDF]/60 border border-[#346C53]/30 rounded-xl text-xs text-[#346C53]">
-          Once installed, ZeroIndex runs as an app without browser URL bars and launches instantly from your home screen.
+        <div className="p-3 bg-[#DDEADD]/60 border border-[#285C49]/20 rounded-xl text-xs text-[#285C49]">
+          Once added, ZeroIndex opens directly from your home screen with quick, app-like access and clean full-screen reading.
         </div>
 
         <button
           onClick={onClose}
-          className="w-full py-2.5 rounded-xl bg-[#245B4B] hover:bg-[#28755E] text-white font-bold text-xs transition-colors cursor-pointer"
+          className="w-full py-2.5 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white font-bold text-xs transition-colors cursor-pointer"
         >
           Done
         </button>

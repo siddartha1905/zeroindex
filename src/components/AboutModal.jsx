@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { X, BookOpen, Compass, Briefcase, Radio, FileText, Heart, ShieldCheck } from 'lucide-react';
 import { ViitCrest } from './ViitCrest';
+import { ZeroIndexMark } from './ZeroIndexMark';
 
 export const AboutModal = ({ isOpen, onClose }) => {
   useEffect(() => {
@@ -40,16 +41,14 @@ export const AboutModal = ({ isOpen, onClose }) => {
 
         {/* Modal Header */}
         <div className="space-y-1">
-          <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded border border-[#DDE2DA] bg-[#F7F5EF] flex items-center justify-center font-technical text-xs font-bold text-[#245B4B]">
-              0
-            </span>
-            <span className="font-editorial text-2xl font-bold tracking-tight text-[#25352D]" id="about-title">
+          <div className="flex items-center gap-2.5">
+            <ZeroIndexMark size={24} className="w-6 h-6 flex-shrink-0" />
+            <span className="font-editorial text-2xl font-bold tracking-tight text-[#293B32]" id="about-title">
               About ZeroIndex
             </span>
           </div>
           <p className="font-editorial italic text-sm text-[#5F6C64]">
-            An independent academic and intellectual publication
+            An independent space for learning, career preparation, technology and personal writing
           </p>
         </div>
 
@@ -114,7 +113,7 @@ export const AboutModal = ({ isOpen, onClose }) => {
         <div className="pt-2 flex justify-end">
           <button
             onClick={onClose}
-            className="px-5 py-2.5 rounded-xl bg-[#245B4B] hover:bg-[#28755E] text-white text-xs font-bold transition-colors cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white text-xs font-bold transition-colors cursor-pointer"
           >
             Close
           </button>

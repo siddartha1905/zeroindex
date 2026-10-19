@@ -6,13 +6,9 @@ import {
   Compass, 
   Briefcase, 
   Radio, 
-  FileText, 
-  Info,
-  CheckCircle2,
-  ExternalLink
+  FileText
 } from 'lucide-react';
 import { KnowledgeTreeIllustration } from './KnowledgeTreeIllustration';
-import { ViitCrest } from './ViitCrest';
 
 export const MainHome = ({ 
   onNavigate, 
@@ -31,12 +27,13 @@ export const MainHome = ({
       number: '01',
       name: 'The Workbench',
       category: 'Academic Learning',
-      accent: '#346C53',
-      softAccent: '#E0EBDF',
+      accent: '#285C49',
+      softAccent: '#DDEADD',
       tag: 'Digital Logic Design & Systems',
-      description: 'Subjects, notes and practical tools for working through the fundamentals.',
+      description: 'Subjects, structured notes and practical tools for learning through fundamentals.',
       actionLabel: 'Enter The Workbench',
       icon: BookOpen,
+      borderColor: 'hover:border-[#285C49]',
     },
     {
       id: 'atlas',
@@ -46,21 +43,23 @@ export const MainHome = ({
       accent: '#496D91',
       softAccent: '#E1EAF2',
       tag: 'Engineering Roadmaps',
-      description: 'Learning routes that help you decide what to study next.',
+      description: 'Learning roadmaps that help you understand what to study, in what order, and where to begin.',
       actionLabel: 'Explore The Atlas',
       icon: Compass,
+      borderColor: 'hover:border-[#496D91]',
     },
     {
       id: 'bridge',
       number: '03',
       name: 'The Bridge',
       category: 'Professional Readiness',
-      accent: '#956A43',
-      softAccent: '#F1E5D9',
+      accent: '#C38A63',
+      softAccent: '#F5EBE1',
       tag: 'Interview & Aptitude Practice',
-      description: 'Practice and preparation for the move into professional work.',
+      description: 'Preparation for placements, interviews and the move from study into professional work.',
       actionLabel: 'Cross The Bridge',
       icon: Briefcase,
+      borderColor: 'hover:border-[#C38A63]',
     },
     {
       id: 'readout',
@@ -70,9 +69,10 @@ export const MainHome = ({
       accent: '#765C90',
       softAccent: '#EBE5F0',
       tag: 'Computing & Science Notes',
-      description: 'Developments in technology and science, examined with curiosity.',
+      description: 'Developments in technology and science, explained with clarity and curiosity.',
       actionLabel: 'Open The Readout',
       icon: Radio,
+      borderColor: 'hover:border-[#765C90]',
     },
     {
       id: 'folio',
@@ -80,11 +80,12 @@ export const MainHome = ({
       name: 'The Folio',
       category: 'Personal Essays',
       accent: '#935F5D',
-      softAccent: '#F2E5E1',
+      softAccent: '#F3E6E3',
       tag: 'Writing & Reflection',
-      description: 'Essays, observations and ideas I want to put into words.',
+      description: 'Essays, reflections and personal observations I want to put into words.',
       actionLabel: 'Read The Folio',
       icon: FileText,
+      borderColor: 'hover:border-[#935F5D]',
     },
   ];
 
@@ -100,34 +101,28 @@ export const MainHome = ({
           {/* Left Column: Natural Editorial Story (6 cols) */}
           <div className="lg:col-span-6 space-y-6 text-left">
             
-            {/* Small Restrained Label */}
-            <div>
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0EBDF] border border-[#346C53]/30 font-technical text-xs font-bold text-[#346C53] uppercase tracking-wider">
-                <span className="w-2 h-2 rounded-full bg-[#245B4B]" />
-                Independent Academic Publication
-              </span>
-            </div>
-
-            {/* Main Headline */}
-            <div className="space-y-3">
-              <h1 className="font-editorial text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-[#25352D] leading-[1.08]">
+            {/* Main Headline & Approved Descriptions */}
+            <div className="space-y-4 pt-1 sm:pt-2">
+              <h1 className="font-editorial text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold tracking-tight text-[#293B32] leading-[1.1] max-w-xl text-balance">
                 A place to begin, and many directions to go.
               </h1>
               
-              <p className="font-editorial italic text-lg sm:text-xl text-[#5F6C64] leading-relaxed max-w-xl">
-                "ZeroIndex is where I bring together the things I teach, study and write about. There are five sections to explore, each with its own purpose."
-              </p>
+              <div className="space-y-3 pt-1">
+                <p className="text-base sm:text-lg text-[#293B32] leading-relaxed max-w-xl font-normal">
+                  ZeroIndex is where I bring together academic learning, structured roadmaps, career preparation, technology observations and personal writing.
+                </p>
 
-              <p className="text-sm sm:text-base text-[#5F6C64] leading-relaxed max-w-xl font-normal">
-                From undergraduate classroom notes in Digital Logic Design to structured computer systems roadmaps, interview preparation, and technical field notes.
-              </p>
+                <p className="text-sm sm:text-base text-[#5F6C64] leading-relaxed max-w-xl font-normal">
+                  A calm, clear space for students and independent learners to begin with clarity, explore ideas and move forward with direction.
+                </p>
+              </div>
             </div>
 
             {/* Primary & Secondary Actions */}
-            <div className="pt-2 flex flex-wrap items-center gap-4">
+            <div className="pt-2 flex flex-wrap items-center gap-3.5">
               <button
                 onClick={scrollToPillars}
-                className="px-7 py-3.5 rounded-xl bg-[#245B4B] hover:bg-[#28755E] text-white text-sm font-bold shadow-soft transition-all flex items-center gap-2 cursor-pointer group"
+                className="px-6 py-3 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white text-sm font-semibold shadow-soft hover:shadow-lift transition-all flex items-center gap-2 cursor-pointer group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] focus-visible:ring-offset-2"
               >
                 <span>Explore ZeroIndex</span>
                 <ArrowDown className="w-4 h-4 group-hover:translate-y-0.5 transition-transform" />
@@ -135,16 +130,10 @@ export const MainHome = ({
 
               <button
                 onClick={onOpenAboutModal}
-                className="px-5 py-3.5 rounded-xl bg-white hover:bg-[#F0F1EB] text-[#25352D] text-sm font-semibold border border-[#DDE2DA] shadow-2xs transition-colors cursor-pointer"
+                className="px-5 py-3 rounded-xl bg-white hover:bg-[#F3F1EC] text-[#293B32] text-sm font-semibold border border-[#DDE2DA] shadow-2xs transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] focus-visible:ring-offset-2"
               >
-                About this project
+                About ZeroIndex
               </button>
-            </div>
-
-            {/* Restrained Origin Subtitle */}
-            <div className="pt-2 text-xs font-technical text-[#69766D] flex items-center gap-2">
-              <span className="font-bold text-[#25352D]">[0]</span>
-              <span>Every meaningful learning journey in computing begins from index zero.</span>
             </div>
 
           </div>
@@ -167,32 +156,40 @@ export const MainHome = ({
         {/* Section Header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 pb-4 border-b border-[#DDE2DA] text-left">
           <div>
-            <span className="font-technical text-xs font-bold uppercase tracking-wider text-[#245B4B]">
+            <span className="font-technical text-xs font-bold uppercase tracking-wider text-[#285C49]">
               The Core Architecture
             </span>
-            <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-[#25352D] mt-1">
+            <h2 className="font-editorial text-3xl sm:text-4xl font-bold text-[#293B32] mt-1">
               Inside ZeroIndex
             </h2>
-            <p className="font-editorial italic text-base text-[#5F6C64] mt-1">
-              "Five sections, each built around a different kind of work."
-            </p>
           </div>
-          <span className="font-technical text-xs text-[#69766D]">
-            Select any section to enter its dedicated workspace
+          <span className="font-technical text-xs text-[#5F6C64]">
+            Choose a section to enter its workspace.
           </span>
         </div>
 
-        {/* 5 Pillar Cards: Row 1 has 3 cards, Row 2 has 2 wider cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+        {/* 5 Pillar Cards: Desktop arrangement: 
+            First row: Workbench, Atlas, Bridge (each lg:col-span-2)
+            Second row: Readout, Folio (each lg:col-span-3, equal-width balanced cards)
+        */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 text-left">
           
           {/* Card 01: The Workbench */}
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => onNavigate('workbench')}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#346C53] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNavigate('workbench');
+              }
+            }}
+            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#285C49] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#E0EBDF] text-[#346C53]">
+                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#DDEADD] text-[#285C49]">
                   01
                 </span>
                 <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
@@ -201,7 +198,7 @@ export const MainHome = ({
               </div>
 
               <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#346C53] transition-colors">
+                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#285C49] transition-colors">
                   {pillars[0].name}
                 </h3>
                 <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
@@ -210,7 +207,7 @@ export const MainHome = ({
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#346C53]">
+            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#285C49]">
               <span>{pillars[0].actionLabel}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
@@ -218,8 +215,16 @@ export const MainHome = ({
 
           {/* Card 02: The Atlas */}
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => onNavigate('atlas')}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#496D91] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNavigate('atlas');
+              }
+            }}
+            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#496D91] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#496D91]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -232,7 +237,7 @@ export const MainHome = ({
               </div>
 
               <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#496D91] transition-colors">
+                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#496D91] transition-colors">
                   {pillars[1].name}
                 </h3>
                 <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
@@ -249,12 +254,20 @@ export const MainHome = ({
 
           {/* Card 03: The Bridge */}
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => onNavigate('bridge')}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#956A43] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNavigate('bridge');
+              }
+            }}
+            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#C38A63] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-2 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C38A63]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F1E5D9] text-[#956A43]">
+                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F5EBE1] text-[#C38A63]">
                   03
                 </span>
                 <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
@@ -263,7 +276,7 @@ export const MainHome = ({
               </div>
 
               <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#956A43] transition-colors">
+                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#C38A63] transition-colors">
                   {pillars[2].name}
                 </h3>
                 <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
@@ -272,16 +285,24 @@ export const MainHome = ({
               </div>
             </div>
 
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#956A43]">
+            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#C38A63]">
               <span>{pillars[2].actionLabel}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </div>
           </div>
 
-          {/* Card 04: The Readout (Balanced Row 2) */}
+          {/* Card 04: The Readout (Balanced Row 2 - spans 3 cols on lg) */}
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => onNavigate('readout')}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#765C90] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group md:col-span-1 lg:col-span-1"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNavigate('readout');
+              }
+            }}
+            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#765C90] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#765C90]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -294,7 +315,7 @@ export const MainHome = ({
               </div>
 
               <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#765C90] transition-colors">
+                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#765C90] transition-colors">
                   {pillars[3].name}
                 </h3>
                 <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
@@ -309,14 +330,22 @@ export const MainHome = ({
             </div>
           </div>
 
-          {/* Card 05: The Folio (Balanced Row 2 - spans 2 cols on lg) */}
+          {/* Card 05: The Folio (Balanced Row 2 - spans 3 cols on lg) */}
           <div
+            role="button"
+            tabIndex={0}
             onClick={() => onNavigate('folio')}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#935F5D] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group md:col-span-1 lg:col-span-2"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onNavigate('folio');
+              }
+            }}
+            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#935F5D] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#935F5D]"
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F2E5E1] text-[#935F5D]">
+                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F3E6E3] text-[#935F5D]">
                   05
                 </span>
                 <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
@@ -325,10 +354,10 @@ export const MainHome = ({
               </div>
 
               <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#935F5D] transition-colors">
+                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#935F5D] transition-colors">
                   {pillars[4].name}
                 </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal max-w-xl">
+                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
                   {pillars[4].description}
                 </p>
               </div>
@@ -345,38 +374,57 @@ export const MainHome = ({
       </section>
 
       {/* =========================================================================
-          SECTION 3: SHORT AUTHOR & PROJECT NOTE
+          SECTION 3: WHY I BUILT ZEROINDEX
       ========================================================================= */}
-      <section className="max-w-4xl mx-auto p-8 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-left space-y-5">
-        <div className="flex items-start gap-4">
-          <ViitCrest className="w-10 h-10 flex-shrink-0 mt-1" />
-          <div className="space-y-1">
-            <h4 className="font-editorial text-xl font-bold text-[#25352D]">
-              A Note on ZeroIndex
-            </h4>
-            <p className="font-technical text-xs text-[#5F6C64]">
-              Curated by J. Siddartha Varma · Assistant Professor, Dept. of CSE (Data Science)
-            </p>
+      <section className="max-w-5xl mx-auto p-8 sm:p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-left">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+          
+          {/* Left Column: Approved Motivation Narrative (7 cols on lg) */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="space-y-1.5 border-b border-[#E5E8E1] pb-4">
+              <span className="font-technical text-xs font-semibold uppercase tracking-wider text-[#285C49]">
+                The Motivation
+              </span>
+              <h3 className="font-editorial text-2xl sm:text-3xl font-bold text-[#293B32]">
+                Why I built ZeroIndex
+              </h3>
+              <p className="font-technical text-xs text-[#5F6C64]">
+                Curated by J. Siddartha Varma
+              </p>
+            </div>
+
+            <div className="text-base text-[#293B32]/90 leading-relaxed space-y-4 font-normal">
+              <p>
+                I began building ZeroIndex in response to something I repeatedly noticed in technical education: many students do not struggle only because the subjects are difficult, but because the starting points are unclear, the pathways are fragmented, and the bigger picture is often missing.
+              </p>
+              <p>
+                ZeroIndex is my attempt to bring those pieces together. It is a space for academic foundations, structured learning paths, career preparation, technology writing and personal reflection, each in its own section, but all connected by a common intention: to help learners begin with clarity and move forward with direction.
+              </p>
+            </div>
+
+            <div className="pt-2 flex items-center justify-between text-xs font-technical">
+              <button
+                onClick={onOpenAboutModal}
+                className="text-[#285C49] font-semibold hover:text-[#1E4738] hover:underline cursor-pointer flex items-center gap-1.5 group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] rounded-md"
+              >
+                <span>Learn more about the platform</span>
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              </button>
+            </div>
           </div>
-        </div>
 
-        <div className="text-sm text-[#5F6C64] leading-relaxed space-y-3 font-normal">
-          <p>
-            I began building ZeroIndex as a response to a recurring pattern I witnessed in undergraduate technical education: students often feel lost not because engineering is impossibly hard, but because the prerequisites were left unstated.
-          </p>
-          <p>
-            Whether you are working through Boolean minimization in The Workbench, navigating structured study routes in The Atlas, preparing for your first technical interview in The Bridge, or reading through reflections in The Folio, my goal is to give every learner a quiet, clear, and dignified space to master ideas from index zero.
-          </p>
-        </div>
+          {/* Right Column: Final Motivation Artwork (5 cols on lg, below on mobile) */}
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <img
+              src="/zeroindex-motivation-journey.webp"
+              alt="Hand-drawn watercolor painting of stacked books with a growing seedling beside a winding trail leading toward snow-capped mountain peaks and morning sun"
+              width="2400"
+              height="1792"
+              className="w-full h-auto object-contain max-w-sm sm:max-w-md lg:max-w-none rounded-xl"
+              loading="lazy"
+            />
+          </div>
 
-        <div className="pt-3 border-t border-[#E6E8E1] flex flex-wrap items-center justify-between gap-3 text-xs font-technical text-[#69766D]">
-          <span>Vignan's Institute of Information Technology (Autonomous), Visakhapatnam</span>
-          <button
-            onClick={onOpenAboutModal}
-            className="text-[#245B4B] font-semibold hover:underline cursor-pointer"
-          >
-            Learn more about the platform →
-          </button>
         </div>
       </section>
 

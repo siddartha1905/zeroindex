@@ -4,6 +4,143 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-19: Final Homepage Artwork Integration
+
+- **Type**: visual / branding / artwork / production-assets
+- **Summary**: Integrated the user's finalized artwork and master brand emblem on development branch `homepage-refinement`:
+  1. **Final Motivation Artwork Integration**:
+     - Integrated `public/zeroindex-motivation-journey.webp` into the "Why I built ZeroIndex" section in `MainHome.jsx`.
+     - Preserved original 2400x1792 aspect ratio without distortion or cropping of the authentic deckled parchment edges.
+     - Removed temporary `MotivationIllustration.jsx` SVG drawing and avoided any heavy artificial borders.
+     - Positioned elegantly beside the motivation narrative on desktop (7-col text, 5-col artwork) and neatly stacked below narrative on mobile.
+     - Retained 100% of approved narrative copy unchanged.
+  2. **Final Botanical Brand Emblem Integration**:
+     - Processed the user's approved `zeroindex-logo.png` master asset to generate `public/zeroindex-brand-logo.png` (1165x1165 px) with genuine alpha transparency.
+     - Updated `ZeroIndexMark.jsx` to render this authentic botanical emblem across Site Header, Site Footer, and About Modal.
+     - Derived crisp production icons and favicons: `public/favicon-32x32.png`, `public/favicon.ico`, `public/icon-192.png`, and `public/icon-512.png`.
+     - Updated `index.html` and `public/manifest.json` to link the new brand mark icons.
+  3. **Verification and Preservation**:
+     - Confirmed all previously agreed refinements (hero label removed, hero headline retained, author name centered/prominent, Vignan logo affiliation only, official install URL, no exaggerated offline claims).
+     - Successfully built production bundle with `npm run build` (0 errors).
+     - Verified all 4 automated mathematical suites (163 checks passed, 0 failures).
+     - Verified 0 em-dashes and 0 en-dashes across all source and memory files.
+- **Affected Files**:
+  * `src/components/MainHome.jsx`
+  * `src/components/ZeroIndexMark.jsx`
+  * `src/components/MotivationIllustration.jsx` (removed)
+  * `public/zeroindex-brand-logo.png` (created)
+  * `public/zeroindex-motivation-journey.webp` (copied)
+  * `public/favicon-32x32.png` (generated)
+  * `public/favicon.ico` (generated)
+  * `public/icon-192.png` (regenerated)
+  * `public/icon-512.png` (regenerated)
+  * `public/manifest.json`
+  * `index.html`
+- **Tests Performed**:
+  * `npm run build`: Success, 0 errors, 3,380 modules transformed in 3.56s.
+  * `verifyUnit1Math.mjs`: 44 passed, 0 failed.
+  * `verifySection15Math.mjs`: 35 passed, 0 failed.
+  * `verifySection17.mjs`: 50 passed, 0 failed.
+  * `verifyInteractiveSolvers.mjs`: 34 passed, 0 failed.
+  * Dash compliance check: 0 em-dashes, 0 en-dashes.
+- **Deployment State**: Staged on development branch `homepage-refinement`. Not merged to `main` and not deployed to production.
+
+---
+
+## 2026-10-19: Homepage Refinement Round 2
+
+- **Type**: visual / branding / layout / artwork / fixes
+- **Summary**: Implemented focused Round 2 refinements on development branch `homepage-refinement`:
+  1. **Hero Label Removal**:
+     - Completely removed the green pill label ("Five sections. One framework.") above the hero headline.
+     - Kept headline exactly as "A place to begin, and many directions to go." with balanced vertical spacing.
+     - Preserved all approved hero descriptions and buttons.
+  2. **Install App Modal URL & Copy Correction**:
+     - Corrected stale `zeroindex.edu` address across Android (Chrome) and iPhone (Safari) instructions to the official website: `https://zeroindex-sigma.vercel.app/`.
+     - Also corrected stale references in `AcademicsHub.jsx` and updated `manifest.json`.
+     - Replaced exaggerated offline claims with the preferred subtitle: "Add ZeroIndex to your home screen for quick, app-like access."
+  3. **Author and Affiliation Card Redesign**:
+     - Centered and enlarged author name `J. Siddartha Varma` in `SiteFooter.jsx`.
+     - Prominently displayed academic titles: Assistant Professor, Department of CSE (Data Science).
+     - Created a clearly distinguished institutional affiliation area underneath with small `ViitCrest` placed solely beside the institution name (`Vignan's Institute of Information Technology (Autonomous), Visakhapatnam`).
+  4. **Original Hand-drawn Artwork ("Why I built ZeroIndex")**:
+     - Created and integrated `MotivationIllustration.jsx` original vector SVG artwork.
+     - Features a scholarly stack of books and open notebook, a winding path leading through rolling foothills to snow-capped mountain peaks, a soft morning sun, an organic budding plant, a tiny solitary traveler, and the subtle caption "From index zero to what's next."
+     - Integrated in a balanced 2-column layout on desktop (7 cols text, 5 cols artwork) and natural vertical stacking on mobile.
+  5. **Symmetrical Botanical Brand Emblem**:
+     - Refined `ZeroIndexMark.jsx` and `public/icon.svg` into an organic symmetrical emblem representing "One origin. Many directions. Continuous growth."
+     - Features an origin node `[0]` with warm copper catalyst seed, central upward growth stem, and five balanced radiating branches in forest green (`#285C49`), sage (`#8EA89D`), and copper (`#C38A63`).
+     - Added SVG favicon link to `index.html`.
+  6. **Strict Content Preservation**:
+     - 100% preservation of DLD Unit 1 teaching content, mathematical formulas, and 5 interactive solvers.
+- **Affected Files**:
+  * `src/components/MainHome.jsx`
+  * `src/components/MotivationIllustration.jsx` (created)
+  * `src/components/ZeroIndexMark.jsx`
+  * `src/components/SiteFooter.jsx`
+  * `src/components/InstallModal.jsx`
+  * `src/components/AcademicsHub.jsx`
+  * `public/icon.svg`
+  * `public/manifest.json`
+  * `index.html`
+- **Verification Performed**:
+  * Production build: `npm run build` succeeded in 5.34s (3,381 modules, 0 errors).
+  * 4 mathematical verification suites: 163/163 passed (100% accuracy).
+  * Dash constraint audit: 0 em-dashes and 0 en-dashes across all modified/new files.
+- **Release State**: Completed on `homepage-refinement` branch; ready for preview.
+
+---
+
+## 2026-10-19: Homepage Visual Refinement and Brand Identity
+
+- **Type**: visual / branding / layout / accessibility
+- **Summary**: Implemented focused visual, brand identity, and layout refinements across the ZeroIndex homepage on development branch `homepage-refinement`:
+  1. **Brand Identity & Minimalist Mark**:
+     - Created `ZeroIndexMark.jsx` minimalist SVG mark inspired by origin index zero `[0]` and the 5 branching pathways of the Knowledge Tree.
+     - Removed the "Educational Publication" subtitle in `SiteHeader.jsx`, presenting "ZeroIndex" cleanly.
+     - Integrated `ZeroIndexMark` into header, footer, and `AboutModal.jsx`.
+  2. **Hero Section Refinement**:
+     - Retained headline "A place to begin, and many directions to go." with balanced responsive text wrapping.
+     - Replaced badge with subtle "Five sections. One framework." pill badge.
+     - Replaced previous italic quote and DLD-specific copy with approved primary and supporting body copy.
+     - Retained hero buttons "Explore ZeroIndex" and "About ZeroIndex" with working smooth-scroll and modal actions.
+  3. **Interactive Knowledge Tree**:
+     - Preserved original branching geometry, coordinates, and 5 destination nodes.
+     - Replaced helper text with "Select a branch to preview its destination."
+     - Added keyboard accessibility (`tabIndex={0}`, `role="button"`, Enter/Space activation) and focus states.
+  4. **Inside ZeroIndex 5-Card Layout**:
+     - Arranged into balanced 6-column grid: Row 1 has 3 cards (`lg:col-span-2`), Row 2 has 2 equal-width cards (`lg:col-span-3`).
+     - Applied exact approved descriptions across all 5 pillar cards.
+     - Section helper text updated to "Choose a section to enter its workspace."
+  5. **Why I Built ZeroIndex Section**:
+     - Renamed from "A Note on ZeroIndex".
+     - Removed institutional logo from author block.
+     - Applied approved two-paragraph narrative with "Curated by J. Siddartha Varma" and "Learn more about the platform" trigger.
+  6. **Footer Refinement**:
+     - Structured into 3 balanced columns: Col 1 (ZeroIndex mark, name, tagline, description); Col 2 (Explore 5 pillars); Col 3 (Author and affiliation with small `ViitCrest` restricted to institution name).
+     - Simplified bottom line to "© 2026 ZeroIndex". Removed curriculum versions and redundant metadata.
+  7. **Sunlit Editorial Design Tokens**:
+     - Harmonized color tokens with Sunlit Editorial palette: `#FBF8F2` warm ivory background, `#FFFFFF` cards, `#285C49` primary green, `#DDEADD` supporting sage, `#C38A63` warm accent, `#293B32` primary text.
+  8. **Strict Preservation**:
+     - 100% preservation of DLD Unit 1 academic content, mathematical calculations, and 5 interactive solvers.
+- **Affected Files**:
+  * `src/components/ZeroIndexMark.jsx` (created)
+  * `src/components/MainHome.jsx`
+  * `src/components/SiteHeader.jsx`
+  * `src/components/SiteFooter.jsx`
+  * `src/components/KnowledgeTreeIllustration.jsx`
+  * `src/components/AboutModal.jsx`
+  * `src/App.jsx`
+  * `src/theme/pastelTheme.js`
+  * `index.html`
+- **Verification Performed**:
+  * Production build: `npm run build` succeeded in 3.31s (3,380 modules, 0 errors).
+  * 4 mathematical verification suites: 163/163 passed (100% accuracy).
+  * Dash constraint audit: 0 em-dashes and 0 en-dashes across all modified/new files.
+- **Release State**: Completed on `homepage-refinement` branch; ready for preview.
+
+---
+
 ## 2026-10-19: Foundation Development Sprint Production Release
 
 - **Type**: release

@@ -4,7 +4,7 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **54**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **55**
 - Verification script names discovered: **4**
 
 ## Selected declared dependencies
@@ -65,6 +65,7 @@
 - `src/components/UnitWorkspace.jsx`
 - `src/components/ViitCrest.jsx`
 - `src/components/WorkbenchLanding.jsx`
+- `src/components/ZeroIndexMark.jsx`
 - `src/components/ZeroIndexSideWings.jsx`
 - `src/data/atlasRoadmapsConfig.js`
 - `src/data/bridgePlacementConfig.js`

@@ -172,12 +172,12 @@ export function App() {
 
   return (
     <ConfigProvider theme={antdThemeConfig}>
-      <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] font-sans flex flex-col justify-between selection:bg-[#28755E]/15 selection:text-[#245B4B]">
+      <div className="min-h-screen bg-[#FBF8F2] text-[#293B32] font-sans flex flex-col justify-between selection:bg-[#285C49]/15 selection:text-[#285C49]">
         
         {/* Accessible Keyboard Skip to Main Content Link */}
         <a 
           href="#main-content" 
-          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#245B4B] focus:text-white focus:rounded-lg focus:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#28755E] text-xs font-technical font-semibold"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:px-4 focus:py-2 focus:bg-[#285C49] focus:text-white focus:rounded-lg focus:shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#285C49] text-xs font-technical font-semibold"
         >
           Skip to main content
         </a>

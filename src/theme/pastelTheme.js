@@ -4,19 +4,19 @@
  */
 
 export const pastelThemeTokens = {
-  // Brand color palette (Part 4)
-  creamBg: '#F7F5EF',        // Main paper background
+  // Brand color palette - Sunlit Editorial Refinement
+  creamBg: '#FBF8F2',        // Warm ivory background
   softWhite: '#FFFFFF',      // Primary surface
-  sageTint: '#F0F1EB',       // Secondary surface
+  sageTint: '#F4F3ED',       // Secondary surface
   sageBorder: '#DDE2DA',     // Soft paper border
-  sagePrimary: '#245B4B',    // Primary brand green
-  sageHover: '#28755E',      // Interactive green
-  sageLight: '#E0EBDF',      // Light workbench accent
+  sagePrimary: '#285C49',    // Primary brand green
+  sageHover: '#1E4738',      // Interactive green
+  sageLight: '#DDEADD',      // Supporting sage accent
   indigoAccent: '#496D91',   // Muted atlas blue accent
   indigoLight: '#E1EAF2',    // Blue tint
-  amberBadge: '#B77B59',     // Warm accent
-  amberLight: '#F1E5D9',     // Bridge tint
-  technicalSlate: '#25352D', // Primary ink
+  amberBadge: '#C38A63',     // Warm accent
+  amberLight: '#F5EBE1',     // Bridge tint
+  technicalSlate: '#293B32', // Primary dark text
   slateMuted: '#5F6C64',     // Secondary text
   slateBorder: '#DDE2DA',    // Border
 };
