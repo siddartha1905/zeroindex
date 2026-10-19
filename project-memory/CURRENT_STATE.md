@@ -17,10 +17,10 @@
 | The Workbench (Pillar 1) | Active / Functional | Houses Digital Logic Design subject, Unit 1 workspace, 5 interactive solvers, and 110+ question Practice Arena. |
 | The Atlas (Pillar 2) | Structural landing corrected | `src/components/AtlasLanding.jsx` active. Unsupported course completion claims removed; framed honestly as curriculum roadmap outlines and planned learning pathways. |
 | The Bridge (Pillar 3) | Structural landing corrected | `src/components/BridgeLanding.jsx` active. Unsupported question counts removed; framed honestly as placement and interview preparation outlines. |
-| The Readout (Pillar 4) | Corrected (Phase 1A) | `src/components/ReadoutLanding.jsx` active. Three unapproved sample articles removed from public views and safely preserved in `unpublished-archive/readout-articles-archive.json`. Displays tasteful empty state ("Articles are being prepared."). |
-| The Folio (Pillar 5) | Corrected (Phase 1A) | `src/components/FolioLanding.jsx` active. Three unapproved sample essays removed from public views and safely preserved in `unpublished-archive/folio-essays-archive.json`. Displays tasteful empty state ("Writing will appear here soon."). |
+| The Readout (Pillar 4) | Corrected (Phase 1A) | `src/components/ReadoutLanding.jsx` active. Three unapproved sample articles removed from public views and safely preserved in `unpublished-archive/readout-articles-archive.json`. Displays tasteful empty state ("Articles are being prepared." with neutral availability text; no status badges). |
+| The Folio (Pillar 5) | Corrected (Phase 1A) | `src/components/FolioLanding.jsx` active. Three unapproved sample essays removed from public views and safely preserved in `unpublished-archive/folio-essays-archive.json`. Displays tasteful empty state ("Writing will appear here soon." with neutral availability text; no status badges). |
 | DLD Unit 1 Curriculum | Available; pending final academic review | All 7 sections (1.1 to 1.7) fully populated in `src/data/dldUnit1Master.js` and section modules. Audited in `handover_md/DLD_UNIT_1_TECHNICAL_AND_ACADEMIC_AUDIT.md`. |
-| DLD Units 2 to 5 | Planned (in development) | Marked honestly as planned units in `src/data/dldAvailabilityConfig.js` and workspace UI. No false completion claims. |
+| DLD Units 2 to 5 | Planned | Publication status set to "Planned" across `src/data/dldAvailabilityConfig.js` and workspace UI. Not described as in development until work begins. |
 | DLD Resource Links | Corrected (Phase 1A) | Overleaf destinations completely eliminated. Centralized Google Drive configuration (`src/data/dldResourceConfig.js`) established with status "Material link will be added soon." Non-clickable until verified links supplied. |
 | Navigation and Routing | Active; enhancements planned | Hash-based navigation in `src/App.jsx`. Deep-linking history and back/forward polish scheduled for Phase 1B. |
 
@@ -32,13 +32,15 @@ The codebase has undergone automated execution and verification:
 
 1. **Production Build**:
    * Command: `npm run build`
-   * Result: 3,375 modules transformed, `dist/` bundle created in 3.68s, 0 errors. Unpublished archive verified absent from distribution bundle.
+   * Result: 3,375 modules transformed, `dist/` bundle created in 3.35s, 0 errors. Unpublished archive verified absent from distribution bundle.
 
 2. **Automated Verification Suites (163 checks passed, 0 failures)**:
    * `scripts/verifyUnit1Math.mjs`: 44 passed, 0 failed (Arithmetic, radix, and base conversions).
    * `scripts/verifySection15Math.mjs`: 35 passed, 0 failed (Decimal/binary complements and subtraction traps).
    * `scripts/verifySection17.mjs`: 50 passed, 0 failed (Logic gates, switches, waveforms, and master matrix).
    * `scripts/verifyInteractiveSolvers.mjs`: 34 passed, 0 failed (5 engineering solver engines and UI elements).
+
+> **Qualification on Academic Correctness**: Automated tests verify specific mathematical algorithms, conversions, truth tables, and complement arithmetic. Passing these tests does not constitute exhaustive academic approval of all instructional content, which remains subject to comprehensive faculty review.
 
 ---
 

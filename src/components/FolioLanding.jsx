@@ -146,12 +146,9 @@ export const FolioLanding = ({ onNavigateHome }) => {
                 Personal essays, pedagogical reflections, and intellectual notes will be published here upon author review.
               </p>
             </div>
-            <div className="pt-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#DDE2DA] text-xs font-technical text-[#935F5D]">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <span>Manuscripts In Preparation</span>
-              </span>
-            </div>
+            <p className="text-xs text-[#5F6C64] font-technical">
+              Essays will be published here as they become available.
+            </p>
           </div>
         )}
 

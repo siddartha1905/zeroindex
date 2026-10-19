@@ -42,7 +42,7 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'units',
       title: 'Course Units (1-5)',
-      description: 'Unit 1 available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units in development.',
+      description: 'Unit 1 available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.',
       icon: Layers,
       badge: 'Unit 1 Available',
       badgeColor: 'bg-[#2E6F40]/10 text-[#2E6F40] border border-[#2E6F40]/20',

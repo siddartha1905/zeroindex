@@ -176,12 +176,9 @@ export const ReadoutLanding = ({ onNavigateHome }) => {
                 Technical publications, architectural monographs, and computing dispatches are currently in editorial preparation and review.
               </p>
             </div>
-            <div className="pt-2">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#DDE2DA] text-xs font-technical text-[#765C90]">
-                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
-                <span>Editorial Queue Active</span>
-              </span>
-            </div>
+            <p className="text-xs text-[#5F6C64] font-technical">
+              Articles will be published here as they become available.
+            </p>
           </div>
         )}
 

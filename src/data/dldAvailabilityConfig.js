@@ -7,7 +7,7 @@ export const dldAvailabilityConfig = {
   courseCode: "1005261102",
   subjectTitle: "Digital Logic Design",
   regulation: "VR23 / Autonomous",
-  subjectAvailabilityText: "Unit 1 available. Additional units in development.",
+  subjectAvailabilityText: "Unit 1 available. Additional units planned.",
   overallStatus: "Unit 1 Live",
   
   units: [
@@ -28,7 +28,7 @@ export const dldAvailabilityConfig = {
       title: "Boolean Algebra & Gate-Level Minimization",
       status: "planned",
       label: "Planned",
-      sublabel: "In development",
+      sublabel: "Planned",
       totalSections: 6,
       completedSections: 0,
       isLive: false
@@ -39,7 +39,7 @@ export const dldAvailabilityConfig = {
       title: "Combinational Logic Design",
       status: "planned",
       label: "Planned",
-      sublabel: "In development",
+      sublabel: "Planned",
       totalSections: 7,
       completedSections: 0,
       isLive: false
@@ -50,7 +50,7 @@ export const dldAvailabilityConfig = {
       title: "Synchronous Sequential Logic & Flip-Flops",
       status: "planned",
       label: "Planned",
-      sublabel: "In development",
+      sublabel: "Planned",
       totalSections: 6,
       completedSections: 0,
       isLive: false
@@ -61,7 +61,7 @@ export const dldAvailabilityConfig = {
       title: "Registers, Counters & Memory Systems",
       status: "planned",
       label: "Planned",
-      sublabel: "In development",
+      sublabel: "Planned",
       totalSections: 7,
       completedSections: 0,
       isLive: false

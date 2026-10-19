@@ -205,7 +205,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
-                      Unit {currentUnitData?.unitNumber} · Planned (In Development)
+                      Unit {currentUnitData?.unitNumber} · Planned
                     </span>
                     <span className="text-xs text-[#64748B] font-mono">{currentUnitData?.hours}</span>
                   </div>
@@ -219,7 +219,7 @@ export const DldWorkspace = ({ onBackToDldHome, initialTab = 'units' }) => {
                   <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
                     <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 Available</h4>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are currently in active development according to the curriculum blueprint.
+                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
                     </p>
                   </div>
 
