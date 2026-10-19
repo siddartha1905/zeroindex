@@ -9,7 +9,6 @@ import {
   FileText
 } from 'lucide-react';
 import { KnowledgeTreeIllustration } from './KnowledgeTreeIllustration';
-import { MotivationIllustration } from './MotivationIllustration';
 
 export const MainHome = ({ 
   onNavigate, 
@@ -414,9 +413,16 @@ export const MainHome = ({
             </div>
           </div>
 
-          {/* Right Column: Original Hand-drawn Artwork (5 cols on lg, below on mobile) */}
-          <div className="lg:col-span-5 flex justify-center">
-            <MotivationIllustration className="w-full max-w-sm sm:max-w-md" />
+          {/* Right Column: Final Motivation Artwork (5 cols on lg, below on mobile) */}
+          <div className="lg:col-span-5 flex justify-center items-center">
+            <img
+              src="/zeroindex-motivation-journey.webp"
+              alt="Hand-drawn watercolor painting of stacked books with a growing seedling beside a winding trail leading toward snow-capped mountain peaks and morning sun"
+              width="2400"
+              height="1792"
+              className="w-full h-auto object-contain max-w-sm sm:max-w-md lg:max-w-none rounded-xl"
+              loading="lazy"
+            />
           </div>
 
         </div>

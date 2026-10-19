@@ -106,6 +106,12 @@ Record important architectural, design, and academic decisions with their date, 
 - **Rationale**: Direct response to user review in Homepage Refinement Round 2. Solves visual composition balance, ensures correct installation guidance, and establishes a memorable, mature brand emblem.
 - **Consequences**: No broken or stale domains remain in user-facing modals. 100% preservation of academic content and navigation.
 
+## D-014 | 2026-10-19 | Final Homepage Artwork and Master Botanical Logo Integration
+
+- **Decision**: (1) Replace temporary vector SVG illustrations with the authentic master watercolor painting `zeroindex-motivation-journey.webp` in the "Why I built ZeroIndex" section, preserving its natural proportions without heavy borders or deckled-edge cropping; (2) Process the finalized master botanical logo asset `zeroindex-logo.png` to create a high-fidelity transparent background version `public/zeroindex-brand-logo.png` and update `ZeroIndexMark.jsx` to render this exact approved emblem across header, footer, and modals; (3) Generate production-grade favicons (`favicon-32x32.png`, `favicon.ico`) and PWA icons (`icon-192.png`, `icon-512.png`) derived directly from the approved botanical brand mark; (4) Retain 100% of previously verified copy, layout rules, zero-dash compliance, and DLD mathematical engines.
+- **Rationale**: Direct response to user directive concluding visual refinements. Replaces interim programmatic drawings with the user's authentic finalized artwork assets.
+- **Consequences**: Eliminates synthetic SVG drawings of the logo and motivation scene. All platforms (desktop, mobile, PWA, favicons) display the authentic visual brand assets.
+
 ---
 
 ## Decision Record Template

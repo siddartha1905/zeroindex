@@ -4,7 +4,7 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **56**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **55**
 - Verification script names discovered: **4**
 
 ## Selected declared dependencies
@@ -47,7 +47,6 @@
 - `src/components/InteractiveSolvers.jsx`
 - `src/components/KnowledgeTreeIllustration.jsx`
 - `src/components/MainHome.jsx`
-- `src/components/MotivationIllustration.jsx`
 - `src/components/Navbar.jsx`
 - `src/components/PortalLanding.jsx`
 - `src/components/PracticeArena.jsx`
