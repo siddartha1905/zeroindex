@@ -125,7 +125,7 @@ export const SiteFooter = ({ onNavigate, onOpenAboutModal }) => {
         {/* Bottom Bar: Clean Copyright & Colophon */}
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#69766D] text-center sm:text-left">
           <p>
-            © {new Date().getFullYear()} ZeroIndex. Designed as an independent academic publication.
+            © {new Date().getFullYear()} ZeroIndex · Version 2.0. Designed as an independent academic publication.
           </p>
           <div className="flex items-center gap-4 text-[11px] font-technical">
             <span>Autonomous Curriculum VR23</span>
