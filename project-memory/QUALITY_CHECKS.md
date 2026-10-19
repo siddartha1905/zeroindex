@@ -26,6 +26,21 @@ node scripts/verifyInteractiveSolvers.mjs
 node scripts/generateProjectSnapshot.mjs
 ```
 
+### Verified Test Run: DLD Unit 2 Phase 1 (2026-10-19)
+
+| Test Script / Build | Scope | Result | Details |
+|---|---|---|---|
+| `npm run build` | Vite 6 Production Bundle | **PASS** | 3,382 modules transformed in 5.36s; 0 errors; clean production bundle |
+| `verifySection21Math.mjs` | Unit 2 Section 2.1 Rigorous Math Audit | **PASS** | 22/22 checks passed (Postulates 4a/4b, identity, complements, evaluation, duality, zero-dash) |
+| `verifyUnit1Math.mjs` | DLD Radix & Number Systems | **PASS** | 44/44 checks passed (100% accuracy) |
+| `verifySection15Math.mjs` | Complements & Subtraction | **PASS** | 35/35 checks passed (100% accuracy) |
+| `verifySection17.mjs` | 7-Gate Logic Explorer & Waves | **PASS** | 50/50 checks passed (100% accuracy) |
+| `verifyInteractiveSolvers.mjs` | 5 Interactive Solvers Suite | **PASS** | 34/34 checks passed (100% accuracy) |
+| Dash Constraint Check | Em-dash & En-dash Scan | **PASS** | 0 em-dashes, 0 en-dashes across all files in repository |
+| Syllabus Alignment | VR23 Course Code 1005261102 | **PASS** | 13 official topics mapped 1-to-1 to 7 sequential sections |
+
+---
+
 ### Verified Test Run: Final Homepage Artwork Integration (2026-10-19)
 
 | Test Script / Build | Scope | Result | Details |

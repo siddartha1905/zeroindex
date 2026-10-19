@@ -12,7 +12,9 @@ import { dldSyllabus } from '../data/dldSyllabus';
 import { dldAvailabilityConfig } from '../data/dldAvailabilityConfig';
 import { dldUnit1 } from '../data/dldUnit1';
 import { dldUnit1Master } from '../data/dldUnit1Master';
+import { dldUnit2Master } from '../data/dldUnit2Master';
 import { UnitWorkspace } from './UnitWorkspace';
+import { Section21View } from './Section21View';
 import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
@@ -162,7 +164,14 @@ export const DldWorkspace = ({
                     return (
                       <div key={unit.unitNumber} className="space-y-1">
                         <button
-                          onClick={() => setActiveUnit(unit.unitNumber)}
+                          onClick={() => {
+                            setActiveUnit(unit.unitNumber);
+                            if (unit.unitNumber === 1 && !activeSubModuleId.startsWith('1.')) {
+                              handleSubModuleChange('1.1');
+                            } else if (unit.unitNumber === 2 && !activeSubModuleId.startsWith('2.')) {
+                              handleSubModuleChange('2.1');
+                            }
+                          }}
                           className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left text-xs transition-all ${
                             isSelected 
                               ? 'bg-[#2E6F40] text-white font-semibold shadow-sm' 
@@ -178,9 +187,11 @@ export const DldWorkspace = ({
                           <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase ml-1 flex-shrink-0 ${
                             isUnit1
                               ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
-                              : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
+                              : unit.unitNumber === 2
+                                ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#92400E]')
+                                : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {isUnit1 ? 'Available' : 'Planned'}
+                            {isUnit1 ? 'Available' : (unit.unitNumber === 2 ? 'In Development' : 'Planned')}
                           </span>
                         </button>
 
@@ -188,6 +199,32 @@ export const DldWorkspace = ({
                         {isUnit1 && activeUnit === 1 && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
                             {dldUnit1.subModules.map((sub) => {
+                              const isSubActive = activeSubModuleId === sub.id;
+                              return (
+                                <button
+                                  key={sub.id}
+                                  onClick={() => handleSubModuleChange(sub.id)}
+                                  className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
+                                    isSubActive
+                                      ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
+                                      : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
+                                  }`}
+                                >
+                                  <span className="truncate">
+                                    <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
+                                    {sub.title}
+                                  </span>
+                                  {isSubActive && <ChevronRight className="w-3 h-3 flex-shrink-0 text-[#2E6F40]" />}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Unit 2 Nested Sub-Modules */}
+                        {unit.unitNumber === 2 && activeUnit === 2 && (
+                          <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
+                            {dldUnit2Master.sections.map((sub) => {
                               const isSubActive = activeSubModuleId === sub.id;
                               return (
                                 <button
@@ -249,8 +286,48 @@ export const DldWorkspace = ({
                     }} 
                   />
                 )
+              ) : activeUnit === 2 ? (
+                activeSubModuleId === '2.1' ? (
+                  <Section21View section={dldUnit2Master.sections[0]} />
+                ) : (
+                  (() => {
+                    const sec = dldUnit2Master.sections.find(s => s.id === activeSubModuleId) || dldUnit2Master.sections[0];
+                    return (
+                      <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold uppercase text-[#92400E] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
+                            Section {sec.number} · Planned
+                          </span>
+                          <span className="text-xs text-[#64748B] font-mono">{sec.estimatedReadTime}</span>
+                        </div>
+
+                        <div>
+                          <span className="text-xs font-mono text-[#64748B]">UNIT-II · Boolean Algebra & Gate-Level Minimization</span>
+                          <h2 className="text-2xl font-bold text-[#1E293B] mt-1">{sec.title}</h2>
+                          <p className="text-xs text-[#475569] mt-2 leading-relaxed">{sec.summary}</p>
+                        </div>
+
+                        <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
+                          <h4 className="text-xs font-bold text-[#2E6F40]">Phase 1 In Progress</h4>
+                          <p className="text-xs text-[#64748B] mt-0.5">
+                            Section 2.1 is available to study on this development branch. Section {sec.number} is planned for upcoming development phases according to the curriculum blueprint.
+                          </p>
+                        </div>
+
+                        <div className="pt-2">
+                          <button
+                            onClick={() => handleSubModuleChange('2.1')}
+                            className="px-4 py-2 rounded-lg bg-[#2E6F40] text-white text-xs font-semibold hover:bg-[#255A34] transition-colors"
+                          >
+                            ← Study Section 2.1 (Axiomatic Foundations)
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })()
+                )
               ) : (
-                /* Units 2-5 Preview Card */
+                /* Units 3-5 Preview Card */
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">

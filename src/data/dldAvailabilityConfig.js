@@ -26,11 +26,11 @@ export const dldAvailabilityConfig = {
       unitNumber: 2,
       roman: "UNIT II",
       title: "Boolean Algebra & Gate-Level Minimization",
-      status: "planned",
-      label: "Planned",
-      sublabel: "Planned",
-      totalSections: 6,
-      completedSections: 0,
+      status: "in-development",
+      label: "In Development",
+      sublabel: "Phase 1: Academic Foundation & First Lesson",
+      totalSections: 7,
+      completedSections: 1,
       isLive: false
     },
     {

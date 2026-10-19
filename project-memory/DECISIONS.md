@@ -112,6 +112,12 @@ Record important architectural, design, and academic decisions with their date, 
 - **Rationale**: Direct response to user directive concluding visual refinements. Replaces interim programmatic drawings with the user's authentic finalized artwork assets.
 - **Consequences**: Eliminates synthetic SVG drawings of the logo and motivation scene. All platforms (desktop, mobile, PWA, favicons) display the authentic visual brand assets.
 
+## D-015 | 2026-10-19 | DLD Unit 2 Syllabus Architecture and Phased Academic Sequence
+
+- **Decision**: (1) Extract the exact prescribed VR23 university syllabus for Unit 2 (13 topics) and organize into a 7-section pedagogical architecture: 2.1 Concept of Boolean Algebra & Huntington Postulates; 2.2 Basic Theorems & Algebraic Simplification; 2.3 Boolean Functions & Gate Realization; 2.4 Canonical & Standard Forms (Minterms & Maxterms); 2.5 The Map Method (2 & 3 Variable K-Maps); 2.6 Four-Variable K-Maps, Don't-Care Conditions & Prime Implicants; 2.7 Universal Gate Realization (NAND/NOR) & XOR Implementation; (2) Keep Unit 2 unpublished (`isLive: false`, status: "in-development") until verified and approved; (3) Develop Section 2.1 first as a complete foundational lesson with 6 Huntington postulates, 4 worked models, 5 misconceptions, and 6 practice problems; (4) Defer complete interactive K-Map solver development to Phase 4.
+- **Rationale**: Strict adherence to the official university syllabus prevents curriculum drift or missing exam competencies. Incremental phased delivery ensures each section matches the high pedagogical quality of Unit 1.
+- **Consequences**: Unit 2 sidebar navigation is available for development testing on `dld-unit2-phase1`. Section 2.1 is fully interactive. Automated tests in `verifySection21Math.mjs` guarantee mathematical accuracy.
+
 ---
 
 ## Decision Record Template

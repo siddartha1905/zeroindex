@@ -27,7 +27,8 @@
 | The Readout (Pillar 4) | Functional Infrastructure | Editorial article publishing infrastructure (`src/data/readoutArticlesConfig.js`, `src/components/ReadoutLanding.jsx`) with clean empty state. 0 unapproved articles bundled. 100% preserved. |
 | The Folio (Pillar 5) | Functional Infrastructure | Personal writing publishing infrastructure (`src/data/folioEssaysConfig.js`, `src/components/FolioLanding.jsx`) with clean author desk empty state. 0 unapproved essays bundled. 100% preserved. |
 | DLD Unit 1 Curriculum | Available; verified | All 7 sections (1.1 to 1.7) fully populated in `src/data/dldUnit1Master.js` and section modules. Audited with 163/163 automated test checks passing. |
-| DLD Units 2 to 5 | Planned | Publication status set to "Planned" across `src/data/dldAvailabilityConfig.js` and workspace UI. |
+| DLD Unit 2 Curriculum | In Development (Phase 1) | 7-section curriculum architecture defined from official VR23 syllabus. Section 2.1 (Concept of Boolean Algebra, Huntington Postulates & Axiomatic Foundations) fully developed with 6 postulates, 4 worked models, 5 misconceptions, and 6 practice problems. Audited with 22/22 checks passing in `verifySection21Math.mjs`. Kept unpublished (`isLive: false`) per agreement. |
+| DLD Units 3 to 5 | Planned | Publication status set to "Planned" across `src/data/dldAvailabilityConfig.js` and workspace UI. |
 | Navigation and Routing | Active / Enhanced | Dual-listener hash routing in `src/App.jsx` listening to `hashchange` and `popstate`. Supports deep-linking for all 5 pillars and workspace sub-routes. |
 
 ---
@@ -38,13 +39,14 @@ The codebase has undergone automated execution and verification:
 
 1. **Production Build**:
    * Command: `npm run build`
-   * Result: 3,381 modules transformed, `dist/` bundle created in 5.34s, 0 errors. Unpublished archives verified absent from distribution bundle.
+   * Result: 3,382 modules transformed, `dist/` bundle created in 5.36s, 0 errors. Unpublished archives verified absent from distribution bundle.
 
-2. **Automated Verification Suites (163 checks passed, 0 failures)**:
+2. **Automated Verification Suites (185 checks passed, 0 failures)**:
    * `scripts/verifyUnit1Math.mjs`: 44 passed, 0 failed (Arithmetic, radix, and base conversions).
    * `scripts/verifySection15Math.mjs`: 35 passed, 0 failed (Decimal/binary complements and subtraction traps).
    * `scripts/verifySection17.mjs`: 50 passed, 0 failed (Logic gates, switches, waveforms, and master matrix).
    * `scripts/verifyInteractiveSolvers.mjs`: 34 passed, 0 failed (5 engineering solver engines and UI elements).
+   * `scripts/verifySection21Math.mjs`: 22 passed, 0 failed (Postulates 4a/4b perfect induction, identity, complements, evaluation, and duality).
 
 3. **Dash Compliance Verification**:
    * 0 em-dashes and 0 en-dashes verified across all created and modified source files.
@@ -55,6 +57,7 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Homepage Visual Refinements and Final Artwork Integration merged to `main` and deployed to production.
-* **Immediate Next Action**: Commence Phase 2 / Phase 3: DLD Unit 2 (Boolean Algebra and Logic Simplification / K-Maps).
-* **Downstream Progression**: Phase 2 (DLD Unit 1 deep review) -> Phase 3 (DLD Unit 2 Boolean & K-Maps) -> Phase 4 (DLD Units 3 to 5).
+* **Current Stage**: DLD Unit 2 Phase 1 (Academic Foundation & First Lesson) complete on development branch `dld-unit2-phase1`.
+* **Immediate Next Action**: Review Phase 1 deliverables, then proceed with Phase 2 (Section 2.2 Theorems, Properties & Algebraic Simplification; Section 2.3 Boolean Functions & Gate Realization).
+* **Downstream Progression**: Phase 1 (Syllabus & 2.1) -> Phase 2 (2.2 Theorems & 2.3 Functions) -> Phase 3 (2.4 Canonical Forms) -> Phase 4 (2.5 & 2.6 K-Maps) -> Phase 5 (2.7 Universal Logic).
+

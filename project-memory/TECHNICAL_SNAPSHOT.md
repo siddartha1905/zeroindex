@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **55**
-- Verification script names discovered: **4**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **57**
+- Verification script names discovered: **5**
 
 ## Selected declared dependencies
 
@@ -29,6 +29,7 @@
 - `scripts/verifyInteractiveSolvers.mjs`
 - `scripts/verifySection15Math.mjs`
 - `scripts/verifySection17.mjs`
+- `scripts/verifySection21Math.mjs`
 - `scripts/verifyUnit1Math.mjs`
 
 ## Source file inventory
@@ -58,6 +59,7 @@
 - `src/components/Section16View.jsx`
 - `src/components/Section17Components.jsx`
 - `src/components/Section17View.jsx`
+- `src/components/Section21View.jsx`
 - `src/components/SiteFooter.jsx`
 - `src/components/SiteHeader.jsx`
 - `src/components/SolversHub.jsx`
@@ -79,6 +81,7 @@
 - `src/data/dldSyllabus.js`
 - `src/data/dldUnit1.js`
 - `src/data/dldUnit1Master.js`
+- `src/data/dldUnit2Master.js`
 - `src/data/folioEssaysConfig.js`
 - `src/data/portalConfig.js`
 - `src/data/readoutArticlesConfig.js`
