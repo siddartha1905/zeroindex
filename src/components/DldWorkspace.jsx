@@ -391,7 +391,7 @@ export const DldWorkspace = ({
                       : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
                   }`}
                 >
-                  Unit 1 Solvers (Conversions & Gates)
+                  Unit I Solvers (Number Systems & Gates)
                 </button>
                 <button
                   onClick={() => setSolversUnit(2)}
@@ -401,7 +401,7 @@ export const DldWorkspace = ({
                       : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
                   }`}
                 >
-                  Unit 2 Solvers (Boolean, K-Maps, NAND/NOR)
+                  Unit II Solvers (Boolean Algebra & K-Maps)
                 </button>
               </div>
             </div>

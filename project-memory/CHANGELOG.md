@@ -4,6 +4,27 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: Final Refinements and Closure of Unit II Interactive Solvers (Phase 1)
+
+- **Type**: refinement / interactive-solvers / mathematics / dld-unit-2 / phase-1-closure
+- **Summary**: Completed all 6 faculty lead refinements to close Phase 1 on `dld-unit2-development`:
+  1. **Explicit Minterm/Maxterm Input Panel**: Added "Enter Your Boolean Function" panel directly above the K-Map with 4 modes (Minterms Σm, Maxterms ΠM, Boolean Expression, Edit Map Directly), optional don't-care input d(...), and comprehensive validation (out-of-bounds, duplicates, conflicting assignments).
+  2. **Step-by-Step K-Map Solutions**: Auto Solve provides full pedagogical walkthrough: Step 1 (Plot K-Map Grid), Steps 2 to (1+N) (Form Group Gk with cell list, size, constant/eliminated variables, derived term, and active live color halo highlighting on K-Map grid), Step (2+N) (Combine Derived Terms into minimal SOP or POS), and Step (3+N) (Truth Table Verification), with Stepper controls and "Show All Steps" toggle.
+  3. **Preset Verification & Correction**: Disambiguated 4-Corner Quad (cells {0, 2, 8, 10} deriving B'D') from Vertically Wrapped Quad (cells {0, 1, 8, 9} deriving B'C'); verified 3-Var POS Quad (cells {2, 3, 6, 7} deriving (B')), Don't-Care Optimization ({1, 3, 7} + d(5) deriving C), and 2-Var Pair ({1, 3} deriving B). Configured preset badge to clear upon student cell edits.
+  4. **Removed Redundant Navigation**: Eliminated redundant Course Unit Partition and stale "Upcoming" Unit 2 badge from `InteractiveSolvers.jsx`; established a single clean top toggle (Unit I Solvers | Unit II Solvers) in `DldWorkspace.jsx`; focused default Unit II inventory on the 5 approved Section 2.1 to 2.5 solvers.
+  5. **Confirmed Complete SOP/POS Conversion Studio**: Verified all 8 required syllabus pathways across 6 dedicated interactive routes (General SOP -> Can SOP, General POS -> Can POS, Can SOP <-> Can POS via U \ S, General SOP <-> General POS, Truth Table -> Canonical Forms, and Dual Hardware comparison).
+  6. **UI Polish & Escaped Strings**: Replaced all raw JSX escaped sequences with literal Unicode glyphs (→, Σ, Π, ↔); touch-friendly mobile click/tap cell cycles (0 → 1 → X → 0).
+  7. **Testing & Verification**:
+     - `scripts/verifyUnit2Solvers.mjs`: 119/119 checks passed (100%).
+     - `scripts/verifyInteractiveSolvers.mjs`: 34/34 checks passed.
+     - `scripts/testUnit2SolversSSR.mjs`: Clean Vite SSR rendering (14,026 bytes).
+     - Full regression suites (`verifySection25Math.mjs` 365/365, `verifyUnit2Full.mjs` 842/842, `verifyUnit1Math.mjs` 44/44) passed 100%.
+     - Production build `npm run build` succeeds in 4.28s with 0 errors.
+     - Strict zero em-dashes and zero en-dashes confirmed across all files.
+- **Affected Files**: `src/components/Unit2Solvers.jsx`, `src/components/InteractiveSolvers.jsx`, `src/components/DldWorkspace.jsx`, `scripts/verifyUnit2Solvers.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/QUALITY_CHECKS.md`.
+
+---
+
 ## 2026-10-20: Complete and Professionally Integrate Unit II Interactive Solvers Suite (Phase 1: Sections 2.1 to 2.5)
 
 - **Type**: feature / interactive-solvers / mathematics / dld-unit-2

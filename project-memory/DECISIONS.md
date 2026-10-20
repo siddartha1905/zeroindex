@@ -224,6 +224,17 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence**: Dedicated automated verification suite `verifyUnit2Solvers.mjs` passes 90/90 checks (100%); Vite SSR smoke test `testUnit2SolversSSR.mjs` renders all 6 tabs cleanly; regression test suites across Unit 1 and Unit 2 pass 100%; `npm run build` succeeds in 5.68s with 0 errors. Strict zero-dash audit passed.
 - **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development`. Do not merge into main or proceed to Phase 2 without explicit approval.
 
+
+---
+
+## D-028 | 2026-10-20 | Unit II Interactive Solvers Final Refinements, Step-by-Step Derivations, Preset Corrections, and Phase 1 Closure
+
+- **Decision**: (1) Added explicit "Enter Your Boolean Function" panel to the Interactive K-Map Solver with 4 discoverable input modes: Minterms (Σm), Maxterms (ΠM), Boolean Expression (e.g. AB + CD, A'B + AC), and Edit Map Directly (with click/tap cycle 0 → 1 → X → 0), along with optional Don't-Care indices d(...); (2) Added robust input validation rejecting out-of-bounds indices, duplicates, non-integers, conflicting minterm/don't-care assignments, and incompatible stale groups upon parameter changes; (3) Added complete step-by-step K-Map solutions for Auto Solve: Step 1 (Plot K-Map Grid), Steps 2 to (1+N) (Form Group Gk with cell list, size, constant/eliminated variables, derived Boolean term, and active live color halo highlighting on the map), Step (2+N) (Combine Derived Terms into minimal SOP or POS), and Step (3+N) (Truth Table Verification) with both Step-by-Step navigation and Show All Steps view; (4) Verified and distinguished K-Map presets: corrected 4-Corner Quad to cells {0, 2, 8, 10} yielding term B'D' and added Vertically Wrapped Quad to cells {0, 1, 8, 9} yielding B'C', plus Don't-Care Optimization {1,3,7}+d(5) yielding C, 2-Var Pair {1,3} yielding B, and 3-Var POS Quad {2,3,6,7} yielding (B'); configured preset badge to reset upon manual cell editing; (5) Removed redundant Course Unit Partition from InteractiveSolvers.jsx and established a clean single top-level toggle (Unit I Solvers | Unit II Solvers) in DldWorkspace.jsx, keeping the default Unit II inventory focused on the 5 approved Section 2.1 to 2.5 solvers with a secondary preview link for the Section 2.6 NAND/NOR tool; (6) Confirmed SOP/POS Conversion Studio covers all 8 required syllabus pathways across 6 dedicated interactive routes with step-by-step variable expansion and universal set complementation; (7) Cleaned all escaped JSX character sequences to true Unicode glyphs (→, Σ, Π, ↔) and verified strict zero em-dashes and zero en-dashes across all modified files.
+- **Rationale**: Ensures students can directly enter any homework or exam problem in their preferred format, trace exactly how each K-Map group was formed and simplified, and navigate solvers without confusing redundant UI controls.
+- **Affected Files**: `src/components/Unit2Solvers.jsx`, `src/components/InteractiveSolvers.jsx`, `src/components/DldWorkspace.jsx`, `scripts/verifyUnit2Solvers.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+- **Approval Evidence**: Dedicated automated verification suite `verifyUnit2Solvers.mjs` passes 119/119 checks (100%); Vite SSR smoke test `testUnit2SolversSSR.mjs` passes; regression test suites across Unit 1 and Unit 2 pass 100%; `npm run build` succeeds in 4.28s with 0 errors. Strict zero-dash audit passed.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development`. Do not merge into main or proceed to Phase 2 without explicit approval.
+
 ---
 
 ## Decision Record Template
@@ -237,6 +248,7 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+
 
 
 

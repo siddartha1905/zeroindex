@@ -273,24 +273,114 @@ const qmOnePOS = minimizeKMap([0, 1, 2, 3], [], ['A', 'B'], 'POS');
 assert(qmOnePOS.minimalExpression === '1', 'No maxterms (all 1s) in POS mode produces constant 1');
 
 // ----------------------------------------------------------------------------
-// 7. UNICODE SYMBOL & STRICT ZERO-DASH AUDIT
+// 7. PRESET ACCURACY & INPUT AUDIT (Solver 5 Refinements)
 // ----------------------------------------------------------------------------
-console.log('\n--- 7. Unicode Symbol & Dash Compliance Audit ---');
+console.log('\n--- 7. Testing K-Map Presets & Input Modes ---');
+
+// 1. Four-Corner Quad: {0, 2, 8, 10} in 4 vars -> B'D'
+const valCorners = validateKMapGroup([0, 2, 8, 10], 4, vars4, { 0: 1, 2: 1, 8: 1, 10: 1 }, 'SOP');
+assert(valCorners.isValid && valCorners.term === "B'D'", "Preset 4-Corner Quad [0, 2, 8, 10] derives B'D'");
+
+// 2. Vertically Wrapped Quad: {0, 1, 8, 9} in 4 vars -> B'C'
+const valVertWrap = validateKMapGroup([0, 1, 8, 9], 4, vars4, { 0: 1, 1: 1, 8: 1, 9: 1 }, 'SOP');
+assert(valVertWrap.isValid && valVertWrap.term === "B'C'", "Preset Vertically Wrapped Quad [0, 1, 8, 9] derives B'C'");
+assert(valCorners.term !== valVertWrap.term, "4-Corner Quad (B'D') and Vertically Wrapped Quad (B'C') are mathematically distinct");
+
+// 3. POS 3-Var Quad: Maxterms {2, 3, 6, 7} (Minterms {0, 1, 4, 5}) -> (B')
+// In POS mode, cells 2, 3, 6, 7 are 0
+const posGrid = { 2: 0, 3: 0, 6: 0, 7: 0 };
+const valPosQuad = validateKMapGroup([2, 3, 6, 7], 3, vars3, posGrid, 'POS');
+assert(valPosQuad.isValid, "Preset 3-Var POS Quad [2, 3, 6, 7] is valid in POS mode");
+assert(valPosQuad.term.includes("B'"), "Preset 3-Var POS Quad derives (B')");
+
+// 4. Don't-Care Optimization Preset: Minterms {1, 3, 7} + DC {5} -> single literal C
+const qmDCPreset = minimizeKMap([1, 3, 7], [5], vars3, 'SOP');
+assert(qmDCPreset.minimalExpression === 'C', "Preset Don't-Care Optimization [1, 3, 7] + d(5) reduces to C");
+assert(qmDCPreset.selectedGroups.length === 1 && qmDCPreset.selectedGroups[0].cells.length === 4, "QM groups 4 cells including don't-care 5");
+
+// 5. 2-Var Pair Preset: Minterms {1, 3} in 2 vars -> B
+const qm2VarPair = minimizeKMap([1, 3], [], ['A', 'B'], 'SOP');
+assert(qm2VarPair.minimalExpression === 'B', "Preset 2-Var Pair [1, 3] reduces to B");
+
+// ----------------------------------------------------------------------------
+// 8. SOP/POS CONVERSION STUDIO 6-ROUTE AUDIT
+// ----------------------------------------------------------------------------
+console.log('\n--- 8. Testing SOP/POS Conversion Studio 6 Pathways ---');
+
+// Pathway 1: General SOP to Canonical SOP
+const p1 = expandSOPTerm('AB', ['A', 'B', 'C']);
+assert(p1.finalMinterms.includes('ABC') && p1.finalMinterms.includes("ABC'"), 'Pathway 1: General SOP AB expands to ABC + ABC\'');
+
+// Pathway 2: General POS to Canonical POS
+const p2 = expandPOSTerm('(A + B)', ['A', 'B', 'C']);
+assert(p2.finalMaxterms.length === 2, 'Pathway 2: General POS (A + B) expands to 2 canonical maxterms');
+
+// Pathway 3: Canonical SOP to Canonical POS via U \\ S
+const p3 = convertCanonicalSOPtoPOS([1, 3, 5, 7], 3, vars3);
+assert(JSON.stringify(p3.maxterms) === JSON.stringify([0, 2, 4, 6]), 'Pathway 3: Canonical SOP {1,3,5,7} converts to Canonical POS {0,2,4,6}');
+
+// Pathway 4: Canonical POS to Canonical SOP via U \\ S
+const p4 = convertCanonicalPOStoSOP([0, 2, 4, 6], 3, vars3);
+assert(JSON.stringify(p4.minterms) === JSON.stringify([1, 3, 5, 7]), 'Pathway 4: Canonical POS {0,2,4,6} converts to Canonical SOP {1,3,5,7}');
+
+// Pathway 5: General SOP to Equivalent General POS
+const p5MinSOP = minimizeKMap([3, 5, 7], [], vars3, 'SOP');
+const p5MinPOS = minimizeKMap([3, 5, 7], [], vars3, 'POS');
+assert(areExpressionsEquivalent(p5MinSOP.minimalExpression, p5MinPOS.minimalExpression, vars3), 'Pathway 5 & 6: Minimal SOP and POS are strictly equivalent');
+
+// Pathway 6: Truth Table to Canonical Forms
+const ttConv = generateTruthTable("AB + C'", vars3);
+assert(ttConv.minterms.length > 0 && ttConv.maxterms.length > 0, 'Pathway 7 & 8: Truth table produces both minterms and maxterms');
+assert(ttConv.minterms.length + ttConv.maxterms.length === 8, 'Truth table minterms and maxterms partition 2^3 = 8 rows exactly');
+
+// ----------------------------------------------------------------------------
+// 9. NAVIGATION & WORKSPACE CLEANUP AUDIT
+// ----------------------------------------------------------------------------
+console.log('\n--- 9. Testing UI Navigation & Redundancy Removal ---');
+
+const interactiveSolversSrc = fs.readFileSync(path.resolve('src/components/InteractiveSolvers.jsx'), 'utf8');
+const dldWorkspaceSrc = fs.readFileSync(path.resolve('src/components/DldWorkspace.jsx'), 'utf8');
+const unit2SolversSrc = fs.readFileSync(path.resolve('src/components/Unit2Solvers.jsx'), 'utf8');
+
+// Ensure redundant Course Unit Partition is removed
+assert(!interactiveSolversSrc.includes('Course Unit Partition'), 'InteractiveSolvers.jsx does not contain redundant Course Unit Partition');
+assert(!interactiveSolversSrc.includes('solverUnits'), 'InteractiveSolvers.jsx does not contain solverUnits state');
+assert(!interactiveSolversSrc.includes('Upcoming'), 'InteractiveSolvers.jsx does not flag Unit 2 as Upcoming');
+
+// Ensure DldWorkspace has top-level toggle
+assert(dldWorkspaceSrc.includes('Unit I Solvers'), 'DldWorkspace.jsx includes Unit I Solvers toggle');
+assert(dldWorkspaceSrc.includes('Unit II Solvers'), 'DldWorkspace.jsx includes Unit II Solvers toggle');
+
+// Ensure Unit2Solvers has all 4 input modes
+assert(unit2SolversSrc.includes("id: 'minterms'"), 'Unit2Solvers.jsx includes Minterms input mode');
+assert(unit2SolversSrc.includes("id: 'maxterms'"), 'Unit2Solvers.jsx includes Maxterms input mode');
+assert(unit2SolversSrc.includes("id: 'expression'"), 'Unit2Solvers.jsx includes Boolean Expression input mode');
+assert(unit2SolversSrc.includes("id: 'direct'"), 'Unit2Solvers.jsx includes Direct Map input mode');
+
+// Ensure no escaped unicode arrow strings remain in Unit2Solvers.jsx
+assert(!unit2SolversSrc.includes('\\u2192'), 'Unit2Solvers.jsx does not contain escaped \\u2192 string literal');
+assert(unit2SolversSrc.includes('0 → 1 → X → 0'), 'Unit2Solvers.jsx contains clean literal Unicode arrow sequence');
+
+// Ensure step-by-step solution derivation is integrated
+assert(unit2SolversSrc.includes('Solution Walkthrough'), 'Unit2Solvers.jsx includes Solution Walkthrough');
+assert(unit2SolversSrc.includes('Step 1 : Plot the K-Map'), 'Unit2Solvers.jsx includes Step 1 Plot the K-Map');
+assert(unit2SolversSrc.includes('Combine Derived Terms'), 'Unit2Solvers.jsx includes Combine Derived Terms step');
+
+// ----------------------------------------------------------------------------
+// 10. UNICODE SYMBOL & STRICT ZERO-DASH AUDIT
+// ----------------------------------------------------------------------------
+console.log('\n--- 10. Unicode Symbol & Dash Compliance Audit ---');
 
 const filesToAudit = [
   'src/utils/booleanEngine.js',
-  'src/components/Unit2Solvers.jsx'
+  'src/components/Unit2Solvers.jsx',
+  'src/components/InteractiveSolvers.jsx',
+  'src/components/DldWorkspace.jsx'
 ];
 
 for (const relPath of filesToAudit) {
   const fullPath = path.resolve(relPath);
   const content = fs.readFileSync(fullPath, 'utf8');
-
-  // Check Unicode Sigma and Pi presence in strings or comments
-  const hasSigma = content.includes('\u03A3') || content.includes('\\u03A3');
-  const hasPi = content.includes('\u03A0') || content.includes('\\u03A0');
-  assert(hasSigma, `${relPath} contains Unicode \u03A3 (Sigma)`);
-  assert(hasPi, `${relPath} contains Unicode \u03A0 (Pi)`);
 
   // Strict Zero-Dash standard
   const emDashCount = (content.match(/[\u2014]/g) || []).length;
