@@ -51,6 +51,15 @@ export const dldVideoRegistry = {
     embedUrl: "https://www.youtube-nocookie.com/embed/k04ksfLBuak",
     duration: "14 min",
     topic: "Simplification of Boolean Expressions Using Algebraic Laws"
+  },
+  "canonical-forms": {
+    id: "Km5pTz67uGc",
+    title: "Minimal to Canonical Form Conversion (Part 1)",
+    publisher: "Neso Academy",
+    url: "https://www.youtube.com/watch?v=Km5pTz67uGc",
+    embedUrl: "https://www.youtube-nocookie.com/embed/Km5pTz67uGc",
+    duration: "10 min",
+    topic: "Canonical and Standard Forms: Minterm and Maxterm Expansion"
   }
 };
 
