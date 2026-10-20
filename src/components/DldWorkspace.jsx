@@ -43,8 +43,11 @@ export const DldWorkspace = ({
   initialSubModuleId = '1.1' 
 }) => {
   const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
-  const [activeUnit, setActiveUnit] = useState(1);
   const [activeSubModuleId, setActiveSubModuleId] = useState(initialSubModuleId || '1.1');
+  const [activeUnit, setActiveUnit] = useState(() => {
+    const unitNum = parseInt((initialSubModuleId || '1.1').split('.')[0], 10);
+    return !isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 ? unitNum : 1;
+  });
   const [solversUnit, setSolversUnit] = useState(1);
 
   // Synchronize state when props update via browser navigation or hashchange
@@ -75,13 +78,21 @@ export const DldWorkspace = ({
 
   const handleSubModuleChange = (subId) => {
     setActiveSubModuleId(subId);
+    const unitNum = parseInt(subId.split('.')[0], 10);
+    if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5) {
+      setActiveUnit(unitNum);
+    }
     const newHash = `workspace/units/${subId}`;
     if (window.location.hash !== `#${newHash}`) {
       window.history.pushState(null, '', `#${newHash}`);
     }
   };
 
-  const currentUnitData = dldSyllabus.units.find(u => u.unitNumber === activeUnit);
+  const effectiveUnit = activeSubModuleId?.startsWith('2.') 
+    ? 2 
+    : (activeSubModuleId?.startsWith('1.') ? 1 : activeUnit);
+
+  const currentUnitData = dldSyllabus.units.find(u => u.unitNumber === effectiveUnit) || dldSyllabus.units.find(u => u.unitNumber === activeUnit);
 
   // Retrieve rich master content if available, else fallback
   const masterSection = dldUnit1Master.sections.find(s => s.id === activeSubModuleId);
@@ -166,7 +177,7 @@ export const DldWorkspace = ({
 
                 <div className="space-y-1.5">
                   {dldSyllabus.units.map((unit) => {
-                    const isSelected = activeUnit === unit.unitNumber;
+                    const isSelected = effectiveUnit === unit.unitNumber;
                     const isUnit1 = unit.unitNumber === 1;
 
                     return (
@@ -177,7 +188,7 @@ export const DldWorkspace = ({
                             if (unit.unitNumber === 1 && !activeSubModuleId.startsWith('1.')) {
                               handleSubModuleChange('1.1');
                             } else if (unit.unitNumber === 2 && !activeSubModuleId.startsWith('2.')) {
-                              handleSubModuleChange('2.1');
+                              handleSubModuleChange('2.2');
                             }
                           }}
                           className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left text-xs transition-all ${
@@ -204,7 +215,7 @@ export const DldWorkspace = ({
                         </button>
 
                         {/* Unit 1 Nested Sub-Modules */}
-                        {isUnit1 && activeUnit === 1 && (
+                        {isUnit1 && effectiveUnit === 1 && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
                             {dldUnit1.subModules.map((sub) => {
                               const isSubActive = activeSubModuleId === sub.id;
@@ -230,7 +241,7 @@ export const DldWorkspace = ({
                         )}
 
                         {/* Unit 2 Nested Sub-Modules */}
-                        {unit.unitNumber === 2 && activeUnit === 2 && (
+                        {unit.unitNumber === 2 && effectiveUnit === 2 && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
                             {dldUnit2Master.sections.map((sub) => {
                               const isSubActive = activeSubModuleId === sub.id;
@@ -273,7 +284,7 @@ export const DldWorkspace = ({
 
             {/* Center / Right Column: Comprehensive Topic Notes (9 cols) */}
             <section className="lg:col-span-9 space-y-6">
-              {activeUnit === 1 ? (
+              {effectiveUnit === 1 ? (
                 masterSection ? (
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
@@ -294,7 +305,7 @@ export const DldWorkspace = ({
                     }} 
                   />
                 )
-              ) : activeUnit === 2 ? (
+              ) : effectiveUnit === 2 ? (
                 activeSubModuleId === '2.1' ? (
                   <Section21View section={dldUnit2Master.sections[0]} />
                 ) : activeSubModuleId === '2.2' ? (
@@ -310,7 +321,7 @@ export const DldWorkspace = ({
                 ) : activeSubModuleId === '2.7' ? (
                   <Section27View section={dldUnit2Master.sections[6]} />
                 ) : (
-                  <Section21View section={dldUnit2Master.sections[0]} />
+                  <Section22View section={dldUnit2Master.sections[1]} />
                 )
               ) : (
                 /* Units 3-5 Preview Card */
