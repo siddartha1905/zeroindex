@@ -247,7 +247,7 @@ export const Section22View = ({ section }) => {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[#FCD9BD] text-center font-mono text-lg font-bold text-[#293B32]">
+                <div className="p-3 bg-white rounded-xl border border-[#FCD9BD] text-center font-mono text-lg font-bold text-[#293B32] whitespace-nowrap overflow-x-auto">
                   {data.startHere.objectiveDemo.comparison.before.expression}
                 </div>
 
@@ -268,7 +268,7 @@ export const Section22View = ({ section }) => {
                   </span>
                 </div>
 
-                <div className="p-3 bg-white rounded-xl border border-[#BDE8CA] text-center font-mono text-lg font-bold text-[#285C49]">
+                <div className="p-3 bg-white rounded-xl border border-[#BDE8CA] text-center font-mono text-lg font-bold text-[#285C49] whitespace-nowrap overflow-x-auto">
                   {data.startHere.objectiveDemo.comparison.after.expression}
                 </div>
 
@@ -301,9 +301,9 @@ export const Section22View = ({ section }) => {
                       <th className="p-2.5">A</th>
                       <th className="p-2.5">B</th>
                       <th className="p-2.5">AB</th>
-                      <th className="p-2.5 text-[#C05621] font-bold">F = A + AB</th>
-                      <th className="p-2.5 text-[#285C49] font-bold">F = A</th>
-                      <th className="p-2.5 text-[#285C49]">Match</th>
+                      <th className="p-2.5 text-[#C05621] font-bold whitespace-nowrap">F = A + AB</th>
+                      <th className="p-2.5 text-[#285C49] font-bold whitespace-nowrap">F = A</th>
+                      <th className="p-2.5 text-[#285C49] whitespace-nowrap">Match</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DCE7E1] bg-white text-[#293B32]">
@@ -490,7 +490,7 @@ export const Section22View = ({ section }) => {
                       <span className="font-mono text-xs font-bold text-[#285C49]">
                         {l.name}
                       </span>
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-white border border-[#DCE7E1] text-[#293B32]">
+                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-white border border-[#DCE7E1] text-[#293B32] whitespace-nowrap shadow-2xs">
                         {l.formula}
                       </span>
                     </div>
@@ -498,7 +498,7 @@ export const Section22View = ({ section }) => {
                       {l.explanation}
                     </p>
                     <div className="pt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono border-t border-[#DCE7E1]/50 text-[#5F6C64]">
-                      <span>Example: <strong className="text-[#293B32]">{l.example}</strong></span>
+                      <span>Example: <strong className="text-[#293B32] whitespace-nowrap">{l.example}</strong></span>
                       <span className="text-[#285C49]">Tip: {l.recognitionTip}</span>
                     </div>
                   </div>
@@ -527,7 +527,7 @@ export const Section22View = ({ section }) => {
                       <span className="font-mono text-xs font-bold text-[#285C49]">
                         {l.name}
                       </span>
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-white border border-[#DCE7E1] text-[#293B32]">
+                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded bg-white border border-[#DCE7E1] text-[#293B32] whitespace-nowrap shadow-2xs">
                         {l.formula}
                       </span>
                     </div>
@@ -535,7 +535,7 @@ export const Section22View = ({ section }) => {
                       {l.explanation}
                     </p>
                     <div className="pt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono border-t border-[#DCE7E1]/50 text-[#5F6C64]">
-                      <span>Example: <strong className="text-[#293B32]">{l.example}</strong></span>
+                      <span>Example: <strong className="text-[#293B32] whitespace-nowrap">{l.example}</strong></span>
                       <span className="text-[#285C49]">Tip: {l.recognitionTip}</span>
                     </div>
                   </div>
@@ -551,21 +551,33 @@ export const Section22View = ({ section }) => {
               {data.techniques.dualitySummary.headline}
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs font-mono text-[#293B32]">
-              <div className="p-2 rounded bg-white border border-[#DCE7E1]">
-                <span className="text-[#5F6C64] block text-[10px]">OR Identity:</span>
-                {data.techniques.dualitySummary.orIdentity}
+              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[#5F6C64] block text-[10px] uppercase font-bold tracking-wider">OR Identity</span>
+                <div className="font-bold text-[#285C49] whitespace-nowrap bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#DCE7E1] text-center">
+                  A + 0 = A
+                </div>
+                <span className="text-[11px] text-[#5F6C64] block">0 preserves OR</span>
               </div>
-              <div className="p-2 rounded bg-white border border-[#DCE7E1]">
-                <span className="text-[#5F6C64] block text-[10px]">AND Identity:</span>
-                {data.techniques.dualitySummary.andIdentity}
+              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[#5F6C64] block text-[10px] uppercase font-bold tracking-wider">AND Identity</span>
+                <div className="font-bold text-[#285C49] whitespace-nowrap bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#DCE7E1] text-center">
+                  A · 1 = A
+                </div>
+                <span className="text-[11px] text-[#5F6C64] block">1 preserves AND</span>
               </div>
-              <div className="p-2 rounded bg-white border border-[#DCE7E1]">
-                <span className="text-[#5F6C64] block text-[10px]">OR Domination:</span>
-                {data.techniques.dualitySummary.orDominant}
+              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[#5F6C64] block text-[10px] uppercase font-bold tracking-wider">OR Domination</span>
+                <div className="font-bold text-[#285C49] whitespace-nowrap bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#DCE7E1] text-center">
+                  A + 1 = 1
+                </div>
+                <span className="text-[11px] text-[#5F6C64] block">1 dominates OR</span>
               </div>
-              <div className="p-2 rounded bg-white border border-[#DCE7E1]">
-                <span className="text-[#5F6C64] block text-[10px]">AND Domination:</span>
-                {data.techniques.dualitySummary.andDominant}
+              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] space-y-1">
+                <span className="text-[#5F6C64] block text-[10px] uppercase font-bold tracking-wider">AND Domination</span>
+                <div className="font-bold text-[#285C49] whitespace-nowrap bg-[#FAF8F5] px-2 py-0.5 rounded border border-[#DCE7E1] text-center">
+                  A · 0 = 0
+                </div>
+                <span className="text-[11px] text-[#5F6C64] block">0 dominates AND</span>
               </div>
             </div>
             <p className="text-xs text-[#5F6C64] italic pt-1">
@@ -595,7 +607,7 @@ export const Section22View = ({ section }) => {
                 <div key={tech.number} className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#EBF3ED] text-[#285C49]">
+                      <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-md bg-[#1E4537] text-white shadow-2xs tracking-wide">
                         Technique {tech.number}
                       </span>
                       <span className="font-mono text-xs text-[#5F6C64]">
@@ -607,7 +619,7 @@ export const Section22View = ({ section }) => {
                       {tech.name}
                     </h4>
 
-                    <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-center font-mono text-xs font-bold text-[#285C49]">
+                    <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-center font-mono text-xs font-bold text-[#285C49] whitespace-nowrap overflow-x-auto">
                       {tech.formula}
                     </div>
 
@@ -618,17 +630,23 @@ export const Section22View = ({ section }) => {
 
                     <div className="p-2.5 rounded-lg bg-white/70 border border-[#DCE7E1]/60 text-xs font-mono text-[#293B32] space-y-1">
                       <span className="text-[10px] text-[#5F6C64] uppercase tracking-wider block">Worked Application:</span>
-                      <div>{tech.example}</div>
+                      <div className="overflow-x-auto whitespace-nowrap">{tech.example}</div>
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-[#DCE7E1] space-y-1 text-[11px]">
+                  <div className="pt-2 border-t border-[#DCE7E1] space-y-2 text-[11px]">
                     <div className="text-[#285C49]">
                       <strong>When to Apply: </strong>{tech.whenToApply}
                     </div>
                     {tech.mistake && (
-                      <div className="text-[#C05621]">
-                        <strong>Watch Out: </strong>{tech.mistake}
+                      <div className="p-2.5 rounded-lg bg-[#FFF5F5] border border-[#FED7D7] text-xs text-[#9B2C2C] space-y-1">
+                        <div className="flex items-center gap-1.5 font-bold text-[#C53030]">
+                          <AlertTriangle className="w-3.5 h-3.5 flex-shrink-0" />
+                          <span>Watch Out (Strict Prohibition):</span>
+                        </div>
+                        <p className="leading-relaxed text-[11px] text-[#742A2A]">
+                          {tech.mistake.replace(/^Watch Out:\s*/i, '')}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -780,7 +798,7 @@ export const Section22View = ({ section }) => {
                         <span className="text-[10px] uppercase tracking-wider text-[#5F6C64] block">
                           Original Expression:
                         </span>
-                        <span className="text-sm sm:text-base font-bold text-[#293B32] break-all">
+                        <span className="text-sm sm:text-base font-bold text-[#293B32] whitespace-nowrap overflow-x-auto">
                           {model.originalExpression}
                         </span>
                       </div>
@@ -789,7 +807,7 @@ export const Section22View = ({ section }) => {
                           <span className="text-[10px] uppercase tracking-wider text-[#5F6C64] block">
                             Target Result:
                           </span>
-                          <span className="text-sm sm:text-base font-bold text-[#285C49] break-all">
+                          <span className="text-sm sm:text-base font-bold text-[#285C49] whitespace-nowrap">
                             {model.finalAnswer}
                           </span>
                         </div>
@@ -838,7 +856,7 @@ export const Section22View = ({ section }) => {
                                 </span>
                               </div>
 
-                              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] font-mono text-sm sm:text-base font-bold text-[#293B32] break-all">
+                              <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] font-mono text-sm sm:text-base font-bold text-[#293B32] overflow-x-auto whitespace-nowrap">
                                 {st.expr}
                               </div>
 
@@ -859,7 +877,7 @@ export const Section22View = ({ section }) => {
                             <span className="font-mono text-xs text-[#285C49] font-bold block">
                               Final Verified Equivalent Expression
                             </span>
-                            <span className="font-mono text-base font-bold text-[#285C49]">
+                            <span className="font-mono text-base font-bold text-[#285C49] whitespace-nowrap">
                               {model.finalAnswer}
                             </span>
                           </div>
@@ -975,8 +993,8 @@ export const Section22View = ({ section }) => {
                   <tbody className="divide-y divide-[#DCE7E1] bg-white">
                     {data.cheatSheet.orLawsTable.map((row, idx) => (
                       <tr key={idx} className="hover:bg-[#FAF8F5]">
-                        <td className="p-2.5 font-bold text-[#285C49]">{row.name}</td>
-                        <td className="p-2.5 font-bold text-[#293B32]">{row.formula}</td>
+                        <td className="p-2.5 font-bold text-[#285C49] whitespace-nowrap">{row.name}</td>
+                        <td className="p-2.5 font-bold text-[#293B32] whitespace-nowrap">{row.formula}</td>
                         <td className="p-2.5 text-[#5F6C64] font-sans text-[11px]">{row.meaning}</td>
                       </tr>
                     ))}
@@ -1002,8 +1020,8 @@ export const Section22View = ({ section }) => {
                   <tbody className="divide-y divide-[#DCE7E1] bg-white">
                     {data.cheatSheet.andLawsTable.map((row, idx) => (
                       <tr key={idx} className="hover:bg-[#FAF8F5]">
-                        <td className="p-2.5 font-bold text-[#285C49]">{row.name}</td>
-                        <td className="p-2.5 font-bold text-[#293B32]">{row.formula}</td>
+                        <td className="p-2.5 font-bold text-[#285C49] whitespace-nowrap">{row.name}</td>
+                        <td className="p-2.5 font-bold text-[#293B32] whitespace-nowrap">{row.formula}</td>
                         <td className="p-2.5 text-[#5F6C64] font-sans text-[11px]">{row.meaning}</td>
                       </tr>
                     ))}
@@ -1036,9 +1054,9 @@ export const Section22View = ({ section }) => {
                 <tbody className="divide-y divide-[#DCE7E1] bg-white text-[#293B32]">
                   {data.cheatSheet.patternRecognition.map((pt, idx) => (
                     <tr key={idx} className="hover:bg-[#FAF8F5]">
-                      <td className="p-3 font-bold text-[#C05621]">{pt.trigger}</td>
-                      <td className="p-3 text-[#285C49] font-bold">{pt.law}</td>
-                      <td className="p-3 font-bold">{pt.result}</td>
+                      <td className="p-3 font-bold text-[#C05621] whitespace-nowrap">{pt.trigger}</td>
+                      <td className="p-3 text-[#285C49] font-bold whitespace-nowrap">{pt.law}</td>
+                      <td className="p-3 font-bold whitespace-nowrap">{pt.result}</td>
                       <td className="p-3 text-[#5F6C64] font-sans">{pt.note}</td>
                     </tr>
                   ))}
@@ -1057,14 +1075,14 @@ export const Section22View = ({ section }) => {
               </h3>
               <div className="space-y-2">
                 {data.cheatSheet.precedenceHierarchy.map((lvl) => (
-                  <div key={lvl.rank} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-between text-xs font-mono">
+                  <div key={lvl.rank} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs font-mono">
                     <div className="flex items-center gap-2.5">
-                      <span className="w-5 h-5 rounded-full bg-[#EBF3ED] text-[#285C49] font-bold flex items-center justify-center">
+                      <span className="w-6 h-6 rounded-full bg-[#1E4537] text-white text-[11px] font-bold flex items-center justify-center flex-shrink-0 shadow-2xs">
                         {lvl.rank}
                       </span>
-                      <span className="font-bold text-[#293B32]">{lvl.operator}</span>
+                      <span className="font-bold text-[#293B32] whitespace-nowrap">{lvl.operator}</span>
                     </div>
-                    <span className="text-[#5F6C64]">{lvl.rule}</span>
+                    <span className="text-[#5F6C64] text-[11px] sm:text-right">{lvl.rule}</span>
                   </div>
                 ))}
               </div>
@@ -1081,7 +1099,7 @@ export const Section22View = ({ section }) => {
                     <span className="font-mono text-xs font-bold text-[#285C49] block">
                       {sc.name}
                     </span>
-                    <div className="font-mono text-xs font-bold text-[#293B32]">
+                    <div className="p-2 rounded bg-white border border-[#DCE7E1] font-mono text-xs font-bold text-[#293B32] whitespace-nowrap overflow-x-auto">
                       {sc.form}
                     </div>
                     <p className="text-[11px] text-[#5F6C64]">
@@ -1226,10 +1244,8 @@ export const Section22View = ({ section }) => {
                     </div>
 
                     {/* Problem Statement & Expression */}
-                    <div>
-                      <p className="text-xs text-[#5F6C64]">
-                        {prob.problem}
-                      </p>
+                    <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] font-mono text-sm font-bold text-[#293B32] overflow-x-auto whitespace-nowrap">
+                      {prob.problem}
                     </div>
 
                     {/* Techniques */}
@@ -1299,7 +1315,7 @@ export const Section22View = ({ section }) => {
                                   {st.law}
                                 </span>
                               </div>
-                              <div className="font-mono text-xs font-bold text-[#293B32] break-all">
+                              <div className="font-mono text-xs font-bold text-[#293B32] p-2 rounded bg-white border border-[#DCE7E1] overflow-x-auto whitespace-nowrap">
                                 {st.expr}
                               </div>
                               <p className="text-[11px] text-[#5F6C64]">
@@ -1310,11 +1326,11 @@ export const Section22View = ({ section }) => {
                         </div>
 
                         {/* Verified Final Answer Box */}
-                        <div className="p-3 rounded-xl bg-[#F0FAF4] border border-[#BDE8CA] flex items-center justify-between gap-2">
-                          <span className="font-mono text-xs font-bold text-[#285C49]">
+                        <div className="p-3 rounded-xl bg-[#F0FAF4] border border-[#BDE8CA] flex items-center justify-between gap-2 font-mono">
+                          <span className="text-xs font-bold text-[#285C49]">
                             Answer:
                           </span>
-                          <span className="font-mono text-sm font-bold text-[#285C49] break-all">
+                          <span className="text-sm font-bold text-[#285C49] whitespace-nowrap">
                             {prob.finalAnswer}
                           </span>
                         </div>

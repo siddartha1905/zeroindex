@@ -4,6 +4,41 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: DLD Unit 2 Section 2.2 Final Minor Visual and Content Refinements
+
+- **Type**: visual-polish / academic-clarification / video-fix / dld-unit-2
+- **Summary**: Executed the final minor visual and content refinement pass for Section 2.2 ("Simplification of Boolean Expressions Using Algebraic Laws") on `dld-unit2-development`:
+  1. **Working Video Lesson Fix**:
+     - Diagnosed and fixed the dead YouTube video ID (`A2d57vVw8vQ` returning 404/unavailable) in `src/data/dldVideoConfig.js`.
+     - Replaced with verified active, high-quality Neso Academy video ID `k04ksfLBuak` ("Boolean Algebra Examples (Part 1)", 14 min) verified via YouTube oEmbed API.
+  2. **Enhanced "Technique X" Badges in 10 Simplification Techniques**:
+     - Upgraded the Technique number badge from faint background (`bg-[#EBF3ED] text-[#285C49]`) to authoritative dark forest green (`bg-[#1E4537] text-white font-bold shadow-2xs`).
+     - Maintained full harmony with ZeroIndex DLD visual styling without being loud or harsh.
+  3. **Explicit "Watch Out (Strict Prohibition)" Warning Cards**:
+     - Refactored all 10 `tenTechniques` mistake items to explicitly state what students MUST NOT write and why (e.g., "Watch Out: Do NOT write A + 1 = A (confusing Boolean OR with ordinary arithmetic). The correct identity is A + 1 = 1.").
+     - Wrapped each warning in an explicit styled warning card (`bg-[#FFF5F5] border border-[#FED7D7]` with `AlertTriangle` icon and "Watch Out (Strict Prohibition):" title) so first-year students never mistake prohibited expressions for valid simplifications.
+     - Clarified all 10 items in the `commonMistakes` panel with explicit prohibition phrasing ("Do NOT write...", "Do NOT evaluate...", "Do NOT delete...").
+  4. **Formula Alignment and Wrapping Corrections**:
+     - Audited and eliminated text-wrapping fractures in formulas (such as $A \cdot 0 = 0$ breaking across lines).
+     - Enriched `dualitySummary` with dedicated formula fields (`orIdentityFormula`, `andIdentityFormula`, `orDominantFormula`, `andDominantFormula`) and styled them in balanced, centered pills with `whitespace-nowrap`.
+     - Added `whitespace-nowrap` across all formula table cells (`orLawsTable`, `andLawsTable`, and `patternRecognition`) to prevent symbols, primes, and parentheses from breaking.
+     - Replaced unconstrained `break-all` in Worked Models (header, steps, answers) and Practice Lab with `whitespace-nowrap overflow-x-auto` to preserve mathematical integrity.
+     - Enhanced Operator Precedence Hierarchy with prominent rank badges (`#1E4537`) and clean responsive flex layout.
+  5. **Verification & Testing**:
+     - Automated render props audit: `node scripts/testSection22RenderProps.mjs` passed (100% properties valid).
+     - Mathematical verification: `node scripts/verifySection22Math.mjs` passed all 78/78 checks.
+     - Production build: `npm run build` completed in 3.62s with zero errors.
+     - Strict dash check: 0 em-dashes and 0 en-dashes across all modified files.
+- **Affected Files**:
+  * `src/data/dldVideoConfig.js`
+  * `src/data/dldSection22Data.js`
+  * `src/components/Section22View.jsx`
+  * `project-memory/CURRENT_STATE.md`
+  * `project-memory/CHANGELOG.md`
+- **Deployment State**: On development branch `dld-unit2-development` (preview status `isLive: false`). Section 2.3 not yet started. Main branch untouched.
+
+---
+
 ## 2026-10-20: DLD Unit 2 Section 2.2 Complete Academic Rebuild (WHY-FIRST 5-Tab Architecture)
 
 - **Type**: academic / curriculum / ui-rebuild / dld-unit-2

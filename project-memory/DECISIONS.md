@@ -148,6 +148,14 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence**: All 78/78 tests in `verifySection22Math.mjs`, 95/95 in `verifySection21Math.mjs`, 842/842 in `verifyUnit2Full.mjs`, and 78/78 in Unit 1 suites pass with 100% accuracy. Zero em-dashes and zero en-dashes throughout. `npm run build` succeeds in 3.55s.
 - **Verification / Follow-up Requirements**: Continued on branch `dld-unit2-development` (preview status `isLive: false`). User review required before proceeding to Section 2.3 or merging to main.
 
+## D-020 | 2026-10-20 | Section 2.2 Final Minor Visual and Content Refinements
+
+- **Decision**: (1) Replace broken/unavailable YouTube video ID `A2d57vVw8vQ` with active, verified Neso Academy video `k04ksfLBuak` ("Boolean Algebra Examples (Part 1)", 14 min) verified via YouTube oEmbed API; (2) Upgrade Technique badge styling in Tab 2 to authoritative dark forest green (`bg-[#1E4537] text-white font-bold shadow-2xs`) for prominent recognition without visual harshness; (3) Standardize all Watch Out warnings across `tenTechniques` and `commonMistakes` to explicitly state the strict prohibition (using phrasing such as "Watch Out: Do NOT write A + 1 = A...") and enclose each warning in a distinct red alert card (`bg-[#FFF5F5] border border-[#FED7D7]` with `AlertTriangle` icon) to eliminate student misunderstanding; (4) Fix formula alignment and wrapping issues across all tabs by eliminating unconstrained `break-all`, styling `dualitySummary` with dedicated centered pills and `whitespace-nowrap`, wrapping short expressions and table cells in `whitespace-nowrap`, and enhancing Operator Precedence Hierarchy with prominent rank badges (`#1E4537`).
+- **Rationale**: Removes student confusion on common exam traps, guarantees that mathematical formulas never split across lines mid-symbol or mid-operator, and ensures working multimedia supplementary learning.
+- **Affected Files**: `src/data/dldVideoConfig.js`, `src/data/dldSection22Data.js`, `src/components/Section22View.jsx`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`.
+- **Approval Evidence**: Render prop tests (`testSection22RenderProps.mjs`) pass with 100% valid schema properties. Math verification (`verifySection22Math.mjs`) passes 78/78 checks with zero errors. Production build (`npm run build`) builds cleanly in 3.62s. Zero em-dashes and zero en-dashes confirmed.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development`. Do not merge into main or deploy to Vercel without user instruction. Section 2.3 will be handled separately.
+
 ---
 
 ## Decision Record Template
