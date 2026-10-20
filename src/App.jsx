@@ -66,7 +66,13 @@ export function App() {
           normalizedTab = 'practice';
         } else if (rawTab === 'syllabus' || rawTab === 'resources') {
           normalizedTab = 'syllabus';
-        } else if (rawTab === 'dld-u1' || rawTab === 'dld' || rawTab === 'theory' || rawTab === 'notes' || rawTab === 'units' || rawTab === '1') {
+        } else if (rawTab === 'dld-u1' || rawTab === '1') {
+          normalizedTab = 'units';
+          subId = parts[2] || '1.1';
+        } else if (rawTab === 'dld-u2' || rawTab === '2') {
+          normalizedTab = 'units';
+          subId = parts[2] || '2.1';
+        } else if (rawTab === 'dld' || rawTab === 'theory' || rawTab === 'notes' || rawTab === 'units') {
           normalizedTab = 'units';
           if (parts[2]) subId = parts[2];
         } else if (/^\d+\.\d+$/.test(rawTab)) {
