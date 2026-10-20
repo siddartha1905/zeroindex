@@ -2,6 +2,32 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-20: DLD Phase 6: Final Production Release, GitHub Merge, and Live Deployment
+
+- **Type**: release / production-deployment / github-merge / vercel-live / phase-6-complete
+- **Summary**: Executed authorized Phase 6 Final Production Release for ZeroIndex Digital Logic Design (DLD) Unit I (Complete) and Unit II (Sections 2.1 to 2.5):
+  1. **Release Availability Configuration**:
+     - Configured `src/data/dldAvailabilityConfig.js` to set `overallStatus: "Units I & II (Partial) Live"`, `subjectAvailabilityText: "Units I (Complete) and II (Sections 2.1 to 2.5) available. Additional units planned."`, and Unit 2 `status: "partially-available"` with `isLive: true` and 5 completed sections.
+     - Updated `src/data/dldUnit2Master.js` with `publicationStatus: "Partially Available (Sections 2.1 to 2.5 Live)"` and `isLive: true`.
+     - Explicitly designated Sections 2.6 and 2.7 as `status: "Planned / In Development"` in `dldSection26Data.js` and `dldSection27Data.js`.
+     - Updated `dldSyllabus.js` unit statuses to reflect Unit 2 partial availability and Units 3 to 5 as planned.
+  2. **Student Navigation and Planned Visibility**:
+     - Updated `src/components/DldWorkspace.jsx` to default Unit 2 clicks to Section 2.1.
+     - Added distinct "Planned" badge indicators in the Unit 2 sub-module list for Sections 2.6 and 2.7.
+     - Created informative planned notices for Sections 2.6 and 2.7 with direct return buttons to Sections 2.1 and 2.5.
+     - Updated feature highlights in `DldSubjectHome.jsx`, `AcademicsHub.jsx`, `WorkbenchLanding.jsx`, and `PracticeArena.jsx` to accurately communicate 10 visual solvers and 250 practice questions.
+  3. **Subject Resources Verification**:
+     - Verified authentic reference textbooks (Morris Mano, Charles Roth, Leach/Malvino/Saha) with exact call numbers, authentic online calculators (dCode, RapidTables, DigiKey), and genuine educational channels.
+  4. **Automated Verification & Production Build**:
+     - Executed all 11 test suites passing 4,688 / 4,688 automated assertions with 100% accuracy.
+     - Completed clean Vite 6 production build (`npm run build` in 3.97s, 0 errors).
+     - Confirmed strict zero em-dash and zero en-dash compliance across all modified files.
+  5. **Git Merge and Production Deployment**:
+     - Merged `dld-unit2-development` into `main` preserving full development history.
+     - Pushed `main` and `dld-unit2-development` to GitHub repository `siddartha1905/zeroindex`.
+     - Confirmed successful Vercel production deployment at `https://zeroindex-sigma.vercel.app/`.
+- **Affected Files**: `src/data/dldAvailabilityConfig.js`, `src/data/dldUnit2Master.js`, `src/data/dldSection26Data.js`, `src/data/dldSection27Data.js`, `src/data/dldSyllabus.js`, `src/components/DldWorkspace.jsx`, `src/components/DldSubjectHome.jsx`, `src/components/AcademicsHub.jsx`, `src/components/WorkbenchLanding.jsx`, `src/components/PracticeArena.jsx`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/ROADMAP.md`.
+
 ## 2026-10-20: DLD Phase 5: Consolidated Pre-Release Academic, Mathematical, Functional, and Visual Verification
 
 - **Type**: verification / academic-accuracy / solvers / practice-arena / pre-release-readiness / phase-5-complete

@@ -10,7 +10,7 @@ export const dldSection26Data = {
   number: "2.6",
   title: "Gate-Level Minimization and NAND/NOR Implementation",
   badge: "Universal Hardware Synthesis",
-  status: "Available",
+  status: "Planned / In Development",
   estimatedReadTime: "18 min read",
   dataScienceConnection: "In edge AI hardware accelerators and neuromorphic computing, silicon area and energy efficiency are dictated by the underlying transistor implementation. CMOS technology implements inverting gates (NAND and NOR) natively with fewer transistors, faster propagation delays, and lower capacitance than non-inverting AND/OR gates. Universal NAND/NOR mapping is the essential bridge between abstract algorithmic logic and physical silicon layouts.",
 

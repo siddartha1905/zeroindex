@@ -10,7 +10,7 @@ export const dldSection27Data = {
   number: "2.7",
   title: "Exclusive-OR Functions and Implementation Using NAND/NOR Gates",
   badge: "Specialized Arithmetic Logic",
-  status: "Available",
+  status: "Planned / In Development",
   estimatedReadTime: "18 min read",
   dataScienceConnection: "The Exclusive-OR operation is the mathematical backbone of error-detecting cyclic redundancy checks (CRC), Hamming error-correcting codes, and cryptographic hashing algorithms (such as SHA-256 and AES). In distributed data streaming (such as Apache Kafka), parity bits generated via multi-variable XOR networks detect corrupted data frames during network transit with zero software overhead.",
 

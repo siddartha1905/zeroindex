@@ -31,8 +31,8 @@ export const WorkbenchLanding = ({
       description: 'Number systems, base conversions, complement arithmetic, Boolean algebra, K-Map minimization, combinational logic, and sequential machines.',
       features: [
         { label: '5 Modular Units', icon: BookOpen },
-        { label: '5 Interactive Solvers', icon: Calculator },
-        { label: '110+ Quiz Bank', icon: CheckCircle2 },
+        { label: '10 Interactive Solvers', icon: Calculator },
+        { label: '250 Practice Questions', icon: CheckCircle2 },
         { label: 'VR23 Syllabus Notes', icon: Layers },
       ],
       action: onSelectDld,

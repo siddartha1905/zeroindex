@@ -1819,14 +1819,14 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
             <div className="mt-6 p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-700">
                 <span className="font-bold block text-slate-900 mb-0.5">Status: Grand Mock Simulator Pipeline</span>
-                <span>Unit 1 (110 Qs) and Unit 2 (125 Qs) question pools are 100% verified. Units 3 through 5 are in development. The full 60-question simulator unlocks upon completion of all units.</span>
+                <span>Unit 1 (125 Qs) and Unit 2 (125 Qs) question pools are 100% verified. Units 3 through 5 are in development. The full 60-question simulator unlocks upon completion of all units.</span>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => setActiveQuizUnit(1)}
                   className="whitespace-nowrap px-3.5 py-2 bg-[#2E6F40] text-white rounded-xl text-xs font-bold hover:bg-[#255A34] transition-colors"
                 >
-                  Practice Unit 1 (110 Qs)
+                  Practice Unit 1 (125 Qs)
                 </button>
                 <button
                   onClick={() => setActiveQuizUnit(2)}

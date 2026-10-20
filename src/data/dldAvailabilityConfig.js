@@ -7,8 +7,8 @@ export const dldAvailabilityConfig = {
   courseCode: "1005261102",
   subjectTitle: "Digital Logic Design",
   regulation: "VR23 / Autonomous",
-  subjectAvailabilityText: "Unit 1 available. Additional units planned.",
-  overallStatus: "Unit 1 Live",
+  subjectAvailabilityText: "Units I (Complete) and II (Sections 2.1 to 2.5) available. Additional units planned.",
+  overallStatus: "Units I & II (Partial) Live",
   
   units: [
     {
@@ -17,7 +17,7 @@ export const dldAvailabilityConfig = {
       title: "Number Systems & Binary Arithmetic",
       status: "available",
       label: "Available",
-      sublabel: "Pending final academic review",
+      sublabel: "Complete & Verified",
       totalSections: 7,
       completedSections: 7,
       isLive: true
@@ -26,12 +26,12 @@ export const dldAvailabilityConfig = {
       unitNumber: 2,
       roman: "UNIT II",
       title: "Boolean Algebra & Gate-Level Minimization",
-      status: "in-development",
-      label: "In Development",
-      sublabel: "Complete & Verified (Preview Ready)",
+      status: "partially-available",
+      label: "Partially Available",
+      sublabel: "Sections 2.1 to 2.5 Live (2.6 & 2.7 Planned)",
       totalSections: 7,
-      completedSections: 7,
-      isLive: false
+      completedSections: 5,
+      isLive: true
     },
     {
       unitNumber: 3,
