@@ -32,7 +32,7 @@ node scripts/generateProjectSnapshot.mjs
 |---|---|---|---|
 | `npm run build` | Vite 6 Production Bundle | **PASS** | 3,401 modules transformed in 4.28s; 0 errors; clean production bundle |
 | `verifyUnit2Solvers.mjs` | Unit 2 Interactive Solvers Engine & Mathematical Rules | **PASS** | 119/119 checks passed (Minterm/maxterm inputs, 4-corner quad B'D' vs vertically wrapped quad B'C', POS 3-var quad B', don't-care optimization C, 2-var pair B, 6 conversion pathways, step-by-step group derivations, UI navigation, and strict zero-dash audit) |
-| `testUnit2SolversSSR.mjs` | Vite SSR Smoke Test | **PASS** | Clean server-side component rendering across all solver tabs (14,026 bytes generated, zero runtime exceptions) |
+| `testUnit2SolversSSR.mjs` | Multi-Solver Vite SSR Smoke Test | **PASS** | Clean server-side component rendering across all 6 individual solvers (Simplifier 7,099B, Truth Table 8,558B, Minterms 10,770B, SOP/POS 4,376B, K-Map 13,251B, NAND/NOR 3,825B) and master container (14,026B), zero runtime exceptions |
 | `verifySection25Math.mjs` | Unit 2 Section 2.5 K-Maps Math Audit | **PASS** | 365/365 checks passed (100% accuracy, zero regressions) |
 | `verifyUnit2Full.mjs` | Unit 2 Comprehensive Audit (7 Groups) | **PASS** | 842/842 checks passed |
 | `verifyInteractiveSolvers.mjs` | 5 Unit 1 Interactive Solvers | **PASS** | 34/34 checks passed (100% accuracy, zero regressions) |

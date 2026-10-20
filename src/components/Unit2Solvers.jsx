@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, Component } from 'react';
 import { 
   Calculator, 
   Table, 
@@ -56,6 +56,36 @@ import {
  * 
  * Strict formatting: Zero em-dashes and zero en-dashes throughout.
  */
+
+class SolverErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('SolverErrorBoundary caught error:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-6 rounded-2xl bg-amber-50 border border-amber-300 text-amber-900 space-y-3 font-mono text-xs">
+          <div className="text-base font-bold text-amber-950">Solver Recovery View</div>
+          <p>An unexpected state was encountered during calculation ({this.state.error?.message || 'Calculation error'}).</p>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="px-4 py-2 bg-[#285C49] text-white rounded-xl font-bold hover:bg-[#1E4537] transition-colors"
+          >
+            Reset Solver
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
 
 export const Unit2Solvers = () => {
   const [activeSolverTab, setActiveSolverTab] = useState('simplifier');
@@ -161,12 +191,14 @@ export const Unit2Solvers = () => {
       </div>
 
       {/* Render Selected Solver */}
-      {activeSolverTab === 'simplifier' && <SolverA_Simplifier />}
-      {activeSolverTab === 'truthTable' && <SolverB_TruthTable />}
-      {activeSolverTab === 'mintermMaxterm' && <SolverC_MintermMaxterm />}
-      {activeSolverTab === 'sopPos' && <SolverD_SopPos />}
-      {activeSolverTab === 'kmap' && <SolverE_KMap />}
-      {activeSolverTab === 'nandNor' && <SolverF_NandNor onBack={() => setActiveSolverTab('kmap')} />}
+      <SolverErrorBoundary>
+        {activeSolverTab === 'simplifier' && <SolverA_Simplifier />}
+        {activeSolverTab === 'truthTable' && <SolverB_TruthTable />}
+        {activeSolverTab === 'mintermMaxterm' && <SolverC_MintermMaxterm />}
+        {activeSolverTab === 'sopPos' && <SolverD_SopPos />}
+        {activeSolverTab === 'kmap' && <SolverE_KMap />}
+        {activeSolverTab === 'nandNor' && <SolverF_NandNor onBack={() => setActiveSolverTab('kmap')} />}
+      </SolverErrorBoundary>
 
       {/* Optional Supplemental Tool Link */}
       {activeSolverTab !== 'nandNor' && (
@@ -190,7 +222,7 @@ export const Unit2Solvers = () => {
 // ============================================================================
 // SOLVER 1: BOOLEAN ALGEBRA & SIMPLIFICATION (Sections 2.1 & 2.2)
 // ============================================================================
-const SolverA_Simplifier = () => {
+export const SolverA_Simplifier = () => {
   const [expression, setExpression] = useState("AB + AB'");
   const [variablesStr, setVariablesStr] = useState("A, B");
   const [showTruthTableVerification, setShowTruthTableVerification] = useState(false);
@@ -435,7 +467,7 @@ const SolverA_Simplifier = () => {
 // ============================================================================
 // SOLVER 2: TRUTH TABLE GENERATOR & EQUIVALENCE CHECKER (Sections 2.1 - 2.4)
 // ============================================================================
-const SolverB_TruthTable = () => {
+export const SolverB_TruthTable = () => {
   const [mode, setMode] = useState('single'); // 'single' or 'compare'
   const [expr1, setExpr1] = useState("AB + C");
   const [expr2, setExpr2] = useState("(A + C)(B + C)");
@@ -733,7 +765,7 @@ const SolverB_TruthTable = () => {
 // ============================================================================
 // SOLVER 3: MINTERM & MAXTERM EXPLORER (Section 2.3)
 // ============================================================================
-const SolverC_MintermMaxterm = () => {
+export const SolverC_MintermMaxterm = () => {
   const [varCount, setVarCount] = useState(3);
   const [selectedRow, setSelectedRow] = useState(5); // Default to row 5 (101)
   const [functionValues, setFunctionValues] = useState({
@@ -989,7 +1021,7 @@ const SolverC_MintermMaxterm = () => {
 // ============================================================================
 // SOLVER 4: SOP/POS CONVERSION STUDIO (Section 2.4 - Full 6 Pathways)
 // ============================================================================
-const SolverD_SopPos = () => {
+export const SolverD_SopPos = () => {
   const [route, setRoute] = useState('sopToCan');
   const [expression, setExpression] = useState("AB + C");
   const [variablesStr, setVariablesStr] = useState("A, B, C");
@@ -1440,7 +1472,7 @@ const SolverD_SopPos = () => {
 // ============================================================================
 // SOLVER 5: INTERACTIVE KARNAUGH MAP SOLVER (Section 2.5 - Flagship)
 // ============================================================================
-const SolverE_KMap = () => {
+export const SolverE_KMap = () => {
   const [varCount, setVarCount] = useState(4);
   const [mode, setMode] = useState('SOP'); // 'SOP' or 'POS'
   const [workflowMode, setWorkflowMode] = useState('manual'); // 'manual' or 'guided'
@@ -2240,9 +2272,9 @@ const SolverE_KMap = () => {
               <thead>
                 <tr>
                   <th className="p-2 border border-[#DCE7E1] bg-[#EBF3ED] text-[11px] font-mono text-[#285C49] text-center">
-                    {descriptor.rowVars.join('')} \ {descriptor.colVars.join('')}
+                    {(descriptor.rowVars || []).join('')} \ {(descriptor.colVars || []).join('')}
                   </th>
-                  {descriptor.colGrayCodes.map((code) => (
+                  {(descriptor.colGrayCodes || descriptor.colHeaders || []).map((code) => (
                     <th 
                       key={code}
                       className="p-2 border border-[#DCE7E1] bg-[#FAF8F5] text-xs font-mono font-bold text-[#1E293B] text-center"
@@ -2253,20 +2285,22 @@ const SolverE_KMap = () => {
                 </tr>
               </thead>
               <tbody>
-                {descriptor.rowGrayCodes.map((rowCode, rIdx) => (
+                {(descriptor.rowGrayCodes || descriptor.rowHeaders || []).map((rowCode, rIdx) => (
                   <tr key={rowCode}>
                     <td className="p-2 border border-[#DCE7E1] bg-[#FAF8F5] text-xs font-mono font-bold text-[#1E293B] text-center">
                       {rowCode}
                     </td>
-                    {descriptor.colGrayCodes.map((colCode, cIdx) => {
-                      const cellIdx = descriptor.matrix[rIdx][cIdx];
+                    {(descriptor.colGrayCodes || descriptor.colHeaders || []).map((colCode, cIdx) => {
+                      const matrix = descriptor.grid || descriptor.matrix || [];
+                      const cellIdx = matrix[rIdx]?.[cIdx];
+                      if (cellIdx === undefined) return null;
                       const state = cellStates[cellIdx] !== undefined ? cellStates[cellIdx] : 0;
                       const isSelected = selectedCells.includes(cellIdx);
                       const isTarget = (mode === 'SOP' && state === 1) || (mode === 'POS' && state === 0);
                       const isDontCare = state === 'X';
 
                       // Check if cell is in active group (Auto Solve mode)
-                      const isCellInActiveStepGroup = workflowMode === 'guided' && currentStepData.type === 'group' && currentStepData.cells?.includes(cellIdx);
+                      const isCellInActiveStepGroup = workflowMode === 'guided' && currentStepData?.type === 'group' && currentStepData?.cells?.includes(cellIdx);
                       const isCellInHoveredGroup = hoveredGroupCells && hoveredGroupCells.includes(cellIdx);
                       const activeGroupColor = isCellInActiveStepGroup ? currentStepData.groupColor : (isCellInHoveredGroup ? '#285C49' : null);
 
@@ -2404,7 +2438,7 @@ const SolverE_KMap = () => {
                           Cells: {'{'}{g.cells.join(', ')}{'}'} ({g.size} cells)
                         </div>
                         <div className="text-[10px] text-[#285C49]">
-                          Eliminates: {g.eliminatedVars.join(', ') || 'None'} | Preserves: {g.constantVars.map(c => `${c.variable}=${c.value}`).join(', ')}
+                          Eliminates: {(g.eliminatedVars || []).join(', ') || 'None'} | Preserves: {(g.constantVars || []).map(c => `${c.variable}=${c.value}`).join(', ') || 'None'}
                         </div>
                       </div>
                     ))}
@@ -2574,10 +2608,10 @@ const SolverE_KMap = () => {
                         Derived Boolean Term: {currentStepData.term}
                       </div>
                       <div className="text-[#64748B] space-y-1">
-                        <div>Covered Cells: {'{'}{currentStepData.cells.join(', ')}{'}'} ({currentStepData.size} cells)</div>
-                        <div>Geometry: {currentStepData.geoNote}</div>
-                        <div>Constant Variables: {currentStepData.constantVars.map(c => `${c.variable}=${c.value}`).join(', ')}</div>
-                        <div>Eliminated Variables: {currentStepData.eliminatedVars.join(', ') || 'None'}</div>
+                        <div>Covered Cells: {'{'}{(currentStepData.cells || []).join(', ')}{'}'} ({currentStepData.size || 0} cells)</div>
+                        <div>Geometry: {currentStepData.geoNote || 'Standard'}</div>
+                        <div>Constant Variables: {(currentStepData.constantVars || []).map(c => `${c.variable}=${c.value}`).join(', ') || 'None'}</div>
+                        <div>Eliminated Variables: {(currentStepData.eliminatedVars || []).join(', ') || 'None'}</div>
                       </div>
                       <p className="text-[11px] text-[#475569] font-sans pt-1 border-t border-[#F2F7F4]">
                         {currentStepData.explanation}
@@ -2618,7 +2652,7 @@ const SolverE_KMap = () => {
 // ============================================================================
 // SOLVER 6: UNIVERSAL GATE SYNTHESIS (Section 2.6 Supplemental - Preserved)
 // ============================================================================
-const SolverF_NandNor = ({ onBack }) => {
+export const SolverF_NandNor = ({ onBack }) => {
   const [expr, setExpr] = useState("AB + CD");
   const [mode, setMode] = useState('NAND'); // 'NAND' or 'NOR'
 

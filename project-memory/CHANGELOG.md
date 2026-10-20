@@ -4,6 +4,20 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: Fix Interactive K-Map Solver Blank Page Runtime Exception
+
+- **Type**: bug-fix / interactive-solvers / dld-unit-2 / stability
+- **Summary**: Resolved runtime exception causing the Interactive K-Map Solver tab to crash into a blank page upon navigation:
+  1. **Root Cause**: `getKMapGridDescriptor` in `booleanEngine.js` exported `rowHeaders`, `colHeaders`, and `grid`, whereas `SolverE_KMap` in `Unit2Solvers.jsx` mapped over `descriptor.colGrayCodes` and `descriptor.rowGrayCodes` and accessed `descriptor.matrix`. Calling `.map()` on `undefined` threw an uncaught `TypeError` that unmounted the React component tree. Furthermore, `minimizeKMap` did not populate `constantVars` and `eliminatedVars` on its selected groups, risking secondary TypeErrors during Auto Solve group inspections.
+  2. **Engine Alignment**: Added `rowGrayCodes`, `colGrayCodes`, and `matrix` aliases alongside `rowHeaders`, `colHeaders`, and `grid` across 2V, 3V, and 4V descriptors in `src/utils/booleanEngine.js`.
+  3. **Defensive K-Map Table Rendering**: Updated `Unit2Solvers.jsx` with fallback chaining: `(descriptor.colGrayCodes || descriptor.colHeaders || [])`, `(descriptor.rowGrayCodes || descriptor.rowHeaders || [])`, and `(descriptor.grid || descriptor.matrix || [])`.
+  4. **Variable Array Population**: Computed and populated `constantVars` and `eliminatedVars` for each group in `minimizeKMap`, and applied defensive optional chaining across step-by-step and manual grouping displays.
+  5. **React SolverErrorBoundary**: Added a dedicated error boundary around the solver tabs in `Unit2Solvers.jsx` to prevent any runtime error from ever causing a blank screen, displaying an informative recovery view instead.
+  6. **Comprehensive Multi-Solver SSR Test**: Enhanced `scripts/testUnit2SolversSSR.mjs` to render every individual solver (`SolverA_Simplifier`, `SolverB_TruthTable`, `SolverC_MintermMaxterm`, `SolverD_SopPos`, `SolverE_KMap`, `SolverF_NandNor`) individually. Verified all 6 render cleanly with zero errors. Production build `npm run build` passed in 6.09s.
+- **Affected Files**: `src/utils/booleanEngine.js`, `src/components/Unit2Solvers.jsx`, `scripts/testUnit2SolversSSR.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`, `project-memory/QUALITY_CHECKS.md`.
+
+---
+
 ## 2026-10-20: Final Refinements and Closure of Unit II Interactive Solvers (Phase 1)
 
 - **Type**: refinement / interactive-solvers / mathematics / dld-unit-2 / phase-1-closure

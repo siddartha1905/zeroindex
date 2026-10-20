@@ -14,19 +14,21 @@
   - `src/components/Unit2Solvers.jsx` (Explicit input panel, step-by-step solution derivation, live K-Map active halos, verified presets, 6 SOP/POS conversion routes, 5-tab release dashboard).
   - `src/components/InteractiveSolvers.jsx` (Removed redundant Course Unit Partition and stale placeholders).
   - `src/components/DldWorkspace.jsx` (Clean top-level toggle between Unit I and Unit II solvers).
+  - `src/utils/booleanEngine.js` (Added rowGrayCodes, colGrayCodes, and matrix aliases to getKMapGridDescriptor, and constantVars/eliminatedVars to minimizeKMap selectedGroups).
   - `scripts/verifyUnit2Solvers.mjs` (Expanded to 119 automated checks covering presets, conversion pathways, input modes, step-by-step walkthrough, and zero-dash audit).
+  - `scripts/testUnit2SolversSSR.mjs` (Enhanced to render all 6 individual solvers independently).
   - `project-memory/CURRENT_STATE.md`, `CHANGELOG.md`, `DECISIONS.md`, `ROADMAP.md`, `QUALITY_CHECKS.md`.
 - **Actual Progress (Done / Partial / Blocked):** Done. Phase 1 is fully completed and closed.
 - **Tests Executed and Exact Results:**
   - `node scripts/verifyUnit2Solvers.mjs`: 119 / 119 tests passed (100%).
-  - `node scripts/testUnit2SolversSSR.mjs`: Passed (14,026 bytes generated, 0 exceptions).
+  - `node scripts/testUnit2SolversSSR.mjs`: Passed (Rendered all 6 individual solvers + master container cleanly).
   - `node scripts/verifySection25Math.mjs`: 365 / 365 tests passed (100%).
   - `node scripts/verifyUnit2Full.mjs`: 842 / 842 tests passed (100%).
   - `node scripts/verifyInteractiveSolvers.mjs`: 34 / 34 tests passed (Unit 1 preserved).
   - `node scripts/verifyUnit1Math.mjs`: 44 / 44 tests passed (100%).
-  - `npm run build`: Clean production build in 4.28s with 0 errors.
+  - `npm run build`: Clean production build in 6.09s with 0 errors.
   - Zero-dash check: 0 em-dashes and 0 en-dashes across all modified files.
-- **Identified Risks / Unverified Items:** Headless browser automation via Playwright remains blocked by local browser binary/driver setup; verified via Vite SSR component rendering, React component mounting, and 1,404+ dedicated automated unit/math test checks.
+- **Identified Risks / Unverified Items:** Headless browser automation via Playwright remains blocked by local browser binary/driver setup; verified via Vite SSR multi-solver rendering, React component mounting, and 1,404+ dedicated automated unit/math test checks.
 - **Next Action:** Present final Phase 1 closure report to the faculty lead and await Phase 2 instructions. Do not start Phase 2 automatically.
 - **Commit / Preview / Release Links (If Verified):** Committed to `dld-unit2-development`.
-- **Reusable Prompt or Lesson Learned:** In JSX text nodes, escape sequences like `\u2192` are not evaluated by Babel/JSX parser; they must be written as literal Unicode characters or JSX curly braces `{"\u2192"}`. Literal UTF-8 is cleaner and avoids escaping errors.
+- **Reusable Prompt or Lesson Learned:** When designing descriptors and mathematical results consumed by UI tables, always supply both canonical and common alias property names (e.g. colHeaders and colGrayCodes, grid and matrix), and wrap the solver renderer in an ErrorBoundary to prevent TypeErrors from unmounting the view.

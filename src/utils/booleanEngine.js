@@ -360,9 +360,12 @@ export function getKMapGridDescriptor(varCount, customVars = null) {
       colVars: [vars[1]],
       rowHeaders: GRAY_1_LABELS,
       colHeaders: GRAY_1_LABELS,
+      rowGrayCodes: GRAY_1_LABELS,
+      colGrayCodes: GRAY_1_LABELS,
       rowCount: 2,
       colCount: 2,
-      grid
+      grid,
+      matrix: grid
     };
   }
 
@@ -379,9 +382,12 @@ export function getKMapGridDescriptor(varCount, customVars = null) {
       colVars: [vars[1], vars[2]],
       rowHeaders: GRAY_1_LABELS,
       colHeaders: GRAY_2_LABELS,
+      rowGrayCodes: GRAY_1_LABELS,
+      colGrayCodes: GRAY_2_LABELS,
       rowCount: 2,
       colCount: 4,
-      grid
+      grid,
+      matrix: grid
     };
   }
 
@@ -400,9 +406,12 @@ export function getKMapGridDescriptor(varCount, customVars = null) {
     colVars: [vars[2], vars[3]],
     rowHeaders: GRAY_2_LABELS,
     colHeaders: GRAY_2_LABELS,
+    rowGrayCodes: GRAY_2_LABELS,
+    colGrayCodes: GRAY_2_LABELS,
     rowCount: 4,
     colCount: 4,
-    grid
+    grid,
+    matrix: grid
   };
 }
 
@@ -591,6 +600,23 @@ export function minimizeKMap(minterms, dontCares = [], variables = ['A', 'B', 'C
   const formattedGroups = chosenCover.map((pi, idx) => {
     const term = maskToTerm(pi.mask, variables, mode);
     const isEssential = essentialPIs.includes(pi);
+    const constantVars = [];
+    const eliminatedVars = [];
+    for (let i = 0; i < pi.mask.length; i++) {
+      const bit = pi.mask[i];
+      if (bit === '-') {
+        eliminatedVars.push(variables[i]);
+      } else {
+        const val = parseInt(bit, 10);
+        let literal = variables[i];
+        if (mode === 'SOP') {
+          literal = val === 1 ? variables[i] : `${variables[i]}'`;
+        } else {
+          literal = val === 0 ? variables[i] : `${variables[i]}'`;
+        }
+        constantVars.push({ variable: variables[i], value: val, literal });
+      }
+    }
     return {
       id: `group-${idx + 1}`,
       mask: pi.mask,
@@ -599,6 +625,8 @@ export function minimizeKMap(minterms, dontCares = [], variables = ['A', 'B', 'C
       size: pi.minterms.length,
       isEssential,
       color: groupColors[idx % groupColors.length],
+      constantVars,
+      eliminatedVars,
       explanation: describeGroupDerivation(pi.mask, variables, mode)
     };
   });

@@ -237,6 +237,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-029 | 2026-10-20 | Fix K-Map Solver Blank Page Crash with Descriptor Aliases, Variable Array Population, and SolverErrorBoundary
+
+- **Decision**: (1) Fixed K-Map solver white-screen crash caused by `descriptor.colGrayCodes` / `descriptor.rowGrayCodes` and `descriptor.matrix` being undefined in `getKMapGridDescriptor` by adding `colGrayCodes`, `rowGrayCodes`, and `matrix` aliases alongside `colHeaders`, `rowHeaders`, and `grid` in `src/utils/booleanEngine.js`; (2) Defensively updated `src/components/Unit2Solvers.jsx` table rendering to fallback across `descriptor.colGrayCodes || descriptor.colHeaders || []`, `descriptor.rowGrayCodes || descriptor.rowHeaders || []`, and `descriptor.grid || descriptor.matrix || []`; (3) Populated `constantVars` and `eliminatedVars` on each selected group in `minimizeKMap` in `src/utils/booleanEngine.js`, and added defensive optional chaining across step-by-step and manual grouping detail displays; (4) Added React `SolverErrorBoundary` class wrapping the active solver view in `Unit2Solvers.jsx` to prevent any unexpected runtime evaluation error from unmounting the component tree into a blank page; (5) Exported all 6 solver components (`SolverA_Simplifier`, `SolverB_TruthTable`, `SolverC_MintermMaxterm`, `SolverD_SopPos`, `SolverE_KMap`, `SolverF_NandNor`) and updated `scripts/testUnit2SolversSSR.mjs` to render every solver tab individually, proving 100% crash-free SSR rendering.
+- **Rationale**: Eliminates uncaught runtime TypeErrors in React lifecycle, ensuring the flagship K-Map solver immediately mounts and renders cleanly across all viewports and state transitions.
+- **Affected Files**: `src/utils/booleanEngine.js`, `src/components/Unit2Solvers.jsx`, `scripts/testUnit2SolversSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+- **Approval Evidence**: Dedicated SSR verification suite `testUnit2SolversSSR.mjs` renders all 6 individual solvers cleanly with zero errors; `verifyUnit2Solvers.mjs` passes 119/119 checks; `npm run build` succeeds in 6.09s with 0 errors. Zero-dash audit passed.
+- **Verification / Follow-up Requirements**: Maintained on `dld-unit2-development`. Do not merge into main or push without approval.
+
+---
+
 ## Decision Record Template
 
 ```markdown
