@@ -4,6 +4,18 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: Fix Section 2.5 White Screen Rendering Crash and Add Defensive Guards
+
+- **Type**: bug-fix / dld-unit-2 / stability
+- **Summary**: Resolved runtime exception causing Section 2.5 to display an empty white screen upon navigation:
+  1. **Root Cause**: In `Section25View.jsx`, `MiniKMap` subcomponents expected `item.miniMap.mapType` and `item.miniMap.cells`, which were undefined in `dldSection25Data.js` (`powerOfTwoElimination` had `miniGrid` rather than `miniMap`), causing an uncaught `TypeError` during initial component mounting that unmounted the entire view tree.
+  2. **Data Model Enrichment**: Added explicit `miniMap` specifications for all items across `powerOfTwoElimination`, `visualTopologies`, `termExtractionGuide` (`sopRule` and `posRule`), `groupSizeLadder`, and `wraparoundReference`.
+  3. **Defensive Component Fallbacks**: Updated `Section25View.jsx` with optional chaining and fallback calculations for all `miniMap` properties so that missing sub-properties cannot crash the view.
+  4. **React SectionErrorBoundary**: Wrapped `Section25View` with a dedicated error boundary to prevent any unexpected edge-case exception from producing a blank page, providing an informative academic recovery card instead.
+  5. **Verification**: Built and executed `scripts/testSection25ComponentRender.mjs` verifying clean Vite SSR rendering across all 7 tabs (`start-here`, `foundations`, `grouping-rules`, `guided-demos`, `worked-models`, `cheat-sheet`, `practice-lab`) with zero errors. Production build `npm run build` completed cleanly. Strict zero-dash compliance verified.
+
+---
+
 ## 2026-10-20: DLD Unit 2 Section 2.5 Final Visual, Academic, and Practice Refinement (7 Tabs, Real Topologies, POS Coverage, Master Cheat Sheet, Interactive Workspace)
 
 - **Type**: academic / visual-refinement / interactive-lab / dld-unit-2

@@ -123,6 +123,7 @@ export const dldSection25Data = {
         remaining: "n literals (full minterm)", 
         example: "In 4-var map: ABCD",
         takeaway: "No variables eliminated; retains all n inputs in the product term.",
+        miniMap: { mapType: "twoVar", cells: [0] },
         miniGrid: { rows: 2, cols: 2, activeCells: [0], total: 4 }
       },
       { 
@@ -133,6 +134,7 @@ export const dldSection25Data = {
         remaining: "n - 1 literals", 
         example: "In 4-var map: ABC",
         takeaway: "Combines 2 adjacent cells differing by 1 bit; removes 1 variable.",
+        miniMap: { mapType: "twoVar", cells: [0, 1] },
         miniGrid: { rows: 2, cols: 2, activeCells: [0, 1], total: 4 }
       },
       { 
@@ -143,6 +145,7 @@ export const dldSection25Data = {
         remaining: "n - 2 literals", 
         example: "In 4-var map: AB",
         takeaway: "Square or 1x4 strip of 4 cells; eliminates 2 changing variables.",
+        miniMap: { mapType: "twoVar", cells: [0, 1, 2, 3] },
         miniGrid: { rows: 2, cols: 2, activeCells: [0, 1, 2, 3], total: 4 }
       },
       { 
@@ -153,6 +156,7 @@ export const dldSection25Data = {
         remaining: "n - 3 literals", 
         example: "In 4-var map: A",
         takeaway: "Block of 8 cells; eliminates 3 variables, leaving a single literal.",
+        miniMap: { mapType: "threeVar", cells: [0, 1, 3, 2, 4, 5, 7, 6] },
         miniGrid: { rows: 2, cols: 4, activeCells: [0, 1, 2, 3, 4, 5, 6, 7], total: 8 }
       },
       { 
@@ -163,6 +167,7 @@ export const dldSection25Data = {
         remaining: "Constant 1 (SOP) or 0 (POS)", 
         example: "SOP: F = 1 | POS: F = 0",
         takeaway: "All cells covered; eliminates all 4 variables, yielding a constant output.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10] },
         miniGrid: { rows: 4, cols: 4, activeCells: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], total: 16 }
       }
     ],
@@ -348,7 +353,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0],
         term: "A'B'",
-        explanation: "One isolated target cell with no adjacent 1s. Eliminates 0 variables; retains all n literals."
+        derivedTerm: "A'B'",
+        explanation: "One isolated target cell with no adjacent 1s. Eliminates 0 variables; retains all n literals.",
+        desc: "One isolated target cell with no adjacent 1s. Eliminates 0 variables; retains all n literals.",
+        miniMap: { mapType: "twoVar", cells: [0], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-02",
@@ -360,7 +368,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1],
         term: "A'",
-        explanation: "Two adjacent cells in row A=0. Variable B changes from 0 to 1 and is eliminated; A remains 0."
+        derivedTerm: "A'",
+        explanation: "Two adjacent cells in row A=0. Variable B changes from 0 to 1 and is eliminated; A remains 0.",
+        desc: "Two adjacent cells in row A=0. Variable B changes from 0 to 1 and is eliminated; A remains 0.",
+        miniMap: { mapType: "twoVar", cells: [0, 1], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-03",
@@ -372,7 +383,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 4, 5],
         term: "A'C'",
-        explanation: "2x2 block in rows 00 & 01 and cols 00 & 01. Eliminates 2 variables (B and D); leaves A'C'."
+        derivedTerm: "A'C'",
+        explanation: "2x2 block in rows 00 & 01 and cols 00 & 01. Eliminates 2 variables (B and D); leaves A'C'.",
+        desc: "2x2 block in rows 00 & 01 and cols 00 & 01. Eliminates 2 variables (B and D); leaves A'C'.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 4, 5], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-04",
@@ -384,7 +398,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 3, 2],
         term: "A'B'",
-        explanation: "Entire horizontal row AB=00 across all 4 columns. Eliminates C and D completely; leaves A'B'."
+        derivedTerm: "A'B'",
+        explanation: "Entire horizontal row AB=00 across all 4 columns. Eliminates C and D completely; leaves A'B'.",
+        desc: "Entire horizontal row AB=00 across all 4 columns. Eliminates C and D completely; leaves A'B'.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-05",
@@ -396,7 +413,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 3, 2, 4, 5, 7, 6],
         term: "A'",
-        explanation: "Top two rows AB=00 & 01 across all columns. Eliminates 3 variables (B, C, D); leaves single literal A'."
+        derivedTerm: "A'",
+        explanation: "Top two rows AB=00 & 01 across all columns. Eliminates 3 variables (B, C, D); leaves single literal A'.",
+        desc: "Top two rows AB=00 & 01 across all columns. Eliminates 3 variables (B, C, D); leaves single literal A'.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2, 4, 5, 7, 6], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-06",
@@ -408,7 +428,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10],
         term: "1",
-        explanation: "All 16 cells are 1. Eliminates all 4 variables, simplifying to logic constant 1 (tautology)."
+        derivedTerm: "1",
+        explanation: "All 16 cells are 1. Eliminates all 4 variables, simplifying to logic constant 1 (tautology).",
+        desc: "All 16 cells are 1. Eliminates all 4 variables, simplifying to logic constant 1 (tautology).",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-07",
@@ -420,7 +443,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 2, 8, 10],
         term: "B'D'",
-        explanation: "Four outer corners wrap continuously on the torus: rows 00 & 10 (B=0) and cols 00 & 10 (D=0) yield B'D'."
+        derivedTerm: "B'D'",
+        explanation: "Four outer corners wrap continuously on the torus: rows 00 & 10 (B=0) and cols 00 & 10 (D=0) yield B'D'.",
+        desc: "Four outer corners wrap continuously on the torus: rows 00 & 10 (B=0) and cols 00 & 10 (D=0) yield B'D'.",
+        miniMap: { mapType: "fourVar", cells: [0, 2, 8, 10], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-08",
@@ -432,7 +458,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 2, 4, 6],
         term: "A'D'",
-        explanation: "Columns CD=00 and CD=10 wrap horizontally in top two rows. Eliminates B and C; leaves A'D'."
+        derivedTerm: "A'D'",
+        explanation: "Columns CD=00 and CD=10 wrap horizontally in top two rows. Eliminates B and C; leaves A'D'.",
+        desc: "Columns CD=00 and CD=10 wrap horizontally in top two rows. Eliminates B and C; leaves A'D'.",
+        miniMap: { mapType: "fourVar", cells: [0, 2, 4, 6], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-09",
@@ -444,7 +473,10 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1], // Group 1 shown, overlaps with [1, 3]
         term: "A'B' + A'C",
-        explanation: "Pair {0, 1} and Pair {1, 3} share cell m1. Permitted overlap eliminates variables and simplifies both terms."
+        derivedTerm: "A'B' + A'C",
+        explanation: "Pair {0, 1} and Pair {1, 3} share cell m1. Permitted overlap eliminates variables and simplifies both terms.",
+        desc: "Pair {0, 1} and Pair {1, 3} share cell m1. Permitted overlap eliminates variables and simplifies both terms.",
+        miniMap: { mapType: "threeVar", cells: [0, 1], targetVal: "1", groupColor: "emerald" }
       },
       {
         id: "VT-10",
@@ -456,7 +488,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 3],
         term: "ILLEGAL",
-        explanation: "Diagonal cells (00 and 11) differ by 2 bits. Violates single-bit Hamming distance; cannot eliminate any variable."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "Diagonal cells (00 and 11) differ by 2 bits. Violates single-bit Hamming distance; cannot eliminate any variable.",
+        desc: "Diagonal cells (00 and 11) differ by 2 bits. Violates single-bit Hamming distance; cannot eliminate any variable.",
+        reason: "Diagonal cells (00 and 11) differ by 2 bits. Violates single-bit Hamming distance; cannot eliminate any variable.",
+        miniMap: { mapType: "twoVar", cells: [0, 3], targetVal: "1" }
       },
       {
         id: "VT-11",
@@ -468,7 +505,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 2],
         term: "ILLEGAL",
-        explanation: "L-shape has 3 cells (not a power of 2) and is non-rectangular. Must be split into two overlapping pairs of 2."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "L-shape has 3 cells (not a power of 2) and is non-rectangular. Must be split into two overlapping pairs of 2.",
+        desc: "L-shape has 3 cells (not a power of 2) and is non-rectangular. Must be split into two overlapping pairs of 2.",
+        reason: "L-shape has 3 cells (not a power of 2) and is non-rectangular. Must be split into two overlapping pairs of 2.",
+        miniMap: { mapType: "twoVar", cells: [0, 1, 2], targetVal: "1" }
       },
       {
         id: "VT-12",
@@ -480,7 +522,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 3],
         term: "ILLEGAL",
-        explanation: "Group size is 3 (not 2^k). Boolean algebra cannot simplify 3 minterms into a single product term."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "Group size is 3 (not 2^k). Boolean algebra cannot simplify 3 minterms into a single product term.",
+        desc: "Group size is 3 (not 2^k). Boolean algebra cannot simplify 3 minterms into a single product term.",
+        reason: "Group size is 3 (not 2^k). Boolean algebra cannot simplify 3 minterms into a single product term.",
+        miniMap: { mapType: "threeVar", cells: [0, 1, 3], targetVal: "1" }
       },
       {
         id: "VT-13",
@@ -492,7 +539,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 4, 5, 2],
         term: "ILLEGAL",
-        explanation: "5 cells is not a power of 2. Must form a quad of 4 cells {0, 1, 4, 5} and a separate pair {0, 2}."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "5 cells is not a power of 2. Must form a quad of 4 cells {0, 1, 4, 5} and a separate pair {0, 2}.",
+        desc: "5 cells is not a power of 2. Must form a quad of 4 cells {0, 1, 4, 5} and a separate pair {0, 2}.",
+        reason: "5 cells is not a power of 2. Must form a quad of 4 cells {0, 1, 4, 5} and a separate pair {0, 2}.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 4, 5, 2], targetVal: "1" }
       },
       {
         id: "VT-14",
@@ -504,7 +556,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [0, 1, 3, 4, 5, 7, 12, 13, 15],
         term: "ILLEGAL",
-        explanation: "9 cells is not a power of 2 (allowed sizes: 1, 2, 4, 8, 16). Contains an octet plus one extra cell."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "9 cells is not a power of 2 (allowed sizes: 1, 2, 4, 8, 16). Contains an octet plus one extra cell.",
+        desc: "9 cells is not a power of 2 (allowed sizes: 1, 2, 4, 8, 16). Contains an octet plus one extra cell.",
+        reason: "9 cells is not a power of 2 (allowed sizes: 1, 2, 4, 8, 16). Contains an octet plus one extra cell.",
+        miniMap: { mapType: "fourVar", cells: [0, 1, 3, 4, 5, 7, 12, 13, 15], targetVal: "1" }
       },
       {
         id: "VT-15",
@@ -516,7 +573,12 @@ export const dldSection25Data = {
         targetPolarity: "1",
         groupCells: [1, 4, 5, 6, 9],
         term: "ILLEGAL",
-        explanation: "T-shaped cluster has 5 cells and non-rectangular geometry. Variables do not remain constant across the group."
+        derivedTerm: "ILLEGAL",
+        rejectionBadge: "ILLEGAL",
+        explanation: "T-shaped cluster has 5 cells and non-rectangular geometry. Variables do not remain constant across the group.",
+        desc: "T-shaped cluster has 5 cells and non-rectangular geometry. Variables do not remain constant across the group.",
+        reason: "T-shaped cluster has 5 cells and non-rectangular geometry. Variables do not remain constant across the group.",
+        miniMap: { mapType: "fourVar", cells: [1, 4, 5, 6, 9], targetVal: "1" }
       }
     ],
 
@@ -530,15 +592,39 @@ export const dldSection25Data = {
           "If a variable changes between 0 and 1 within the group, ELIMINATE that variable completely from the product term."
         ],
         example: {
+          title: "SOP Example: 4-Variable Quad of 1s",
           mapType: "fourVar",
           groupCells: [5, 7, 13, 15],
           minterms: [5, 7, 13, 15],
           targetPolarity: "1",
+          miniMap: { mapType: "fourVar", cells: [5, 7, 13, 15] },
           variablesAnalysis: [
-            { var: "A", states: "0 in m5, m7; 1 in m13, m15", result: "CHANGES -> ELIMINATED" },
-            { var: "B", states: "1 in all 4 cells", result: "CONSTANT AT 1 -> B" },
-            { var: "C", states: "0 in m5, m13; 1 in m7, m15", result: "CHANGES -> ELIMINATED" },
-            { var: "D", states: "1 in all 4 cells", result: "CONSTANT AT 1 -> D" }
+            { var: "A", variable: "A", states: "0 in m5, m7; 1 in m13, m15", values: "0 in m5, m7; 1 in m13, m15", status: "Eliminated", result: "CHANGES -> ELIMINATED", literal: "-" },
+            { var: "B", variable: "B", states: "1 in all 4 cells", values: "1 in all 4 cells", status: "Constant 1", result: "CONSTANT AT 1 -> B", literal: "B" },
+            { var: "C", variable: "C", states: "0 in m5, m13; 1 in m7, m15", values: "0 in m5, m13; 1 in m7, m15", status: "Eliminated", result: "CHANGES -> ELIMINATED", literal: "-" },
+            { var: "D", variable: "D", states: "1 in all 4 cells", values: "1 in all 4 cells", status: "Constant 1", result: "CONSTANT AT 1 -> D", literal: "D" }
+          ],
+          varAnalysis: [
+            { variable: "A", values: "0 in m5, m7; 1 in m13, m15", status: "Eliminated", literal: "-" },
+            { variable: "B", values: "1 in all 4 cells", status: "Constant 1", literal: "B" },
+            { variable: "C", values: "0 in m5, m13; 1 in m7, m15", status: "Eliminated", literal: "-" },
+            { variable: "D", values: "1 in all 4 cells", status: "Constant 1", literal: "D" }
+          ],
+          derivedTerm: "BD",
+          summary: "Quad of 4 cells eliminates 2 variables (A and C) and keeps constant variables B=1 and D=1, yielding product term BD."
+        },
+        workedExample: {
+          title: "SOP Example: 4-Variable Quad of 1s",
+          mapType: "fourVar",
+          groupCells: [5, 7, 13, 15],
+          minterms: [5, 7, 13, 15],
+          targetPolarity: "1",
+          miniMap: { mapType: "fourVar", cells: [5, 7, 13, 15] },
+          varAnalysis: [
+            { variable: "A", values: "0 in m5, m7; 1 in m13, m15", status: "Eliminated", literal: "-" },
+            { variable: "B", values: "1 in all 4 cells", status: "Constant 1", literal: "B" },
+            { variable: "C", values: "0 in m5, m13; 1 in m7, m15", status: "Eliminated", literal: "-" },
+            { variable: "D", values: "1 in all 4 cells", status: "Constant 1", literal: "D" }
           ],
           derivedTerm: "BD",
           summary: "Quad of 4 cells eliminates 2 variables (A and C) and keeps constant variables B=1 and D=1, yielding product term BD."
@@ -554,14 +640,36 @@ export const dldSection25Data = {
           "If a variable changes between 0 and 1 within the group, ELIMINATE that variable completely from the sum term."
         ],
         example: {
+          title: "POS Example: 3-Variable Quad of 0s",
           mapType: "threeVar",
           groupCells: [0, 2, 4, 6],
           maxterms: [0, 2, 4, 6],
           targetPolarity: "0",
+          miniMap: { mapType: "threeVar", cells: [0, 2, 4, 6] },
           variablesAnalysis: [
-            { var: "A", states: "0 in m0, m2; 1 in m4, m6", result: "CHANGES -> ELIMINATED" },
-            { var: "B", states: "0 in m0, m4; 1 in m2, m6", result: "CHANGES -> ELIMINATED" },
-            { var: "C", states: "0 in all 4 cells (cols 00 & 10)", result: "CONSTANT AT 0 -> C (Uncomplemented)" }
+            { var: "A", variable: "A", states: "0 in m0, m2; 1 in m4, m6", values: "0 in m0, m2; 1 in m4, m6", status: "Eliminated", result: "CHANGES -> ELIMINATED", literal: "-" },
+            { var: "B", variable: "B", states: "0 in m0, m4; 1 in m2, m6", values: "0 in m0, m4; 1 in m2, m6", status: "Eliminated", result: "CHANGES -> ELIMINATED", literal: "-" },
+            { var: "C", variable: "C", states: "0 in all 4 cells (cols 00 & 10)", values: "0 in all 4 cells (cols 00 & 10)", status: "Constant 0", result: "CONSTANT AT 0 -> C (Uncomplemented)", literal: "(C)" }
+          ],
+          varAnalysis: [
+            { variable: "A", values: "0 in m0, m2; 1 in m4, m6", status: "Eliminated", literal: "-" },
+            { variable: "B", values: "0 in m0, m4; 1 in m2, m6", status: "Eliminated", literal: "-" },
+            { variable: "C", values: "0 in all 4 cells (cols 00 & 10)", status: "Constant 0", literal: "(C)" }
+          ],
+          derivedTerm: "(C)",
+          summary: "Quad of 4 zero-cells eliminates 2 variables (A and B) and keeps constant C=0. In POS sum-term logic, constant 0 maps to uncomplemented literal (C)."
+        },
+        workedExample: {
+          title: "POS Example: 3-Variable Quad of 0s",
+          mapType: "threeVar",
+          groupCells: [0, 2, 4, 6],
+          maxterms: [0, 2, 4, 6],
+          targetPolarity: "0",
+          miniMap: { mapType: "threeVar", cells: [0, 2, 4, 6] },
+          varAnalysis: [
+            { variable: "A", values: "0 in m0, m2; 1 in m4, m6", status: "Eliminated", literal: "-" },
+            { variable: "B", values: "0 in m0, m4; 1 in m2, m6", status: "Eliminated", literal: "-" },
+            { variable: "C", values: "0 in all 4 cells (cols 00 & 10)", status: "Constant 0", literal: "(C)" }
           ],
           derivedTerm: "(C)",
           summary: "Quad of 4 zero-cells eliminates 2 variables (A and B) and keeps constant C=0. In POS sum-term logic, constant 0 maps to uncomplemented literal (C)."
@@ -1878,11 +1986,11 @@ export const dldSection25Data = {
       { dim: "4-Variable", rows: "AB (00, 01, 11, 10)", cols: "CD (00, 01, 11, 10)", totalCells: 16, rowCount: 4, colCount: 4 }
     ],
     groupSizeLadder: [
-      { size: 1, name: "Singleton (2^0)", varsEliminated: 0, literalsRemaining: "n literals", shape: "1x1 cell" },
-      { size: 2, name: "Pair (2^1)", varsEliminated: 1, literalsRemaining: "n - 1 literals", shape: "1x2 or 2x1 rectangle" },
-      { size: 4, name: "Quad (2^2)", varsEliminated: 2, literalsRemaining: "n - 2 literals", shape: "2x2 square, 1x4, or 4x1 strip" },
-      { size: 8, name: "Octet (2^3)", varsEliminated: 3, literalsRemaining: "n - 3 literals", shape: "2x4 or 4x2 block" },
-      { size: 16, name: "16-Cell (2^4)", varsEliminated: 4, literalsRemaining: "Constant 1 (SOP) or 0 (POS)", shape: "Entire 4x4 grid" }
+      { size: 1, cells: 1, name: "Singleton (2^0)", varsEliminated: 0, eliminated: "0 variables", literalsRemaining: "n literals", remaining: "n literals", shape: "1x1 cell", miniMap: { mapType: "twoVar", cells: [0] } },
+      { size: 2, cells: 2, name: "Pair (2^1)", varsEliminated: 1, eliminated: "1 variable", literalsRemaining: "n - 1 literals", remaining: "n - 1 literals", shape: "1x2 or 2x1 rectangle", miniMap: { mapType: "twoVar", cells: [0, 1] } },
+      { size: 4, cells: 4, name: "Quad (2^2)", varsEliminated: 2, eliminated: "2 variables", literalsRemaining: "n - 2 literals", remaining: "n - 2 literals", shape: "2x2 square, 1x4, or 4x1 strip", miniMap: { mapType: "twoVar", cells: [0, 1, 2, 3] } },
+      { size: 8, cells: 8, name: "Octet (2^3)", varsEliminated: 3, eliminated: "3 variables", literalsRemaining: "n - 3 literals", remaining: "n - 3 literals", shape: "2x4 or 4x2 block", miniMap: { mapType: "threeVar", cells: [0, 1, 3, 2, 4, 5, 7, 6] } },
+      { size: 16, cells: 16, name: "16-Cell (2^4)", varsEliminated: 4, eliminated: "4 variables", literalsRemaining: "Constant 1 (SOP) or 0 (POS)", remaining: "Constant 1 (SOP) or 0 (POS)", shape: "Entire 4x4 grid", miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10] } }
     ],
     sopVsPosComparison: [
       { aspect: "Canonical Notation", sop: "F = Σ m(i, j, ...)", pos: "F = Π M(i, j, ...)" },
@@ -1894,9 +2002,9 @@ export const dldSection25Data = {
       { aspect: "Final Combination", sop: "Sum of Products (OR of ANDs)", pos: "Product of Sums (AND of ORs)" }
     ],
     wraparoundReference: [
-      { type: "Horizontal Left-Right Wrap", rule: "Column 00 wraps around to Column 10 (cells differ by only 1 bit).", example: "Cells {0, 2} in 2x4 map -> A'C'" },
-      { type: "Vertical Top-Bottom Wrap", rule: "Row 00 wraps around to Row 10 (cells differ by only 1 bit).", example: "Rows AB=00 and AB=10 in 4x4 map -> B'" },
-      { type: "Toroidal Four-Corner Quad", rule: "Cells {0, 2, 8, 10} in a 4x4 map form one contiguous 4-cell quad.", example: "Corners {0, 2, 8, 10} -> B'D' (SOP) or (B + D) (POS)" }
+      { type: "Horizontal Left-Right Wrap", name: "Horizontal Left-Right Wrap", rule: "Column 00 wraps around to Column 10 (cells differ by only 1 bit).", example: "Cells {0, 2} in 2x4 map -> A'C'", term: "A'C'", desc: "Opposite horizontal columns 00 and 10 wrap continuously.", miniMap: { mapType: "threeVar", cells: [0, 2] } },
+      { type: "Vertical Top-Bottom Wrap", name: "Vertical Top-Bottom Wrap", rule: "Row 00 wraps around to Row 10 (cells differ by only 1 bit).", example: "Rows AB=00 and AB=10 in 4x4 map -> B'", term: "B'", desc: "Top row 00 and bottom row 10 wrap continuously.", miniMap: { mapType: "fourVar", cells: [0, 1, 3, 2, 8, 9, 11, 10] } },
+      { type: "Toroidal Four-Corner Quad", name: "Toroidal Four-Corner Quad", rule: "Cells {0, 2, 8, 10} in a 4x4 map form one contiguous 4-cell quad.", example: "Corners {0, 2, 8, 10} -> B'D' (SOP) or (B + D) (POS)", term: "B'D'", desc: "All four outer corner cells wrap together on the torus.", miniMap: { mapType: "fourVar", cells: [0, 2, 8, 10] } }
     ],
     dontCareRules: [
       "An X represents a condition that can never occur or whose output is irrelevant.",

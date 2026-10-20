@@ -351,8 +351,41 @@ export const MiniKMap = ({
   );
 };
 
-export const Section25View = ({ section }) => {
-  const [activeTab, setActiveTab] = useState('start-here');
+class SectionErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('Section 2.5 Error caught:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-8 max-w-4xl mx-auto my-8 bg-rose-50 border border-rose-200 rounded-2xl text-[#1E293B]">
+          <h2 className="text-xl font-bold text-rose-900 mb-2">Section 2.5 Rendering Error</h2>
+          <p className="text-sm text-rose-800 mb-4">A component error occurred while rendering this view:</p>
+          <pre className="p-4 bg-white rounded-lg border border-rose-300 text-xs font-mono text-rose-700 overflow-x-auto whitespace-pre-wrap">
+            {this.state.error?.toString()}
+          </pre>
+          <button
+            onClick={() => this.setState({ hasError: false, error: null })}
+            className="mt-4 px-4 py-2 bg-rose-700 text-white font-mono text-xs font-bold rounded-lg hover:bg-rose-800 transition-colors"
+          >
+            Retry Rendering
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const Section25ViewInternal = ({ section, initialTab = 'start-here' }) => {
+  const [activeTab, setActiveTab] = useState(initialTab);
   const data = dldSection25Data;
 
   // Tab 2 state
@@ -885,8 +918,8 @@ export const Section25View = ({ section }) => {
                   {/* Miniature Visual K-Map Diagram */}
                   <div className="flex justify-center py-1">
                     <MiniKMap
-                      mapType={item.miniMap.mapType}
-                      highlightCells={item.miniMap.cells}
+                      mapType={item.miniMap?.mapType || (item.cells <= 4 ? 'twoVar' : item.cells === 8 ? 'threeVar' : 'fourVar')}
+                      highlightCells={item.miniMap?.cells || (item.cells === 1 ? [0] : item.cells === 2 ? [0, 1] : item.cells === 4 ? [0, 1, 2, 3] : item.cells === 8 ? [0, 1, 3, 2, 4, 5, 7, 6] : [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10])}
                       targetValue="1"
                       groupColor="emerald"
                     />
@@ -1240,10 +1273,10 @@ export const Section25View = ({ section }) => {
                       {/* Real Visual K-Map Diagram */}
                       <div className="flex justify-center py-1">
                         <MiniKMap
-                          mapType={topo.miniMap.mapType}
-                          highlightCells={topo.miniMap.cells}
-                          targetValue={topo.miniMap.targetVal || '1'}
-                          groupColor={topo.miniMap.groupColor || 'emerald'}
+                          mapType={topo.miniMap?.mapType || topo.mapType || 'fourVar'}
+                          highlightCells={topo.miniMap?.cells || topo.groupCells || topo.minterms || []}
+                          targetValue={topo.miniMap?.targetVal || topo.targetPolarity || '1'}
+                          groupColor={topo.miniMap?.groupColor || 'emerald'}
                         />
                       </div>
 
@@ -1294,8 +1327,8 @@ export const Section25View = ({ section }) => {
                       {/* Real Visual K-Map Diagram with Red/Rose indicator */}
                       <div className="flex justify-center py-1">
                         <MiniKMap
-                          mapType={topo.miniMap.mapType}
-                          highlightCells={topo.miniMap.cells}
+                          mapType={topo.miniMap?.mapType || topo.mapType || 'fourVar'}
+                          highlightCells={topo.miniMap?.cells || topo.groupCells || topo.minterms || []}
                           targetValue="1"
                           isInvalid={true}
                         />
@@ -1358,57 +1391,62 @@ export const Section25View = ({ section }) => {
                 </ul>
 
                 {/* SOP Fully Illustrated Example */}
-                {data.groupingAndTerms.termExtractionGuide.sopRule.workedExample && (
-                  <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-[#285C49]">
-                        {data.groupingAndTerms.termExtractionGuide.sopRule.workedExample.title}
-                      </span>
-                    </div>
+                {(data.groupingAndTerms?.termExtractionGuide?.sopRule?.workedExample || data.groupingAndTerms?.termExtractionGuide?.sopRule?.example) && (() => {
+                  const ex = data.groupingAndTerms.termExtractionGuide.sopRule.workedExample || data.groupingAndTerms.termExtractionGuide.sopRule.example;
+                  return (
+                    <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-[#285C49]">
+                          {ex.title}
+                        </span>
+                      </div>
 
-                    <div className="flex justify-center py-1">
-                      <MiniKMap
-                        mapType={data.groupingAndTerms.termExtractionGuide.sopRule.workedExample.miniMap.mapType}
-                        highlightCells={data.groupingAndTerms.termExtractionGuide.sopRule.workedExample.miniMap.cells}
-                        targetValue="1"
-                        groupColor="emerald"
-                      />
-                    </div>
+                      <div className="flex justify-center py-1">
+                        <MiniKMap
+                          mapType={ex.miniMap?.mapType || 'fourVar'}
+                          highlightCells={ex.miniMap?.cells || ex.cells || []}
+                          targetValue="1"
+                          groupColor="emerald"
+                        />
+                      </div>
 
-                    {/* Variable Analysis Table */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-[11px] font-mono text-left border border-[#DCE7E1] rounded overflow-hidden">
-                        <thead className="bg-slate-100 text-slate-700">
-                          <tr>
-                            <th className="p-1.5">Var</th>
-                            <th className="p-1.5">Values</th>
-                            <th className="p-1.5">Status</th>
-                            <th className="p-1.5">Literal</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#E2E8F0] bg-white">
-                          {data.groupingAndTerms.termExtractionGuide.sopRule.workedExample.varAnalysis.map((v, vIdx) => (
-                            <tr key={vIdx}>
-                              <td className="p-1.5 font-bold text-slate-800">{v.variable}</td>
-                              <td className="p-1.5 text-slate-600">{v.values}</td>
-                              <td className={`p-1.5 font-semibold ${v.status === 'Eliminated' ? 'text-slate-400 italic' : 'text-emerald-700'}`}>
-                                {v.status}
-                              </td>
-                              <td className="p-1.5 font-bold text-[#285C49]">{v.literal}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                      {/* Variable Analysis Table */}
+                      {ex.varAnalysis && (
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-[11px] font-mono text-left border border-[#DCE7E1] rounded overflow-hidden">
+                            <thead className="bg-slate-100 text-slate-700">
+                              <tr>
+                                <th className="p-1.5">Var</th>
+                                <th className="p-1.5">Values</th>
+                                <th className="p-1.5">Status</th>
+                                <th className="p-1.5">Literal</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-[#E2E8F0] bg-white">
+                              {ex.varAnalysis.map((v, vIdx) => (
+                                <tr key={vIdx}>
+                                  <td className="p-1.5 font-bold text-slate-800">{v.variable}</td>
+                                  <td className="p-1.5 text-slate-600">{v.values}</td>
+                                  <td className={`p-1.5 font-semibold ${v.status === 'Eliminated' ? 'text-slate-400 italic' : 'text-emerald-700'}`}>
+                                    {v.status}
+                                  </td>
+                                  <td className="p-1.5 font-bold text-[#285C49]">{v.literal}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
 
-                    <div className="p-2 rounded bg-emerald-100/70 border border-emerald-300 font-mono text-xs flex items-center justify-between">
-                      <span className="text-emerald-900 font-bold">Resulting Product Term:</span>
-                      <span className="font-bold text-base text-emerald-950 bg-white px-2.5 py-0.5 rounded border border-emerald-300">
-                        {data.groupingAndTerms.termExtractionGuide.sopRule.workedExample.derivedTerm}
-                      </span>
+                      <div className="p-2 rounded bg-emerald-100/70 border border-emerald-300 font-mono text-xs flex items-center justify-between">
+                        <span className="text-emerald-900 font-bold">Resulting Product Term:</span>
+                        <span className="font-bold text-base text-emerald-950 bg-white px-2.5 py-0.5 rounded border border-emerald-300">
+                          {ex.derivedTerm || ex.term}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
 
               {/* POS Derivation Illustrated */}
@@ -1435,57 +1473,62 @@ export const Section25View = ({ section }) => {
                 </ul>
 
                 {/* POS Fully Illustrated Example */}
-                {data.groupingAndTerms.termExtractionGuide.posRule.workedExample && (
-                  <div className="p-3.5 rounded-xl bg-purple-50/50 border border-purple-200 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="font-mono text-xs font-bold text-purple-900">
-                        {data.groupingAndTerms.termExtractionGuide.posRule.workedExample.title}
-                      </span>
-                    </div>
+                {(data.groupingAndTerms?.termExtractionGuide?.posRule?.workedExample || data.groupingAndTerms?.termExtractionGuide?.posRule?.example) && (() => {
+                  const ex = data.groupingAndTerms.termExtractionGuide.posRule.workedExample || data.groupingAndTerms.termExtractionGuide.posRule.example;
+                  return (
+                    <div className="p-3.5 rounded-xl bg-purple-50/50 border border-purple-200 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-xs font-bold text-purple-900">
+                          {ex.title}
+                        </span>
+                      </div>
 
-                    <div className="flex justify-center py-1">
-                      <MiniKMap
-                        mapType={data.groupingAndTerms.termExtractionGuide.posRule.workedExample.miniMap.mapType}
-                        highlightCells={data.groupingAndTerms.termExtractionGuide.posRule.workedExample.miniMap.cells}
-                        targetValue="0"
-                        groupColor="purple"
-                      />
-                    </div>
+                      <div className="flex justify-center py-1">
+                        <MiniKMap
+                          mapType={ex.miniMap?.mapType || 'fourVar'}
+                          highlightCells={ex.miniMap?.cells || ex.cells || []}
+                          targetValue="0"
+                          groupColor="purple"
+                        />
+                      </div>
 
-                    {/* Variable Analysis Table */}
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-[11px] font-mono text-left border border-purple-200 rounded overflow-hidden">
-                        <thead className="bg-purple-100/70 text-purple-900">
-                          <tr>
-                            <th className="p-1.5">Var</th>
-                            <th className="p-1.5">Values</th>
-                            <th className="p-1.5">Status</th>
-                            <th className="p-1.5">Literal</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-purple-100 bg-white">
-                          {data.groupingAndTerms.termExtractionGuide.posRule.workedExample.varAnalysis.map((v, vIdx) => (
-                            <tr key={vIdx}>
-                              <td className="p-1.5 font-bold text-purple-900">{v.variable}</td>
-                              <td className="p-1.5 text-slate-600">{v.values}</td>
-                              <td className={`p-1.5 font-semibold ${v.status === 'Eliminated' ? 'text-slate-400 italic' : 'text-purple-700'}`}>
-                                {v.status}
-                              </td>
-                              <td className="p-1.5 font-bold text-purple-900">{v.literal}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+                      {/* Variable Analysis Table */}
+                      {ex.varAnalysis && (
+                        <div className="overflow-x-auto">
+                          <table className="w-full text-[11px] font-mono text-left border border-purple-200 rounded overflow-hidden">
+                            <thead className="bg-purple-100/70 text-purple-900">
+                              <tr>
+                                <th className="p-1.5">Var</th>
+                                <th className="p-1.5">Values</th>
+                                <th className="p-1.5">Status</th>
+                                <th className="p-1.5">Literal</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y divide-purple-100 bg-white">
+                              {ex.varAnalysis.map((v, vIdx) => (
+                                <tr key={vIdx}>
+                                  <td className="p-1.5 font-bold text-purple-900">{v.variable}</td>
+                                  <td className="p-1.5 text-slate-600">{v.values}</td>
+                                  <td className={`p-1.5 font-semibold ${v.status === 'Eliminated' ? 'text-slate-400 italic' : 'text-purple-700'}`}>
+                                    {v.status}
+                                  </td>
+                                  <td className="p-1.5 font-bold text-purple-900">{v.literal}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
 
-                    <div className="p-2 rounded bg-purple-100 border border-purple-300 font-mono text-xs flex items-center justify-between">
-                      <span className="text-purple-950 font-bold">Resulting Sum Term:</span>
-                      <span className="font-bold text-base text-purple-950 bg-white px-2.5 py-0.5 rounded border border-purple-300">
-                        {data.groupingAndTerms.termExtractionGuide.posRule.workedExample.derivedTerm}
-                      </span>
+                      <div className="p-2 rounded bg-purple-100 border border-purple-300 font-mono text-xs flex items-center justify-between">
+                        <span className="text-purple-950 font-bold">Resulting Sum Term:</span>
+                        <span className="font-bold text-base text-purple-950 bg-white px-2.5 py-0.5 rounded border border-purple-300">
+                          {ex.derivedTerm || ex.term}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  );
+                })()}
               </div>
             </div>
           </div>
@@ -2055,8 +2098,8 @@ export const Section25View = ({ section }) => {
                     </span>
                     <div className="flex justify-center py-0.5">
                       <MiniKMap
-                        mapType={step.miniMap.mapType}
-                        highlightCells={step.miniMap.cells}
+                        mapType={step.miniMap?.mapType || (step.cells <= 4 ? 'twoVar' : step.cells === 8 ? 'threeVar' : 'fourVar')}
+                        highlightCells={step.miniMap?.cells || (step.cells === 1 ? [0] : step.cells === 2 ? [0, 1] : step.cells === 4 ? [0, 1, 2, 3] : step.cells === 8 ? [0, 1, 3, 2, 4, 5, 7, 6] : [0, 1, 3, 2, 4, 5, 7, 6, 12, 13, 15, 14, 8, 9, 11, 10])}
                         targetValue="1"
                         groupColor="emerald"
                       />
@@ -2140,8 +2183,8 @@ export const Section25View = ({ section }) => {
                     </span>
                     <div className="flex justify-center py-1">
                       <MiniKMap
-                        mapType={wrap.miniMap.mapType}
-                        highlightCells={wrap.miniMap.cells}
+                        mapType={wrap.miniMap?.mapType || (wIdx === 0 ? 'threeVar' : 'fourVar')}
+                        highlightCells={wrap.miniMap?.cells || (wIdx === 0 ? [0, 2] : wIdx === 1 ? [0, 1, 8, 9] : [0, 2, 8, 10])}
                         targetValue="1"
                         groupColor="emerald"
                       />
@@ -2590,5 +2633,11 @@ export const Section25View = ({ section }) => {
     </div>
   );
 };
+
+export const Section25View = (props) => (
+  <SectionErrorBoundary>
+    <Section25ViewInternal {...props} />
+  </SectionErrorBoundary>
+);
 
 export default Section25View;
