@@ -16,7 +16,9 @@ import {
   expandSOPTerm, 
   expandPOSTerm, 
   convertCanonicalSOPtoPOS, 
-  convertCanonicalPOStoSOP 
+  convertCanonicalPOStoSOP,
+  KMAP_GROUP_PALETTE,
+  getGroupCellGeometry
 } from '../src/utils/booleanEngine.js';
 import fs from 'fs';
 import path from 'path';
@@ -388,6 +390,100 @@ for (const relPath of filesToAudit) {
   assert(emDashCount === 0, `${relPath}: Zero em-dashes found (count = ${emDashCount})`);
   assert(enDashCount === 0, `${relPath}: Zero en-dashes found (count = ${enDashCount})`);
 }
+
+// ----------------------------------------------------------------------------
+// 11. PERSISTENT COLORED GROUP OVERLAYS & GEOMETRIC BOUNDARY AUDIT
+// ----------------------------------------------------------------------------
+console.log('\n--- 11. Testing Persistent Group Overlays, Palettes & Geometry ---');
+
+// 1. Color Palette integrity
+assert(Array.isArray(KMAP_GROUP_PALETTE) && KMAP_GROUP_PALETTE.length >= 7, 'KMAP_GROUP_PALETTE defines at least 7 distinguishable color schemes');
+const paletteIds = KMAP_GROUP_PALETTE.map(p => p.id);
+assert(paletteIds.includes('blue') && paletteIds.includes('emerald') && paletteIds.includes('amber') && paletteIds.includes('purple') && paletteIds.includes('rose'), 'Palette includes standard academic colors Blue, Emerald, Amber, Purple, Rose');
+
+for (const pal of KMAP_GROUP_PALETTE) {
+  assert(pal.border && pal.bg && pal.badgeBg && pal.badgeText && pal.badgeBorder, `Palette entry ${pal.id} defines all visual styling tokens`);
+}
+
+// 2. Geometry: Singleton Cell
+const desc4Grid = getKMapGridDescriptor(4, ['A', 'B', 'C', 'D']).grid;
+const geoSingle = getGroupCellGeometry([5], 1, 1, desc4Grid);
+assert(geoSingle !== null, 'Singleton cell 5 returns valid geometry descriptor');
+assert(geoSingle.borderTop && geoSingle.borderBottom && geoSingle.borderLeft && geoSingle.borderRight, 'Singleton has all 4 solid borders active');
+assert(!geoSingle.isWrapTop && !geoSingle.isWrapBottom && !geoSingle.isWrapLeft && !geoSingle.isWrapRight, 'Singleton has no wraparound edges');
+assert(geoSingle.borderRadius === '7px 7px 7px 7px', 'Singleton has fully rounded corners on all 4 corners');
+
+// 3. Geometry: Contiguous Horizontal Pair {2, 3}
+// In 4-var K-Map: Row 0 is [0, 1, 3, 2]. Cell 3 is at (0, 2), Cell 2 is at (0, 3)
+const geoPair3 = getGroupCellGeometry([2, 3], 0, 2, desc4Grid);
+const geoPair2 = getGroupCellGeometry([2, 3], 0, 3, desc4Grid);
+assert(geoPair3.borderTop && geoPair3.borderBottom && geoPair3.borderLeft && !geoPair3.borderRight, 'Pair cell 3 has solid Left, Top, Bottom and NO Right border (shared interior boundary)');
+assert(geoPair2.borderTop && geoPair2.borderBottom && !geoPair2.borderLeft && geoPair2.borderRight, 'Pair cell 2 has solid Right, Top, Bottom and NO Left border (shared interior boundary)');
+assert(geoPair3.borderRadius === '7px 0px 0px 7px', 'Pair cell 3 rounds only outer left corners');
+assert(geoPair2.borderRadius === '0px 7px 7px 0px', 'Pair cell 2 rounds only outer right corners');
+
+// 4. Geometry: 2x2 Centered Quad {5, 7, 13, 15}
+// In 4-var K-Map: Rows 1 & 2, Cols 1 & 2
+const geoQuad5 = getGroupCellGeometry([5, 7, 13, 15], 1, 1, desc4Grid);
+const geoQuad7 = getGroupCellGeometry([5, 7, 13, 15], 1, 2, desc4Grid);
+const geoQuad13 = getGroupCellGeometry([5, 7, 13, 15], 2, 1, desc4Grid);
+const geoQuad15 = getGroupCellGeometry([5, 7, 13, 15], 2, 2, desc4Grid);
+assert(geoQuad5.borderTop && geoQuad5.borderLeft && !geoQuad5.borderBottom && !geoQuad5.borderRight, 'Quad cell 5 has exterior Top and Left borders, interior boundaries empty');
+assert(geoQuad7.borderTop && geoQuad7.borderRight && !geoQuad7.borderBottom && !geoQuad7.borderLeft, 'Quad cell 7 has exterior Top and Right borders, interior boundaries empty');
+assert(geoQuad13.borderBottom && geoQuad13.borderLeft && !geoQuad13.borderTop && !geoQuad13.borderRight, 'Quad cell 13 has exterior Bottom and Left borders, interior boundaries empty');
+assert(geoQuad15.borderBottom && geoQuad15.borderRight && !geoQuad15.borderTop && !geoQuad15.borderLeft, 'Quad cell 15 has exterior Bottom and Right borders, interior boundaries empty');
+
+// 5. Geometry: Four-Corner Toroidal Quad {0, 2, 8, 10}
+const geoCorner0 = getGroupCellGeometry([0, 2, 8, 10], 0, 0, desc4Grid);
+const geoCorner2 = getGroupCellGeometry([0, 2, 8, 10], 0, 3, desc4Grid);
+const geoCorner8 = getGroupCellGeometry([0, 2, 8, 10], 3, 0, desc4Grid);
+const geoCorner10 = getGroupCellGeometry([0, 2, 8, 10], 3, 3, desc4Grid);
+assert(geoCorner0.isWrapTop && geoCorner0.isWrapLeft && geoCorner0.borderBottom && geoCorner0.borderRight, 'Corner 0 has dashed Top and Left wrap edges, solid interior Bottom and Right borders');
+assert(geoCorner2.isWrapTop && geoCorner2.isWrapRight && geoCorner2.borderBottom && geoCorner2.borderLeft, 'Corner 2 has dashed Top and Right wrap edges, solid interior Bottom and Left borders');
+assert(geoCorner8.isWrapBottom && geoCorner8.isWrapLeft && geoCorner8.borderTop && geoCorner8.borderRight, 'Corner 8 has dashed Bottom and Left wrap edges, solid interior Top and Right borders');
+assert(geoCorner10.isWrapBottom && geoCorner10.isWrapRight && geoCorner10.borderTop && geoCorner10.borderLeft, 'Corner 10 has dashed Bottom and Right wrap edges, solid interior Top and Left borders');
+assert(geoCorner0.borderRadius === '0px 0px 7px 0px', 'Corner 0 interior right-angle curves inward towards center');
+assert(geoCorner2.borderRadius === '0px 0px 0px 7px', 'Corner 2 interior right-angle curves inward towards center');
+
+// 6. Faculty Case A Verification: F(A,B,C) = Σm(0,2,3,5,7)
+// G1: {2,3} -> A'B, G2: {5,7} -> AC, G3: {0,2} -> A'C'
+const desc3Grid = getKMapGridDescriptor(3, ['A', 'B', 'C']).grid;
+const valCaseAG1 = validateKMapGroup([2, 3], 3, ['A', 'B', 'C'], { 0: 1, 2: 1, 3: 1, 5: 1, 7: 1 }, 'SOP');
+const valCaseAG2 = validateKMapGroup([5, 7], 3, ['A', 'B', 'C'], { 0: 1, 2: 1, 3: 1, 5: 1, 7: 1 }, 'SOP');
+const valCaseAG3 = validateKMapGroup([0, 2], 3, ['A', 'B', 'C'], { 0: 1, 2: 1, 3: 1, 5: 1, 7: 1 }, 'SOP');
+assert(valCaseAG1.isValid && valCaseAG1.term === "A'B", "Case A G1 {2,3} derives A'B");
+assert(valCaseAG2.isValid && valCaseAG2.term === 'AC', 'Case A G2 {5,7} derives AC');
+assert(valCaseAG3.isValid && valCaseAG3.term === "A'C'", "Case A G3 {0,2} derives A'C'");
+
+// Overlapping cell m2 belongs to both G1 and G3
+assert(valCaseAG1.cells.includes(2) && valCaseAG3.cells.includes(2), 'Cell m2 is simultaneously covered by G1 and G3');
+const geoCaseAm2_G1 = getGroupCellGeometry([2, 3], 0, 3, desc3Grid);
+const geoCaseAm2_G3 = getGroupCellGeometry([0, 2], 0, 3, desc3Grid);
+assert(geoCaseAm2_G1 !== null && geoCaseAm2_G3 !== null, 'Cell m2 computes valid independent geometry for both G1 and G3');
+assert(!geoCaseAm2_G1.isWrapRight && geoCaseAm2_G3.isWrapRight, 'Cell m2 has solid Right border in G1 pair, but dashed wraparound Right border in G3 horizontal wrap');
+
+// 7. Faculty Case B Verification: 4-Variable Multi-Group Set
+// G1: {3,7,11,15} -> CD, G2: {0,2} -> A'B'D', G3: {5,13} -> BC'D
+const valCaseBG1 = validateKMapGroup([3, 7, 11, 15], 4, ['A', 'B', 'C', 'D'], { 3: 1, 7: 1, 11: 1, 15: 1, 0: 1, 2: 1, 5: 1, 13: 1 }, 'SOP');
+const valCaseBG2 = validateKMapGroup([0, 2], 4, ['A', 'B', 'C', 'D'], { 3: 1, 7: 1, 11: 1, 15: 1, 0: 1, 2: 1, 5: 1, 13: 1 }, 'SOP');
+const valCaseBG3 = validateKMapGroup([5, 13], 4, ['A', 'B', 'C', 'D'], { 3: 1, 7: 1, 11: 1, 15: 1, 0: 1, 2: 1, 5: 1, 13: 1 }, 'SOP');
+assert(valCaseBG1.isValid && valCaseBG1.term === 'CD', 'Case B G1 {3,7,11,15} derives column CD');
+assert(valCaseBG2.isValid && valCaseBG2.term === "A'B'D'", "Case B G2 {0,2} derives wrapped pair A'B'D'");
+assert(valCaseBG3.isValid && valCaseBG3.term === "BC'D", "Case B G3 {5,13} derives vertical pair BC'D");
+
+// 8. Educational Redundancy Detection
+// In Case A, if student adds redundant G4 {3, 7} (BC)
+const valCaseAG4 = validateKMapGroup([3, 7], 3, ['A', 'B', 'C'], { 0: 1, 2: 1, 3: 1, 5: 1, 7: 1 }, 'SOP');
+assert(valCaseAG4.isValid && valCaseAG4.term === 'BC', 'G4 {3,7} is a valid prime implicant term BC');
+const existingCaseAGroups = [
+  { id: 'G1', cells: [2, 3] },
+  { id: 'G2', cells: [5, 7] },
+  { id: 'G3', cells: [0, 2] }
+];
+const otherCovered = new Set(existingCaseAGroups.flatMap(g => g.cells));
+const g4Targets = [3, 7];
+const isG4Redundant = g4Targets.every(c => otherCovered.has(c));
+assert(isG4Redundant, 'Educational feedback accurately flags G4 {3,7} as redundant because cell 3 is in G1 and cell 7 is in G2');
 
 console.log('\n=================================================================');
 console.log(`TOTAL AUDIT CHECKS: ${passed + failed}`);

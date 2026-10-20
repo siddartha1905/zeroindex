@@ -416,6 +416,190 @@ export function getKMapGridDescriptor(varCount, customVars = null) {
 }
 
 /**
+ * Standard Accessible Group Color Palette for K-Map Overlays
+ * G1: Blue, G2: Emerald, G3: Amber, G4: Purple, G5: Rose, G6: Cyan, G7: Indigo
+ */
+export const KMAP_GROUP_PALETTE = [
+  {
+    id: 'blue',
+    name: 'Blue',
+    border: '#2563EB',
+    bg: 'rgba(37, 99, 235, 0.12)',
+    badgeBg: 'bg-blue-100',
+    badgeText: 'text-blue-800',
+    badgeBorder: 'border-blue-300',
+    ring: 'ring-blue-500'
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald',
+    border: '#059669',
+    bg: 'rgba(5, 150, 105, 0.12)',
+    badgeBg: 'bg-emerald-100',
+    badgeText: 'text-emerald-800',
+    badgeBorder: 'border-emerald-300',
+    ring: 'ring-emerald-500'
+  },
+  {
+    id: 'amber',
+    name: 'Amber',
+    border: '#D97706',
+    bg: 'rgba(217, 119, 6, 0.14)',
+    badgeBg: 'bg-amber-100',
+    badgeText: 'text-amber-800',
+    badgeBorder: 'border-amber-300',
+    ring: 'ring-amber-500'
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    border: '#7C3AED',
+    bg: 'rgba(124, 58, 237, 0.12)',
+    badgeBg: 'bg-purple-100',
+    badgeText: 'text-purple-800',
+    badgeBorder: 'border-purple-300',
+    ring: 'ring-purple-500'
+  },
+  {
+    id: 'rose',
+    name: 'Rose',
+    border: '#E11D48',
+    bg: 'rgba(225, 29, 72, 0.12)',
+    badgeBg: 'bg-rose-100',
+    badgeText: 'text-rose-800',
+    badgeBorder: 'border-rose-300',
+    ring: 'ring-rose-500'
+  },
+  {
+    id: 'cyan',
+    name: 'Cyan',
+    border: '#0891B2',
+    bg: 'rgba(8, 145, 178, 0.12)',
+    badgeBg: 'bg-cyan-100',
+    badgeText: 'text-cyan-800',
+    badgeBorder: 'border-cyan-300',
+    ring: 'ring-cyan-500'
+  },
+  {
+    id: 'indigo',
+    name: 'Indigo',
+    border: '#4F46E5',
+    bg: 'rgba(79, 70, 229, 0.12)',
+    badgeBg: 'bg-indigo-100',
+    badgeText: 'text-indigo-800',
+    badgeBorder: 'border-indigo-300',
+    ring: 'ring-indigo-500'
+  }
+];
+
+/**
+ * Computes border segment styling for a specific cell within a formed group.
+ * Differentiates perimeter solid borders, interior cell boundaries (none),
+ * and toroidal wraparound edges (dashed).
+ */
+export function getGroupCellGeometry(groupCells, rIdx, cIdx, matrix) {
+  if (!groupCells || !matrix || !matrix[rIdx]) return null;
+  const currentCell = matrix[rIdx][cIdx];
+  if (!groupCells.includes(currentCell)) return null;
+
+  const R = matrix.length;
+  const C = matrix[0].length;
+  const S = new Set(groupCells);
+
+  // Direct 4-way neighbors
+  const hasDirectTop = rIdx > 0 && S.has(matrix[rIdx - 1][cIdx]);
+  const hasDirectBottom = rIdx < R - 1 && S.has(matrix[rIdx + 1][cIdx]);
+  const hasDirectLeft = cIdx > 0 && S.has(matrix[rIdx][cIdx - 1]);
+  const hasDirectRight = cIdx < C - 1 && S.has(matrix[rIdx][cIdx + 1]);
+
+  // Toroidal wraparound detection:
+  // Column wraparound: 4-column map where group spans col 0 and col 3 without col 1 or col 2
+  const hasCol0 = C === 4 && groupCells.some(c => matrix.some(row => row[0] === c));
+  const hasCol3 = C === 4 && groupCells.some(c => matrix.some(row => row[3] === c));
+  const hasCol1Or2 = C === 4 && groupCells.some(c => matrix.some(row => row[1] === c || row[2] === c));
+  const isColWrapped = C === 4 && hasCol0 && hasCol3 && !hasCol1Or2;
+
+  // Row wraparound: 4-row map where group spans row 0 and row 3 without row 1 or row 2
+  const hasRow0 = R === 4 && groupCells.some(c => matrix[0]?.includes(c));
+  const hasRow3 = R === 4 && groupCells.some(c => matrix[3]?.includes(c));
+  const hasRow1Or2 = R === 4 && groupCells.some(c => (matrix[1]?.includes(c) || matrix[2]?.includes(c)));
+  const isRowWrapped = R === 4 && hasRow0 && hasRow3 && !hasRow1Or2;
+
+  let borderTop = false;
+  let isWrapTop = false;
+  if (hasDirectTop) {
+    borderTop = false;
+  } else if (isRowWrapped && rIdx === 0) {
+    isWrapTop = true;
+  } else {
+    borderTop = true;
+  }
+
+  let borderBottom = false;
+  let isWrapBottom = false;
+  if (hasDirectBottom) {
+    borderBottom = false;
+  } else if (isRowWrapped && rIdx === R - 1) {
+    isWrapBottom = true;
+  } else {
+    borderBottom = true;
+  }
+
+  let borderLeft = false;
+  let isWrapLeft = false;
+  if (hasDirectLeft) {
+    borderLeft = false;
+  } else if (isColWrapped && cIdx === 0) {
+    isWrapLeft = true;
+  } else {
+    borderLeft = true;
+  }
+
+  let borderRight = false;
+  let isWrapRight = false;
+  if (hasDirectRight) {
+    borderRight = false;
+  } else if (isColWrapped && cIdx === C - 1) {
+    isWrapRight = true;
+  } else {
+    borderRight = true;
+  }
+
+  // Corner radius calculation:
+  // True exterior corner gets rounded (7px).
+  let tl = (borderTop && borderLeft) ? '7px' : '0px';
+  let tr = (borderTop && borderRight) ? '7px' : '0px';
+  let bl = (borderBottom && borderLeft) ? '7px' : '0px';
+  let br = (borderBottom && borderRight) ? '7px' : '0px';
+
+  // Corner rounding for toroidal corner quads:
+  // Give the interior right-angle corner a smooth inward curve
+  if (isWrapTop && isWrapLeft && borderBottom && borderRight) {
+    br = '7px';
+  } else if (isWrapTop && isWrapRight && borderBottom && borderLeft) {
+    bl = '7px';
+  } else if (isWrapBottom && isWrapLeft && borderTop && borderRight) {
+    tr = '7px';
+  } else if (isWrapBottom && isWrapRight && borderTop && borderLeft) {
+    tl = '7px';
+  }
+
+  const borderRadius = `${tl} ${tr} ${br} ${bl}`;
+
+  return {
+    borderTop,
+    isWrapTop,
+    borderBottom,
+    isWrapBottom,
+    borderLeft,
+    isWrapLeft,
+    borderRight,
+    isWrapRight,
+    borderRadius
+  };
+}
+
+/**
  * Exact Boolean Minimizer (Quine-McCluskey / Karnaugh grouping model)
  * Handles up to 4 variables deterministically.
  * @param {number[]} minterms - Array of minterm indices where F = 1

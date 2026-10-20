@@ -1478,6 +1478,191 @@ export const SolverD_SopPos = () => {
 // ============================================================================
 // SOLVER 5: INTERACTIVE KARNAUGH MAP SOLVER (Section 2.5 - Flagship)
 // ============================================================================
+
+/**
+ * Standard Accessible Group Color Palette for K-Map Overlays
+ * G1: Blue, G2: Emerald, G3: Amber, G4: Purple, G5: Rose, G6: Cyan, G7: Indigo
+ */
+export const KMAP_GROUP_PALETTE = [
+  {
+    id: 'blue',
+    name: 'Blue',
+    border: '#2563EB',
+    bg: 'rgba(37, 99, 235, 0.12)',
+    badgeBg: 'bg-blue-100',
+    badgeText: 'text-blue-800',
+    badgeBorder: 'border-blue-300',
+    ring: 'ring-blue-500'
+  },
+  {
+    id: 'emerald',
+    name: 'Emerald',
+    border: '#059669',
+    bg: 'rgba(5, 150, 105, 0.12)',
+    badgeBg: 'bg-emerald-100',
+    badgeText: 'text-emerald-800',
+    badgeBorder: 'border-emerald-300',
+    ring: 'ring-emerald-500'
+  },
+  {
+    id: 'amber',
+    name: 'Amber',
+    border: '#D97706',
+    bg: 'rgba(217, 119, 6, 0.14)',
+    badgeBg: 'bg-amber-100',
+    badgeText: 'text-amber-800',
+    badgeBorder: 'border-amber-300',
+    ring: 'ring-amber-500'
+  },
+  {
+    id: 'purple',
+    name: 'Purple',
+    border: '#7C3AED',
+    bg: 'rgba(124, 58, 237, 0.12)',
+    badgeBg: 'bg-purple-100',
+    badgeText: 'text-purple-800',
+    badgeBorder: 'border-purple-300',
+    ring: 'ring-purple-500'
+  },
+  {
+    id: 'rose',
+    name: 'Rose',
+    border: '#E11D48',
+    bg: 'rgba(225, 29, 72, 0.12)',
+    badgeBg: 'bg-rose-100',
+    badgeText: 'text-rose-800',
+    badgeBorder: 'border-rose-300',
+    ring: 'ring-rose-500'
+  },
+  {
+    id: 'cyan',
+    name: 'Cyan',
+    border: '#0891B2',
+    bg: 'rgba(8, 145, 178, 0.12)',
+    badgeBg: 'bg-cyan-100',
+    badgeText: 'text-cyan-800',
+    badgeBorder: 'border-cyan-300',
+    ring: 'ring-cyan-500'
+  },
+  {
+    id: 'indigo',
+    name: 'Indigo',
+    border: '#4F46E5',
+    bg: 'rgba(79, 70, 229, 0.12)',
+    badgeBg: 'bg-indigo-100',
+    badgeText: 'text-indigo-800',
+    badgeBorder: 'border-indigo-300',
+    ring: 'ring-indigo-500'
+  }
+];
+
+/**
+ * Computes border segment styling for a specific cell within a formed group.
+ * Differentiates perimeter solid borders, interior cell boundaries (none),
+ * and toroidal wraparound edges (dashed).
+ */
+export function getGroupCellGeometry(groupCells, rIdx, cIdx, matrix) {
+  if (!groupCells || !matrix || !matrix[rIdx]) return null;
+  const currentCell = matrix[rIdx][cIdx];
+  if (!groupCells.includes(currentCell)) return null;
+
+  const R = matrix.length;
+  const C = matrix[0].length;
+  const S = new Set(groupCells);
+
+  // Direct 4-way neighbors
+  const hasDirectTop = rIdx > 0 && S.has(matrix[rIdx - 1][cIdx]);
+  const hasDirectBottom = rIdx < R - 1 && S.has(matrix[rIdx + 1][cIdx]);
+  const hasDirectLeft = cIdx > 0 && S.has(matrix[rIdx][cIdx - 1]);
+  const hasDirectRight = cIdx < C - 1 && S.has(matrix[rIdx][cIdx + 1]);
+
+  // Toroidal wraparound detection:
+  // Column wraparound: 4-column map where group spans col 0 and col 3 without col 1 or col 2
+  const hasCol0 = C === 4 && groupCells.some(c => matrix.some(row => row[0] === c));
+  const hasCol3 = C === 4 && groupCells.some(c => matrix.some(row => row[3] === c));
+  const hasCol1Or2 = C === 4 && groupCells.some(c => matrix.some(row => row[1] === c || row[2] === c));
+  const isColWrapped = C === 4 && hasCol0 && hasCol3 && !hasCol1Or2;
+
+  // Row wraparound: 4-row map where group spans row 0 and row 3 without row 1 or row 2
+  const hasRow0 = R === 4 && groupCells.some(c => matrix[0]?.includes(c));
+  const hasRow3 = R === 4 && groupCells.some(c => matrix[3]?.includes(c));
+  const hasRow1Or2 = R === 4 && groupCells.some(c => (matrix[1]?.includes(c) || matrix[2]?.includes(c)));
+  const isRowWrapped = R === 4 && hasRow0 && hasRow3 && !hasRow1Or2;
+
+  let borderTop = false;
+  let isWrapTop = false;
+  if (hasDirectTop) {
+    borderTop = false;
+  } else if (isRowWrapped && rIdx === 0) {
+    isWrapTop = true;
+  } else {
+    borderTop = true;
+  }
+
+  let borderBottom = false;
+  let isWrapBottom = false;
+  if (hasDirectBottom) {
+    borderBottom = false;
+  } else if (isRowWrapped && rIdx === R - 1) {
+    isWrapBottom = true;
+  } else {
+    borderBottom = true;
+  }
+
+  let borderLeft = false;
+  let isWrapLeft = false;
+  if (hasDirectLeft) {
+    borderLeft = false;
+  } else if (isColWrapped && cIdx === 0) {
+    isWrapLeft = true;
+  } else {
+    borderLeft = true;
+  }
+
+  let borderRight = false;
+  let isWrapRight = false;
+  if (hasDirectRight) {
+    borderRight = false;
+  } else if (isColWrapped && cIdx === C - 1) {
+    isWrapRight = true;
+  } else {
+    borderRight = true;
+  }
+
+  // Corner radius calculation:
+  // True exterior corner gets rounded (7px).
+  let tl = (borderTop && borderLeft) ? '7px' : '0px';
+  let tr = (borderTop && borderRight) ? '7px' : '0px';
+  let bl = (borderBottom && borderLeft) ? '7px' : '0px';
+  let br = (borderBottom && borderRight) ? '7px' : '0px';
+
+  // Corner rounding for toroidal corner quads:
+  // Give the interior right-angle corner a smooth inward curve
+  if (isWrapTop && isWrapLeft && borderBottom && borderRight) {
+    br = '7px';
+  } else if (isWrapTop && isWrapRight && borderBottom && borderLeft) {
+    bl = '7px';
+  } else if (isWrapBottom && isWrapLeft && borderTop && borderRight) {
+    tr = '7px';
+  } else if (isWrapBottom && isWrapRight && borderTop && borderLeft) {
+    tl = '7px';
+  }
+
+  const borderRadius = `${tl} ${tr} ${br} ${bl}`;
+
+  return {
+    borderTop,
+    isWrapTop,
+    borderBottom,
+    isWrapBottom,
+    borderLeft,
+    isWrapLeft,
+    borderRight,
+    isWrapRight,
+    borderRadius
+  };
+}
+
 export const SolverE_KMap = () => {
   const [varCount, setVarCount] = useState(4);
   const [mode, setMode] = useState('SOP'); // 'SOP' or 'POS'
@@ -1502,6 +1687,8 @@ export const SolverE_KMap = () => {
   const [userGroups, setUserGroups] = useState([]);
   const [groupFeedback, setGroupFeedback] = useState(null);
   const [coverStatus, setCoverStatus] = useState(null);
+  const [inspectedGroupId, setInspectedGroupId] = useState(null);
+  const [hoveredGroupId, setHoveredGroupId] = useState(null);
 
   // Guided Step-by-Step State
   const [activeStep, setActiveStep] = useState(1);
@@ -1533,8 +1720,7 @@ export const SolverE_KMap = () => {
         [index]: next
       };
     });
-    setGroupFeedback(null);
-    setCoverStatus(null);
+    handleClearGroups();
   };
 
   // Cell selection for student grouping
@@ -1547,7 +1733,7 @@ export const SolverE_KMap = () => {
     });
   };
 
-  // Add group from current selection
+  // Add group from current selection with stable palette assignment
   const handleAddGroup = () => {
     const validation = validateKMapGroup(selectedCells, varCount, variables, cellStates, mode);
     if (!validation.isValid) {
@@ -1558,17 +1744,35 @@ export const SolverE_KMap = () => {
       return;
     }
 
+    // Determine stable group number G1, G2, G3...
+    const existingNums = userGroups.map(g => parseInt(g.id.replace('G', ''), 10)).filter(n => !isNaN(n));
+    let nextNum = 1;
+    while (existingNums.includes(nextNum)) {
+      nextNum++;
+    }
+    const groupId = `G${nextNum}`;
+
+    // Assign first unused palette entry to prevent collisions
+    const usedColorIds = new Set(userGroups.map(g => g.palette?.id || g.colorId));
+    let paletteEntry = KMAP_GROUP_PALETTE.find(p => !usedColorIds.has(p.id));
+    if (!paletteEntry) {
+      paletteEntry = KMAP_GROUP_PALETTE[(nextNum - 1) % KMAP_GROUP_PALETTE.length];
+    }
+
     const newGroup = {
-      id: `G${userGroups.length + 1}`,
+      id: groupId,
+      groupNumber: nextNum,
       cells: validation.cells,
       size: validation.size,
       term: validation.term,
       constantVars: validation.constantVars,
       eliminatedVars: validation.eliminatedVars,
-      color: ['#285C49', '#4F46E5', '#D97706', '#DC2626', '#0891B2', '#9333EA'][userGroups.length % 6]
+      color: paletteEntry.border,
+      colorId: paletteEntry.id,
+      palette: paletteEntry
     };
 
-    setUserGroups(prev => [...prev, newGroup]);
+    setUserGroups(prev => [...prev, newGroup].sort((a, b) => a.groupNumber - b.groupNumber));
     setSelectedCells([]);
     setGroupFeedback({
       success: true,
@@ -1576,7 +1780,17 @@ export const SolverE_KMap = () => {
     });
   };
 
-  // Check cover completeness
+  // Delete a single formed group while preserving all other groups and colors
+  const handleDeleteGroup = (groupId) => {
+    setUserGroups(prev => prev.filter(g => g.id !== groupId));
+    if (inspectedGroupId === groupId) {
+      setInspectedGroupId(null);
+    }
+    setGroupFeedback(null);
+    setCoverStatus(null);
+  };
+
+  // Check cover completeness and identify redundant groups
   const handleCheckCover = () => {
     const requiredTargets = [];
     for (let i = 0; i < totalCells; i++) {
@@ -1604,14 +1818,38 @@ export const SolverE_KMap = () => {
         message: `Incomplete Cover: ${uncovered.length} required ${mode === 'SOP' ? '1s' : '0s'} remain uncovered (cells: ${uncovered.join(', ')}).`
       });
     } else {
-      const isOptimal = userGroups.length <= qm.selectedGroups.length;
-      setCoverStatus({
-        isComplete: true,
-        isOptimal,
-        message: isOptimal
-          ? `Complete & Minimal Cover! All required cells covered using ${userGroups.length} terms.`
-          : `Valid Complete Cover! All required cells covered, but nonminimal (${userGroups.length} terms used vs ${qm.selectedGroups.length} optimal terms).`
+      // Check for redundant groups where all target cells are covered by other groups
+      const redundantGroups = userGroups.filter(g => {
+        const gTargets = g.cells.filter(c => requiredTargets.includes(c));
+        if (gTargets.length === 0) return true;
+        const otherGroups = userGroups.filter(other => other.id !== g.id);
+        const otherCovered = new Set(otherGroups.flatMap(other => other.cells));
+        return gTargets.every(c => otherCovered.has(c));
       });
+
+      const isOptimal = userGroups.length <= qm.selectedGroups.length && redundantGroups.length === 0;
+
+      if (isOptimal) {
+        setCoverStatus({
+          isComplete: true,
+          isOptimal: true,
+          message: `Complete and Minimal Cover! All required cells covered using ${userGroups.length} optimal terms.`
+        });
+      } else if (redundantGroups.length > 0) {
+        const redundantIds = redundantGroups.map(g => g.id).join(', ');
+        setCoverStatus({
+          isComplete: true,
+          isOptimal: false,
+          redundantGroups: redundantGroups.map(g => g.id),
+          message: `Valid Complete Cover! All required cells are covered, but group ${redundantIds} is redundant because all its target cells are already covered by other groups. Minimal cover requires ${qm.selectedGroups.length} terms.`
+        });
+      } else {
+        setCoverStatus({
+          isComplete: true,
+          isOptimal: false,
+          message: `Valid Complete Cover! All required cells are covered, but nonminimal (${userGroups.length} terms used vs ${qm.selectedGroups.length} optimal terms). Consider grouping into larger subcubes.`
+        });
+      }
     }
   };
 
@@ -1620,6 +1858,8 @@ export const SolverE_KMap = () => {
     setSelectedCells([]);
     setGroupFeedback(null);
     setCoverStatus(null);
+    setInspectedGroupId(null);
+    setHoveredGroupId(null);
     setHoveredGroupCells(null);
   };
 
@@ -1808,6 +2048,41 @@ export const SolverE_KMap = () => {
     return minimizeKMap(minterms, dontCares, variables, mode);
   }, [cellStates, totalCells, variables, mode]);
 
+  // Groups to display on the K-Map (Manual userGroups or Auto Solve steps)
+  const displayGroups = useMemo(() => {
+    if (workflowMode === 'manual') {
+      return userGroups;
+    }
+    if (!minResult || !minResult.selectedGroups) return [];
+    
+    const autoGroups = minResult.selectedGroups.map((g, idx) => {
+      const pal = KMAP_GROUP_PALETTE[idx % KMAP_GROUP_PALETTE.length];
+      return {
+        id: `G${idx + 1}`,
+        groupNumber: idx + 1,
+        cells: g.cells,
+        size: g.size,
+        term: g.term,
+        constantVars: g.constantVars,
+        eliminatedVars: g.eliminatedVars,
+        color: pal.border,
+        colorId: pal.id,
+        palette: pal,
+        isEssential: g.isEssential,
+        explanation: g.explanation
+      };
+    });
+
+    if (showAllSteps || activeStep > minResult.selectedGroups.length + 1) {
+      return autoGroups;
+    }
+    if (activeStep === 1) {
+      return [];
+    }
+    const currentGroupIdx = activeStep - 2;
+    return autoGroups.slice(0, currentGroupIdx + 1);
+  }, [workflowMode, userGroups, minResult, showAllSteps, activeStep]);
+
   // Derived current canonical function description
   const functionSummary = useMemo(() => {
     const minterms = [];
@@ -1851,6 +2126,7 @@ export const SolverE_KMap = () => {
     // Steps 2 to (1 + N): Form Each Group
     minResult.selectedGroups.forEach((g, idx) => {
       const groupNum = idx + 1;
+      const pal = KMAP_GROUP_PALETTE[idx % KMAP_GROUP_PALETTE.length];
       let geoNote = 'Standard Subcube';
       const cellSet = new Set(g.cells);
       if (g.cells.length === 4 && cellSet.has(0) && cellSet.has(2) && cellSet.has(8) && cellSet.has(10)) {
@@ -1868,7 +2144,8 @@ export const SolverE_KMap = () => {
         title: `Step ${groupNum + 1} : Form Group G${groupNum}`,
         type: 'group',
         groupId: `G${groupNum}`,
-        groupColor: g.color || '#285C49',
+        groupColor: pal.border,
+        palette: pal,
         badge: g.isEssential ? 'Essential Prime Implicant' : 'Prime Implicant',
         badgeColor: g.isEssential ? 'bg-[#EBF3ED] text-[#285C49]' : 'bg-amber-50 text-amber-800',
         cells: g.cells,
@@ -1912,6 +2189,11 @@ export const SolverE_KMap = () => {
   // Active step highlight
   const currentStepData = solutionSteps[activeStep - 1] || solutionSteps[0];
 
+  // Active inspected group ID
+  const effectiveInspectedId = inspectedGroupId || hoveredGroupId || (
+    workflowMode === 'guided' && currentStepData?.type === 'group' ? currentStepData.groupId : null
+  );
+
   return (
     <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-2xs space-y-6">
       {/* Header */}
@@ -1924,7 +2206,7 @@ export const SolverE_KMap = () => {
             Interactive Karnaugh Map Solver &amp; Minimizer
           </h3>
           <p className="text-xs text-[#64748B] mt-0.5">
-            Explicit minterm/maxterm inputs, step-by-step group derivation, Quine-McCluskey exact minimization, and student manual grouping.
+            Explicit minterm/maxterm inputs, persistent colored group boundaries, Quine-McCluskey exact minimization, and manual student grouping.
           </p>
         </div>
 
@@ -1975,7 +2257,11 @@ export const SolverE_KMap = () => {
 
           <div className="flex items-center gap-1 bg-[#FAF8F5] p-1 rounded-xl border border-[#DCE7E1]">
             <button
-              onClick={() => setWorkflowMode('manual')}
+              onClick={() => {
+                setWorkflowMode('manual');
+                setInspectedGroupId(null);
+                setHoveredGroupId(null);
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition-all ${
                 workflowMode === 'manual'
                   ? 'bg-[#285C49] text-white shadow-xs'
@@ -1985,7 +2271,11 @@ export const SolverE_KMap = () => {
               Manual Grouping
             </button>
             <button
-              onClick={() => setWorkflowMode('guided')}
+              onClick={() => {
+                setWorkflowMode('guided');
+                setInspectedGroupId(null);
+                setHoveredGroupId(null);
+              }}
               className={`px-2.5 py-1 rounded-lg text-xs font-bold font-mono transition-all ${
                 workflowMode === 'guided'
                   ? 'bg-[#285C49] text-white shadow-xs'
@@ -2268,7 +2558,7 @@ export const SolverE_KMap = () => {
               Rows: {descriptor.rowVars.join('')} | Columns: {descriptor.colVars.join('')}
             </span>
             <span className="text-[11px] text-[#64748B]">
-              Click cell to toggle value: 0 → 1 → X → 0
+              {workflowMode === 'manual' ? 'Select cells to form group' : 'Click cell to toggle value: 0 → 1 → X → 0'}
             </span>
           </div>
 
@@ -2305,10 +2595,8 @@ export const SolverE_KMap = () => {
                       const isTarget = (mode === 'SOP' && state === 1) || (mode === 'POS' && state === 0);
                       const isDontCare = state === 'X';
 
-                      // Check if cell is in active group (Auto Solve mode)
-                      const isCellInActiveStepGroup = workflowMode === 'guided' && currentStepData?.type === 'group' && currentStepData?.cells?.includes(cellIdx);
-                      const isCellInHoveredGroup = hoveredGroupCells && hoveredGroupCells.includes(cellIdx);
-                      const activeGroupColor = isCellInActiveStepGroup ? currentStepData.groupColor : (isCellInHoveredGroup ? '#285C49' : null);
+                      // Find all formed groups covering this cell
+                      const cellGroups = displayGroups.filter(g => g.cells && g.cells.includes(cellIdx));
 
                       return (
                         <td
@@ -2320,27 +2608,107 @@ export const SolverE_KMap = () => {
                               toggleCellVal(cellIdx);
                             }
                           }}
-                          className={`p-3 border border-[#DCE7E1] text-center relative cursor-pointer select-none transition-all ${
+                          className={`p-0 relative border border-[#DCE7E1] text-center select-none cursor-pointer transition-all ${
                             isSelected 
-                              ? 'bg-amber-100 ring-2 ring-amber-500 z-10' 
-                              : activeGroupColor
-                                ? 'ring-2 z-10'
-                                : isTarget 
-                                  ? (mode === 'SOP' ? 'bg-[#285C49] text-white' : 'bg-[#4F46E5] text-white')
-                                  : isDontCare 
-                                    ? 'bg-amber-50 text-amber-900 border-amber-300' 
-                                    : 'bg-white text-[#64748B] hover:bg-slate-50'
+                              ? 'bg-amber-50 ring-2 ring-amber-500 z-30' 
+                              : 'bg-white hover:bg-slate-50/70'
                           }`}
-                          style={activeGroupColor ? { backgroundColor: `${activeGroupColor}20`, borderColor: activeGroupColor } : {}}
+                          style={{
+                            width: varCount === 2 ? '90px' : varCount === 3 ? '76px' : '68px',
+                            height: varCount === 2 ? '80px' : varCount === 3 ? '72px' : '64px',
+                            minWidth: '60px',
+                            minHeight: '60px'
+                          }}
                         >
-                          <span className="text-base font-bold font-mono block">
-                            {state}
-                          </span>
-                          <span className={`text-[9px] block font-mono ${
-                            isSelected ? 'text-[#64748B]' : isTarget ? 'text-white/80' : 'text-[#94A3B8]'
-                          }`}>
+                          {/* Concentric Group Geometric Boundary Overlays */}
+                          {cellGroups.map((g, depth) => {
+                            const geo = getGroupCellGeometry(g.cells, rIdx, cIdx, matrix);
+                            if (!geo) return null;
+                            const isInspected = effectiveInspectedId === g.id;
+                            const isDimmed = effectiveInspectedId && !isInspected;
+                            const pal = g.palette || KMAP_GROUP_PALETTE[depth % KMAP_GROUP_PALETTE.length];
+                            
+                            // Depth offset: 3px per depth level to keep all overlapping boundaries clearly visible
+                            const insetOffset = 2 + depth * 3;
+                            const borderWidth = isInspected ? 3.5 : 2;
+
+                            return (
+                              <div
+                                key={g.id}
+                                className={`absolute pointer-events-none transition-all ${
+                                  isDimmed ? 'opacity-65' : 'opacity-100'
+                                }`}
+                                style={{
+                                  top: `${insetOffset}px`,
+                                  left: `${insetOffset}px`,
+                                  right: `${insetOffset}px`,
+                                  bottom: `${insetOffset}px`,
+                                  backgroundColor: pal.bg,
+                                  borderTop: geo.isWrapTop 
+                                    ? `${borderWidth}px dashed ${pal.border}` 
+                                    : geo.borderTop ? `${borderWidth}px solid ${pal.border}` : 'none',
+                                  borderBottom: geo.isWrapBottom 
+                                    ? `${borderWidth}px dashed ${pal.border}` 
+                                    : geo.borderBottom ? `${borderWidth}px solid ${pal.border}` : 'none',
+                                  borderLeft: geo.isWrapLeft 
+                                    ? `${borderWidth}px dashed ${pal.border}` 
+                                    : geo.borderLeft ? `${borderWidth}px solid ${pal.border}` : 'none',
+                                  borderRight: geo.isWrapRight 
+                                    ? `${borderWidth}px dashed ${pal.border}` 
+                                    : geo.borderRight ? `${borderWidth}px solid ${pal.border}` : 'none',
+                                  borderRadius: geo.borderRadius,
+                                  boxShadow: isInspected ? `0 0 8px ${pal.border}70` : 'none',
+                                  zIndex: isInspected ? 15 : 5 + depth
+                                }}
+                              />
+                            );
+                          })}
+
+                          {/* Top-Left Corner: Minterm Index */}
+                          <span className="absolute top-1 left-1.5 font-mono text-[9px] font-semibold text-slate-400 select-none z-20">
                             m{cellIdx}
                           </span>
+
+                          {/* Top-Right Corner: Small G1, G2, G3 Badges */}
+                          {cellGroups.length > 0 && (
+                            <div className="absolute top-1 right-1 flex items-center gap-0.5 z-25">
+                              {cellGroups.map(g => {
+                                const pal = g.palette || KMAP_GROUP_PALETTE[0];
+                                const isInspected = effectiveInspectedId === g.id;
+                                return (
+                                  <button
+                                    key={g.id}
+                                    type="button"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setInspectedGroupId(prev => prev === g.id ? null : g.id);
+                                    }}
+                                    title={`Group ${g.id} (${g.term}) : Click to inspect`}
+                                    className={`px-1 py-0.2 rounded font-mono text-[8px] font-bold border transition-all ${
+                                      isInspected 
+                                        ? `${pal.badgeBg} ${pal.badgeText} ${pal.badgeBorder} ring-1 ${pal.ring} shadow-2xs`
+                                        : `${pal.badgeBg} ${pal.badgeText} ${pal.badgeBorder} hover:scale-105`
+                                    }`}
+                                  >
+                                    {g.id}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+
+                          {/* Centered Target Value (1, 0, or X) */}
+                          <div className="relative z-20 flex flex-col items-center justify-center h-full pointer-events-none">
+                            <span className={`font-mono font-black text-base sm:text-lg ${
+                              isDontCare
+                                ? 'text-amber-600'
+                                : isTarget
+                                  ? (mode === 'SOP' ? 'text-[#285C49]' : 'text-[#4F46E5]')
+                                  : 'text-slate-300'
+                            }`}>
+                              {state}
+                            </span>
+                          </div>
                         </td>
                       );
                     })}
@@ -2349,6 +2717,35 @@ export const SolverE_KMap = () => {
               </tbody>
             </table>
           </div>
+
+          {/* Formed Groups Persistent Legend Bar */}
+          {displayGroups.length > 0 && (
+            <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-[#DCE7E1] text-xs font-mono">
+              <span className="font-bold text-[#64748B]">Active Groups:</span>
+              {displayGroups.map((g) => {
+                const pal = g.palette || KMAP_GROUP_PALETTE[0];
+                const isInspected = effectiveInspectedId === g.id;
+                return (
+                  <button
+                    key={g.id}
+                    type="button"
+                    onClick={() => setInspectedGroupId(prev => prev === g.id ? null : g.id)}
+                    className={`px-2 py-0.5 rounded-md font-mono text-xs font-bold border flex items-center gap-1.5 transition-all ${
+                      isInspected 
+                        ? `${pal.badgeBg} ${pal.badgeText} ${pal.badgeBorder} ring-2 ${pal.ring} shadow-xs`
+                        : `${pal.badgeBg} ${pal.badgeText} ${pal.badgeBorder} hover:scale-105`
+                    }`}
+                  >
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: pal.border }} />
+                    <span>{g.id}: {g.term}</span>
+                  </button>
+                );
+              })}
+              <span className="text-[10px] text-[#64748B] ml-auto">
+                Click badge to highlight group
+              </span>
+            </div>
+          )}
 
           <div className="flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono text-[#64748B] pt-1 border-t border-[#DCE7E1]">
             <span>Click cell: {workflowMode === 'manual' ? 'Select cell for group' : 'Cycle 0 → 1 → X → 0'}</span>
@@ -2420,34 +2817,69 @@ export const SolverE_KMap = () => {
                   </div>
                 ) : (
                   <div className="space-y-2 max-h-60 overflow-y-auto">
-                    {userGroups.map((g, idx) => (
-                      <div 
-                        key={g.id} 
-                        onMouseEnter={() => setHoveredGroupCells(g.cells)}
-                        onMouseLeave={() => setHoveredGroupCells(null)}
-                        className="p-3 rounded-xl border border-[#DCE7E1] bg-white space-y-1 text-xs font-mono"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
-                            <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: g.color }} />
-                            {g.id}: Term = {g.term}
-                          </span>
-                          <button
-                            onClick={() => setUserGroups(prev => prev.filter((_, i) => i !== idx))}
-                            className="text-[#DC2626] hover:bg-rose-50 p-1 rounded"
-                            title="Delete Group"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                    {userGroups.map((g, idx) => {
+                      const isInspected = effectiveInspectedId === g.id;
+                      const pal = g.palette || KMAP_GROUP_PALETTE[idx % KMAP_GROUP_PALETTE.length];
+                      return (
+                        <div 
+                          key={g.id} 
+                          onClick={() => setInspectedGroupId(prev => prev === g.id ? null : g.id)}
+                          onMouseEnter={() => setHoveredGroupId(g.id)}
+                          onMouseLeave={() => setHoveredGroupId(null)}
+                          className={`p-3 rounded-xl border cursor-pointer transition-all space-y-1.5 text-xs font-mono ${
+                            isInspected 
+                              ? 'bg-slate-50/90 ring-2 shadow-xs' 
+                              : 'bg-white hover:bg-slate-50/50'
+                          }`}
+                          style={{
+                            borderColor: isInspected ? pal.border : '#DCE7E1',
+                            boxShadow: isInspected ? `0 0 0 1px ${pal.border}` : undefined
+                          }}
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+                              <span 
+                                className="w-3.5 h-3.5 rounded flex items-center justify-center text-[9px] font-bold text-white shadow-2xs" 
+                                style={{ backgroundColor: pal.border }}
+                              >
+                                {g.id}
+                              </span>
+                              <span className="text-[#1E293B]">{g.id} : Term = </span>
+                              <span className="font-bold text-sm px-1.5 py-0.5 rounded" style={{ backgroundColor: pal.bg, color: pal.border }}>
+                                {g.term}
+                              </span>
+                            </span>
+                            <div className="flex items-center gap-1">
+                              {isInspected && (
+                                <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-200 text-slate-700">
+                                  Inspecting
+                                </span>
+                              )}
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleDeleteGroup(g.id);
+                                }}
+                                className="text-[#DC2626] hover:bg-rose-50 p-1 rounded transition-colors"
+                                title="Delete Group"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
+                          <div className="text-[11px] text-[#64748B] flex items-center gap-1">
+                            <span>Cells:</span>
+                            <span className="font-bold text-[#1E293B]">{'{'}{g.cells.join(', ')}{'}'}</span>
+                            <span>({g.size} cells)</span>
+                          </div>
+                          <div className="text-[10px] text-[#285C49] flex flex-wrap gap-x-2">
+                            <span>Eliminates: {(g.eliminatedVars || []).join(', ') || 'None'}</span>
+                            <span>|</span>
+                            <span>Preserves: {(g.constantVars || []).map(c => `${c.variable}=${c.value}`).join(', ') || 'None'}</span>
+                          </div>
                         </div>
-                        <div className="text-[11px] text-[#64748B]">
-                          Cells: {'{'}{g.cells.join(', ')}{'}'} ({g.size} cells)
-                        </div>
-                        <div className="text-[10px] text-[#285C49]">
-                          Eliminates: {(g.eliminatedVars || []).join(', ') || 'None'} | Preserves: {(g.constantVars || []).map(c => `${c.variable}=${c.value}`).join(', ') || 'None'}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
 
@@ -2465,8 +2897,10 @@ export const SolverE_KMap = () => {
                 {coverStatus && (
                   <div className={`p-3 rounded-xl text-xs font-mono ${
                     coverStatus.isComplete
-                      ? 'bg-[#EBF3ED] border border-[#285C49]/40 text-[#285C49]'
-                      : 'bg-amber-50 border border-amber-300 text-amber-900'
+                      ? coverStatus.isOptimal
+                        ? 'bg-[#EBF3ED] border border-[#285C49]/40 text-[#285C49]'
+                        : 'bg-amber-50 border border-amber-300 text-amber-900'
+                      : 'bg-rose-50 border border-rose-300 text-rose-900'
                   }`}>
                     {coverStatus.message}
                   </div>
@@ -2532,9 +2966,17 @@ export const SolverE_KMap = () => {
                   {solutionSteps.map((st) => (
                     <div 
                       key={st.stepNumber}
-                      onMouseEnter={() => st.cells?.length && setHoveredGroupCells(st.cells)}
-                      onMouseLeave={() => setHoveredGroupCells(null)}
-                      className="p-3.5 rounded-xl border border-[#DCE7E1] bg-white space-y-2 text-xs font-mono"
+                      onMouseEnter={() => st.groupId && setHoveredGroupId(st.groupId)}
+                      onMouseLeave={() => setHoveredGroupId(null)}
+                      onClick={() => st.groupId && setInspectedGroupId(prev => prev === st.groupId ? null : st.groupId)}
+                      className={`p-3.5 rounded-xl border bg-white space-y-2 text-xs font-mono transition-all ${
+                        st.groupId && effectiveInspectedId === st.groupId
+                          ? 'ring-2 border-transparent shadow-xs'
+                          : 'border-[#DCE7E1]'
+                      }`}
+                      style={{
+                        ringColor: st.groupColor
+                      }}
                     >
                       <div className="flex items-center justify-between">
                         <span className="font-bold text-[#1E293B] flex items-center gap-1.5">

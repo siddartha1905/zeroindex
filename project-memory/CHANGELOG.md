@@ -2,6 +2,36 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-20: Focused K-Map Visual Correction: Persistent Colored Groups and Concentric Boundaries
+
+- **Type**: fix / interactive-solvers / kmap-visualization / dld-unit-2 / persistent-groups
+- **Summary**: Implemented focused visual correction for the Interactive Karnaugh Map Solver (`SolverE_KMap`) in `src/components/Unit2Solvers.jsx` and `src/utils/booleanEngine.js` ensuring completed groups persistently display distinct colors, continuous geometric boundaries, and concentric overlap rings:
+  1. **Root Cause Resolution**:
+     - Identified that cells previously defaulted to solid opaque green (`#285C49`) or indigo fills, and `userGroups` was only consulted for an active hover state.
+     - Upon clicking "Form Group", hover state cleared and the map reverted to solid filled 1-cells, obscuring groupings.
+  2. **Standard Group Color Palette (`KMAP_GROUP_PALETTE`)**:
+     - Standardized accessible palette: G1 Blue (`#2563EB`), G2 Emerald (`#059669`), G3 Amber (`#D97706`), G4 Purple (`#7C3AED`), G5 Rose (`#E11D48`), G6 Cyan (`#0891B2`), G7 Indigo (`#4F46E5`).
+     - Stable assignment ensures each group retains its assigned color even when subsequent groups are added or removed.
+  3. **Perimeter-Only Geometry & Toroidal Wraparound (`getGroupCellGeometry`)**:
+     - Added perimeter calculation in `src/utils/booleanEngine.js`: internal cell borders between adjacent cells within the same group are removed.
+     - Singletons render 4 solid borders; pairs render 1 continuous rectangle; quads render 1 square/rectangle; octets render 1 continuous region.
+     - Wraparound groups render dashed boundary lines at outside edges with inward-curving corners. 4-corner quad `{0,2,8,10}` renders dashed wrap lines on outer edges and curved inward corners.
+  4. **Multi-Group Overlaps & Concentric Layering**:
+     - Up to 4 overlapping groups per cell are rendered via nested concentric border insets (`2 + depth * 3` px) and restrained translucent fills (`opacity: 0.12`).
+     - Centered values (1, 0, X) sit in high-contrast `z-20` on clean neutral cell backgrounds, remaining legible without hover.
+  5. **Bidirectional Group Inspection & Legend**:
+     - Persistent Active Groups legend below K-Map with interactive color chips and inspection controls.
+     - Clickable pill badges in cell top-right corners (`[G1] [G3]`) allow inspecting groups directly from the map.
+     - Hovering or clicking a group card in the Formed Groups panel emphasizes its boundary while gently subduing other groups.
+  6. **Educational Redundancy Detection**:
+     - `handleCheckCover` detects mathematically redundant groups where all target minterms/maxterms are already covered by other selected groups, providing clear guidance without invalidating valid alternatives.
+  7. **Comprehensive Verification**:
+     - Added 38 automated test assertions in `scripts/verifyUnit2Solvers.mjs` (now 157 passing tests, total suite 4,472 passing tests).
+     - Full test suite passed across all modules. SSR rendering verified. Zero em-dashes and zero en-dashes confirmed.
+- **Affected Files**: `src/components/Unit2Solvers.jsx`, `src/utils/booleanEngine.js`, `scripts/verifyUnit2Solvers.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/TECHNICAL_SNAPSHOT.md`, `project-memory/CHANGELOG.md`.
+
+---
+
 ## 2026-10-20: Complete DLD Phase 3 Subject Resources and Connected Learning Loop
 
 - **Type**: feature / subject-resources / connected-learning / reference-center / dld-unit-1-2 / phase-3-complete

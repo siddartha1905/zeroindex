@@ -263,6 +263,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-032 | 2026-10-20 | Focused K-Map Visual Correction: Persistent Colored Groups, Concentric Layering, and Toroidal Geometry Outlines
+
+- **Decision**: (1) Corrected the visual usability issue in the Interactive Karnaugh Map Solver (`src/components/Unit2Solvers.jsx` and `src/utils/booleanEngine.js`) where formed groups reverted to solid dark green (`#285C49`) upon formation; (2) Defined standard accessible color palette `KMAP_GROUP_PALETTE` (G1: Blue `#2563EB`, G2: Emerald `#059669`, G3: Amber `#D97706`, G4: Purple `#7C3AED`, G5: Rose `#E11D48`, G6: Cyan `#0891B2`, G7: Indigo `#4F46E5`); (3) Created geometry engine `getGroupCellGeometry` rendering complete continuous perimeter boundaries for pairs, quads, octets, and singletons without internal cell dividing borders; (4) Added toroidal wraparound boundary rendering with dashed exterior edges and smooth inward-curving interior corners for four-corner quads and horizontal/vertical cylindrical edge wraps; (5) Handled overlapping groups via concentric depth offsets (`2 + depth * 3` px) and restrained translucent fills (`rgba(...)`) keeping all intersecting boundaries visible side-by-side without obscuring one another; (6) Positioned cell value (1, 0, or X) in high-contrast `z-20` centered container for clear readability above all group overlays; (7) Established bidirectional synchronization between the K-Map grid and Formed Groups list via `inspectedGroupId` and cell badge buttons (`[G1] [G2]`); (8) Enhanced cover completeness feedback with mathematical redundancy detection; (9) Added Section 11 to `scripts/verifyUnit2Solvers.mjs` bringing total solver tests from 119 to 157; verified Faculty Cases A and B; passed all 4,472 automated checks across 6 test suites with 0 failures; (10) Maintained strict zero em-dash and zero en-dash compliance across all code, content, and test files.
+- **Rationale**: Students previously could not discern overlapping groups or verify completed groupings without actively hovering over individual group cards. Persistent geometric colored boundaries replicate real classroom grouping diagrams, making Boolean minimization visually educational, accessible, and intuitive.
+- **Affected Files**: `src/utils/booleanEngine.js`, `src/components/Unit2Solvers.jsx`, `scripts/verifyUnit2Solvers.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+- **Approval Evidence**: `verifyUnit2Solvers.mjs` passed 157/157 checks; `verifyDldResources.mjs` passed 238/238 checks; `verifyUnit2PracticeArena.mjs` passed 2,715/2,715 checks; `verifySection25Math.mjs` passed 365/365 checks; `verifyUnit2Full.mjs` passed 953/953 checks; `testUnit2SolversSSR.mjs` passed 7/7 SSR checks; `npm run build` succeeded in 4.13s with 0 errors. Strict zero-dash audit passed.
+- **Verification / Follow-up Requirements**: Maintained on `dld-unit2-development`. Do not merge into main, push to GitHub, or deploy to Vercel without user approval.
+
+---
+
 ## Decision Record Template
 
 ```markdown
