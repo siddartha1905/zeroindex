@@ -140,6 +140,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-019 | 2026-10-20 | Section 2.2 Complete Academic Rebuild (WHY-FIRST 5-Tab Architecture)
+
+- **Decision**: (1) Rebuild Section 2.2 ("Simplification of Boolean Expressions Using Algebraic Laws") using the permanent ZeroIndex WHY-FIRST 5-tab pedagogical architecture: Start Here, Simplification Techniques, Worked Models, Cheat Sheet & Shortcuts, and Practice Lab; (2) In Tab 1, establish the core engineering purpose ("A Boolean expression describes the logical behavior of a digital circuit... The goal is to preserve the function while identifying a simpler mathematical representation that may lead to a more efficient circuit implementation"), 4 physical benefits with hardware caveats, objective before/after demonstration ($F = A + AB \implies F = A$) with full 4-row truth table verification, the 6-step simplification framework (READ, RECOGNIZE, CHOOSE, TRANSFORM, CHECK, CONCLUDE), and the critical distinction between equivalent, simplified, and minimal expressions; (3) In Tab 2, present matching side-by-side panels for the 4 fundamental OR laws ($A+0=A, A+1=1, A+A=A, A+A'=1$) and 4 fundamental AND laws ($A·1=A, A·0=0, A·A=A, A·A'=0$), duality summary, 10 core pattern-recognition techniques, and 10 common mistakes (Mistake -> Correct Method -> Why); (4) In Tab 3, implement exactly 24 progressive worked models (5 Basic, 6 Intermediate, 12 Advanced, 1 Optional 5-Variable Challenge) where every single step shows the exact law applied and answers the pedagogical question "WHY was this law chosen at this specific step?", including deep multi-step derivations (ADV05 with 9 steps, ADV10 with 14 steps, CH01 across all 32 combinations); (5) In Tab 4, provide a dedicated Simplification Strategy Sheet with a law-selection decision guide flowchart, pattern-recognition reference table, operator precedence hierarchy, factoring shortcuts, 7-point simplification checklist, and an inline link/modal to the Section 2.1 Master Cheat Sheet; (6) In Tab 5, provide 24 validated practice problems (P01 to P24) with two-tier progressive hints, toggleable step-by-step solutions, verified answer keys, and pedagogical observations; (7) Formulate automated test suite `scripts/verifySection22Math.mjs` verifying all 8 fundamental laws, 10 pattern identities, all 24 worked models, all 24 practice questions, and zero-dash compliance (78/78 checks passed).
+- **Rationale**: Boolean algebraic simplification cannot be mastered through abstract lists of identities or disconnected formulas; students require pattern recognition, decision reasoning, and extensive verified multi-step practice to build genuine problem-solving confidence.
+- **Affected Files**: `src/data/dldSection22Data.js`, `src/components/Section22View.jsx`, `src/data/dldVideoConfig.js`, `scripts/verifySection22Math.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`.
+- **Approval Evidence**: All 78/78 tests in `verifySection22Math.mjs`, 95/95 in `verifySection21Math.mjs`, 842/842 in `verifyUnit2Full.mjs`, and 78/78 in Unit 1 suites pass with 100% accuracy. Zero em-dashes and zero en-dashes throughout. `npm run build` succeeds in 3.55s.
+- **Verification / Follow-up Requirements**: Continued on branch `dld-unit2-development` (preview status `isLive: false`). User review required before proceeding to Section 2.3 or merging to main.
+
+---
+
 ## Decision Record Template
 
 ```markdown
@@ -151,3 +161,4 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+

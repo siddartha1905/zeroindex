@@ -42,6 +42,15 @@ export const dldVideoRegistry = {
     embedUrl: "https://www.youtube-nocookie.com/embed/3pbH9IhxwOg",
     duration: "8 min",
     topic: "Redundancy Law and Consensus Theorem Simplification"
+  },
+  "boolean-examples": {
+    id: "A2d57vVw8vQ",
+    title: "Boolean Algebra Examples (Part 1)",
+    publisher: "Neso Academy",
+    url: "https://www.youtube.com/watch?v=A2d57vVw8vQ",
+    embedUrl: "https://www.youtube-nocookie.com/embed/A2d57vVw8vQ",
+    duration: "14 min",
+    topic: "Simplification of Boolean Expressions Using Algebraic Laws"
   }
 };
 
