@@ -176,6 +176,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-023 | 2026-10-20 | Section 2.4 Complete Academic Rebuild (6-Tab Architecture)
+
+- **Decision**: (1) Rebuild Section 2.4 ("SOP and POS Forms, Conversions and Simplification") into the approved 6-tab academic architecture: Start Here, Conversion Methods, Guided Demonstrations, Worked Models, Cheat Sheet, and Practice Lab; (2) In Tab 1, establish the foundational WHY-FIRST question ("If the output is the same, why do we represent the function in different forms?") with 6 structured bullet points, a primary dual-form visual demonstration ($F = AB + C \iff (A+C)(B+C)$) with an 8-row truth table proof, 2-level AND-OR and OR-AND SVG schematics, a 6-stage problem-solving roadmap (READ -> RECOGNIZE -> CHOOSE -> TRANSFORM -> VERIFY -> CONCLUDE), engineering hardware qualifications, and curated Neso Academy video `canonical-conversion`; (3) In Tab 2, present 8 comprehensive conversion methods with when required, starting/target forms, main mathematical rules, step-by-step procedures, concrete verified examples, common examination traps, and pro shortcuts, alongside a prominent Critical Distinction card clarifying that converting $F$ uses complementary indices ($F = \Sigma m(S) \iff F = \Pi M(U \setminus S)$), whereas complementing $F$ to $F'$ swaps index sets ($F' = \Sigma m(U \setminus S) = \Pi M(S)$); (4) In Tab 3, implement 4 Guided Demonstrations (GD1: SOP missing-variable expansion, GD2: POS missing-variable expansion via $XX'=0$, GD3: index-set conversion with interactive colored tiles, GD4: general SOP to POS factoring with gate-cost comparison); (5) In Tab 4, provide exactly 18 worked models (5 Basic, 5 Intermediate, 8 Advanced) using the approved 4-column layout (`Step Number | Mathematical Expression | Applied Law | Why It Is Valid`); (6) In Tab 5, provide a Master Cheat Sheet with a 6-formula panel, a 7-pathway conversion decision matrix, core identities, and 11 common exam traps (Incorrect -> Correct -> Why); (7) In Tab 6, provide 28 practice problems across Basic, Intermediate, Advanced, and Challenge categories with two-tier hints and toggleable step-by-step revealed solutions; (8) Build automated verification suite `scripts/verifySection24Math.mjs` verifying all 8 conversion methods, all 4 guided demonstrations, all 18 models, all 28 practice problems, truth tables over 3 and 4 variables, $\Sigma$ and $\Pi$ glyphs, and zero-dash compliance (387/387 checks passed); (9) Validate 100% schema compliance with `scripts/testSection24RenderProps.mjs`.
+- **Rationale**: Equip first-year engineering students with systematic, exam-ready algebraic conversion and factoring skills, eliminate polarity and index confusion between SOP and POS, and provide progressive, multi-step worked models that build genuine problem-solving confidence before tackling Karnaugh Maps in Section 2.5.
+- **Affected Files**: `src/data/dldSection24Data.js`, `src/components/Section24View.jsx`, `src/data/dldVideoConfig.js`, `scripts/verifySection24Math.mjs`, `scripts/testSection24RenderProps.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`.
+- **Approval Evidence**: Dedicated math verification suite `verifySection24Math.mjs` passes 387/387 checks with 0 failures; `testSection24RenderProps.mjs` passes 100% schema validation; regression suites for Section 2.1 (95 passed), Section 2.2 (78 passed), Section 2.3 (551 passed), and Unit 1 (44 passed) pass with 100% accuracy. Production build `npm run build` succeeds in 3.86s with zero errors and zero warnings. Zero em-dashes and zero en-dashes confirmed across all files.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development` (preview status `isLive: false`). Stop after Section 2.4 completion; do not merge into main or proceed to Section 2.5 without explicit user instruction.
+
+---
+
 ## Decision Record Template
 
 ```markdown
@@ -187,5 +197,6 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+
 
 

@@ -60,6 +60,15 @@ export const dldVideoRegistry = {
     embedUrl: "https://www.youtube-nocookie.com/embed/Km5pTz67uGc",
     duration: "10 min",
     topic: "Canonical and Standard Forms: Minterm and Maxterm Expansion"
+  },
+  "canonical-conversion": {
+    id: "f0trF1LtYZ4",
+    title: "Minimal to Canonical Form Conversion (Part 2)",
+    publisher: "Neso Academy",
+    url: "https://www.youtube.com/watch?v=f0trF1LtYZ4",
+    embedUrl: "https://www.youtube-nocookie.com/embed/f0trF1LtYZ4",
+    duration: "10 min",
+    topic: "Conversion of General POS and SOP into Canonical Forms"
   }
 };
 
