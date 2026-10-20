@@ -1,14 +1,15 @@
 /**
- * ZeroIndex Portal - Unit 1 Master Question Bank (110 Verified Questions)
+ * ZeroIndex Portal - Unit 1 Master Question Bank (125 Verified Questions)
  * Strictly zero em-dashes (\u2014) or en-dashes (\u2013).
  * Strictly zero collegiate affiliations or test session years.
  * 100% brand-new numerical values that do not duplicate Worked Examples in Sections 1.1 to 1.7.
- * Covers 4 core Unit 1 topics:
+ * Covers 5 core Unit 1 topics:
  *   1. Number Systems & All 12 Conversions (35 Qs)
  *   2. Binary Arithmetic with 95% Addition & Direct Subtraction (25 Qs)
  *   3. Complements & Complement Subtraction (1's, 2's, 9's, 10's) (30 Qs)
  *   4. Signed Binary Numbers, Overflow & General Unit 1 Theory (20 Qs)
- * Total Pool: 110 Questions.
+ *   5. Logic Gates, Truth Tables & Universal Realizations (15 Qs)
+ * Total Pool: 125 Questions.
  */
 
 export const unit1QuizBank = [
@@ -8901,6 +8902,805 @@ export const unit1QuizBank = [
       "fastShortcut": "Fast Fact: Digital advantage = Noise Immunity + Exact Signal Regeneration!",
       "verification": "Foundational Digital Electronics Axiom."
     }
+  },
+  {
+    "id": "q-g1",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: XOR Gate Truth Table",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "What is the output Y of a standard 2-input XOR gate when both input lines are set to HIGH (A = 1, B = 1)?",
+    "promptDetail": "Evaluate the Exclusive-OR algebraic equation Y = A'B + AB'.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "0",
+    "acceptedAnswers": [
+      "0",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "0",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "1",
+        "distractorReason": "Confused XOR with inclusive OR where 1 + 1 = 1"
+      },
+      {
+        "label": "C",
+        "text": "High-Z",
+        "distractorReason": "XOR is an active push-pull gate, not a disabled tri-state buffer"
+      },
+      {
+        "label": "D",
+        "text": "Indeterminate",
+        "distractorReason": "Both inputs are valid Logic 1 voltages yielding a deterministic 0 output"
+      }
+    ],
+    "hint1": "Formula & Rule: XOR evaluates to 1 if and only if exactly one input is 1 (inputs differ). If inputs are identical, the output is 0.",
+    "hint2": "First Step & Trap: Algebraic substitution: Y = (1)'(1) + (1)(1)' = (0)(1) + (1)(0) = 0 + 0 = 0.",
+    "solution": {
+      "finalAnswer": "0",
+      "steps": [
+        {
+          "title": "XOR Logic Definition",
+          "type": "summary",
+          "content": "For inputs A = 1 and B = 1, the Exclusive-OR function Y = A ⊕ B = A'B + AB' evaluates to 0 · 1 + 1 · 0 = 0. The output is 0 whenever both inputs are equal."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Equal inputs produce 0 in XOR; different inputs produce 1.",
+      "verification": "Truth table row: A=1, B=1 -> Y=0."
+    }
+  },
+  {
+    "id": "q-g2",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal NAND Synthesis",
+    "questionType": "numerical_mcq",
+    "difficulty": "Medium",
+    "set": "gates",
+    "question": "What is the minimum number of 2-input NAND gates required to implement a 2-input XOR function Y = A ⊕ B?",
+    "promptDetail": "Recall the canonical minimal universal NAND realization for Exclusive-OR.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "4",
+    "acceptedAnswers": [
+      "4",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "4",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "3",
+        "distractorReason": "3 NAND gates cannot produce both complement cross-terms and the final sum"
+      },
+      {
+        "label": "C",
+        "text": "5",
+        "distractorReason": "5 is the minimum number of NOR gates for XOR, not NAND gates"
+      },
+      {
+        "label": "D",
+        "text": "6",
+        "distractorReason": "A naive non-minimal substitution of NOT, AND, and OR uses more than 4 gates"
+      }
+    ],
+    "hint1": "Formula & Rule: First gate computes (AB)'. Second gate computes (A(AB)')'. Third gate computes (B(AB)')'. Fourth gate combines them to produce Y = A ⊕ B.",
+    "hint2": "First Step & Trap: Do not build A' and B' separately with extra inverters; share the intermediate NAND term (AB)' across both input branches.",
+    "solution": {
+      "finalAnswer": "4",
+      "steps": [
+        {
+          "title": "4-NAND XOR Construction",
+          "type": "summary",
+          "content": "Gate 1: G1 = (AB)'. Gate 2: G2 = (A · G1)' = (A(AB)')'. Gate 3: G3 = (B · G1)' = (B(AB)')'. Gate 4: Y = (G2 · G3)' = A'B + AB'. Exactly 4 two-input NAND gates are required."
+        }
+      ],
+      "fastShortcut": "Fast Fact: XOR requires 4 NAND gates; XNOR requires 5 NAND gates (or 4 NOR gates).",
+      "verification": "Standard textbook minimal gate count proof."
+    }
+  },
+  {
+    "id": "q-g3",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal NOR Synthesis",
+    "questionType": "numerical_mcq",
+    "difficulty": "Medium",
+    "set": "gates",
+    "question": "What is the minimum number of 2-input NOR gates required to implement a 2-input XOR function Y = A ⊕ B?",
+    "promptDetail": "Recall the dual relationship between NAND and NOR universal synthesis.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "5",
+    "acceptedAnswers": [
+      "5",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "5",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "4",
+        "distractorReason": "4 NOR gates synthesize XNOR, not XOR"
+      },
+      {
+        "label": "C",
+        "text": "3",
+        "distractorReason": "3 NOR gates are insufficient to generate the non-linearly separable XOR function"
+      },
+      {
+        "label": "D",
+        "text": "6",
+        "distractorReason": "6 is non-minimal because the intermediate term can be shared"
+      }
+    ],
+    "hint1": "Formula & Rule: Implementing XNOR takes 4 NOR gates. Inverting that XNOR output to get XOR requires a 5th NOR gate as an inverter.",
+    "hint2": "First Step & Trap: Remember the duality: XOR needs 4 NANDs (or 5 NORs); XNOR needs 4 NORs (or 5 NANDs).",
+    "solution": {
+      "finalAnswer": "5",
+      "steps": [
+        {
+          "title": "5-NOR XOR Construction",
+          "type": "summary",
+          "content": "Using NOR gates, 4 gates synthesize the equivalence function (A ⊕ B)'. Adding a fifth NOR gate configured as an inverter produces ( (A ⊕ B)' )' = A ⊕ B. Thus 5 gates are required."
+        }
+      ],
+      "fastShortcut": "Fast Fact: XOR = 4 NANDs = 5 NORs. XNOR = 4 NORs = 5 NANDs.",
+      "verification": "Minimal universal gate count theorem."
+    }
+  },
+  {
+    "id": "q-g4",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal NOR Synthesis",
+    "questionType": "numerical_mcq",
+    "difficulty": "Medium",
+    "set": "gates",
+    "question": "What is the minimum number of 2-input NOR gates required to implement a 2-input XNOR (equivalence) function Y = (A ⊕ B)'?",
+    "promptDetail": "Identify the minimal NOR implementation of XNOR.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "4",
+    "acceptedAnswers": [
+      "4",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "4",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "5",
+        "distractorReason": "5 NOR gates implement XOR, not XNOR"
+      },
+      {
+        "label": "C",
+        "text": "3",
+        "distractorReason": "3 NOR gates cannot generate both SOP terms AB and A'B'"
+      },
+      {
+        "label": "D",
+        "text": "6",
+        "distractorReason": "6 is non-minimal"
+      }
+    ],
+    "hint1": "Formula & Rule: XNOR is the dual of XOR. Just as XOR requires 4 NAND gates, XNOR requires exactly 4 NOR gates.",
+    "hint2": "First Step & Trap: First NOR gate forms (A+B)'. Two subsequent NOR gates combine each input with (A+B)'. The fourth NOR gate produces AB + A'B'.",
+    "solution": {
+      "finalAnswer": "4",
+      "steps": [
+        {
+          "title": "4-NOR XNOR Construction",
+          "type": "summary",
+          "content": "Gate 1: G1 = (A + B)'. Gate 2: G2 = (A + G1)'. Gate 3: G3 = (B + G1)'. Gate 4: Y = (G2 + G3)' = AB + A'B' = (A ⊕ B)'. Exactly 4 NOR gates are required."
+        }
+      ],
+      "fastShortcut": "Fast Fact: XNOR = 4 NOR gates. Perfectly symmetric to 4-NAND XOR.",
+      "verification": "Standard switching theory result."
+    }
+  },
+  {
+    "id": "q-g5",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal Logic Foundations",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "Why are NAND and NOR classified as universal logic gates in digital circuit design?",
+    "promptDetail": "Identify the formal definition of functional completeness in Boolean algebra.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Any Boolean logic function can be implemented using only that single gate type alone without any other gates",
+    "acceptedAnswers": [
+      "Any Boolean logic function can be implemented using only that single gate type alone without any other gates",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Any Boolean logic function can be implemented using only that single gate type alone without any other gates",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "They operate at any arbitrary physical voltage without requiring power supply rails",
+        "distractorReason": "All electronic gates require active DC power supplies"
+      },
+      {
+        "label": "C",
+        "text": "They can accept an infinite number of input lines simultaneously without fan-in limitations",
+        "distractorReason": "Physical gates have finite fan-in limits dictated by silicon parasitic capacitances"
+      },
+      {
+        "label": "D",
+        "text": "They exhibit zero propagation delay during digital switching transitions",
+        "distractorReason": "Physical transistors always exhibit non-zero propagation delay"
+      }
+    ],
+    "hint1": "Formula & Rule: A gate set is functionally complete (universal) if it can synthesize the three fundamental Boolean operators: NOT, AND, and OR.",
+    "hint2": "First Step & Trap: Universal refers to functional completeness in logic synthesis, not physical universal compatibility across voltages.",
+    "solution": {
+      "finalAnswer": "Any Boolean logic function can be implemented using only that single gate type alone without any other gates",
+      "steps": [
+        {
+          "title": "Functional Completeness Principle",
+          "type": "summary",
+          "content": "Because NAND (and NOR) can synthesize NOT, AND, and OR operations independently, any arbitrary combinational or sequential Boolean network can be constructed using only NAND (or only NOR) gates."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Universal = Functionally complete (can build any circuit alone).",
+      "verification": "Formal Post-Markov Functional Completeness Theorem."
+    }
+  },
+  {
+    "id": "q-g6",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Multiple-Input XOR Logic",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "For a 3-input XOR gate Y = A ⊕ B ⊕ C, what is the output state Y when all three inputs are HIGH (A = 1, B = 1, C = 1)?",
+    "promptDetail": "Apply the odd-parity definition of multiple-input Exclusive-OR.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "1",
+    "acceptedAnswers": [
+      "1",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "1",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "0",
+        "distractorReason": "Confused with a 2-input XOR where 1 ⊕ 1 = 0"
+      },
+      {
+        "label": "C",
+        "text": "Indeterminate",
+        "distractorReason": "Deterministic Boolean evaluation"
+      },
+      {
+        "label": "D",
+        "text": "Floating",
+        "distractorReason": "Active gate output drives a valid logic rail"
+      }
+    ],
+    "hint1": "Formula & Rule: Evaluate associatively: (A ⊕ B) ⊕ C. First compute 1 ⊕ 1 = 0. Then compute 0 ⊕ 1 = 1.",
+    "hint2": "First Step & Trap: Multiple-input XOR is an odd-parity detector: it outputs 1 whenever the count of HIGH inputs is odd (here count is 3, which is odd).",
+    "solution": {
+      "finalAnswer": "1",
+      "steps": [
+        {
+          "title": "Associative Evaluation",
+          "type": "summary",
+          "content": "Step 1: (1 ⊕ 1) = 0. Step 2: 0 ⊕ 1 = 1. Alternatively, there are three 1s in total. Since 3 is an odd number, the odd-function output is 1."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Multiple-input XOR is an odd-1s detector. 3 ones is odd, so output is 1.",
+      "verification": "Associative law: (1 ⊕ 1) ⊕ 1 = 0 ⊕ 1 = 1."
+    }
+  },
+  {
+    "id": "q-g7",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Logic Family Characteristics",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Medium",
+    "set": "gates",
+    "question": "In standard 74xx bipolar Transistor-Transistor Logic (TTL), what logic state does an unconnected (floating) input pin assume?",
+    "promptDetail": "Consider internal multi-emitter base current sourcing in bipolar TTL.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Logic 1 (HIGH)",
+    "acceptedAnswers": [
+      "Logic 1 (HIGH)",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Logic 1 (HIGH)",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Logic 0 (LOW)",
+        "distractorReason": "Floating TTL does not pull down to ground; it sources base current"
+      },
+      {
+        "label": "C",
+        "text": "Ground (0V)",
+        "distractorReason": "No internal resistor pulls a floating TTL input to ground"
+      },
+      {
+        "label": "D",
+        "text": "High-frequency oscillatory state",
+        "distractorReason": "CMOS floats unpredictably, but bipolar TTL stably pulls up to HIGH"
+      }
+    ],
+    "hint1": "Formula & Rule: In standard bipolar TTL, internal input transistors source current out of the emitter toward ground. If disconnected, no current flows, pulling internal nodes toward VCC.",
+    "hint2": "First Step & Trap: While a floating TTL pin acts as Logic 1, leaving pins floating in actual hardware is bad engineering practice because floating pins act as antennas for noise.",
+    "solution": {
+      "finalAnswer": "Logic 1 (HIGH)",
+      "steps": [
+        {
+          "title": "Bipolar TTL Input Structure",
+          "type": "summary",
+          "content": "Bipolar TTL input stages use an NPN transistor with base tied to VCC through a 4 kΩ resistor. An open circuit stops emitter current, pulling the internal base HIGH. Thus, floating TTL inputs behave as Logic 1."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Floating bipolar TTL = Logic 1 (HIGH).",
+      "verification": "TTL hardware data sheets (Texas Instruments 7400 series)."
+    }
+  },
+  {
+    "id": "q-g8",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Gate Timing & Propagation Delay",
+    "questionType": "numerical_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "If an inverter has low-to-high propagation delay tpLH = 6 ns and high-to-low propagation delay tpHL = 10 ns, what is its average propagation delay tpd?",
+    "promptDetail": "Calculate the standard arithmetic mean of switching delays.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "8 ns",
+    "acceptedAnswers": [
+      "8 ns",
+      "8ns",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "8 ns",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "16 ns",
+        "distractorReason": "Added the two delays without dividing by 2"
+      },
+      {
+        "label": "C",
+        "text": "4 ns",
+        "distractorReason": "Subtracted the delays instead of averaging"
+      },
+      {
+        "label": "D",
+        "text": "60 ns",
+        "distractorReason": "Multiplied the delay values"
+      }
+    ],
+    "hint1": "Formula & Rule: Average propagation delay is defined as tpd = (tpLH + tpHL) / 2.",
+    "hint2": "First Step & Trap: Substitute given values: (6 + 10) / 2 = 16 / 2 = 8 ns.",
+    "solution": {
+      "finalAnswer": "8 ns",
+      "steps": [
+        {
+          "title": "Average Propagation Delay Formula",
+          "type": "summary",
+          "content": "tpd = (tpLH + tpHL) / 2 = (6 ns + 10 ns) / 2 = 16 / 2 = 8 ns. This represents the average switching latency of the gate."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Average tpd is simply the midpoint between tpLH and tpHL: (6 + 10) / 2 = 8 ns.",
+      "verification": "Direct arithmetic: (6 + 10)/2 = 8."
+    }
+  },
+  {
+    "id": "q-g9",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Pulse Gating & Inhibit Control",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "In a 2-input AND gate used for clock gating with data signal A and control signal B, what happens to output Y when control signal B = 0?",
+    "promptDetail": "Apply the null/dominance law of Boolean multiplication.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Output Y is inhibited and clamped to 0 regardless of data signal A",
+    "acceptedAnswers": [
+      "Output Y is inhibited and clamped to 0 regardless of data signal A",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Output Y is inhibited and clamped to 0 regardless of data signal A",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Output Y transmits signal A unchanged",
+        "distractorReason": "Signal A transmits only when control input B = 1"
+      },
+      {
+        "label": "C",
+        "text": "Output Y inverts signal A",
+        "distractorReason": "An AND gate cannot invert an incoming signal"
+      },
+      {
+        "label": "D",
+        "text": "Output Y enters high-impedance floating state",
+        "distractorReason": "Standard AND gates actively drive 0V LOW, not high-impedance"
+      }
+    ],
+    "hint1": "Formula & Rule: By the null element law of Boolean algebra: A · 0 = 0.",
+    "hint2": "First Step & Trap: When B = 0, Y = A · 0 = 0. The gate inhibits transmission. When B = 1, Y = A · 1 = A (enabled).",
+    "solution": {
+      "finalAnswer": "Output Y is inhibited and clamped to 0 regardless of data signal A",
+      "steps": [
+        {
+          "title": "AND Gate Inhibit Action",
+          "type": "summary",
+          "content": "Boolean identity: Y = A · B. When control input B = 0, Y = A · 0 = 0 regardless of whether A is 0 or 1. The data signal is completely blocked."
+        }
+      ],
+      "fastShortcut": "Fast Fact: AND with 0 = Clamped to 0 (Inhibited). AND with 1 = Pass-through (Enabled).",
+      "verification": "Boolean Null Law: A · 0 = 0."
+    }
+  },
+  {
+    "id": "q-g10",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Pulse Gating & Inhibit Control",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "For a 2-input OR gate with data input A and control input B, what value must control input B hold to allow data signal A to pass through to output Y unchanged (Y = A)?",
+    "promptDetail": "Identify the identity element for the Boolean OR operation.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Control input B = 0",
+    "acceptedAnswers": [
+      "Control input B = 0",
+      "B = 0",
+      "0",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Control input B = 0",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Control input B = 1",
+        "distractorReason": "Setting B = 1 clamps the OR output permanently to 1 (inhibition)"
+      },
+      {
+        "label": "C",
+        "text": "Control input B alternating at system clock frequency",
+        "distractorReason": "Alternating control chops the data waveform"
+      },
+      {
+        "label": "D",
+        "text": "Control input B left disconnected",
+        "distractorReason": "Floating inputs in TTL float to 1, clamping output to 1"
+      }
+    ],
+    "hint1": "Formula & Rule: The identity law for OR is A + 0 = A.",
+    "hint2": "First Step & Trap: If B = 1, A + 1 = 1 (output is clamped). Therefore, B must be 0 to let A pass through.",
+    "solution": {
+      "finalAnswer": "Control input B = 0",
+      "steps": [
+        {
+          "title": "OR Gate Enable Condition",
+          "type": "summary",
+          "content": "For an OR gate, Y = A + B. Substituting B = 0 yields Y = A + 0 = A. Thus, setting B = 0 enables the data signal A to propagate without modification."
+        }
+      ],
+      "fastShortcut": "Fast Fact: OR with 0 = Pass-through (Enabled). OR with 1 = Clamped to 1 (Inhibited).",
+      "verification": "Boolean Identity Law: A + 0 = A."
+    }
+  },
+  {
+    "id": "q-g11",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal Inverter Realization",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "How can a standard 2-input NAND gate be configured to operate as a simple NOT inverter?",
+    "promptDetail": "Apply idempotence or identity laws to the NAND operation.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Tie both inputs together, or connect one input to Logic 1 (VCC)",
+    "acceptedAnswers": [
+      "Tie both inputs together, or connect one input to Logic 1 (VCC)",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Tie both inputs together, or connect one input to Logic 1 (VCC)",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Connect one input to Logic 0 (Ground)",
+        "distractorReason": "NAND with 0 yields (A · 0)' = (0)' = 1 permanently, not an inverter"
+      },
+      {
+        "label": "C",
+        "text": "Leave both inputs open and unconnected",
+        "distractorReason": "Floating inputs in TTL float to 1, giving constant 0 output"
+      },
+      {
+        "label": "D",
+        "text": "Connect a reverse pull-down diode across the inputs",
+        "distractorReason": "Passive diodes do not alter basic NAND logic rules"
+      }
+    ],
+    "hint1": "Formula & Rule: Method 1: Tie inputs together: (A · A)' = A'. Method 2: Tie second input to 1: (A · 1)' = A'.",
+    "hint2": "First Step & Trap: Connecting one input of a NAND to 0 clamps the output to 1. To invert, connect to 1 or short the two inputs together.",
+    "solution": {
+      "finalAnswer": "Tie both inputs together, or connect one input to Logic 1 (VCC)",
+      "steps": [
+        {
+          "title": "NAND Inverter Configuration",
+          "type": "summary",
+          "content": "By Boolean idempotent law: (A · A)' = A'. Alternatively, using identity element: (A · 1)' = A'. Both configurations correctly implement the NOT function."
+        }
+      ],
+      "fastShortcut": "Fast Fact: NAND inverter = Tie inputs together, or tie unused input to HIGH (1).",
+      "verification": "Boolean Idempotence: (A · A)' = A'."
+    }
+  },
+  {
+    "id": "q-g12",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7B: Universal Inverter Realization",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "How can a standard 2-input NOR gate be configured to operate as a simple NOT inverter?",
+    "promptDetail": "Apply idempotence or identity laws to the NOR operation.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "Tie both inputs together, or connect one input to Logic 0 (Ground)",
+    "acceptedAnswers": [
+      "Tie both inputs together, or connect one input to Logic 0 (Ground)",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "Tie both inputs together, or connect one input to Logic 0 (Ground)",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Connect one input to Logic 1 (VCC)",
+        "distractorReason": "NOR with 1 yields (A + 1)' = (1)' = 0 permanently, not an inverter"
+      },
+      {
+        "label": "C",
+        "text": "Cross-couple the output back to one input",
+        "distractorReason": "Cross-coupling creates a bistable latch, not a combinational inverter"
+      },
+      {
+        "label": "D",
+        "text": "Connect both inputs to the power rail VCC",
+        "distractorReason": "Inputs tied to VCC produce constant LOW (0)"
+      }
+    ],
+    "hint1": "Formula & Rule: Method 1: Tie inputs together: (A + A)' = A'. Method 2: Tie second input to 0: (A + 0)' = A'.",
+    "hint2": "First Step & Trap: Connecting one input of a NOR to 1 clamps the output to 0. To invert, connect the unused input to Ground (0).",
+    "solution": {
+      "finalAnswer": "Tie both inputs together, or connect one input to Logic 0 (Ground)",
+      "steps": [
+        {
+          "title": "NOR Inverter Configuration",
+          "type": "summary",
+          "content": "By Boolean idempotent law: (A + A)' = A'. Alternatively, using identity element: (A + 0)' = A'. Both methods reliably implement the NOT inverter using a NOR gate."
+        }
+      ],
+      "fastShortcut": "Fast Fact: NOR inverter = Tie inputs together, or tie unused input to LOW (0).",
+      "verification": "Boolean Idempotence: (A + A)' = A'."
+    }
+  },
+  {
+    "id": "q-g13",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Tri-State Logic Buffers",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "What is the electrical state of a tri-state buffer output when its active-HIGH enable input is LOW (EN = 0)?",
+    "promptDetail": "Identify the high-impedance third state in bus architecture.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "High-impedance state (Hi-Z), electrically disconnecting the output from the shared bus line",
+    "acceptedAnswers": [
+      "High-impedance state (Hi-Z), electrically disconnecting the output from the shared bus line",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "High-impedance state (Hi-Z), electrically disconnecting the output from the shared bus line",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "Hard pull-down to Ground potential (Logic 0)",
+        "distractorReason": "A hard pull-down would create bus contention with other active drivers"
+      },
+      {
+        "label": "C",
+        "text": "Hard pull-up to supply potential VCC (Logic 1)",
+        "distractorReason": "A hard pull-up would force the bus HIGH and cause short circuits"
+      },
+      {
+        "label": "D",
+        "text": "Self-oscillating square wave at resonance",
+        "distractorReason": "The gate output is open-circuit, not an active oscillator"
+      }
+    ],
+    "hint1": "Formula & Rule: Tri-state logic has three distinct electrical states: Logic 0, Logic 1, and High-Impedance (Hi-Z).",
+    "hint2": "First Step & Trap: When disabled, both top and bottom output transistors are turned OFF, leaving the output pin floating like an open circuit (Hi-Z).",
+    "solution": {
+      "finalAnswer": "High-impedance state (Hi-Z), electrically disconnecting the output from the shared bus line",
+      "steps": [
+        {
+          "title": "Tri-State Operation",
+          "type": "summary",
+          "content": "When active-HIGH enable EN = 0, the buffer internal totem-pole transistors are both switched off. The output exhibits extremely high resistance (Hi-Z), allowing other circuits to drive the bus without bus contention."
+        }
+      ],
+      "fastShortcut": "Fast Fact: Disabled tri-state = Hi-Z (Electrically disconnected open circuit).",
+      "verification": "Standard microprocessor bus design specification."
+    }
+  },
+  {
+    "id": "q-g14",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Exclusive-NOR Equivalence",
+    "questionType": "conceptual_mcq",
+    "difficulty": "Easy",
+    "set": "gates",
+    "question": "Why is an Exclusive-NOR (XNOR) gate commonly referred to as an equivalence detector or coincidence circuit in digital systems?",
+    "promptDetail": "Analyze the conditions under which XNOR produces an asserted HIGH (1) output.",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "It produces a HIGH output (1) if and only if all its inputs hold identical logic values",
+    "acceptedAnswers": [
+      "It produces a HIGH output (1) if and only if all its inputs hold identical logic values",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "It produces a HIGH output (1) if and only if all its inputs hold identical logic values",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "It produces a HIGH output only when an odd number of inputs are HIGH",
+        "distractorReason": "Odd-number detection is the property of XOR, not XNOR"
+      },
+      {
+        "label": "C",
+        "text": "It produces a HIGH output only when inputs are complementary",
+        "distractorReason": "Complementary inputs produce 0 in XNOR"
+      },
+      {
+        "label": "D",
+        "text": "It produces a HIGH output whenever any input voltage exceeds 0.8V",
+        "distractorReason": "0.8V is an electrical threshold, not the definition of Boolean coincidence"
+      }
+    ],
+    "hint1": "Formula & Rule: XNOR equation: Y = (A ⊕ B)' = AB + A'B'.",
+    "hint2": "First Step & Trap: If A = B = 0, Y = 1. If A = B = 1, Y = 1. If inputs differ (0,1 or 1,0), Y = 0.",
+    "solution": {
+      "finalAnswer": "It produces a HIGH output (1) if and only if all its inputs hold identical logic values",
+      "steps": [
+        {
+          "title": "Equivalence Principle",
+          "type": "summary",
+          "content": "For a 2-input XNOR gate, output Y = 1 when A = B (both 0 or both 1). Because it detects whether inputs are equal, XNOR forms the fundamental core of 1-bit and multi-bit digital magnitude comparators."
+        }
+      ],
+      "fastShortcut": "Fast Fact: XNOR = 1 when inputs are equal (Equivalence / Coincidence detector).",
+      "verification": "Truth table: 0,0 -> 1; 1,1 -> 1; 0,1 -> 0; 1,0 -> 0."
+    }
+  },
+  {
+    "id": "q-g15",
+    "trackId": "gates",
+    "trackTitle": "Topic 5: Logic Gates & Universal Realizations",
+    "topicBadge": "1.7A: Logic Family Noise Margins",
+    "questionType": "numerical_mcq",
+    "difficulty": "Medium",
+    "set": "gates",
+    "question": "A digital logic family has output specifications VOH(min) = 2.4V and VOL(max) = 0.4V, with input specifications VIH(min) = 2.0V and VIL(max) = 0.8V. What are its high-state (NMH) and low-state (NML) noise margins?",
+    "promptDetail": "Calculate NMH = VOH(min) - VIH(min) and NML = VIL(max) - VOL(max).",
+    "inputFormatHint": "Select option A, B, C, or D",
+    "correctAnswer": "NMH = 0.4V and NML = 0.4V",
+    "acceptedAnswers": [
+      "NMH = 0.4V and NML = 0.4V",
+      "NMH = 0.4 V and NML = 0.4 V",
+      "A"
+    ],
+    "options": [
+      {
+        "label": "A",
+        "text": "NMH = 0.4V and NML = 0.4V",
+        "isCorrect": true
+      },
+      {
+        "label": "B",
+        "text": "NMH = 0.8V and NML = 0.4V",
+        "distractorReason": "Incorrect high-margin calculation (subtracted VIL instead of VIH)"
+      },
+      {
+        "label": "C",
+        "text": "NMH = 2.0V and NML = 0.4V",
+        "distractorReason": "Used input threshold as the margin directly"
+      },
+      {
+        "label": "D",
+        "text": "NMH = 1.2V and NML = 1.2V",
+        "distractorReason": "Confused noise margin with transition band (2.0V - 0.8V = 1.2V)"
+      }
+    ],
+    "hint1": "Formula & Rule: High Noise Margin NMH = VOH(min) - VIH(min). Low Noise Margin NML = VIL(max) - VOL(max).",
+    "hint2": "First Step & Trap: NMH = 2.4V - 2.0V = 0.4V. NML = 0.8V - 0.4V = 0.4V.",
+    "solution": {
+      "finalAnswer": "NMH = 0.4V and NML = 0.4V",
+      "steps": [
+        {
+          "title": "Noise Margin Calculation",
+          "type": "summary",
+          "content": "Step 1: NMH = VOH(min) - VIH(min) = 2.4V - 2.0V = 0.4V. Step 2: NML = VIL(max) - VOL(max) = 0.8V - 0.4V = 0.4V. Both margins are 0.4V, which represents standard 5V bipolar TTL specifications."
+        }
+      ],
+      "fastShortcut": "Fast Fact: 5V TTL noise margins: NMH = 2.4 - 2.0 = 0.4V; NML = 0.8 - 0.4 = 0.4V.",
+      "verification": "Direct arithmetic: 2.4 - 2.0 = 0.4 and 0.8 - 0.4 = 0.4."
+    }
   }
 ];
 
@@ -8908,8 +9708,8 @@ export const quizTracks = [
   {
     "id": "all",
     "label": "Full Unit 1 Mixed Mock Exam",
-    "poolSize": 110,
-    "desc": "Draws a balanced weighted exam paper across the entire 110-question Unit 1 pool."
+    "poolSize": 125,
+    "desc": "Draws a balanced weighted exam paper across the entire 125-question Unit 1 pool."
   },
   {
     "id": "conversions",
@@ -8934,5 +9734,11 @@ export const quizTracks = [
     "label": "Topic 4: Signed Numbers, Overflow & Unit 1 Theory",
     "poolSize": 20,
     "desc": "Sign-Magnitude, 1's/2's complement registers, overflow detection V = Cin ⊕ Cout, plus Unit 1 conceptual theory and fill-in-the-blanks."
+  },
+  {
+    "id": "gates",
+    "label": "Topic 5: Logic Gates & Universal Realizations",
+    "poolSize": 15,
+    "desc": "Basic gates (AND, OR, NOT), Universal gates (NAND, NOR), Exclusive gates (XOR, XNOR), truth tables, gate timing, and universal implementations."
   }
 ];

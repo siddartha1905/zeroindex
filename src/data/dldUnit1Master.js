@@ -59,7 +59,7 @@ export const dldUnit1Master = {
           title: "Digital Systems: Discrete and Quantized",
           points: [
             "A Digital Signal is discrete in both time and amplitude. Information is represented using discrete numeric values rather than continuous waves.",
-            "Almost all digital electronic systems use Binary Logic, restricting voltages to two discrete operating bands: Logic 0 (LOW) and Logic 1 (HIGH). For example, in standard 5V TTL input specifications, guaranteed Logic 0 recognition is 0.0V to 0.8V (V_IL max = 0.8V) and guaranteed Logic 1 recognition is 2.0V to 5.0V (V_IH min = 2.0V), with an indeterminate transition band between them.",
+            "Almost all digital electronic systems use Binary Logic, restricting voltages to two discrete operating bands: Logic 0 (LOW) and Logic 1 (HIGH). For example, in standard 5V TTL input specifications, guaranteed Logic 0 input recognition is 0.0V to 0.8V (V_IL max = 0.8V) and guaranteed Logic 1 input recognition is 2.0V to 5.0V (V_IH min = 2.0V), distinct from driving output levels (V_OL max = 0.4V, V_OH min = 2.4V) that ensure 0.4V noise margins (NM_L = 0.4V, NM_H = 0.4V), with an indeterminate transition band between them.",
             "Digital circuits process information using microscopic transistor switches (MOSFETs) operating strictly in ON or OFF states."
           ]
         }
@@ -174,12 +174,12 @@ export const dldUnit1Master = {
           ]
         },
         digitalAdvantage: {
-          title: "The Digital Regeneration Advantage (Zero Degradation)",
+          title: "The Digital Signal Regeneration Principle",
           points: [
             "Digital systems slice continuous physical voltages into discrete quantization bands (Logic 0 and Logic 1).",
             "A digital repeater does not merely amplify the received voltage. Instead, it samples the signal and decides whether it represents a 0 or a 1.",
-            "As long as the noise voltage does not exceed the Noise Margin (V_IL or V_IH thresholds), the repeater reconstructs a brand-new, clean, perfect square wave.",
-            "Digital data can travel through thousands of repeaters across global fiber-optic links and billions of CPU logic gates with zero signal loss."
+            "As long as the noise voltage does not exceed the Noise Margin (V_IL or V_IH thresholds), digital repeaters restore signals to valid logic levels, improving noise tolerance.",
+            "Digital circuits can restore signals to valid logic levels, improving noise tolerance and allowing reliable processing and transmission within their design limits. Signal restoration does not mean unlimited transmission without errors, delay or physical constraints."
           ]
         }
       },
@@ -187,7 +187,7 @@ export const dldUnit1Master = {
       practiceQuestions: [
         {
           q: "Why do digital computers use binary voltage levels (two states) instead of decimal (ten voltage states)?",
-          a: "Semiconductor transistors (MOSFETs) operate most reliably, fastest, and with highest energy efficiency when used as simple ON/OFF switches. Distinguishing ten separate voltage levels would create tiny noise margins, making circuits highly susceptible to noise and thermal errors."
+          a: "Semiconductor transistors (MOSFETs) operate most reliably, fastest, and with highest energy efficiency when used as simple ON/OFF switches. Distinguishing two logical states is comparatively simple, robust, and practical for digital circuits. While multilevel signaling is possible, distinguishing ten separate analog levels requires far more complex detection circuitry and significantly narrower noise margins."
         },
         {
           q: "Give two everyday examples where an analog signal is converted to a digital signal before practical use.",
@@ -308,9 +308,9 @@ export const dldUnit1Master = {
           notes: [
             "Bit: A single binary digit (0 or 1). The fundamental atom of digital computing.",
             "Nibble: A group of 4 binary bits (for example, 1010). Exactly one hexadecimal digit.",
-            "Byte: A group of 8 binary bits (for example, 11001010). The universal standard addressable memory unit.",
+            "Byte / Octet: A group of 8 binary bits (for example, 11001010). The universal standard addressable memory unit (in data communications, an 8-bit group is commonly termed an octet, distinct from an 8-cell octet in K-Map grouping).",
             "Word: The native data chunk processed by a CPU in one cycle (16 bits, 32 bits, or 64 bits).",
-            "Why Computers Use Base-2: Semiconductor transistors operate as bistable electronic switches (saturation/conducting ON vs cutoff/non-conducting OFF). Two widely separated voltage operating bands yield maximum physical noise margins against thermal jitter, supply fluctuations, and crosstalk. Rather than requiring perfect ideal 0V and 5V levels, hardware defines safe input bands (e.g. V_IL max and V_IH min). Attempting 10-state decimal silicon would shrink noise margins to millivolts, causing rampant thermal switching errors."
+            "Why Computers Use Base-2: Semiconductor transistors operate as bistable electronic switches (saturation/conducting ON vs cutoff/non-conducting OFF). Two widely separated voltage operating bands yield maximum physical noise margins against thermal jitter, supply fluctuations, and crosstalk. Rather than requiring perfect ideal 0V and 5V levels, hardware defines safe input bands (e.g. V_IL max and V_IH min). While multilevel signaling is possible, binary logic is widely used because distinguishing two logical states is comparatively simple, robust, and practical for semiconductor digital circuits, avoiding the circuit complexity and tighter noise margins required by multilevel detection."
           ]
         },
         {

@@ -98,24 +98,29 @@ function generateQuestionPaper(allBank, trackId, mode, difficultyMix) {
         ];
       }
     } else if (mode === 'random10' || mode === 'random20') {
-      // Unit 1 tracks
-      const tConv = pool.filter(q => q.trackId === 'conversions' || q.trackId === 'boolean-laws');
-      const tArith = pool.filter(q => q.trackId === 'arithmetic' || q.trackId === 'canonical-forms');
-      const tComp = pool.filter(q => q.trackId === 'complements' || q.trackId === 'kmaps');
-      const tSigned = pool.filter(q => q.trackId === 'signed' || q.trackId === 'gates-xor');
+      // Unit 1 tracks (5 balanced topics)
+      const tConv = pool.filter(q => q.trackId === 'conversions');
+      const tArith = pool.filter(q => q.trackId === 'arithmetic');
+      const tComp = pool.filter(q => q.trackId === 'complements');
+      const tSigned = pool.filter(q => q.trackId === 'signed');
+      const tGates = pool.filter(q => q.trackId === 'gates');
 
       if (mode === 'random10') {
-        const q1 = shuffle(tConv).slice(0, 4);
-        const q2 = shuffle(tArith).slice(0, 3);
-        const q3 = shuffle(tComp).slice(0, 2);
-        const q4 = shuffle(tSigned).slice(0, 1);
-        return [...q1, ...q2, ...q3, ...q4];
+        return [
+          ...shuffle(tConv).slice(0, 2),
+          ...shuffle(tArith).slice(0, 2),
+          ...shuffle(tComp).slice(0, 2),
+          ...shuffle(tSigned).slice(0, 2),
+          ...shuffle(tGates).slice(0, 2),
+        ];
       } else {
-        const q1 = shuffle(tConv).slice(0, 7);
-        const q2 = shuffle(tArith).slice(0, 5);
-        const q3 = shuffle(tComp).slice(0, 5);
-        const q4 = shuffle(tSigned).slice(0, 3);
-        return [...q1, ...q2, ...q3, ...q4];
+        return [
+          ...shuffle(tConv).slice(0, 4),
+          ...shuffle(tArith).slice(0, 4),
+          ...shuffle(tComp).slice(0, 4),
+          ...shuffle(tSigned).slice(0, 4),
+          ...shuffle(tGates).slice(0, 4),
+        ];
       }
     }
   }
@@ -857,7 +862,7 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="flex items-center gap-3">
                 <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-emerald-100 text-emerald-900 border border-emerald-200 truncate max-w-xs md:max-w-md">
-                  {quizTracks.find(t => t.id === selectedTrack)?.label}
+                  {currentTracks.find(t => t.id === selectedTrack)?.label}
                 </span>
 
                 <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 px-3 py-1 rounded-lg border border-slate-200">

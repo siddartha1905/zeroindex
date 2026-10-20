@@ -1845,7 +1845,7 @@ export const UnitWorkspace = ({ section, onNavigate }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#334155] leading-relaxed">
               <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
                 <span className="font-mono font-bold text-[#2E6F40] block text-[11px]">WHY DIGITAL SYSTEMS?</span>
-                <p className="text-[11px] text-[#475569]">Continuous physical analog waveforms accumulate noise with every transmission and amplification. Digital quantization into two discrete voltage bands enables infinite regeneration with zero cumulative degradation.</p>
+                <p className="text-[11px] text-[#475569]">Digital circuits can restore signals to valid logic levels, improving noise tolerance and allowing reliable processing and transmission within their design limits. Signal restoration does not mean unlimited transmission without errors, delay or physical constraints.</p>
               </div>
               <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
                 <span className="font-mono font-bold text-[#4F46E5] block text-[11px]">WHERE APPLIED?</span>
@@ -2294,7 +2294,7 @@ export const UnitWorkspace = ({ section, onNavigate }) => {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#334155] leading-relaxed">
               <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
                 <span className="font-mono font-bold text-[#2E6F40] block text-[11px]">WHY COMPUTERS USE BINARY?</span>
-                <p className="text-[11px] text-[#475569]">Transistors operate as bistable electronic switches (conducting ON vs non-conducting OFF). Two states yield maximum noise margins. Decimal circuits with 10 states would compress noise margins to millivolts, triggering thermal errors.</p>
+                <p className="text-[11px] text-[#475569]">Transistors operate as bistable electronic switches (conducting ON vs non-conducting OFF). Binary is widely used because distinguishing two logical states is comparatively simple, robust, and practical for semiconductor digital circuits. Multilevel signaling is possible, but requires more careful management of noise margins and implementation complexity.</p>
               </div>
               <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
                 <span className="font-mono font-bold text-[#4F46E5] block text-[11px]">WHY OCTAL AND HEXADECIMAL?</span>

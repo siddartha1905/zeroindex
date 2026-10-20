@@ -166,7 +166,7 @@ export const dldSubjectResourcesData = {
         bullets: [
           "Analog quantities are continuous in time and amplitude; digital quantities are discrete, represented by binary 0 and 1 voltage ranges.",
           "Digital advantages include superior noise immunity, reliable magnetic/electronic storage, programmable operation, and IC integration.",
-          "For standard 5V TTL input specifications, guaranteed Logic 0 recognition is 0.0V to 0.8V (V_IL max = 0.8V) and guaranteed Logic 1 recognition is 2.0V to 5.0V (V_IH min = 2.0V), with 0.8V to 2.0V being an indeterminate transition region.",
+          "For standard 5V TTL input specifications, guaranteed Logic 0 recognition is 0.0V to 0.8V (V_IL max = 0.8V) and guaranteed Logic 1 recognition is 2.0V to 5.0V (V_IH min = 2.0V), distinct from driving output specifications (V_OL max = 0.4V, V_OH min = 2.4V) ensuring 0.4V noise margins, with 0.8V to 2.0V being an indeterminate transition region.",
           "Noise margin is the maximum unwanted voltage noise that can be added to a signal without causing an erroneous output state."
         ],
         keyRules: [
@@ -592,7 +592,7 @@ export const dldSubjectResourcesData = {
       unit: 1,
       title: "Logic Gates & Truth Tables",
       solverTarget: { tab: "solvers", unit: 1, solverTab: "gates", label: "Try in Logic Gates Simulator" },
-      practiceTarget: { tab: "practice", unit: 1, trackId: "all", label: "Practise Logic Gate Problems" },
+      practiceTarget: { tab: "practice", unit: 1, trackId: "gates", label: "Practise Logic Gate Problems" },
       resourceTarget: { tab: "syllabus", unit: 1, sheetId: "u1-rev-17", label: "Review Gate Truth Tables" }
     },
     "2.1": {

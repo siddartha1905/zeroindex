@@ -104,15 +104,15 @@ const overflowRule = s16Sheet.keyRules.find(r => r.rule.includes("Overflow"));
 assert(overflowRule && overflowRule.detail.includes("C_{in} \u2295 C_{out}"), "Overflow rule formula is V = Cin ⊕ Cout at sign bit");
 
 // ---------------------------------------------------------------------------
-// 4. UNIT 1 PRACTICE ARENA VALIDATION (110 QUESTIONS)
+// 4. UNIT 1 PRACTICE ARENA VALIDATION (125 QUESTIONS)
 // ---------------------------------------------------------------------------
-console.log("\n--- 4. Testing Unit 1 Practice Arena (110 Questions) ---");
-assert(Array.isArray(unit1QuizBank) && unit1QuizBank.length === 110, `Unit 1 question bank has exactly 110 questions (found ${unit1QuizBank.length})`);
-assert(Array.isArray(quizTracks) && quizTracks.length === 5, `Unit 1 has 5 quiz tracks (all, conversions, arithmetic, complements, signed)`);
+console.log("\n--- 4. Testing Unit 1 Practice Arena (125 Questions) ---");
+assert(Array.isArray(unit1QuizBank) && unit1QuizBank.length === 125, `Unit 1 question bank has exactly 125 questions (found ${unit1QuizBank.length})`);
+assert(Array.isArray(quizTracks) && quizTracks.length === 6, `Unit 1 has 6 quiz tracks (all, conversions, arithmetic, complements, signed, gates)`);
 
 let schemaErrors = 0;
 let answerErrors = 0;
-const trackCounts = { conversions: 0, arithmetic: 0, complements: 0, signed: 0 };
+const trackCounts = { conversions: 0, arithmetic: 0, complements: 0, signed: 0, gates: 0 };
 
 unit1QuizBank.forEach((q, i) => {
   if (!q.id || !q.question || !q.difficulty || !q.trackId) schemaErrors++;
@@ -122,12 +122,13 @@ unit1QuizBank.forEach((q, i) => {
   if (trackCounts[q.trackId] !== undefined) trackCounts[q.trackId]++;
 });
 
-assert(schemaErrors === 0, `All 110 questions conform strictly to the 4-option schema with zero schema errors`);
-assert(answerErrors === 0, `All 110 questions have exactly one verified correct answer`);
+assert(schemaErrors === 0, `All 125 questions conform strictly to the 4-option schema with zero schema errors`);
+assert(answerErrors === 0, `All 125 questions have exactly one verified correct answer`);
 assert(trackCounts.conversions === 35, `Track 'conversions' has exactly 35 questions (found ${trackCounts.conversions})`);
 assert(trackCounts.arithmetic === 25, `Track 'arithmetic' has exactly 25 questions (found ${trackCounts.arithmetic})`);
 assert(trackCounts.complements === 30, `Track 'complements' has exactly 30 questions (found ${trackCounts.complements})`);
 assert(trackCounts.signed === 20, `Track 'signed' has exactly 20 questions (found ${trackCounts.signed})`);
+assert(trackCounts.gates === 15, `Track 'gates' has exactly 15 questions (found ${trackCounts.gates})`);
 
 // ---------------------------------------------------------------------------
 // 5. CONTEXTUAL LEARNING LOOP ROUTING INTEGRITY

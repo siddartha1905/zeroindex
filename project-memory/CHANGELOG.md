@@ -2,6 +2,37 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-20: DLD Phase 5: Consolidated Pre-Release Academic, Mathematical, Functional, and Visual Verification
+
+- **Type**: verification / academic-accuracy / solvers / practice-arena / pre-release-readiness / phase-5-complete
+- **Summary**: Completed comprehensive pre-release quality and correctness verification across Digital Logic Design Unit I (Sections 1.1 to 1.7) and Unit II (Sections 2.1 to 2.5) on `dld-unit2-development`:
+  1. **Academic Verification & Technical Corrections**:
+     - Corrected signal regeneration explanation in `src/components/UnitWorkspace.jsx` and `src/data/dldUnit1Master.js`: replaced claims of infinite lossless transmission with physically accurate logic-level restoration within defined noise margins and physical design limits.
+     - Corrected base-2 semiconductor switching rationale in `UnitWorkspace.jsx` and `dldUnit1Master.js`: explained that binary is widely used due to simple, robust transistor switching and wide noise margins, while multilevel signaling requires complex detection and narrower noise margins, eliminating fabricated numerical millivolt claims.
+     - Clarified standard 5V TTL input recognition thresholds (V_IL <= 0.8V, V_IH >= 2.0V) as distinct from driving output levels (V_OL <= 0.4V, V_OH >= 2.4V) ensuring 0.4V noise margins in `dldSubjectResourcesData.js` and `dldUnit1Master.js`.
+     - Explicitly defined byte vs octet in number-system terminology and verified 8-cell octet usage in K-Maps.
+  2. **Practice Arena Section 1.7 Logic Gates Coverage**:
+     - Added 15 mathematically verified logic gate questions (`q-g1` to `q-g15`) into `src/data/unit1QuizBank.js`, establishing a dedicated `gates` track (Topic 5: Logic Gates & Universal Realizations, pool size 15).
+     - Expanded Unit 1 total question pool to 125 questions across 5 syllabus topics, matching Unit 2's 125 questions.
+     - Updated Section 1.7 practice routing in `contextualLearningMap` to target the `gates` track directly.
+     - Resolved sticky header track label lookup bug in `src/components/PracticeArena.jsx` using `currentTracks` and balanced paper generation across all 5 Unit 1 tracks.
+  3. **Interactive Solvers & K-Map Visual Grouping Verification**:
+     - Verified all 5 Unit 1 hardware engines (Base Converter, Arithmetic Grid, Complements Subtractor, Signed Register, Logic Gate Simulator).
+     - Verified all 5 Unit 2 solvers (Boolean Simplifier, Truth Table Generator, Minterm/Maxterm Explorer, SOP/POS Conversion Studio, Interactive K-Map Solver).
+     - Verified persistent color palette (`KMAP_GROUP_PALETTE` G1 to G7), continuous perimeter outlines, concentric depth offsets (`2 + depth * 3` px) on overlapping cells, dashed toroidal wraparound boundaries, and prominent centered cell values in `z-20`.
+     - Fixed SVG `<title>` multi-child React runtime warning in `InteractiveSolvers.jsx` and provided default prop fallback in `Section17View.jsx`.
+  4. **Subject Resources & Connected Learning Loop Verification**:
+     - Verified units metadata, 3 prescribed textbooks (with call numbers and honest non-clickable Drive placeholders), 3 reference books, 12 section quick revision sheets, 4 curated channels, 3 reference websites, and 4 online calculators with notation disclaimers.
+     - Verified 12-section bidirectional Connected Learning Loop (LEARN -> EXPERIMENT -> PRACTISE -> REVISE).
+  5. **Automated Assertion Reconciliation & Production Build**:
+     - Reconciled automated test suite counts: 11 verification suites executed, passing 4,688/4,688 automated assertions with 100% accuracy (0 failures), resolving the Phase 4 reporting typographical discrepancy.
+     - Production bundle `npm run build` completed cleanly in 3.95s (3,404 modules transformed, 0 errors).
+     - Master SSR smoke test `scripts/testMasterSSR.mjs` passed cleanly across all core portal components.
+     - Strict zero em-dash and zero en-dash compliance confirmed across all files.
+- **Affected Files**: `src/components/UnitWorkspace.jsx`, `src/components/InteractiveSolvers.jsx`, `src/components/PracticeArena.jsx`, `src/components/Section17View.jsx`, `src/components/DldWorkspace.jsx`, `src/data/dldUnit1Master.js`, `src/data/dldSubjectResourcesData.js`, `src/data/unit1QuizBank.js`, `scripts/verifyUnit1Modernization.mjs`, `scripts/testMasterSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+
+---
+
 ## 2026-10-20: DLD Phase 4: Selective Unit I Academic and Experience Modernization
 
 - **Type**: feature / academic-modernization / dld-unit-1 / pedagogy / phase-4-complete

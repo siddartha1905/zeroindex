@@ -4938,7 +4938,7 @@ const LogicGatesWaveformSolver = () => {
                   className="cursor-pointer hover:fill-emerald-500/10 transition-colors"
                   onClick={() => toggleWaveBit("A", i)}
                 >
-                  <title>Click to toggle Clock A at T{i}</title>
+                  <title>{`Click to toggle Clock A at T${i}`}</title>
                 </rect>
               ))}
 
@@ -4972,7 +4972,7 @@ const LogicGatesWaveformSolver = () => {
                   className="cursor-pointer hover:fill-indigo-500/10 transition-colors"
                   onClick={() => toggleWaveBit("B", i)}
                 >
-                  <title>Click to toggle Clock B at T{i}</title>
+                  <title>{`Click to toggle Clock B at T${i}`}</title>
                 </rect>
               ))}
 
@@ -5008,7 +5008,7 @@ const LogicGatesWaveformSolver = () => {
                       className="cursor-pointer hover:fill-teal-500/10 transition-colors"
                       onClick={() => toggleWaveBit("C", i)}
                     >
-                      <title>Click to toggle Clock C at T{i}</title>
+                      <title>{`Click to toggle Clock C at T${i}`}</title>
                     </rect>
                   ))}
                 </g>

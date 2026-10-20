@@ -370,9 +370,9 @@ export const DldWorkspace = ({
                   </div>
 
                   <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 Available</h4>
+                    <h4 className="text-xs font-bold text-[#2E6F40]">Units I and II Available</h4>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
+                      Unit I (Sections 1.1 to 1.7) and Unit II (Sections 2.1 to 2.5) are available for student use. Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
                     </p>
                   </div>
 
