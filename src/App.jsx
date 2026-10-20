@@ -53,6 +53,17 @@ export function App() {
         setFolioSlug(parts[1] ? decodeURIComponent(parts[1]) : null);
       } else if (lowerHash === 'dld' || lowerHash === 'dld-home') {
         setCurrentSection('dld-home');
+      } else if (lowerHash.startsWith('dld/') || lowerHash.startsWith('dld-u') || lowerHash.startsWith('unit') || /^(?:sec(?:tion)?[-_]?)?([1-5]\.[1-7])$/i.test(lowerHash)) {
+        setCurrentSection('dld-workspace');
+        setWorkspaceTab('units');
+        const match = lowerHash.match(/([1-5]\.[1-7])/);
+        if (match) {
+          setWorkspaceSubId(match[1]);
+        } else if (lowerHash.includes('2')) {
+          setWorkspaceSubId('2.2');
+        } else {
+          setWorkspaceSubId('1.1');
+        }
       } else if (lowerHash.startsWith('workspace')) {
         const parts = rawHash.split('/');
         setCurrentSection('dld-workspace');
@@ -66,7 +77,13 @@ export function App() {
           normalizedTab = 'practice';
         } else if (rawTab === 'syllabus' || rawTab === 'resources') {
           normalizedTab = 'syllabus';
-        } else if (rawTab === 'dld-u1' || rawTab === 'dld' || rawTab === 'theory' || rawTab === 'notes' || rawTab === 'units' || rawTab === '1') {
+        } else if (rawTab === 'dld-u1' || rawTab === '1') {
+          normalizedTab = 'units';
+          subId = parts[2] || '1.1';
+        } else if (rawTab === 'dld-u2' || rawTab === '2') {
+          normalizedTab = 'units';
+          subId = parts[2] || '2.2';
+        } else if (rawTab === 'dld' || rawTab === 'theory' || rawTab === 'notes' || rawTab === 'units') {
           normalizedTab = 'units';
           if (parts[2]) subId = parts[2];
         } else if (/^\d+\.\d+$/.test(rawTab)) {

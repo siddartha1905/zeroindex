@@ -12,7 +12,14 @@ import { dldSyllabus } from '../data/dldSyllabus';
 import { dldAvailabilityConfig } from '../data/dldAvailabilityConfig';
 import { dldUnit1 } from '../data/dldUnit1';
 import { dldUnit1Master } from '../data/dldUnit1Master';
+import { dldUnit2Master } from '../data/dldUnit2Master';
 import { UnitWorkspace } from './UnitWorkspace';
+import { Section21View } from './Section21View';
+import { Section22View } from './Section22View';
+import { Section23View } from './Section23View';
+import { Section24View } from './Section24View';
+import { Section25View } from './Section25View';
+import { Unit2Solvers } from './Unit2Solvers';
 import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
@@ -34,8 +41,14 @@ export const DldWorkspace = ({
   initialSubModuleId = '1.1' 
 }) => {
   const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
-  const [activeUnit, setActiveUnit] = useState(1);
   const [activeSubModuleId, setActiveSubModuleId] = useState(initialSubModuleId || '1.1');
+  const [activeUnit, setActiveUnit] = useState(() => {
+    const unitNum = parseInt((initialSubModuleId || '1.1').split('.')[0], 10);
+    return !isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 ? unitNum : 1;
+  });
+  const [solversUnit, setSolversUnit] = useState(1);
+  const [initialSolverTab, setInitialSolverTab] = useState('simplifier');
+  const [initialQuizTrack, setInitialQuizTrack] = useState('all');
 
   // Synchronize state when props update via browser navigation or hashchange
   useEffect(() => {
@@ -65,13 +78,47 @@ export const DldWorkspace = ({
 
   const handleSubModuleChange = (subId) => {
     setActiveSubModuleId(subId);
+    const unitNum = parseInt(subId.split('.')[0], 10);
+    if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5) {
+      setActiveUnit(unitNum);
+    }
     const newHash = `workspace/units/${subId}`;
     if (window.location.hash !== `#${newHash}`) {
       window.history.pushState(null, '', `#${newHash}`);
     }
   };
 
-  const currentUnitData = dldSyllabus.units.find(u => u.unitNumber === activeUnit);
+  const handleContextNavigation = (target) => {
+    if (typeof target === 'string') {
+      handleTabChange(target);
+      return;
+    }
+    const { tab, unit, subId, trackId, solverTab } = target || {};
+    if (unit) {
+      setActiveUnit(unit);
+      if (tab === 'solvers') {
+        setSolversUnit(unit);
+      }
+    }
+    if (solverTab) {
+      setInitialSolverTab(solverTab);
+    }
+    if (trackId) {
+      setInitialQuizTrack(trackId);
+    }
+    if (subId) {
+      handleSubModuleChange(subId);
+    }
+    if (tab) {
+      handleTabChange(tab);
+    }
+  };
+
+  const effectiveUnit = activeSubModuleId?.startsWith('2.') 
+    ? 2 
+    : (activeSubModuleId?.startsWith('1.') ? 1 : activeUnit);
+
+  const currentUnitData = dldSyllabus.units.find(u => u.unitNumber === effectiveUnit) || dldSyllabus.units.find(u => u.unitNumber === activeUnit);
 
   // Retrieve rich master content if available, else fallback
   const masterSection = dldUnit1Master.sections.find(s => s.id === activeSubModuleId);
@@ -156,13 +203,20 @@ export const DldWorkspace = ({
 
                 <div className="space-y-1.5">
                   {dldSyllabus.units.map((unit) => {
-                    const isSelected = activeUnit === unit.unitNumber;
+                    const isSelected = effectiveUnit === unit.unitNumber;
                     const isUnit1 = unit.unitNumber === 1;
 
                     return (
                       <div key={unit.unitNumber} className="space-y-1">
                         <button
-                          onClick={() => setActiveUnit(unit.unitNumber)}
+                          onClick={() => {
+                            setActiveUnit(unit.unitNumber);
+                            if (unit.unitNumber === 1 && !activeSubModuleId.startsWith('1.')) {
+                              handleSubModuleChange('1.1');
+                            } else if (unit.unitNumber === 2 && !activeSubModuleId.startsWith('2.')) {
+                              handleSubModuleChange('2.1');
+                            }
+                          }}
                           className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left text-xs transition-all ${
                             isSelected 
                               ? 'bg-[#2E6F40] text-white font-semibold shadow-sm' 
@@ -178,14 +232,16 @@ export const DldWorkspace = ({
                           <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase ml-1 flex-shrink-0 ${
                             isUnit1
                               ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
-                              : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
+                              : unit.unitNumber === 2
+                                ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
+                                : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {isUnit1 ? 'Available' : 'Planned'}
+                            {isUnit1 ? 'Available' : (unit.unitNumber === 2 ? 'Partially Available' : 'Planned')}
                           </span>
                         </button>
 
                         {/* Unit 1 Nested Sub-Modules */}
-                        {isUnit1 && activeUnit === 1 && (
+                        {isUnit1 && effectiveUnit === 1 && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
                             {dldUnit1.subModules.map((sub) => {
                               const isSubActive = activeSubModuleId === sub.id;
@@ -204,6 +260,40 @@ export const DldWorkspace = ({
                                     {sub.title}
                                   </span>
                                   {isSubActive && <ChevronRight className="w-3 h-3 flex-shrink-0 text-[#2E6F40]" />}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {/* Unit 2 Nested Sub-Modules */}
+                        {unit.unitNumber === 2 && effectiveUnit === 2 && (
+                          <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
+                            {dldUnit2Master.sections.map((sub) => {
+                              const isSubActive = activeSubModuleId === sub.id;
+                              const isPlanned = sub.id === '2.6' || sub.id === '2.7';
+                              return (
+                                <button
+                                  key={sub.id}
+                                  onClick={() => handleSubModuleChange(sub.id)}
+                                  className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
+                                    isSubActive
+                                      ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
+                                      : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
+                                  }`}
+                                >
+                                  <span className="truncate flex items-center gap-1.5">
+                                    <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
+                                    <span className="truncate">{sub.title}</span>
+                                  </span>
+                                  <div className="flex items-center gap-1 flex-shrink-0">
+                                    {isPlanned && (
+                                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FEF3C7] text-[#92400E]">
+                                        Planned
+                                      </span>
+                                    )}
+                                    {isSubActive && <ChevronRight className="w-3 h-3 text-[#2E6F40]" />}
+                                  </div>
                                 </button>
                               );
                             })}
@@ -228,11 +318,12 @@ export const DldWorkspace = ({
 
             {/* Center / Right Column: Comprehensive Topic Notes (9 cols) */}
             <section className="lg:col-span-9 space-y-6">
-              {activeUnit === 1 ? (
+              {effectiveUnit === 1 ? (
                 masterSection ? (
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
                     section={masterSection} 
+                    onNavigate={handleContextNavigation}
                   />
                 ) : (
                   /* Modular study guide for remaining sections */
@@ -247,10 +338,68 @@ export const DldWorkspace = ({
                         }
                       ] : undefined
                     }} 
+                    onNavigate={handleContextNavigation}
                   />
                 )
+              ) : effectiveUnit === 2 ? (
+                activeSubModuleId === '2.1' ? (
+                  <Section21View section={dldUnit2Master.sections[0]} onNavigate={handleContextNavigation} />
+                ) : activeSubModuleId === '2.2' ? (
+                  <Section22View section={dldUnit2Master.sections[1]} onNavigate={handleContextNavigation} />
+                ) : activeSubModuleId === '2.3' ? (
+                  <Section23View section={dldUnit2Master.sections[2]} onNavigate={handleContextNavigation} />
+                ) : activeSubModuleId === '2.4' ? (
+                  <Section24View section={dldUnit2Master.sections[3]} onNavigate={handleContextNavigation} />
+                ) : activeSubModuleId === '2.5' ? (
+                  <Section25View section={dldUnit2Master.sections[4]} onNavigate={handleContextNavigation} />
+                ) : activeSubModuleId === '2.6' || activeSubModuleId === '2.7' ? (
+                  /* Section 2.6 / 2.7 Planned Notice */
+                  <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
+                        Section {activeSubModuleId} · Planned / In Development
+                      </span>
+                      <span className="text-xs text-[#64748B] font-mono">Unit II</span>
+                    </div>
+
+                    <div>
+                      <h2 className="text-2xl font-bold text-[#1E293B] mt-1">
+                        {activeSubModuleId === '2.6' 
+                          ? '2.6 Gate-Level Minimization and NAND/NOR Implementation' 
+                          : '2.7 Exclusive-OR Functions and Implementation Using NAND/NOR Gates'}
+                      </h2>
+                      <p className="text-xs text-[#475569] mt-2 leading-relaxed">
+                        This section is currently in active curriculum development and is scheduled for a future release. 
+                        Sections 2.1 through 2.5 of Unit II are fully available for study and practice.
+                      </p>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
+                      <h4 className="text-xs font-bold text-[#2E6F40]">Available Unit II Topics</h4>
+                      <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed">
+                        You can study Boolean Algebra Fundamentals (2.1), Simplification of Expressions (2.2), Minterms and Maxterms (2.3), SOP/POS Conversions (2.4), and Karnaugh Maps with Don't-Care Minimization (2.5).
+                      </p>
+                      <div className="mt-3 flex flex-wrap gap-2">
+                        <button
+                          onClick={() => handleSubModuleChange('2.1')}
+                          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2E6F40] text-white hover:bg-[#255A34] transition-colors"
+                        >
+                          Return to Section 2.1
+                        </button>
+                        <button
+                          onClick={() => handleSubModuleChange('2.5')}
+                          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-[#DCE7E1] text-[#2E6F40] hover:bg-[#F2F7F4] transition-colors"
+                        >
+                          Go to Section 2.5 (K-Maps)
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Section21View section={dldUnit2Master.sections[0]} onNavigate={handleContextNavigation} />
+                )
               ) : (
-                /* Units 2-5 Preview Card */
+                /* Units 3-5 Preview Card */
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
@@ -266,9 +415,9 @@ export const DldWorkspace = ({
                   </div>
 
                   <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                    <h4 className="text-xs font-bold text-[#2E6F40]">Unit 1 Available</h4>
+                    <h4 className="text-xs font-bold text-[#2E6F40]">Units I and II Available</h4>
                     <p className="text-xs text-[#64748B] mt-0.5">
-                      Unit 1 is available (pending final academic review). Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
+                      Unit I (Sections 1.1 to 1.7) and Unit II (Sections 2.1 to 2.5) are available for student use. Additional units ({currentUnitData?.roman}) are planned according to the curriculum blueprint.
                     </p>
                   </div>
 
@@ -305,17 +454,59 @@ export const DldWorkspace = ({
 
         {/* TAB 2: Interactive Solvers Hub */}
         {activeTab === 'solvers' && (
-          <InteractiveSolvers onNavigate={() => {}} />
+          <div className="space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 sm:p-4 rounded-2xl border border-[#DCE7E1] shadow-2xs">
+              <span className="text-xs font-mono font-bold text-[#64748B]">Active Course Suite:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSolversUnit(1)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
+                    solversUnit === 1
+                      ? 'bg-[#2E6F40] text-white shadow-xs'
+                      : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                  }`}
+                >
+                  Unit I Solvers (Number Systems & Gates)
+                </button>
+                <button
+                  onClick={() => setSolversUnit(2)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
+                    solversUnit === 2
+                      ? 'bg-[#2E6F40] text-white shadow-xs'
+                      : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                  }`}
+                >
+                  Unit II Solvers (Boolean Algebra & K-Maps)
+                </button>
+              </div>
+            </div>
+
+            {solversUnit === 1 ? (
+              <InteractiveSolvers 
+                initialSolverTab={initialSolverTab} 
+                onNavigate={handleContextNavigation} 
+              />
+            ) : (
+              <Unit2Solvers initialSolverTab={initialSolverTab} />
+            )}
+          </div>
         )}
 
         {/* TAB 3: Practice Arena */}
         {activeTab === 'practice' && (
-          <PracticeArena onNavigate={() => {}} />
+          <PracticeArena 
+            defaultUnit={activeUnit} 
+            initialTrack={initialQuizTrack}
+            onNavigate={handleContextNavigation} 
+          />
         )}
 
         {/* TAB 4: Subject Resources */}
         {activeTab === 'syllabus' && (
-          <SyllabusView onNavigate={(tab) => setActiveTab(tab)} />
+          <SyllabusView 
+            onNavigate={handleContextNavigation} 
+            initialUnit={activeUnit} 
+          />
         )}
 
       </main>

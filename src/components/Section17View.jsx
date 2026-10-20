@@ -27,6 +27,7 @@ import {
   GateTruthTable, 
   TimingWaveformViewer 
 } from './Section17Components';
+import { section17Data } from '../data/dldSection17Data.js';
 
 /**
  * Section 1.7: Logic Gates & Circuit Primitives
@@ -38,7 +39,7 @@ import {
  * 
  * Strict formatting: ZERO em-dashes (\u2014) and ZERO en-dashes (\u2013).
  */
-export const Section17View = ({ section }) => {
+export const Section17View = ({ section = section17Data }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [subTab17A, setSubTab17A] = useState("not");
   const [subTab17B, setSubTab17B] = useState("nand");

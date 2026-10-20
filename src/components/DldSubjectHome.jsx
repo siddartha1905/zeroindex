@@ -42,9 +42,9 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'units',
       title: 'Course Units (1-5)',
-      description: 'Unit 1 available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.',
+      description: 'Units I (Complete) and II (Sections 2.1 to 2.5) available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.',
       icon: Layers,
-      badge: 'Unit 1 Available',
+      badge: 'Units 1 & 2 (Partial) Available',
       badgeColor: 'bg-[#2E6F40]/10 text-[#2E6F40] border border-[#2E6F40]/20',
       iconColor: '#2E6F40',
       action: () => onOpenWorkspaceTab('units')
@@ -52,9 +52,9 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'solvers',
       title: 'Interactive Visual Solvers',
-      description: 'Visual step-by-step base converters, bit-aligned arithmetic grids, and complement subtractors organized by unit.',
+      description: 'Ten visual solvers across Units I and II: base converters, complement subtractors, logic gates, Boolean simplifiers, and K-Map visualizers.',
       icon: Calculator,
-      badge: 'Unit 1 Engines',
+      badge: 'Units 1 & 2 Engines',
       badgeColor: 'bg-[#4F46E5]/10 text-[#4F46E5] border border-[#4F46E5]/20',
       iconColor: '#4F46E5',
       action: () => onOpenWorkspaceTab('solvers')
@@ -62,9 +62,9 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'practice',
       title: 'Practice Questions & Quizzes',
-      description: 'Interactive topic-wise and full-unit mock quizzes with hints, instant grading, and graphical solutions.',
+      description: 'Interactive topic-wise and full-unit mock quizzes with hints, instant grading, and graphical solutions (250 questions across Units I and II).',
       icon: CheckCircle2,
-      badge: 'Unit-Wise Quizzes',
+      badge: 'Units 1 & 2 Practice',
       badgeColor: 'bg-[#D97706]/10 text-[#D97706] border border-[#D97706]/20',
       iconColor: '#D97706',
       action: () => onOpenWorkspaceTab('practice')
@@ -72,7 +72,7 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'syllabus',
       title: 'Subject Resources',
-      description: 'Google Drive Study Materials, official VR23 syllabus, Course Outcomes (CO1-CO5), and standard textbooks.',
+      description: 'Curated textbooks, reference manuals, external calculators, video lecture portals, and official VR23 syllabus for Units I and II.',
       icon: BookOpen,
       badge: 'Notes, Syllabus & Books',
       badgeColor: 'bg-[#059669]/10 text-[#059669] border border-[#059669]/20',

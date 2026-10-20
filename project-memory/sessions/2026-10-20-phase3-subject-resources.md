@@ -1,0 +1,34 @@
+# ZeroIndex Session: 2026-10-20 - DLD Phase 3: Subject Resources and Connected Learning
+
+- **Starting Branch and Commit:** `dld-unit2-development` @ `d2b059b`
+- **Goal and Scope:** Complete Phase 3 for Digital Logic Design (DLD) covering Unit I (Sections 1.1 to 1.7) and Unit II (Sections 2.1 to 2.5). Transform the Subject Resources tab into an authoritative academic reference center, organize prescribed literature and quick revision sheets, curate educational channels, academic websites, and online calculators with proper disclaimers, and wire the Connected Learning Loop (LEARN -> EXPERIMENT -> PRACTISE -> REVISE) across all lessons, solvers, and the Practice Arena.
+- **Relevant Sources of Truth:** Syllabus AR23, `src/data/dldSubjectResourcesData.js`, `src/data/dldSyllabus.js`, `src/data/unit1QuizBank.js`, `src/data/unit2QuizBank.js`, `src/components/SubjectResourcesView.jsx`, `src/components/ContextualLearningStrip.jsx`, `project-memory/DECISIONS.md`.
+- **Decisions Made and Approved:** Decision D-031 (DLD Phase 3: Subject Resources Academic Reference Center and Connected Learning Loop Architecture).
+- **Changed Files:**
+  - `src/data/dldSubjectResourcesData.js`: Centralized data registry for units metadata, 3 prescribed textbooks, 3 reference books, 12 section quick revision sheets, 4 educational channels, 3 reference websites, 4 online calculators, and 12-section `contextualLearningMap`.
+  - `src/components/SubjectResourcesView.jsx`: Flagship reference center view with 2-unit toggle, 7 category tabs, textbook cards, revision cards, channel recommendations, website outbound links, calculator cards with syntax/disclaimers, syllabus view, and modal cheat sheets.
+  - `src/components/ContextualLearningStrip.jsx`: Connected Learning Loop component connecting lessons with solvers, practice tracks, and formula revision sheets.
+  - `src/components/SyllabusView.jsx`: Seamlessly delegates to `SubjectResourcesView`.
+  - `src/components/DldWorkspace.jsx`: Added `handleContextNavigation` handler connecting tabs, sub-modules, solver tabs, and quiz tracks.
+  - `src/components/UnitWorkspace.jsx`: Wired `ContextualLearningStrip` and `onNavigate` across Unit 1 sections.
+  - `src/components/Section21View.jsx` to `Section25View.jsx`: Wired `ContextualLearningStrip` and `onNavigate` across Unit 2 sections.
+  - `src/components/InteractiveSolvers.jsx`: Added `initialSolverTab` and `useEffect` synchronization.
+  - `src/components/Unit2Solvers.jsx`: Added `initialSolverTab` and `useEffect` synchronization.
+  - `src/components/PracticeArena.jsx`: Added `initialTrack` and `useEffect` synchronization.
+  - `scripts/verifyDldResources.mjs`: Automated verification suite validating 238 checks across data integrity, link safety, component wiring, and zero-dash compliance.
+  - `scripts/verifyUnit2Full.mjs`: Updated zero-dash audit list to 27 files (953 total checks).
+  - `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/TECHNICAL_SNAPSHOT.md`.
+- **Actual Progress (Done / Partial / Blocked):** DONE. Phase 3 is 100% complete and verified.
+- **Tests Executed and Exact Results:**
+  - `node scripts/verifyDldResources.mjs`: 238/238 checks passed (100%).
+  - `node scripts/verifyUnit2PracticeArena.mjs`: 2,715/2,715 checks passed (100%).
+  - `node scripts/verifyUnit2Full.mjs`: 953/953 checks passed (100%).
+  - `node scripts/verifySection25Math.mjs`: 365/365 checks passed (100%).
+  - `node scripts/verifyUnit2Solvers.mjs`: 119/119 checks passed (100%).
+  - `node scripts/verifyUnit1Math.mjs`: 44/44 checks passed (100%).
+  - Total automated verification assertions executed: 4,434 checks passed (0 failures).
+  - `npm run build`: Production build succeeded in 3.84s with 0 errors (3,404 modules transformed).
+  - Strict zero-dash audit: 0 em-dashes and 0 en-dashes across all files.
+- **Identified Risks / Unverified Items:** None. External URLs have been checked for valid format and safe attributes (`target="_blank"` and `rel="noopener noreferrer"`). Third-party tools include prominent syntax notes and notation discrepancy warnings.
+- **Next Action:** Present Phase 3 completion report to user. Do not push to GitHub or deploy to Vercel without approval. Do not begin Phase 4 automatically.
+- **Commit / Preview / Release Links (If Verified):** Verified on local development server.

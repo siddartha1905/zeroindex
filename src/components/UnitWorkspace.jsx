@@ -37,6 +37,7 @@ import {
 import { Section15View } from './Section15View';
 import { Section16View } from './Section16View';
 import { Section17View } from './Section17View';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 // Dedicated Pedagogical Components for Section 1.3A Conversions
 const StepByStepDivisionViewer = ({ stage }) => {
@@ -1709,7 +1710,7 @@ const GraphicalDivisionLadder = ({
   );
 };
 
-export const UnitWorkspace = ({ section }) => {
+export const UnitWorkspace = ({ section, onNavigate }) => {
   const [revealedQuestions, setRevealedQuestions] = useState({});
   const [activeSubTab13, setActiveSubTab13] = useState("overview");
   const [activeConv13A, setActiveConv13A] = useState("Conversion 1");
@@ -1832,6 +1833,31 @@ export const UnitWorkspace = ({ section }) => {
       {section.id === "1.1" && (
         <div className="space-y-8">
           
+          {/* WHY-FIRST Learning Philosophy Header */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-[#FAF8F5] via-white to-[#F2F7F4] border border-[#DCE7E1] shadow-2xs space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#2E6F40]" />
+                ZeroIndex Pedagogical Framework: WHY → WHERE → WHAT → HOW → TRY → CONNECT
+              </span>
+              <span className="text-[10px] font-mono text-[#64748B]">Foundations of Computing</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#334155] leading-relaxed">
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#2E6F40] block text-[11px]">WHY DIGITAL SYSTEMS?</span>
+                <p className="text-[11px] text-[#475569]">Digital circuits can restore signals to valid logic levels, improving noise tolerance and allowing reliable processing and transmission within their design limits. Signal restoration does not mean unlimited transmission without errors, delay or physical constraints.</p>
+              </div>
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#4F46E5] block text-[11px]">WHERE APPLIED?</span>
+                <p className="text-[11px] text-[#475569]">Microprocessors, flash memory, smartphone displays, high-speed fiber links, and sensor ADCs converting real-world physical telemetry into discrete machine tensors.</p>
+              </div>
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#D97706] block text-[11px]">WHAT IS THE ESSENCE?</span>
+                <p className="text-[11px] text-[#475569]">Information is encoded as discrete binary symbols (0 and 1). Microscopic transistors act as bistable switches (conducting ON vs cutoff OFF), maximizing noise margins and hardware density.</p>
+              </div>
+            </div>
+          </div>
+
           {/* A. Core Theory in Crisp Bullet Points */}
           <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
             <div className="flex items-center gap-2">
@@ -1902,7 +1928,7 @@ export const UnitWorkspace = ({ section }) => {
                   {/* Right: Voltage Thresholds & Noise Margin Diagram */}
                   <rect x="505" y="15" width="240" height="175" rx="8" fill="#FFFFFF" stroke="#DCE7E1" />
                   <text x="625" y="36" textAnchor="middle" fontSize="11" fontWeight="bold" fill="#4F46E5">
-                    TTL Voltage Threshold Bands
+                    Standard 5V TTL Input Thresholds
                   </text>
                   
                   {/* Logic 1 Band (2.0V to 5.0V) */}
@@ -1911,14 +1937,14 @@ export const UnitWorkspace = ({ section }) => {
                     Logic 1 Region (2.0V to 5.0V)
                   </text>
                   <text x="525" y="55" fontSize="8" fill="#64748B">5.0V</text>
-                  <text x="525" y="75" fontSize="8" fill="#64748B">V_IH = 2.0V</text>
+                  <text x="520" y="75" fontSize="8" fill="#64748B">V_IH(min)=2.0V</text>
 
                   {/* Forbidden Region (0.8V to 2.0V) */}
                   <rect x="535" y="78" width="180" height="34" fill="#FEF2F2" stroke="#DC2626" strokeWidth="1" strokeDasharray="3 2" />
                   <text x="625" y="99" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#DC2626">
                     Forbidden Transition Zone
                   </text>
-                  <text x="525" y="113" fontSize="8" fill="#64748B">V_IL = 0.8V</text>
+                  <text x="520" y="113" fontSize="8" fill="#64748B">V_IL(max)=0.8V</text>
 
                   {/* Logic 0 Band (0V to 0.8V) */}
                   <rect x="535" y="116" width="180" height="26" fill="#F8FAFC" stroke="#64748B" strokeWidth="1" />
@@ -1928,8 +1954,8 @@ export const UnitWorkspace = ({ section }) => {
                   <text x="525" y="143" fontSize="8" fill="#64748B">0.0V</text>
 
                   {/* Noise Margin Note */}
-                  <text x="625" y="172" textAnchor="middle" fontSize="9" fill="#4F46E5" fontWeight="bold">
-                    Noise Margins protect data from thermal interference
+                  <text x="625" y="172" textAnchor="middle" fontSize="8" fill="#4F46E5" fontWeight="bold">
+                    5V TTL Input Specs (Indeterminate: 0.8V to 2.0V)
                   </text>
                 </svg>
               </div>
@@ -2256,6 +2282,31 @@ export const UnitWorkspace = ({ section }) => {
       {section.id === "1.2" && (
         <div className="space-y-8">
           
+          {/* WHY-FIRST Learning Philosophy Header */}
+          <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-[#FAF8F5] via-white to-[#F2F7F4] border border-[#DCE7E1] shadow-2xs space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#2E6F40] flex items-center gap-1.5">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#2E6F40]" />
+                ZeroIndex Pedagogical Framework: WHY → WHERE → WHAT → HOW → TRY → CONNECT
+              </span>
+              <span className="text-[10px] font-mono text-[#64748B]">Radix Mathematics</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#334155] leading-relaxed">
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#2E6F40] block text-[11px]">WHY COMPUTERS USE BINARY?</span>
+                <p className="text-[11px] text-[#475569]">Transistors operate as bistable electronic switches (conducting ON vs non-conducting OFF). Binary is widely used because distinguishing two logical states is comparatively simple, robust, and practical for semiconductor digital circuits. Multilevel signaling is possible, but requires more careful management of noise margins and implementation complexity.</p>
+              </div>
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#4F46E5] block text-[11px]">WHY OCTAL AND HEXADECIMAL?</span>
+                <p className="text-[11px] text-[#475569]">Humans cannot read long 32-bit or 64-bit binary strings reliably. Because 8 = 2³ and 16 = 2⁴, Octal groups 3 bits into 1 digit, and Hexadecimal groups 4 bits (1 nibble) into 1 digit without decimal arithmetic.</p>
+              </div>
+              <div className="p-3 rounded-xl bg-white border border-[#DCE7E1] space-y-1">
+                <span className="font-mono font-bold text-[#D97706] block text-[11px]">WHAT IS POSITIONAL WEIGHT?</span>
+                <p className="text-[11px] text-[#475569]">Every digit d_i contributes value d_i × r^i. Integer powers increase to the left (r⁰, r¹, r²), while fractional powers decrease to the right (r⁻¹, r⁻², r⁻³), anchored at the radix point.</p>
+              </div>
+            </div>
+          </div>
+
           {/* A. Properly Aligned Mathematical Equation Box */}
           {section.generalFormula && (
             <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
@@ -5529,6 +5580,11 @@ export const UnitWorkspace = ({ section }) => {
               )}
             </div>
           </div>
+        )}
+
+        {/* Connected Learning Loop */}
+        {section?.id && (
+          <ContextualLearningStrip sectionId={section.id} onNavigate={onNavigate} className="mt-8" />
         )}
 
       </div>

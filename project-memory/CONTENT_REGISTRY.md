@@ -5,7 +5,7 @@
 | Destination | Content Item | Baseline Status | Publication Prerequisites |
 |---|---|---|---|
 | Workbench | DLD Unit 1 (7 Sections) | Available; academic audit complete | Maintain functionality; preserve syllabus alignment |
-| Workbench | DLD Unit 2 (Boolean & K-Maps) | Planned | Complete section data, worked models, and K-Map solver |
+| Workbench | DLD Unit 2 (Boolean & K-Maps) | Under Review (Preview Ready) | Formally review full module and authorize publication |
 | Workbench | DLD Unit 3 (Combinational Logic) | Planned | Complete section data, worked models, and MUX synthesizer |
 | Workbench | DLD Unit 4 (Sequential Logic) | Planned | Complete section data, worked models, and Flip-Flop simulator |
 | Workbench | DLD Unit 5 (Registers & Counters) | Planned | Complete section data, worked models, and Counter visualizer |
@@ -16,8 +16,8 @@
 | Readout | Editorial Articles Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/readoutArticlesConfig.js; explicit author approval required before publication |
 | Readout | Three sample technical articles | Withdrawn (archived in unpublished-archive/) | Explicit author review, approval of voice, and formal release |
 | Folio | Personal Essays Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/folioEssaysConfig.js; explicit author approval required before publication |
-| Folio | Three sample reflective essays | Withdrawn (archived in unpublished-archive/) | Explicit author review and approval of personal attribution |
-| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldResourceConfig.js; do not use dead anchors |
+| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldSubjectResourcesData.js; do not use dead anchors |
+| DLD Resources | Subject Resources Reference Center (Units 1 & 2) | Complete & Verified | Integrated in SubjectResourcesView.jsx; 12 formula sheets, textbooks, reference books, channels, websites, calculators |
 
 ---
 
