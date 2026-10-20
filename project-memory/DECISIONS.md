@@ -196,6 +196,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-025 | 2026-10-20 | Section 2.5 Complete Academic Rebuild (K-Maps: 6-Tab Architecture, Gray Code Topologies, Corner Quads, POS & Don't-Care Minimization)
+
+- **Decision**: (1) Rebuilt Section 2.5 ("Karnaugh Maps - Fundamentals, Two-Variable, Three-Variable, Four-Variable, POS Grouping, and Don't-Care Minimization") into the approved 6-tab academic architecture: Start Here, Gray Code & Topology, Grouping Rules & Terms, Guided Demonstrations, Solved Models, and Cheat Sheet & Practice; (2) In Tab 1, establish the WHY-FIRST teaching principle with 6 structured bullet points (WHY, WHERE, WHAT, HOW, WHY CHOSEN, REMEMBER), a Motivating Example comparing Boolean algebra factoring (requiring creative $ABC$ duplication) with 1-step visual K-Map grouping for $F = A'BC + ABC + AB'C + ABC'$, a power-of-two literal elimination table, a 6-phase solving roadmap (MAP -> PLOT -> INSPECT -> MAXIMIZE -> EXTRACT -> COMBINE), and curated Neso Academy video `kmap-intro`; (3) In Tab 2, establish single-bit Gray code transition proof ($00, 01, 11, 10$) vs binary counting breakdown ($01 \to 10$), an interactive topology selector for 2-, 3-, and 4-variable grids, an interactive cell neighbor inspector with torus boundary wrapping highlights, and four-corner quad $B'D'$ explanation; (4) In Tab 3, detail the 8 grouping rules, visual topology gallery with valid vs illegal geometry cards, and a dedicated tutorial on deriving product terms for SOP and sum terms for POS; (5) In Tab 4, provide 6 interactive step-based walkthroughs (GD1: 2-var SOP, GD2: 3-var SOP quad, GD3: 4-var wraparound octet, GD4: 4-var corner quad & center quad, GD5: 3-var POS grouping 0s, and GD6: 4-var don't-care condition); (6) In Tab 5, provide exactly 26 classroom blackboard models (4 2-var, 7 3-var, 9 4-var, 3 don't-care, 3 special/POS) with visible K-Map grids, corner-index cell styling, glowing/hoverable rectangular grouping overlays, and classroom blackboard derivations; (7) In Tab 6, provide a Master K-Map cheat sheet, an 8-point exam checklist, and 28 progressive practice problems across Basic, Intermediate, Advanced, and Challenge with hints and revealed blackboard derivations; (8) Strictly enforce top-left corner placement for minterm indices, prominent center display for target values, actual Unicode mathematical symbols $\Sigma$ (`\u03A3`) and $\Pi$ (`\u03A0`) throughout all formulas, complemented variable notation ($A'$), and zero em-dashes and zero en-dashes across all code and documentation files.
+- **Rationale**: Elevates Section 2.5 to the strongest and most visually instructive lesson in Unit II, aligning mathematical theory directly with intuitive pattern recognition and real university blackboard teaching.
+- **Affected Files**: `src/data/dldSection25Data.js`, `src/components/Section25View.jsx`, `src/data/dldVideoConfig.js`, `scripts/verifySection25Math.mjs`, `scripts/testSection25RenderProps.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/sessions/2026-10-20-section-2-5-karnaugh-maps-rebuild.md`.
+- **Approval Evidence**: Dedicated math verification suite `verifySection25Math.mjs` passes 286/286 checks with 0 failures; `testSection25RenderProps.mjs` passes 32/32 checks; regression suites across Sections 2.1, 2.2, 2.3, 2.4, Unit 1, and `verifyUnit2Full.mjs` (842/842 checks) pass 100%; `npm run build` succeeds in 3.63s with 0 errors. Zero em-dashes and zero en-dashes confirmed across all files.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development`. Do not merge into main or proceed to Section 2.6 without explicit user approval.
+
+---
+
 ## Decision Record Template
 
 ```markdown
@@ -207,6 +217,7 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+
 
 
 

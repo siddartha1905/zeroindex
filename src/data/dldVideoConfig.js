@@ -69,6 +69,15 @@ export const dldVideoRegistry = {
     embedUrl: "https://www.youtube-nocookie.com/embed/f0trF1LtYZ4",
     duration: "10 min",
     topic: "Conversion of General POS and SOP into Canonical Forms"
+  },
+  "kmap-intro": {
+    id: "FPrcIhqNPVo",
+    title: "Karnaugh Map (K' Map) - Part 1",
+    publisher: "Neso Academy",
+    url: "https://www.youtube.com/watch?v=FPrcIhqNPVo",
+    embedUrl: "https://www.youtube-nocookie.com/embed/FPrcIhqNPVo",
+    duration: "15 min",
+    topic: "Karnaugh Map Fundamentals, Gray Code Adjacency, and 2/3/4-Variable SOP Minimization"
   }
 };
 

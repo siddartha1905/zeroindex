@@ -4,6 +4,44 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: DLD Unit 2 Section 2.5 Complete Academic Rebuild (K-Maps: 6-Tab Architecture, Gray Code Topologies, Corner Quads, POS & Don't-Care Minimization)
+
+- **Type**: academic / curriculum / ui-rebuild / dld-unit-2
+- **Summary**: Executed a comprehensive academic, visual, and interactive rebuild of Section 2.5 ("Karnaugh Maps - Fundamentals, Two-Variable, Three-Variable, Four-Variable, POS Grouping, and Don't-Care Minimization") on `dld-unit2-development`:
+  1. **Tab 1: Start Here - Why K-Maps?**:
+     - Formulated WHY-FIRST pedagogy with 6 structured bullet points (WHY, WHERE, WHAT, HOW, WHY CHOSEN, REMEMBER) with bold typography and restrained forest-green accents.
+     - Motivating comparison showcase: Contrasted Boolean algebra factoring requiring creative $ABC$ duplication with 1-step visual K-Map grouping for $F = A'BC + ABC + AB'C + ABC'$.
+     - Power-of-two literal elimination cards: Singleton ($2^0 \to 0$ eliminated), Pair ($2^1 \to 1$ eliminated), Quad ($2^2 \to 2$ eliminated), Octet ($2^3 \to 3$ eliminated), and 16-Cell ($2^4 \to$ logic 1).
+     - 6-phase solving roadmap (MAP -> PLOT -> INSPECT -> MAXIMIZE -> EXTRACT -> COMBINE).
+     - Curated video card mounting Neso Academy's "Karnaugh Map (K' Map) - Part 1" (`FPrcIhqNPVo`).
+  2. **Tab 2: Foundations - Gray Code, Map Topology & Cell Indexing**:
+     - Single-bit Gray code transition proof ($00, 01, 11, 10$) demonstrating why binary counting ($01 \to 10$) breaks Boolean spatial adjacency.
+     - Interactive topology selector for 2-Variable ($2 \times 2$), 3-Variable ($2 \times 4$), and 4-Variable ($4 \times 4$) grids.
+     - Interactive cell neighbor inspector: Clicking any cell reveals its binary minterm, literal term, and highlights all adjacent neighbors (horizontal, vertical, and wrapped).
+     - Detailed topological breakdowns of cylindrical horizontal wrapping, cylindrical vertical wrapping, and toroidal four-corner quads ($m_0, m_2, m_8, m_{10} \to B'D'$).
+  3. **Tab 3: Grouping Rules & Term Extraction**:
+     - 8 mandatory grouping rules (power-of-two, rectangular geometry, target polarity, completeness, maximum group size, overlap, edge wrapping, don't-care usage).
+     - Visual topology gallery with 8 cards illustrating valid groups vs illegal L-shapes and diagonals.
+     - Dedicated tutorial on Boolean term extraction for SOP (grouping 1s) and POS (grouping 0s), detailing variable elimination logic.
+  4. **Tab 4: Guided Demonstrations (GD1 to GD6)**:
+     - 6 interactive step-based walkthroughs: GD1 (2-var SOP), GD2 (3-var SOP quad), GD3 (4-var wraparound octet), GD4 (4-var corner quad & center quad), GD5 (3-var POS grouping 0s), and GD6 (4-var don't-care condition).
+     - Step controller with previous/next navigation, K-Map active group highlighting, and step-by-step term derivations.
+  5. **Tab 5: Progressive Solved Models (26 Models)**:
+     - 26 classroom blackboard models (4 2-var, 7 3-var, 9 4-var, 3 don't-care, 3 special/POS) with interactive category filters.
+     - Each model card features an interactive K-Map grid with small corner minterm indices, prominent centered target values ($1, 0, X$), color-coded group badges, and university blackboard step-by-step term derivations.
+  6. **Tab 6: Cheat Sheet, Exam Checklist & Practice Lab (28 Problems)**:
+     - Master Cheat Sheet with Gray code headings, literal reduction table, SOP vs POS comparison table, and an 8-point exam checklist.
+     - Practice Lab featuring 28 progressive problems across Basic (6), Intermediate (8), Advanced (10), and Challenge (4) with hints and revealed blackboard derivations.
+  7. **Testing & Verification**:
+     - `verifySection25Math.mjs` passed 286/286 checks with 0 failures.
+     - `testSection25RenderProps.mjs` passed 32/32 schema checks.
+     - Regression suites for Sections 2.1, 2.2, 2.3, 2.4, Unit 1, and `verifyUnit2Full.mjs` (842/842 checks) all pass 100%.
+     - `npm run build` succeeds in 3.63s with zero errors.
+     - Zero em-dashes and zero en-dashes verified across all files.
+- **Affected Files**: `src/data/dldSection25Data.js`, `src/components/Section25View.jsx`, `src/data/dldVideoConfig.js`, `scripts/verifySection25Math.mjs`, `scripts/testSection25RenderProps.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
+---
+
 ## 2026-10-20: DLD Unit 2 Section 2.4 Final Academic, Mathematical and Presentation Refinements
 
 - **Type**: academic / presentation / refinement / dld-unit-2
