@@ -98,16 +98,16 @@ export const dldSection24Data = {
     twoLevelTopologies: {
       sop: {
         title: "Sum of Products (SOP) Architecture",
-        structure: "Inputs -> AND gates (First Level) -> OR gate (Second Level) -> Output F",
-        example: "F = AB + CD",
-        description: "Literals are combined by AND operations to create product terms. The outputs of these AND gates form the inputs to a single OR gate. In classic 2-level logic, inverted inputs are assumed to be supplied directly or inverted at level 0.",
+        structure: "Inputs -> AND Gate (Level 1) & Direct Literal -> OR Gate (Level 2) -> Output F",
+        example: "F = AB + C",
+        description: "Literals A and B are combined by an AND gate to create product term AB. Literal C is then combined with AB through a second-level OR gate. This two-level AND-OR topology directly evaluates F = AB + C with a maximum propagation delay of two gate levels.",
         gateLevel: "AND-OR Network (Transforms directly to NAND-NAND logic)"
       },
       pos: {
         title: "Product of Sums (POS) Architecture",
-        structure: "Inputs -> OR gates (First Level) -> AND gate (Second Level) -> Output F",
-        example: "F = (A + B)(C + D)",
-        description: "Literals are combined by OR operations to create sum terms. The outputs of these OR gates form the inputs to a single AND gate. This is the dual topology of the SOP network.",
+        structure: "Inputs -> OR Gates (Level 1) -> AND Gate (Level 2) -> Output F",
+        example: "F = (A + C)(B + C)",
+        description: "Input C branches via a common connected junction to two first-level OR gates, producing sum terms (A + C) and (B + C). Their outputs are combined by a second-level AND gate. This OR-AND network is algebraically equivalent to F = AB + C by the second distributive law.",
         gateLevel: "OR-AND Network (Transforms directly to NOR-NOR logic)"
       }
     },
@@ -399,6 +399,50 @@ export const dldSection24Data = {
   conversionVsComplementation: {
     title: "Critical Distinction: Converting F vs Complementing F",
     warning: "Confusing these two operations is the single most common cause of lost marks in university examinations.",
+    symbolDictionary: [
+      {
+        symbol: "U",
+        name: "Index Universe",
+        meaning: "Complete set of truth-table row indices. For n variables, U = {0, 1, 2, ..., 2ⁿ - 1}."
+      },
+      {
+        symbol: "S",
+        name: "1-Row Index Set",
+        meaning: "Indices of rows where output F = 1. This is the minterm index set for F."
+      },
+      {
+        symbol: "U \\ S",
+        name: "0-Row Index Set (Set Subtraction)",
+        meaning: "Indices of rows belonging to U but not to S, where output F = 0. Note: U \\ S is set subtraction (U minus S), NOT numerical arithmetic division!"
+      },
+      {
+        symbol: "m / M",
+        name: "Minterm vs Maxterm",
+        meaning: "Lowercase m denotes a minterm (evaluates to 1 only on its specific row). Uppercase M denotes a maxterm (evaluates to 0 only on its specific row)."
+      },
+      {
+        symbol: "Σ / Π",
+        name: "Logical Sum (OR) vs Logical Product (AND)",
+        meaning: "Unicode Σ denotes the logical sum (OR) of minterms. Unicode Π denotes the logical product (AND) of maxterms."
+      }
+    ],
+    setSubtractionNote: "Set subtraction U \\ S means removing all elements of S from universe U. It is NOT arithmetic division.",
+    twoCoreIdeas: [
+      {
+        id: "A",
+        title: "A. Converting the SAME Function",
+        formula: "F = Σm(S) = ΠM(U \\ S)",
+        status: "Same Function (Outputs Unchanged)",
+        explanation: "The Boolean outputs do not change. We are simply describing the exact same truth table using its 1-rows (S) or its 0-rows (U \\ S)."
+      },
+      {
+        id: "B",
+        title: "B. Finding the COMPLEMENT of a Function",
+        formula: "F' = Σm(U \\ S) = ΠM(S)",
+        status: "Inverted Function (Every 1 becomes 0, every 0 becomes 1)",
+        explanation: "Here the circuit output is inverted. Every 1 becomes a 0, and every 0 becomes 1. F' has the minterms of F's maxterms, and the maxterms of F's minterms."
+      }
+    ],
     principles: [
       {
         concept: "Converting the representation of the SAME function F",
@@ -408,16 +452,31 @@ export const dldSection24Data = {
       {
         concept: "Complementing the function to obtain F'",
         operation: "F' = Σm(U \\ S) = ΠM(S)",
-        meaning: "The logical function is inverted. Every 1 becomes a 0, and every 0 becomes a 1. F' has the minterms of F's maxterms, and the maxterms of F's minterms."
+        meaning: "The logical function is inverted. Every 1 becomes a 0, and every 0 becomes 1. F' has the minterms of F's maxterms, and the maxterms of F's minterms."
       }
     ],
     concreteExample: {
-      domain: "3 variables {A, B, C}, where U = {0, 1, 2, 3, 4, 5, 6, 7}",
+      domain: "Three variables A, B, and C with universe U = {0, 1, 2, 3, 4, 5, 6, 7}",
+      targetFunction: "Let F = C",
+      oneRows: "S = {1, 3, 5, 7} (rows where C = 1)",
+      zeroRows: "U \\ S = {0, 2, 4, 6} (rows where C = 0)",
       originalFunction: "F(A, B, C) = Σm(1, 3, 5, 7) = C",
       sameFunctionPOS: "F(A, B, C) = ΠM(0, 2, 4, 6) = C",
       complementSOP: "F'(A, B, C) = Σm(0, 2, 4, 6) = C'",
       complementPOS: "F'(A, B, C) = ΠM(1, 3, 5, 7) = C'",
-      takeaway: "Notice that F = ΠM(0, 2, 4, 6) equals C, while F' = Σm(0, 2, 4, 6) equals C'. Swapping the symbol without understanding whether you want F or F' inverts your circuit!"
+      sameFunctionSummary: "F = Σm(1, 3, 5, 7) = ΠM(0, 2, 4, 6) = C",
+      complementSummary: "F' = Σm(0, 2, 4, 6) = ΠM(1, 3, 5, 7) = C'",
+      takeaway: "Notice: F = ΠM(0, 2, 4, 6) equals C, while F' = Σm(0, 2, 4, 6) equals C'. Simply swapping the symbol without understanding whether you want F or F' inverts your circuit!",
+      truthTable: [
+        { row: 0, A: 0, B: 0, C: 0, F: 0, F_prime: 1, term: "M0 = A + B + C", termPrime: "m0 = A'B'C'" },
+        { row: 1, A: 0, B: 0, C: 1, F: 1, F_prime: 0, term: "m1 = A'B'C", termPrime: "M1 = A + B + C'" },
+        { row: 2, A: 0, B: 1, C: 0, F: 0, F_prime: 1, term: "M2 = A + B' + C", termPrime: "m2 = A'BC'" },
+        { row: 3, A: 0, B: 1, C: 1, F: 1, F_prime: 0, term: "m3 = A'BC", termPrime: "M3 = A + B' + C'" },
+        { row: 4, A: 1, B: 0, C: 0, F: 0, F_prime: 1, term: "M4 = A' + B + C", termPrime: "m4 = AB'C'" },
+        { row: 5, A: 1, B: 0, C: 1, F: 1, F_prime: 0, term: "m5 = AB'C", termPrime: "M5 = A' + B + C'" },
+        { row: 6, A: 1, B: 1, C: 0, F: 0, F_prime: 1, term: "M6 = A' + B' + C", termPrime: "m6 = ABC'" },
+        { row: 7, A: 1, B: 1, C: 1, F: 1, F_prime: 0, term: "m7 = ABC", termPrime: "M7 = A' + B' + C'" }
+      ]
     }
   },
 
@@ -497,29 +556,34 @@ export const dldSection24Data = {
     },
     {
       id: "GD3",
-      title: "Guided Demo 3: Index-Set Conversion via Colored Universe Tiles",
+      title: "Guided Demo 3: Index-Set Conversion (Minterms to Maxterms)",
       target: "Convert F(A, B, C) = Σm(1, 4, 5, 6, 7) directly to Canonical POS",
-      objective: "Visualize the index universe U = {0, 1, ..., 7} as a partitioned set where every row is either a minterm or a maxterm.",
+      objective: "Demonstrate direct canonical form conversion using index set subtraction without intermediate algebraic expansion.",
       steps: [
         {
-          phase: "Step 1: Define the Index Universe",
+          phase: "Step 1: List all possible row indices.",
           expression: "For n = 3 variables, U = {0, 1, 2, 3, 4, 5, 6, 7}",
-          explanation: "The truth table has exactly 2^3 = 8 possible rows."
+          explanation: "The truth table has exactly 2³ = 8 possible rows."
         },
         {
-          phase: "Step 2: Partition the Universe",
-          expression: "1-Rows (Minterms S): {1, 4, 5, 6, 7} [Green Tiles]\n0-Rows (Maxterms U \\ S): {0, 2, 3} [Blue Tiles]",
-          explanation: "Because F is single-output, every row must evaluate to either 1 or 0."
+          phase: "Step 2: Identify the given minterms.",
+          expression: "Rows where F = 1 (minterms): S = {1, 4, 5, 6, 7}",
+          explanation: "The problem specifies F(A, B, C) = Σm(1, 4, 5, 6, 7). These 5 rows evaluate to 1."
         },
         {
-          phase: "Step 3: Write Canonical POS",
-          expression: "F(A, B, C) = ΠM(0, 2, 3)",
-          explanation: "The missing minterm indices become the included maxterm indices for the SAME function F."
+          phase: "Step 3: Find the remaining indices.",
+          expression: "Rows where F = 0 (maxterms): U \\ S = {0, 2, 3}",
+          explanation: "The remaining 3 rows in universe U must evaluate to 0."
         },
         {
-          phase: "Step 4: Algebraic Reduction Proof",
-          expression: "SOP: m4 + m5 + m6 + m7 = A; together with m1 (A'B'C), F = A + A'B'C = A + B'C\nPOS: M2 · M3 = (A + B' + C)(A + B' + C') = A + B'; then (A + B + C)(A + B') = A + B'C",
-          explanation: "Both representations simplify to the identical minimal expression: F = A + B'C. Q.E.D."
+          phase: "Step 4: Write the equivalent canonical POS expression.",
+          expression: "F(A, B, C) = ΠM(0, 2, 3) = (A + B + C)(A + B' + C)(A + B' + C')",
+          explanation: "The 0-row indices form the maxterm indices for the SAME function F."
+        },
+        {
+          phase: "Step 5: Verify the result.",
+          expression: "SOP Simplification:\n  m4 + m5 + m6 + m7 = A\n  m1 = A'B'C\n  F = A + A'B'C = A + B'C\n\nPOS Simplification:\n  M2 · M3 = (A + B' + C)(A + B' + C') = A + B'\n  (A + B + C)(A + B') = A + B'C\n\n∴ Both forms reduce to the identical minimal expression: F = A + B'C.",
+          explanation: "Both algebraic reductions prove that F = Σm(1, 4, 5, 6, 7) and F = ΠM(0, 2, 3) are completely equivalent."
         }
       ],
       finalForm: "F(A, B, C) = ΠM(0, 2, 3) = (A + B + C)(A + B' + C)(A + B' + C')",
@@ -672,13 +736,14 @@ export const dldSection24Data = {
       methodSelected: "Method 6: Distributive expansion X(Y + Z) = XY + XZ",
       methodRationale: "Multiplying C across the sum factor (A + B) directly yields sum of products.",
       solutionSteps: [
-        { step: 1, expr: "F = (A + B)C = AC + BC", law: "First Distributive Law", reason: "Multiply literal C into each term of the sum." },
-        { step: 2, expr: "AC lacks B: AC(B + B') = ABC + AB'C (m7, m5)", law: "Missing literal expansion", reason: "Expand AC to 3 literals." },
-        { step: 3, expr: "BC lacks A: BC(A + A') = ABC + A'BC (m7, m3)", law: "Missing literal expansion", reason: "Expand BC to 3 literals." },
-        { step: 4, expr: "Combine & deduplicate: F = ABC + AB'C + A'BC = Σm(3, 5, 7)", law: "Idempotent Law", reason: "ABC appears in both expansions; ABC + ABC = ABC." },
-        { step: 5, expr: "Canonical POS: U \\ {3, 5, 7} = {0, 1, 2, 4, 6}", law: "Complementary index set", reason: "Remaining rows where F = 0." }
+        { step: 1, expr: "F = (A + B)C", law: "Problem statement", reason: "Product of sum factor (A + B) and literal C." },
+        { step: 2, expr: "F = AC + BC", law: "Distributive Law", reason: "Multiply literal C into each term of the sum." },
+        { step: 3, expr: "F = AC(B + B') + BC(A + A')", law: "Missing-variable expansion", reason: "Multiply by 1 = (B + B') and (A + A') respectively." },
+        { step: 4, expr: "F = ABC + AB'C + ABC + A'BC", law: "Distributive Law", reason: "Distribute literals across parentheses." },
+        { step: 5, expr: "F = A'BC + AB'C + ABC", law: "Idempotent Law", reason: "Combine duplicate term ABC + ABC = ABC; arrange in ascending minterm order." },
+        { step: 6, expr: "F = Σm(3, 5, 7)", law: "Minterm mapping", reason: "A'BC = m3, AB'C = m5, ABC = m7; complementary canonical POS is ΠM(0, 1, 2, 4, 6)." }
       ],
-      finalAnswer: "General SOP: F = AC + BC | Canonical SOP: Σm(3, 5, 7) | Canonical POS: ΠM(0, 1, 2, 4, 6)",
+      finalAnswer: "F = Σm(3, 5, 7)",
       verificationNote: "At A=0, B=0, F=0 (rows 0, 1); at C=0, F=0 (rows 0, 2, 4, 6). Matches exactly.",
       examTip: "Always eliminate duplicate minterms immediately to keep index sets strictly sorted."
     },

@@ -387,50 +387,48 @@ export const Section24View = ({ section }) => {
 
                 {/* SVG Schematic: AND-OR Network */}
                 <div className="p-3 rounded-lg bg-white border border-[#DCE7E1]">
-                  <svg viewBox="0 0 340 130" className="w-full h-auto text-[#293B32]">
+                  <svg viewBox="0 0 460 130" className="w-full h-auto text-[#293B32]">
                     {/* Wires */}
-                    <path d="M 20 25 L 80 25 M 20 45 L 80 45" stroke="#94A3B8" strokeWidth="2" fill="none" />
-                    <path d="M 20 85 L 80 85 M 20 105 L 80 105" stroke="#94A3B8" strokeWidth="2" fill="none" />
-                    <path d="M 140 35 L 200 35 L 200 55 L 220 55" stroke="#285C49" strokeWidth="2" fill="none" />
-                    <path d="M 140 95 L 200 95 L 200 75 L 220 75" stroke="#285C49" strokeWidth="2" fill="none" />
-                    <path d="M 280 65 L 320 65" stroke="#1E4537" strokeWidth="2.5" fill="none" />
+                    {/* Input A to AND gate */}
+                    <path d="M 25 25 L 80 25" stroke="#94A3B8" strokeWidth="2" fill="none" />
+                    {/* Input B to AND gate */}
+                    <path d="M 25 45 L 80 45" stroke="#94A3B8" strokeWidth="2" fill="none" />
+                    {/* Output of AND gate (AB) to Level 2 OR gate */}
+                    <path d="M 130 35 L 180 35 L 180 55 L 210 55" stroke="#285C49" strokeWidth="2" fill="none" />
+                    {/* Direct Input C wire to Level 2 OR gate */}
+                    <path d="M 25 95 L 180 95 L 180 75 L 210 75" stroke="#94A3B8" strokeWidth="2" fill="none" />
+                    {/* Output wire from OR gate to Output F */}
+                    <path d="M 265 65 L 315 65" stroke="#1E4537" strokeWidth="2.5" fill="none" />
+                    <circle cx="315" cy="65" r="2.5" fill="#1E4537" />
 
                     {/* Input Labels */}
-                    <text x="10" y="29" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">A</text>
-                    <text x="10" y="49" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">B</text>
-                    <text x="10" y="89" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">C</text>
-                    <text x="10" y="109" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">D</text>
+                    <text x="12" y="29" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">A</text>
+                    <text x="12" y="49" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">B</text>
+                    <text x="12" y="99" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">C</text>
 
-                    {/* AND Gate 1 */}
+                    {/* AND Gate Level 1 */}
                     <g transform="translate(80, 15)">
                       <rect x="0" y="0" width="30" height="40" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
                       <path d="M 30 0 A 20 20 0 0 1 30 40 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
                       <text x="18" y="24" fontSize="9" fontWeight="bold" fill="#1E4537">AND</text>
                     </g>
 
-                    {/* AND Gate 2 */}
-                    <g transform="translate(80, 75)">
-                      <rect x="0" y="0" width="30" height="40" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
-                      <path d="M 30 0 A 20 20 0 0 1 30 40 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
-                      <text x="18" y="24" fontSize="9" fontWeight="bold" fill="#1E4537">AND</text>
-                    </g>
-
                     {/* Intermediate Term Labels */}
-                    <text x="150" y="30" fontSize="9" fontFamily="monospace" fontWeight="bold" fill="#285C49">AB</text>
-                    <text x="150" y="90" fontSize="9" fontFamily="monospace" fontWeight="bold" fill="#285C49">CD</text>
+                    <text x="145" y="30" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#285C49">AB</text>
+                    <text x="145" y="90" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">C</text>
 
                     {/* OR Gate Level 2 */}
-                    <g transform="translate(220, 45)">
-                      <path d="M 0 0 Q 20 20 0 40 Q 35 40 55 20 Q 35 0 0 0 Z" fill="#DDEADD" stroke="#1E4537" strokeWidth="2" />
-                      <text x="16" y="24" fontSize="9" fontWeight="bold" fill="#1E4537">OR</text>
+                    <g transform="translate(210, 45)">
+                      <path d="M 0 0 Q 15 20 0 40 Q 35 40 55 20 Q 35 0 0 0 Z" fill="#DDEADD" stroke="#1E4537" strokeWidth="2" />
+                      <text x="18" y="24" fontSize="9" fontWeight="bold" fill="#1E4537">OR</text>
                     </g>
 
-                    {/* Output Label */}
-                    <text x="290" y="58" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#1E4537">F = AB + CD</text>
+                    {/* Output Label (sufficient padding on right edge) */}
+                    <text x="325" y="69" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#1E4537">F = AB + C</text>
                   </svg>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] font-mono text-xs text-[#285C49] flex items-center justify-between">
-                  <span>Level 1: <strong>AND Gates</strong></span>
+                  <span>Level 1: <strong>AND Gate & Literal C</strong></span>
                   <span>{"->"}</span>
                   <span>Level 2: <strong>OR Gate</strong></span>
                 </div>
@@ -453,45 +451,58 @@ export const Section24View = ({ section }) => {
 
                 {/* SVG Schematic: OR-AND Network */}
                 <div className="p-3 rounded-lg bg-white border border-[#BFDBFE]">
-                  <svg viewBox="0 0 340 130" className="w-full h-auto text-[#1E3A8A]">
+                  <svg viewBox="0 0 460 130" className="w-full h-auto text-[#1E3A8A]">
                     {/* Wires */}
-                    <path d="M 20 25 L 80 25 M 20 45 L 80 45" stroke="#94A3B8" strokeWidth="2" fill="none" />
-                    <path d="M 20 85 L 80 85 M 20 105 L 80 105" stroke="#94A3B8" strokeWidth="2" fill="none" />
-                    <path d="M 140 35 L 200 35 L 200 55 L 220 55" stroke="#1D4ED8" strokeWidth="2" fill="none" />
-                    <path d="M 140 95 L 200 95 L 200 75 L 220 75" stroke="#1D4ED8" strokeWidth="2" fill="none" />
-                    <path d="M 280 65 L 320 65" stroke="#1E3A8A" strokeWidth="2.5" fill="none" />
+                    {/* Input A to OR Gate 1 */}
+                    <path d="M 25 25 L 80 25" stroke="#94A3B8" strokeWidth="2" fill="none" />
+                    {/* Input C trunk and visible connected junction */}
+                    <path d="M 25 65 L 50 65" stroke="#94A3B8" strokeWidth="2" fill="none" />
+                    <circle cx="50" cy="65" r="3.5" fill="#1D4ED8" />
+                    {/* Junction branch up to OR Gate 1 */}
+                    <path d="M 50 65 L 50 45 L 80 45" stroke="#1D4ED8" strokeWidth="2" fill="none" />
+                    {/* Junction branch down to OR Gate 2 */}
+                    <path d="M 50 65 L 50 85 L 80 85" stroke="#1D4ED8" strokeWidth="2" fill="none" />
+                    {/* Input B to OR Gate 2 */}
+                    <path d="M 25 105 L 80 105" stroke="#94A3B8" strokeWidth="2" fill="none" />
+
+                    {/* Output of OR Gate 1 (A + C) to Level 2 AND Gate */}
+                    <path d="M 135 35 L 180 35 L 180 55 L 210 55" stroke="#1D4ED8" strokeWidth="2" fill="none" />
+                    {/* Output of OR Gate 2 (B + C) to Level 2 AND Gate */}
+                    <path d="M 135 95 L 180 95 L 180 75 L 210 75" stroke="#1D4ED8" strokeWidth="2" fill="none" />
+                    {/* Output wire from Level 2 AND Gate to Output F */}
+                    <path d="M 260 65 L 305 65" stroke="#1E3A8A" strokeWidth="2.5" fill="none" />
+                    <circle cx="305" cy="65" r="2.5" fill="#1E3A8A" />
 
                     {/* Input Labels */}
-                    <text x="10" y="29" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">A</text>
-                    <text x="10" y="49" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">B</text>
-                    <text x="10" y="89" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">C</text>
-                    <text x="10" y="109" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#64748B">D</text>
+                    <text x="12" y="29" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">A</text>
+                    <text x="12" y="69" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">C</text>
+                    <text x="12" y="109" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#64748B">B</text>
 
-                    {/* OR Gate 1 */}
+                    {/* OR Gate 1 (A + C) */}
                     <g transform="translate(80, 15)">
                       <path d="M 0 0 Q 15 20 0 40 Q 35 40 55 20 Q 35 0 0 0 Z" fill="#EFF6FF" stroke="#1D4ED8" strokeWidth="2" />
                       <text x="18" y="24" fontSize="9" fontWeight="bold" fill="#1E3A8A">OR</text>
                     </g>
 
-                    {/* OR Gate 2 */}
+                    {/* OR Gate 2 (B + C) */}
                     <g transform="translate(80, 75)">
                       <path d="M 0 0 Q 15 20 0 40 Q 35 40 55 20 Q 35 0 0 0 Z" fill="#EFF6FF" stroke="#1D4ED8" strokeWidth="2" />
                       <text x="18" y="24" fontSize="9" fontWeight="bold" fill="#1E3A8A">OR</text>
                     </g>
 
                     {/* Intermediate Term Labels */}
-                    <text x="145" y="30" fontSize="9" fontFamily="monospace" fontWeight="bold" fill="#1D4ED8">A+B</text>
-                    <text x="145" y="90" fontSize="9" fontFamily="monospace" fontWeight="bold" fill="#1D4ED8">C+D</text>
+                    <text x="145" y="30" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#1D4ED8">A + C</text>
+                    <text x="145" y="100" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#1D4ED8">B + C</text>
 
                     {/* AND Gate Level 2 */}
-                    <g transform="translate(220, 45)">
+                    <g transform="translate(210, 45)">
                       <rect x="0" y="0" width="30" height="40" fill="#DBEAFE" stroke="#1E3A8A" strokeWidth="2" />
                       <path d="M 30 0 A 20 20 0 0 1 30 40 Z" fill="#DBEAFE" stroke="#1E3A8A" strokeWidth="2" />
                       <text x="16" y="24" fontSize="9" fontWeight="bold" fill="#1E3A8A">AND</text>
                     </g>
 
-                    {/* Output Label */}
-                    <text x="270" y="58" fontSize="10" fontFamily="monospace" fontWeight="bold" fill="#1E3A8A">F = (A+B)(C+D)</text>
+                    {/* Output Label (sufficient padding on right edge) */}
+                    <text x="315" y="69" fontSize="11" fontFamily="monospace" fontWeight="bold" fill="#1E3A8A">F = (A + C)(B + C)</text>
                   </svg>
                 </div>
                 <div className="p-2.5 rounded-lg bg-white border border-[#BFDBFE] font-mono text-xs text-[#1E3A8A] flex items-center justify-between">
@@ -558,8 +569,8 @@ export const Section24View = ({ section }) => {
             </p>
           </div>
 
-          {/* Critical Distinction Card */}
-          <div className="p-6 rounded-2xl bg-white border-2 border-[#C38A63] shadow-soft space-y-4">
+          {/* Critical Distinction Card: Symbol Dictionary & Core Concepts */}
+          <div className="p-6 rounded-2xl bg-white border-2 border-[#C38A63] shadow-soft space-y-5">
             <div className="flex items-start gap-3">
               <div className="p-2 rounded-lg bg-[#C38A63] text-white flex-shrink-0 mt-0.5">
                 <AlertTriangle className="w-5 h-5" />
@@ -574,42 +585,105 @@ export const Section24View = ({ section }) => {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-              {data.conversionVsComplementation.principles.map((p, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E2E8F0] space-y-2">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-[#C38A63]" />
-                    <h4 className="text-xs font-bold text-[#1E293B]">{p.concept}</h4>
+            {/* Beginner-Friendly Symbol Dictionary */}
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#78350F] block">
+                Mathematical Symbol Definitions (Before General Formulas)
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                {data.conversionVsComplementation.symbolDictionary?.map((sym, idx) => (
+                  <div key={idx} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#E2E8F0] space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded bg-[#1E4537] text-white font-mono text-xs font-bold">
+                        {sym.symbol}
+                      </span>
+                      <strong className="text-xs text-[#1E293B] font-bold">{sym.name}</strong>
+                    </div>
+                    <p className="text-[11px] text-[#64748B] leading-relaxed">
+                      {sym.meaning}
+                    </p>
                   </div>
-                  <div className="p-2.5 rounded-lg bg-white border border-[#CBD5E1] font-mono text-xs font-bold text-[#1E4537] text-center">
-                    {p.operation}
+                ))}
+              </div>
+              <div className="p-2.5 rounded-lg bg-[#FEF3C7]/60 border border-[#FDE68A] text-[11px] text-[#92400E] font-medium">
+                <strong>Crucial Note:</strong> {data.conversionVsComplementation.setSubtractionNote}
+              </div>
+            </div>
+
+            {/* Two Core Ideas: Converting F vs Finding Complement F' */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-1">
+              {data.conversionVsComplementation.twoCoreIdeas?.map((idea) => (
+                <div key={idea.id} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#E2E8F0] space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-xs font-bold text-[#1E293B]">{idea.title}</h4>
+                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white text-[#64748B] border border-[#E2E8F0]">
+                      {idea.status}
+                    </span>
+                  </div>
+                  <div className="p-3 rounded-lg bg-white border border-[#CBD5E1] font-mono text-xs font-bold text-[#1E4537] text-center">
+                    {idea.formula}
                   </div>
                   <p className="text-xs text-[#64748B] leading-relaxed">
-                    {p.meaning}
+                    {idea.explanation}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Concrete Example */}
-            <div className="p-4 rounded-xl bg-[#F8FAF9] border border-[#DCE7E1] space-y-2 text-xs">
+            {/* Concrete 3-Variable Proof with Truth Table */}
+            <div className="p-4 rounded-xl bg-[#F8FAF9] border border-[#DCE7E1] space-y-3 text-xs">
               <strong className="text-xs font-bold text-[#1E4537] block">
                 Concrete 3-Variable Proof ({data.conversionVsComplementation.concreteExample.domain}):
               </strong>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 font-mono">
-                <div className="p-2 rounded bg-white border border-[#DCE7E1]">
-                  Original Function: <strong>{data.conversionVsComplementation.concreteExample.originalFunction}</strong>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1.5 font-mono text-xs">
+                  <span className="text-[11px] text-[#64748B] font-bold block uppercase tracking-wider">Target Function: F = C</span>
+                  <div>1-Row Indices: <strong>{data.conversionVsComplementation.concreteExample.oneRows}</strong></div>
+                  <div>0-Row Indices: <strong>{data.conversionVsComplementation.concreteExample.zeroRows}</strong></div>
+                  <div className="pt-1.5 border-t border-[#F1F5F9] text-[#1E4537] font-bold">
+                    {data.conversionVsComplementation.concreteExample.sameFunctionSummary}
+                  </div>
                 </div>
-                <div className="p-2 rounded bg-white border border-[#BFDBFE] text-[#1E3A8A]">
-                  Same Function in POS: <strong>{data.conversionVsComplementation.concreteExample.sameFunctionPOS}</strong>
-                </div>
-                <div className="p-2 rounded bg-white border border-[#FED7AA] text-[#C2410C]">
-                  Complement F' in SOP: <strong>{data.conversionVsComplementation.concreteExample.complementSOP}</strong>
-                </div>
-                <div className="p-2 rounded bg-white border border-[#FED7AA] text-[#C2410C]">
-                  Complement F' in POS: <strong>{data.conversionVsComplementation.concreteExample.complementPOS}</strong>
+
+                <div className="p-3 rounded-lg bg-white border border-[#FED7AA] space-y-1.5 font-mono text-xs text-[#C2410C]">
+                  <span className="text-[11px] text-[#B45309] font-bold block uppercase tracking-wider">Inverted Complement: F' = C'</span>
+                  <div>1-Row Indices for F': <strong>{data.conversionVsComplementation.concreteExample.zeroRows}</strong></div>
+                  <div>0-Row Indices for F': <strong>{data.conversionVsComplementation.concreteExample.oneRows}</strong></div>
+                  <div className="pt-1.5 border-t border-[#FEE2E2] font-bold">
+                    {data.conversionVsComplementation.concreteExample.complementSummary}
+                  </div>
                 </div>
               </div>
+
+              {/* Compact 8-Row Truth Table Comparison */}
+              <div className="overflow-x-auto rounded-lg border border-[#DCE7E1]">
+                <table className="w-full text-center font-mono text-[11px]">
+                  <thead className="bg-[#FAF8F5] text-[#5F6C64] border-b border-[#DCE7E1]">
+                    <tr>
+                      <th className="py-1.5 px-2">Row</th>
+                      <th className="py-1.5 px-2">A B C</th>
+                      <th className="py-1.5 px-2 text-[#1E4537]">F = C</th>
+                      <th className="py-1.5 px-2 text-[#1E4537]">Canonical Term (F)</th>
+                      <th className="py-1.5 px-2 text-[#C2410C]">F' = C'</th>
+                      <th className="py-1.5 px-2 text-[#C2410C]">Canonical Term (F')</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E2E8F0]">
+                    {data.conversionVsComplementation.concreteExample.truthTable?.map((r) => (
+                      <tr key={r.row} className={r.F === 1 ? 'bg-[#EBF3ED]/40' : 'bg-white'}>
+                        <td className="py-1.5 px-2 text-[#64748B] font-bold">{r.row}</td>
+                        <td className="py-1.5 px-2">{r.A}{r.B}{r.C}</td>
+                        <td className="py-1.5 px-2 font-bold text-[#1E4537]">{r.F}</td>
+                        <td className="py-1.5 px-2 text-[#1E4537]">{r.term}</td>
+                        <td className="py-1.5 px-2 font-bold text-[#C2410C]">{r.F_prime}</td>
+                        <td className="py-1.5 px-2 text-[#C2410C]">{r.termPrime}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
               <p className="text-[#5F6C64] italic pt-1">
                 {data.conversionVsComplementation.concreteExample.takeaway}
               </p>
@@ -795,7 +869,7 @@ export const Section24View = ({ section }) => {
                           </span>
                           <span className="text-[11px] text-[#64748B] font-mono">Stage {idx + 1}</span>
                         </div>
-                        <div className="p-3 rounded-lg bg-white border border-[#DCE7E1] font-mono text-xs font-bold text-[#1E4537] whitespace-nowrap overflow-x-auto">
+                        <div className="p-3 rounded-lg bg-white border border-[#DCE7E1] font-mono text-xs font-bold text-[#1E4537] whitespace-pre-wrap leading-relaxed">
                           {st.expression}
                         </div>
                         <p className="text-xs text-[#64748B] leading-relaxed">
@@ -810,7 +884,7 @@ export const Section24View = ({ section }) => {
                 {demo.id === 'GD3' && (
                   <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
                     <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#5F6C64]">
-                      Index Universe Partition Visualization (3 Variables: 8 Rows)
+                      Index Universe Truth Table Rows (3 Variables: 8 Rows)
                     </h4>
                     <div className="grid grid-cols-4 sm:grid-cols-8 gap-2 text-center font-mono text-xs font-bold">
                       {[0, 1, 2, 3, 4, 5, 6, 7].map((idx) => {
@@ -833,12 +907,12 @@ export const Section24View = ({ section }) => {
                         );
                       })}
                     </div>
-                    <div className="flex items-center justify-center gap-6 text-xs font-mono pt-2">
+                    <div className="flex flex-wrap items-center justify-center gap-6 text-xs font-mono pt-2">
                       <span className="flex items-center gap-1.5 text-[#1E4537]">
-                        <span className="w-3 h-3 rounded bg-[#EBF3ED] border border-[#285C49]" /> Minterms (Σm): 1-Rows
+                        <span className="w-3 h-3 rounded bg-[#EBF3ED] border border-[#285C49]" /> Rows where F = 1 (minterms): S = {"{1, 4, 5, 6, 7}"}
                       </span>
                       <span className="flex items-center gap-1.5 text-[#1E3A8A]">
-                        <span className="w-3 h-3 rounded bg-[#EFF6FF] border border-[#3B82F6]" /> Maxterms (ΠM): 0-Rows
+                        <span className="w-3 h-3 rounded bg-[#EFF6FF] border border-[#3B82F6]" /> Rows where F = 0 (maxterms): U \ S = {"{0, 2, 3}"}
                       </span>
                     </div>
                   </div>
@@ -970,49 +1044,49 @@ export const Section24View = ({ section }) => {
                         </p>
                       </div>
 
-                      {/* Desktop 4-Column Table */}
-                      <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
-                        <table className="w-full text-xs border-collapse">
-                          <thead className="bg-[#1E4537] text-white font-mono">
-                            <tr>
-                              <th className="py-2.5 px-3 text-center border-r border-[#285C49] w-14">Step</th>
-                              <th className="py-2.5 px-4 text-left border-r border-[#285C49]">Mathematical Expression</th>
-                              <th className="py-2.5 px-4 text-left border-r border-[#285C49] w-48">Applied Law / Method</th>
-                              <th className="py-2.5 px-4 text-left">Why It Is Valid</th>
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-[#E2E8F0]">
-                            {model.solutionSteps.map((st) => (
-                              <tr key={st.step} className="hover:bg-[#FAF8F5]">
-                                <td className="py-3 px-3 text-center font-mono font-bold text-[#64748B] border-r border-[#E2E8F0] bg-[#FAF8F5]">
-                                  {st.step}
-                                </td>
-                                <td className="py-3 px-4 font-mono font-bold text-[#1E4537] border-r border-[#E2E8F0] whitespace-nowrap overflow-x-auto">
+                      {/* Vertical Classroom Blackboard Mathematical Solution */}
+                      <div className="p-4 sm:p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+                        <div className="flex items-center justify-between pb-2 border-b border-[#E2E8F0]">
+                          <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E4537]">
+                            Solution:
+                          </span>
+                          <span className="font-mono text-[11px] text-[#64748B]">
+                            Method: {model.methodSelected}
+                          </span>
+                        </div>
+
+                        <div className="space-y-2 font-mono text-xs">
+                          {model.solutionSteps.map((st) => (
+                            <div key={st.step} className="flex flex-col sm:flex-row sm:items-baseline gap-2 py-1.5 border-b border-[#F1F5F9] last:border-0">
+                              <span className="font-bold text-[#64748B] sm:w-16 flex-shrink-0">
+                                Step {st.step}:
+                              </span>
+                              <div className="flex-1 flex flex-col md:flex-row md:items-baseline justify-between gap-1">
+                                <span className="font-bold text-[#1E4537] whitespace-pre-wrap leading-relaxed">
                                   {st.expr}
-                                </td>
-                                <td className="py-3 px-4 font-mono text-[11px] text-[#285C49] border-r border-[#E2E8F0]">
-                                  {st.law}
-                                </td>
-                                <td className="py-3 px-4 text-[#64748B] leading-relaxed">
-                                  {st.reason}
-                                </td>
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
+                                </span>
+                                {st.law && st.law !== 'Problem statement' && st.law !== 'Given expression' && (
+                                  <span className="font-sans italic text-[11px] text-[#285C49] flex-shrink-0">
+                                    ({st.law})
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
 
                       {/* Final Answer Banner */}
-                      <div className="p-4 rounded-xl bg-[#EBF3ED]/60 border border-[#285C49]/40 space-y-1 text-xs">
-                        <strong className="text-xs font-mono font-bold text-[#1E4537] uppercase tracking-wider block">
-                          Verified Final Answer
-                        </strong>
-                        <div className="font-mono font-bold text-sm text-[#1E4537] whitespace-nowrap overflow-x-auto">
-                          {model.finalAnswer}
+                      <div className="p-4 rounded-xl bg-[#EBF3ED]/70 border border-[#285C49]/40 space-y-1 text-xs">
+                        <div className="font-mono text-xs font-bold text-[#1E4537] flex flex-wrap items-center gap-2">
+                          <span className="uppercase tracking-wider">Final Answer:</span>
+                          <span className="text-sm font-extrabold">{model.finalAnswer}</span>
                         </div>
-                        <p className="text-[#285C49] font-medium pt-1">
-                          Verification: {model.verificationNote}
-                        </p>
+                        {model.verificationNote && (
+                          <p className="text-[#285C49] font-medium pt-1 font-sans text-xs">
+                            <strong>Verification:</strong> {model.verificationNote}
+                          </p>
+                        )}
                       </div>
 
                       {/* Exam Tip */}
@@ -1284,35 +1358,47 @@ export const Section24View = ({ section }) => {
                   {/* Revealed Solution Box */}
                   {isSolutionOpen && (
                     <div className="p-5 rounded-xl bg-[#F8FAF9] border border-[#DCE7E1] space-y-4 animate-fadeIn">
-                      <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-[#1E4537]">
-                        Step-by-Step Mathematical Derivation
-                      </h4>
-                      <div className="space-y-2">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#DCE7E1]">
+                        <span className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E4537]">
+                          Solution:
+                        </span>
+                        <span className="font-mono text-[11px] text-[#64748B]">
+                          Target: {problem.target}
+                        </span>
+                      </div>
+
+                      <div className="space-y-2 font-mono text-xs">
                         {problem.steps.map((st) => (
-                          <div key={st.step} className="p-3 rounded-lg bg-white border border-[#E2E8F0] space-y-1 text-xs">
-                            <div className="flex items-center justify-between">
-                              <span className="font-mono font-bold text-[#285C49]">Step {st.step}</span>
-                              <span className="font-mono text-[11px] text-[#64748B]">{st.law}</span>
+                          <div key={st.step} className="flex flex-col sm:flex-row sm:items-baseline gap-2 py-1.5 border-b border-[#E2E8F0] last:border-0">
+                            <span className="font-bold text-[#64748B] sm:w-16 flex-shrink-0">
+                              Step {st.step}:
+                            </span>
+                            <div className="flex-1 flex flex-col md:flex-row md:items-baseline justify-between gap-1">
+                              <span className="font-bold text-[#1E4537] whitespace-pre-wrap leading-relaxed">
+                                {st.expr}
+                              </span>
+                              {st.law && st.law !== 'Given expression' && (
+                                <span className="font-sans italic text-[11px] text-[#285C49] flex-shrink-0">
+                                  ({st.law})
+                                </span>
+                              )}
                             </div>
-                            <div className="font-mono font-bold text-[#1E4537] whitespace-nowrap overflow-x-auto">
-                              {st.expr}
-                            </div>
-                            <p className="text-[#64748B] text-[11px]">
-                              {st.reason}
-                            </p>
                           </div>
                         ))}
                       </div>
 
                       {/* Final Answer Banner */}
-                      <div className="p-3.5 rounded-lg bg-[#EBF3ED] border border-[#285C49]/30 font-mono text-xs font-bold text-[#1E4537]">
-                        Target Result: {problem.finalAnswer}
+                      <div className="p-3.5 rounded-lg bg-[#EBF3ED] border border-[#285C49]/30 font-mono text-xs font-bold text-[#1E4537] flex flex-wrap items-center gap-2">
+                        <span className="uppercase tracking-wider">Final Answer:</span>
+                        <span className="text-sm font-extrabold">{problem.finalAnswer}</span>
                       </div>
 
                       {/* Pedagogical Takeaway */}
-                      <p className="text-xs text-[#5F6C64] italic">
-                        <strong>Takeaway:</strong> {problem.takeaway}
-                      </p>
+                      {problem.takeaway && (
+                        <p className="text-xs text-[#5F6C64] italic">
+                          <strong>Takeaway:</strong> {problem.takeaway}
+                        </p>
+                      )}
                     </div>
                   )}
                 </div>
