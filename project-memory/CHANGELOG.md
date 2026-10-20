@@ -2,6 +2,35 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-20: DLD Phase 4: Selective Unit I Academic and Experience Modernization
+
+- **Type**: feature / academic-modernization / dld-unit-1 / pedagogy / phase-4-complete
+- **Summary**: Selectively modernized Digital Logic Design Unit I (Sections 1.1 to 1.7), 5 interactive solvers, and 110-question practice arena aligning with the Unit II academic standard on `dld-unit2-development`:
+  1. **WHY-FIRST Pedagogical Headers (`UnitWorkspace.jsx`)**:
+     - Introduced explicit WHY-FIRST framework headers (WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT) into Sections 1.1 and 1.2.
+     - Section 1.1: Explains physical signal degradation, digital quantization, regenerative noise margins, and semiconductor bistable switching.
+     - Section 1.2: Explains why computers use base 2, human readability value of Octal (groups of 3 bits) and Hexadecimal (groups of 4 bits/nibbles), and positional weighting N = ∑ d_i · r^i.
+  2. **Standard 5V TTL Input Threshold Precision (`dldSubjectResourcesData.js`, `dldUnit1Master.js`, `UnitWorkspace.jsx`)**:
+     - Corrected logic voltage references to specifically designate standard 5V TTL input specifications: guaranteed Logic 0 recognition (0.0V to 0.8V, V_IL max = 0.8V), guaranteed Logic 1 recognition (2.0V to 5.0V, V_IH min = 2.0V), and the indeterminate transition region (0.8V to 2.0V).
+     - Updated SVG waveform diagram labels in `UnitWorkspace.jsx` to reflect exact input threshold designations.
+  3. **Academic Terminology Precision**:
+     - Corrected line 1391 in `dldSection13PracticeData.js` from "3-Bit Nibble" to "3-Bit Group".
+     - Strictly enforced the standard: nibbles are 4 bits, octal groups are 3 bits, and octets are 8 bits.
+  4. **Signed Numbers & Overflow Mathematical Verification**:
+     - Confirmed mathematical distinction across lessons, resources, and solvers: 2's complement n-bit range is -2^{n-1} to +(2^{n-1}-1) with unique zero; signed magnitude and 1's complement range is -(2^{n-1}-1) to +(2^{n-1}-1) with dual zeros (+0 and -0).
+     - Verified signed overflow condition V = C_{in} ⊕ C_{out} on the sign bit, clarifying that ordinary carry-out alone is not overflow.
+  5. **Interactive Solvers & Practice Arena Audit**:
+     - Audited all 5 Unit I Interactive Solvers in `InteractiveSolvers.jsx`: Base Converter, Arithmetic Grid, Complements Subtractor, Signed Register & Overflow, Logic Gates Simulator.
+     - Audited all 110 questions in `unit1QuizBank.js` across 4 tracks (conversions: 35, arithmetic: 25, complements: 30, signed: 20) with 100% valid 4-option schemas.
+  6. **Comprehensive Test Suite & Build**:
+     - Built dedicated verification script `scripts/verifyUnit1Modernization.mjs` (116/116 checks passing).
+     - Full project regression test baseline: 4,588 passing assertions across 10 verification suites with 0 failures.
+     - Production build `npm run build` completed cleanly in 4.19s with 0 errors.
+     - Strict zero em-dash and zero en-dash compliance confirmed across all files.
+- **Affected Files**: `src/components/UnitWorkspace.jsx`, `src/data/dldUnit1Master.js`, `src/data/dldSection13PracticeData.js`, `src/data/dldSubjectResourcesData.js`, `scripts/verifyUnit1Modernization.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+
+---
+
 ## 2026-10-20: Focused K-Map Visual Correction: Persistent Colored Groups and Concentric Boundaries
 
 - **Type**: fix / interactive-solvers / kmap-visualization / dld-unit-2 / persistent-groups

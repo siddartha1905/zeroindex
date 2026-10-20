@@ -59,7 +59,7 @@ export const dldUnit1Master = {
           title: "Digital Systems: Discrete and Quantized",
           points: [
             "A Digital Signal is discrete in both time and amplitude. Information is represented using discrete numeric values rather than continuous waves.",
-            "Almost all digital electronic systems use Binary Logic, restricting voltages to two discrete states: Logic 0 (LOW, typically 0V) and Logic 1 (HIGH, typically 3.3V or 5V).",
+            "Almost all digital electronic systems use Binary Logic, restricting voltages to two discrete operating bands: Logic 0 (LOW) and Logic 1 (HIGH). For example, in standard 5V TTL input specifications, guaranteed Logic 0 recognition is 0.0V to 0.8V (V_IL max = 0.8V) and guaranteed Logic 1 recognition is 2.0V to 5.0V (V_IH min = 2.0V), with an indeterminate transition band between them.",
             "Digital circuits process information using microscopic transistor switches (MOSFETs) operating strictly in ON or OFF states."
           ]
         }
@@ -310,7 +310,7 @@ export const dldUnit1Master = {
             "Nibble: A group of 4 binary bits (for example, 1010). Exactly one hexadecimal digit.",
             "Byte: A group of 8 binary bits (for example, 11001010). The universal standard addressable memory unit.",
             "Word: The native data chunk processed by a CPU in one cycle (16 bits, 32 bits, or 64 bits).",
-            "Why Transistors Use Base-2: A transistor is a switch with two stable states (conducting ON or non-conducting OFF). Two states give maximum physical reliability and noise immunity."
+            "Why Computers Use Base-2: Semiconductor transistors operate as bistable electronic switches (saturation/conducting ON vs cutoff/non-conducting OFF). Two widely separated voltage operating bands yield maximum physical noise margins against thermal jitter, supply fluctuations, and crosstalk. Rather than requiring perfect ideal 0V and 5V levels, hardware defines safe input bands (e.g. V_IL max and V_IH min). Attempting 10-state decimal silicon would shrink noise margins to millivolts, causing rampant thermal switching errors."
           ]
         },
         {

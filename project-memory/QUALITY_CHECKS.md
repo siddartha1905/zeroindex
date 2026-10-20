@@ -26,6 +26,26 @@ node scripts/verifyInteractiveSolvers.mjs
 node scripts/generateProjectSnapshot.mjs
 ```
 
+### Verified Test Run: DLD Phase 4 Selective Unit I Modernization (2026-10-20)
+
+| Test Script / Build | Scope | Result | Details |
+|---|---|---|---|
+| `npm run build` | Vite 6 Production Bundle | **PASS** | 3,404 modules transformed in 4.19s; 0 errors; clean production bundle |
+| `verifyUnit1Modernization.mjs` | Unit 1 Modernization Master Suite | **PASS** | 116/116 checks passed (Dash audit across 16 Unit 1 files, zero '3-bit nibble' and zero '4-bit octet', standard 5V TTL input threshold phrasing, Section 1.6 signed ranges and overflow formula V = Cin ⊕ Cout, Unit 1 Practice Arena 110-question schema and track distributions, and contextual learning loop routing integrity) |
+| `verifyUnit1Math.mjs` | Unit 1 Number Systems & Arithmetic | **PASS** | 44/44 checks passed (100% accuracy, zero regressions) |
+| `verifyInteractiveSolvers.mjs` | Unit 1 Interactive Solvers Suite | **PASS** | 34/34 checks passed (100% accuracy, zero regressions) |
+| `verifySection17.mjs` | Section 1.7 Logic Gates Suite | **PASS** | 50/50 checks passed (100% accuracy, zero regressions) |
+| `verifyDldResources.mjs` | Phase 3 Subject Resources & Connected Learning Suite | **PASS** | 238/238 checks passed (100% accuracy, zero regressions) |
+| `verifyUnit2PracticeArena.mjs` | Unit 2 Practice Arena Master Verification Suite | **PASS** | 2,715/2,715 checks passed (100% accuracy, zero regressions) |
+| `verifyUnit2Full.mjs` | Unit 2 Full Verification (7 Groups) | **PASS** | 953/953 checks passed (100% accuracy, zero regressions) |
+| `verifyUnit2Solvers.mjs` | Unit 2 Interactive Solvers Suite | **PASS** | 157/157 checks passed (100% accuracy, zero regressions) |
+| `testUnit2SolversSSR.mjs` | Multi-Solver Vite SSR Smoke Test | **PASS** | 7/7 solvers passed clean server-side component rendering, zero runtime exceptions |
+| `verifySection25Math.mjs` | Section 2.5 K-Maps Math Audit | **PASS** | 365/365 checks passed (100% accuracy, zero regressions) |
+| **Total Automated Assertions** | **10 Verification Suites Executed** | **PASS** | **4,588/4,588 automated checks passed (100% accuracy, 0 failures)** |
+| Dash Constraint Check | Em-dash & En-dash Scan | **PASS** | 0 em-dashes, 0 en-dashes across all modified and created files |
+
+---
+
 ### Verified Test Run: DLD Phase 3 Subject Resources and Connected Learning (2026-10-20)
 
 | Test Script / Build | Scope | Result | Details |
