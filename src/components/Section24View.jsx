@@ -26,6 +26,7 @@ import {
 } from 'lucide-react';
 import { dldSection24Data } from '../data/dldSection24Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 /**
  * Section 2.4 View: SOP and POS Forms, Conversions and Simplification
@@ -40,7 +41,7 @@ import { CuratedVideoCard } from './CuratedVideoCard';
  * 6. Practice Lab (28 progressive exercises with two-tier hints and revealed derivations)
  */
 
-export const Section24View = ({ section }) => {
+export const Section24View = ({ section, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('start-here');
   
   // Tab 1 state
@@ -1407,6 +1408,9 @@ export const Section24View = ({ section }) => {
           </div>
         </div>
       )}
+
+      {/* Connected Learning Loop */}
+      <ContextualLearningStrip sectionId="2.4" onNavigate={onNavigate} className="mt-10" />
     </div>
   );
 };

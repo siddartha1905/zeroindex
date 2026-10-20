@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Calculator, 
   Sparkles, 
@@ -253,8 +253,14 @@ function decimalFracToTarget(fracDec, targetBase, maxPrecision = 6) {
 // MAIN INTERACTIVE SOLVERS SUITE COMPONENT
 // ============================================================================
 
-export const InteractiveSolvers = () => {
-  const [activeSolver, setActiveSolver] = useState("converter");
+export const InteractiveSolvers = ({ initialSolverTab = "converter", onNavigate }) => {
+  const [activeSolver, setActiveSolver] = useState(initialSolverTab || "converter");
+
+  useEffect(() => {
+    if (initialSolverTab && ['converter', 'arithmetic', 'complements', 'signed', 'gates'].includes(initialSolverTab)) {
+      setActiveSolver(initialSolverTab);
+    }
+  }, [initialSolverTab]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">

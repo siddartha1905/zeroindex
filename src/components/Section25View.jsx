@@ -30,6 +30,7 @@ import {
 } from 'lucide-react';
 import { dldSection25Data } from '../data/dldSection25Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 /**
  * Section 2.5 View: Karnaugh Maps - Fundamentals, Two-Variable, Three-Variable, Four-Variable, POS Grouping, and Don't-Care Minimization
@@ -384,7 +385,7 @@ class SectionErrorBoundary extends React.Component {
   }
 }
 
-const Section25ViewInternal = ({ section, initialTab = 'start-here' }) => {
+const Section25ViewInternal = ({ section, initialTab = 'start-here', onNavigate }) => {
   const [activeTab, setActiveTab] = useState(initialTab);
   const data = dldSection25Data;
 
@@ -2630,6 +2631,9 @@ const Section25ViewInternal = ({ section, initialTab = 'start-here' }) => {
           </div>
         </div>
       )}
+
+      {/* Connected Learning Loop */}
+      <ContextualLearningStrip sectionId="2.5" onNavigate={onNavigate} className="mt-10" />
     </div>
   );
 };

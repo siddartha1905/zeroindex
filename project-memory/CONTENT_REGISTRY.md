@@ -16,8 +16,8 @@
 | Readout | Editorial Articles Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/readoutArticlesConfig.js; explicit author approval required before publication |
 | Readout | Three sample technical articles | Withdrawn (archived in unpublished-archive/) | Explicit author review, approval of voice, and formal release |
 | Folio | Personal Essays Registry & Publishing Infrastructure | Active (Empty state; 0 published) | Schema in src/data/folioEssaysConfig.js; explicit author approval required before publication |
-| Folio | Three sample reflective essays | Withdrawn (archived in unpublished-archive/) | Explicit author review and approval of personal attribution |
-| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldResourceConfig.js; do not use dead anchors |
+| DLD Resources | Google Drive Materials (Units 1 to 5) | Configured (pending authentic URLs) | Supply valid Drive links in dldSubjectResourcesData.js; do not use dead anchors |
+| DLD Resources | Subject Resources Reference Center (Units 1 & 2) | Complete & Verified | Integrated in SubjectResourcesView.jsx; 12 formula sheets, textbooks, reference books, channels, websites, calculators |
 
 ---
 

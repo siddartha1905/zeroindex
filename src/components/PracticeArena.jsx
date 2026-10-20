@@ -125,7 +125,7 @@ function generateQuestionPaper(allBank, trackId, mode, difficultyMix) {
   return shuffled.slice(0, Math.min(targetCount, shuffled.length));
 }
 
-export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
+export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all' }) => {
   // Unit Partition: 1 | 2 | 3 | 4 | 5 | 'all'
   const [activeQuizUnit, setActiveQuizUnit] = useState(defaultUnit || 1);
 
@@ -137,10 +137,18 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
   const [quizState, setQuizState] = useState('lobby');
 
   // Lobby Configuration States
-  const [selectedTrack, setSelectedTrack] = useState('all');
+  const [selectedTrack, setSelectedTrack] = useState(initialTrack || 'all');
   const [selectedMode, setSelectedMode] = useState('random10'); // 'random10' | 'random20' | 'setA' | 'setB' | 'theory'
   const [selectedDifficulty, setSelectedDifficulty] = useState('balanced'); // 'balanced' | 'Easy' | 'Medium' | 'Hard'
   const [selectedInputFormat, setSelectedInputFormat] = useState('hybrid'); // 'hybrid' | 'mcq' | 'direct'
+
+  useEffect(() => {
+    if (defaultUnit) setActiveQuizUnit(defaultUnit);
+  }, [defaultUnit]);
+
+  useEffect(() => {
+    if (initialTrack) setSelectedTrack(initialTrack);
+  }, [initialTrack]);
 
   // Active Quiz Session States
   const [activeQuestions, setActiveQuestions] = useState([]);

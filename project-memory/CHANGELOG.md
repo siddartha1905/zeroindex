@@ -2,6 +2,38 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-20: Complete DLD Phase 3 Subject Resources and Connected Learning Loop
+
+- **Type**: feature / subject-resources / connected-learning / reference-center / dld-unit-1-2 / phase-3-complete
+- **Summary**: Transformed the DLD Subject Resources workspace into an authoritative academic reference center and established a seamless Connected Learning Loop across Unit I and Unit II on `dld-unit2-development`:
+  1. **Subject Resources Architecture (`src/components/SubjectResourcesView.jsx`)**:
+     - Built an academic reference center with unit toggle (Unit I vs Unit II) and clear status indication that Units III to V are in curriculum blueprint.
+     - Implemented 7 filter tabs: All Resources, Textbooks & Materials, Formula Sheets & Revision, Educational Channels, Reference Websites, Online Calculators, Curriculum Syllabus.
+     - Preserved official course banner with VIIT Autonomous Crest, course code (AR23 regulations), L-T-P-C structure, and non-clickable Google Drive study materials placeholder ("Material link will be added soon.").
+     - Reused existing printable cheat sheets (`BooleanLawsCheatSheet.jsx` and `KMapCheatSheet.jsx`) as dedicated interactive modal references with clean print and close controls.
+  2. **Comprehensive Subject Resources Registry (`src/data/dldSubjectResourcesData.js`)**:
+     - **Prescribed Textbooks**: 3 approved books (Morris Mano 5th Ed, Charles H. Roth 5th Ed, Leach, Malvino & Saha 8th Ed) with VIIT library call numbers, authentic bibliographic metadata, and zero fabricated PDF links.
+     - **Supplementary Reference Books**: 3 approved books (Kohavi & Jha 3rd Ed, Thomas L. Floyd 11th Ed, R.P. Jain 4th Ed).
+     - **Formula Sheets & Quick Revision**: Complete coverage for all 12 sections (1.1 to 1.7 in Unit I, 2.1 to 2.5 in Unit II) with 3+ structured takeaways, essential rules, formulas with mandatory Unicode Sigma (\u03A3) and Pi (\u03A0), and direct action links to lessons, solvers, and practice.
+     - **Curated Educational Channels**: 4 selective educators (Neso Academy, ALL ABOUT ELECTRONICS, Gate Smashers, Ben Eater) with specialties, notable topics, and YouTube search actions. Zero embedded video feeds or tracking cookies.
+     - **Academic Reference Websites**: 3 reputable institutions/platforms (All About Circuits, MIT OpenCourseWare Computation Structures, Neso Academy Digital Electronics) with safe outbound links (`rel="noopener noreferrer"`).
+     - **Curated External Online Calculators**: 4 specialized supplementary tools (dCode Boolean Expressions, dCode K-Map, RapidTables Base Converter, DigiKey Number Converter) with category filters, detailed syntax notes, and prominent notation discrepancy warnings.
+  3. **Connected Learning Loop (`src/components/ContextualLearningStrip.jsx`)**:
+     - Implemented the permanent learning philosophy: LEARN -> EXPERIMENT (Solver) -> PRACTISE (Arena) -> REVISE (Formula Sheet).
+     - Connected 12 sections through `contextualLearningMap` with actionable buttons linking lessons, specific solver tabs, relevant practice arena tracks, and formula revision sheets.
+     - Wired into Unit 1 (`UnitWorkspace.jsx`) and Unit 2 (`Section21View.jsx` through `Section25View.jsx`).
+  4. **Workspace & Navigation Integration (`src/components/DldWorkspace.jsx`)**:
+     - Implemented `handleContextNavigation` handling multi-target transitions across tabs, units, sub-modules, solver tabs, and practice tracks.
+     - Connected `initialSolverTab` across both Unit 1 (`InteractiveSolvers.jsx`) and Unit 2 (`Unit2Solvers.jsx`).
+     - Connected `initialTrack` to `PracticeArena.jsx`.
+  5. **Verification & Quality**:
+     - Created dedicated verification suite `scripts/verifyDldResources.mjs`: all 238 checks passed (100%).
+     - Updated `scripts/verifyUnit2Full.mjs`: all 953 checks passed (100%).
+     - Full regression suites passed: 4,434 total automated assertions with 0 failures.
+     - Production build `npm run build` succeeds in 3.84s with 0 errors (3,404 modules transformed).
+     - Strict zero em-dashes and zero en-dashes confirmed across all files.
+- **Affected Files**: `src/data/dldSubjectResourcesData.js`, `src/components/SubjectResourcesView.jsx`, `src/components/ContextualLearningStrip.jsx`, `src/components/SyllabusView.jsx`, `src/components/DldWorkspace.jsx`, `src/components/PracticeArena.jsx`, `src/components/Unit2Solvers.jsx`, `src/components/InteractiveSolvers.jsx`, `src/components/Section21View.jsx`, `src/components/Section22View.jsx`, `src/components/Section23View.jsx`, `src/components/Section24View.jsx`, `src/components/Section25View.jsx`, `src/components/UnitWorkspace.jsx`, `scripts/verifyDldResources.mjs`, `scripts/verifyUnit2Full.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/TECHNICAL_SNAPSHOT.md`.
+
 ---
 
 ## 2026-10-20: Complete Unit II Practice Arena (Phase 2: Sections 2.1 to 2.5)

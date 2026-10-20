@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **77**
-- Verification script names discovered: **12**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **80**
+- Verification script names discovered: **13**
 
 ## Selected declared dependencies
 
@@ -26,6 +26,7 @@
 
 ## Existing verification scripts (not executed here)
 
+- `scripts/verifyDldResources.mjs`
 - `scripts/verifyInteractiveSolvers.mjs`
 - `scripts/verifySection15Math.mjs`
 - `scripts/verifySection17.mjs`
@@ -48,6 +49,7 @@
 - `src/components/BooleanLawsCheatSheet.jsx`
 - `src/components/BottomNav.jsx`
 - `src/components/BridgeLanding.jsx`
+- `src/components/ContextualLearningStrip.jsx`
 - `src/components/CuratedVideoCard.jsx`
 - `src/components/DldSubjectHome.jsx`
 - `src/components/DldWorkspace.jsx`
@@ -79,6 +81,7 @@
 - `src/components/SiteFooter.jsx`
 - `src/components/SiteHeader.jsx`
 - `src/components/SolversHub.jsx`
+- `src/components/SubjectResourcesView.jsx`
 - `src/components/SyllabusView.jsx`
 - `src/components/Unit2Solvers.jsx`
 - `src/components/UnitWorkspace.jsx`
@@ -102,6 +105,7 @@
 - `src/data/dldSection25Data.js`
 - `src/data/dldSection26Data.js`
 - `src/data/dldSection27Data.js`
+- `src/data/dldSubjectResourcesData.js`
 - `src/data/dldSyllabus.js`
 - `src/data/dldUnit1.js`
 - `src/data/dldUnit1Master.js`

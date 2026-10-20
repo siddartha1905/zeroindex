@@ -23,8 +23,9 @@ import {
 } from 'lucide-react';
 import { dldSection21Data } from '../data/dldSection21Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
-export const Section21View = () => {
+export const Section21View = ({ onNavigate }) => {
   const [activeTab, setActiveTab] = useState('start-here');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedProofs, setExpandedProofs] = useState({ 'proof-4': true, 'proof-5': true });
@@ -1239,6 +1240,9 @@ export const Section21View = () => {
           </div>
         </div>
       )}
+
+      {/* Connected Learning Loop */}
+      <ContextualLearningStrip sectionId="2.1" onNavigate={onNavigate} className="mt-10" />
 
     </div>
   );

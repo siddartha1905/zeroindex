@@ -49,6 +49,8 @@ export const DldWorkspace = ({
     return !isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 ? unitNum : 1;
   });
   const [solversUnit, setSolversUnit] = useState(1);
+  const [initialSolverTab, setInitialSolverTab] = useState('simplifier');
+  const [initialQuizTrack, setInitialQuizTrack] = useState('all');
 
   // Synchronize state when props update via browser navigation or hashchange
   useEffect(() => {
@@ -85,6 +87,32 @@ export const DldWorkspace = ({
     const newHash = `workspace/units/${subId}`;
     if (window.location.hash !== `#${newHash}`) {
       window.history.pushState(null, '', `#${newHash}`);
+    }
+  };
+
+  const handleContextNavigation = (target) => {
+    if (typeof target === 'string') {
+      handleTabChange(target);
+      return;
+    }
+    const { tab, unit, subId, trackId, solverTab } = target || {};
+    if (unit) {
+      setActiveUnit(unit);
+      if (tab === 'solvers') {
+        setSolversUnit(unit);
+      }
+    }
+    if (solverTab) {
+      setInitialSolverTab(solverTab);
+    }
+    if (trackId) {
+      setInitialQuizTrack(trackId);
+    }
+    if (subId) {
+      handleSubModuleChange(subId);
+    }
+    if (tab) {
+      handleTabChange(tab);
     }
   };
 
@@ -289,6 +317,7 @@ export const DldWorkspace = ({
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
                     section={masterSection} 
+                    onNavigate={handleContextNavigation}
                   />
                 ) : (
                   /* Modular study guide for remaining sections */
@@ -303,25 +332,26 @@ export const DldWorkspace = ({
                         }
                       ] : undefined
                     }} 
+                    onNavigate={handleContextNavigation}
                   />
                 )
               ) : effectiveUnit === 2 ? (
                 activeSubModuleId === '2.1' ? (
-                  <Section21View section={dldUnit2Master.sections[0]} />
+                  <Section21View section={dldUnit2Master.sections[0]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.2' ? (
-                  <Section22View section={dldUnit2Master.sections[1]} />
+                  <Section22View section={dldUnit2Master.sections[1]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.3' ? (
-                  <Section23View section={dldUnit2Master.sections[2]} />
+                  <Section23View section={dldUnit2Master.sections[2]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.4' ? (
-                  <Section24View section={dldUnit2Master.sections[3]} />
+                  <Section24View section={dldUnit2Master.sections[3]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.5' ? (
-                  <Section25View section={dldUnit2Master.sections[4]} />
+                  <Section25View section={dldUnit2Master.sections[4]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.6' ? (
                   <Section26View section={dldUnit2Master.sections[5]} />
                 ) : activeSubModuleId === '2.7' ? (
                   <Section27View section={dldUnit2Master.sections[6]} />
                 ) : (
-                  <Section22View section={dldUnit2Master.sections[1]} />
+                  <Section22View section={dldUnit2Master.sections[1]} onNavigate={handleContextNavigation} />
                 )
               ) : (
                 /* Units 3-5 Preview Card */
@@ -407,21 +437,31 @@ export const DldWorkspace = ({
             </div>
 
             {solversUnit === 1 ? (
-              <InteractiveSolvers onNavigate={() => {}} />
+              <InteractiveSolvers 
+                initialSolverTab={initialSolverTab} 
+                onNavigate={handleContextNavigation} 
+              />
             ) : (
-              <Unit2Solvers />
+              <Unit2Solvers initialSolverTab={initialSolverTab} />
             )}
           </div>
         )}
 
         {/* TAB 3: Practice Arena */}
         {activeTab === 'practice' && (
-          <PracticeArena defaultUnit={activeUnit} onNavigate={() => {}} />
+          <PracticeArena 
+            defaultUnit={activeUnit} 
+            initialTrack={initialQuizTrack}
+            onNavigate={handleContextNavigation} 
+          />
         )}
 
         {/* TAB 4: Subject Resources */}
         {activeTab === 'syllabus' && (
-          <SyllabusView onNavigate={(tab) => setActiveTab(tab)} />
+          <SyllabusView 
+            onNavigate={handleContextNavigation} 
+            initialUnit={activeUnit} 
+          />
         )}
 
       </main>

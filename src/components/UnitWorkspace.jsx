@@ -37,6 +37,7 @@ import {
 import { Section15View } from './Section15View';
 import { Section16View } from './Section16View';
 import { Section17View } from './Section17View';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 // Dedicated Pedagogical Components for Section 1.3A Conversions
 const StepByStepDivisionViewer = ({ stage }) => {
@@ -1709,7 +1710,7 @@ const GraphicalDivisionLadder = ({
   );
 };
 
-export const UnitWorkspace = ({ section }) => {
+export const UnitWorkspace = ({ section, onNavigate }) => {
   const [revealedQuestions, setRevealedQuestions] = useState({});
   const [activeSubTab13, setActiveSubTab13] = useState("overview");
   const [activeConv13A, setActiveConv13A] = useState("Conversion 1");
@@ -5529,6 +5530,11 @@ export const UnitWorkspace = ({ section }) => {
               )}
             </div>
           </div>
+        )}
+
+        {/* Connected Learning Loop */}
+        {section?.id && (
+          <ContextualLearningStrip sectionId={section.id} onNavigate={onNavigate} className="mt-8" />
         )}
 
       </div>

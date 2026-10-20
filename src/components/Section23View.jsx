@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { dldSection23Data } from '../data/dldSection23Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 /**
  * Section 2.3 View: Boolean Functions, Minterms, Maxterms, Canonical and Standard Forms
@@ -32,7 +33,7 @@ import { CuratedVideoCard } from './CuratedVideoCard';
  * Follows permanent ZeroIndex WHY-FIRST philosophy: WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT
  */
 
-export const Section23View = ({ section }) => {
+export const Section23View = ({ section, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('start-here');
   
   // Tab 2 interactive state
@@ -1987,6 +1988,9 @@ export const Section23View = ({ section }) => {
 
         </div>
       )}
+
+      {/* Connected Learning Loop */}
+      <ContextualLearningStrip sectionId="2.3" onNavigate={onNavigate} className="mt-10" />
 
     </div>
   );

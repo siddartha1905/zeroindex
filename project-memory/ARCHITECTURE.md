@@ -29,6 +29,9 @@
 - `src/utils/booleanEngine.js`: Deterministic Boolean tokenizer, AST parser, truth table generator, exact Quine-McCluskey minimizer, and universal logic synthesis engine.
 - `src/components/Section21View.jsx` to `Section27View.jsx`: Dedicated academic views for Unit 2 sections 2.1 through 2.7.
 - `src/components/BooleanLawsCheatSheet.jsx` & `KMapCheatSheet.jsx`: Academic revision cheat sheet modules.
+- `src/components/SubjectResourcesView.jsx`: Master academic reference center with unit toggle, 7 category filters, textbooks, formula sheets, channels, websites, and external calculators.
+- `src/components/ContextualLearningStrip.jsx`: Connected learning strip embedded in lessons (LEARN -> EXPERIMENT -> PRACTISE -> REVISE).
+- `src/data/dldSubjectResourcesData.js`: Centralized data registry for DLD subject resources and contextual learning map.
 - `src/components/PracticeArena.jsx`: Timed exam and practice arena with dual Unit 1 and Unit 2 quiz tracks.
 - `src/data/dldUnit1Master.js`: Master registry of Unit 1 curricula and worked solutions.
 - `src/data/dldUnit2Master.js` & `dldSection22Data.js` to `dldSection27Data.js`: Unit 2 academic master syllabus and section data modules.

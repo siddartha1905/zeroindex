@@ -22,6 +22,7 @@ import {
 import { dldSection22Data } from '../data/dldSection22Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
 import BooleanLawsCheatSheet from './BooleanLawsCheatSheet';
+import { ContextualLearningStrip } from './ContextualLearningStrip';
 
 /**
  * Section 2.2 View: Simplification of Boolean Expressions Using Algebraic Laws
@@ -29,7 +30,7 @@ import BooleanLawsCheatSheet from './BooleanLawsCheatSheet';
  * Follows permanent ZeroIndex WHY-FIRST philosophy: WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT
  */
 
-export const Section22View = ({ section }) => {
+export const Section22View = ({ section, onNavigate }) => {
   const [activeTab, setActiveTab] = useState('start-here');
   const [modelFilter, setModelFilter] = useState('All');
   const [practiceFilter, setPracticeFilter] = useState('All');
@@ -1416,6 +1417,9 @@ export const Section22View = ({ section }) => {
           </div>
         </div>
       )}
+
+      {/* Connected Learning Loop */}
+      <ContextualLearningStrip sectionId="2.2" onNavigate={onNavigate} className="mt-10" />
 
     </div>
   );

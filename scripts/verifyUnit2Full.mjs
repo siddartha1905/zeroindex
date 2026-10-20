@@ -220,7 +220,12 @@ const filesToAudit = [
   './src/components/Unit2Solvers.jsx',
   './src/components/PracticeArena.jsx',
   './src/components/DldWorkspace.jsx',
-  './src/data/dldAvailabilityConfig.js'
+  './src/data/dldAvailabilityConfig.js',
+  './src/data/dldSubjectResourcesData.js',
+  './src/components/SubjectResourcesView.jsx',
+  './src/components/ContextualLearningStrip.jsx',
+  './src/components/SyllabusView.jsx',
+  './scripts/verifyDldResources.mjs'
 ];
 
 filesToAudit.forEach(filePath => {

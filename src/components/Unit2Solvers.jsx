@@ -1,4 +1,4 @@
-import React, { useState, useMemo, Component } from 'react';
+import React, { useState, useMemo, Component, useEffect } from 'react';
 import { 
   Calculator, 
   Table, 
@@ -87,8 +87,14 @@ class SolverErrorBoundary extends Component {
   }
 }
 
-export const Unit2Solvers = () => {
-  const [activeSolverTab, setActiveSolverTab] = useState('simplifier');
+export const Unit2Solvers = ({ initialSolverTab = 'simplifier' }) => {
+  const [activeSolverTab, setActiveSolverTab] = useState(initialSolverTab || 'simplifier');
+
+  useEffect(() => {
+    if (initialSolverTab) {
+      setActiveSolverTab(initialSolverTab);
+    }
+  }, [initialSolverTab]);
 
   const solverTabs = [
     { 
