@@ -174,12 +174,12 @@ xorStates.forEach(st => {
 });
 
 // ----------------------------------------------------------------------------
-// 6. UNIT 2 PRACTICE QUESTION BANK VALIDATION (110 QUESTIONS)
+// 6. UNIT 2 PRACTICE QUESTION BANK VALIDATION (125 QUESTIONS)
 // ----------------------------------------------------------------------------
-console.log("\n[TEST GROUP 6] Unit 2 Practice Arena 110-Question Bank Validation");
+console.log("\n[TEST GROUP 6] Unit 2 Practice Arena 125-Question Bank Validation");
 
-assert(unit2QuizBank.length === 110, `Quiz bank contains exactly 110 questions (actual: ${unit2QuizBank.length})`);
-assert(unit2QuizTracks.length === 5, "Quiz bank has 5 comprehensive tracks (All, Laws, Canonical, K-Maps, Gates/XOR)");
+assert(unit2QuizBank.length === 125, `Quiz bank contains exactly 125 questions (actual: ${unit2QuizBank.length})`);
+assert(unit2QuizTracks.length === 6, "Quiz bank has 6 comprehensive tracks (All, Sec 2.1, Sec 2.2, Sec 2.3, Sec 2.4, Sec 2.5)");
 
 unit2QuizBank.forEach((q, idx) => {
   assert(q.id && q.id.startsWith("u2-q"), `Q${idx + 1} has valid ID prefix: ${q.id}`);
@@ -200,6 +200,7 @@ console.log("\n[TEST GROUP 7] Zero Em-Dash (\\u2014) and Zero En-Dash (\\u2013) 
 
 const filesToAudit = [
   './src/utils/booleanEngine.js',
+  './src/utils/quizGrading.js',
   './src/data/dldSection22Data.js',
   './src/data/dldSection23Data.js',
   './src/data/dldSection24Data.js',

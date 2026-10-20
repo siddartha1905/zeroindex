@@ -57,33 +57,71 @@ function generateQuestionPaper(allBank, trackId, mode, difficultyMix) {
   if (mode === 'random20') targetCount = 20;
   else if (mode === 'setA' || mode === 'setB' || mode === 'theory') targetCount = 15;
 
-  // If track is 'all' and random mode, draw weighted distribution across topics
-  if (trackId === 'all' && (mode === 'random10' || mode === 'random20')) {
-    // Unit 1 tracks
-    const tConv = pool.filter(q => q.trackId === 'conversions' || q.trackId === 'boolean-laws');
-    const tArith = pool.filter(q => q.trackId === 'arithmetic' || q.trackId === 'canonical-forms');
-    const tComp = pool.filter(q => q.trackId === 'complements' || q.trackId === 'kmaps');
-    const tSigned = pool.filter(q => q.trackId === 'signed' || q.trackId === 'gates-xor');
+  const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
-    const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
+  // If track is 'all', draw balanced distribution across sections/topics
+  if (trackId === 'all') {
+    const isUnit2 = pool.some(q => q.trackId && q.trackId.startsWith('sec2'));
+    if (isUnit2) {
+      const s21 = pool.filter(q => q.trackId === 'sec21');
+      const s22 = pool.filter(q => q.trackId === 'sec22');
+      const s23 = pool.filter(q => q.trackId === 'sec23');
+      const s24 = pool.filter(q => q.trackId === 'sec24');
+      const s25 = pool.filter(q => q.trackId === 'sec25');
 
-    if (mode === 'random10') {
-      const q1 = shuffle(tConv).slice(0, 4);
-      const q2 = shuffle(tArith).slice(0, 3);
-      const q3 = shuffle(tComp).slice(0, 2);
-      const q4 = shuffle(tSigned).slice(0, 1);
-      return [...q1, ...q2, ...q3, ...q4];
-    } else {
-      const q1 = shuffle(tConv).slice(0, 7);
-      const q2 = shuffle(tArith).slice(0, 5);
-      const q3 = shuffle(tComp).slice(0, 5);
-      const q4 = shuffle(tSigned).slice(0, 3);
-      return [...q1, ...q2, ...q3, ...q4];
+      if (mode === 'random10') {
+        // Balanced 2 questions from each of the 5 sections = 10 questions
+        return [
+          ...shuffle(s21).slice(0, 2),
+          ...shuffle(s22).slice(0, 2),
+          ...shuffle(s23).slice(0, 2),
+          ...shuffle(s24).slice(0, 2),
+          ...shuffle(s25).slice(0, 2),
+        ];
+      } else if (mode === 'random20') {
+        // Balanced 4 questions from each of the 5 sections = 20 questions
+        return [
+          ...shuffle(s21).slice(0, 4),
+          ...shuffle(s22).slice(0, 4),
+          ...shuffle(s23).slice(0, 4),
+          ...shuffle(s24).slice(0, 4),
+          ...shuffle(s25).slice(0, 4),
+        ];
+      } else if (mode === 'setA' || mode === 'setB') {
+        // 3 questions from each of the 5 sections = 15 questions
+        return [
+          ...shuffle(s21).slice(0, 3),
+          ...shuffle(s22).slice(0, 3),
+          ...shuffle(s23).slice(0, 3),
+          ...shuffle(s24).slice(0, 3),
+          ...shuffle(s25).slice(0, 3),
+        ];
+      }
+    } else if (mode === 'random10' || mode === 'random20') {
+      // Unit 1 tracks
+      const tConv = pool.filter(q => q.trackId === 'conversions' || q.trackId === 'boolean-laws');
+      const tArith = pool.filter(q => q.trackId === 'arithmetic' || q.trackId === 'canonical-forms');
+      const tComp = pool.filter(q => q.trackId === 'complements' || q.trackId === 'kmaps');
+      const tSigned = pool.filter(q => q.trackId === 'signed' || q.trackId === 'gates-xor');
+
+      if (mode === 'random10') {
+        const q1 = shuffle(tConv).slice(0, 4);
+        const q2 = shuffle(tArith).slice(0, 3);
+        const q3 = shuffle(tComp).slice(0, 2);
+        const q4 = shuffle(tSigned).slice(0, 1);
+        return [...q1, ...q2, ...q3, ...q4];
+      } else {
+        const q1 = shuffle(tConv).slice(0, 7);
+        const q2 = shuffle(tArith).slice(0, 5);
+        const q3 = shuffle(tComp).slice(0, 5);
+        const q4 = shuffle(tSigned).slice(0, 3);
+        return [...q1, ...q2, ...q3, ...q4];
+      }
     }
   }
 
   // General random sampling
-  const shuffled = [...pool].sort(() => Math.random() - 0.5);
+  const shuffled = shuffle(pool);
   return shuffled.slice(0, Math.min(targetCount, shuffled.length));
 }
 
@@ -129,6 +167,14 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
     });
     return counts;
   }, [currentBank, currentTracks]);
+
+  // Reset selected track and state when switching units
+  useEffect(() => {
+    setSelectedTrack('all');
+    setQuizState('lobby');
+    setElapsedSeconds(0);
+    setIsTimerPaused(false);
+  }, [activeQuizUnit]);
 
   // Timer Tick
   useEffect(() => {
@@ -479,7 +525,7 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
       id: 2,
       title: "Unit 2 Quiz Arena",
       shortTitle: "Unit 2: Boolean & K-Maps",
-      badge: "110 Qs Live",
+      badge: "125 Qs Live",
       badgeColor: "bg-[#2E6F40] text-white",
       description: "Boolean Algebra Axioms, 3/4-Var K-Maps, Canonical SOP/POS, Universal NAND/NOR"
     },
@@ -595,7 +641,7 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
               </span>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <div className={`grid grid-cols-1 md:grid-cols-3 ${currentTracks.length >= 6 ? 'lg:grid-cols-6' : 'lg:grid-cols-5'} gap-3`}>
               {currentTracks.map((track) => {
                 const isSelected = selectedTrack === track.id;
                 const pool = trackCounts[track.id] || 0;
@@ -613,7 +659,11 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
                       <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
                         isSelected ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
                       }`}>
-                        {track.id === 'all' ? 'MIXED' : `TOPIC ${track.id.toUpperCase()}`}
+                        {track.id === 'all'
+                          ? 'MIXED'
+                          : track.id.startsWith('sec')
+                            ? `SEC ${track.id.replace('sec', '2.')}`
+                            : `TOPIC ${track.id.toUpperCase()}`}
                       </span>
                       <span className={`text-xs font-bold px-1.5 py-0.2 rounded-full ${
                         isSelected ? 'bg-emerald-900/40 text-emerald-100' : 'bg-slate-200 text-slate-700'
@@ -639,7 +689,7 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
           <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-center gap-3 text-amber-900 text-xs">
             <PenTool className="w-4 h-4 text-amber-600 shrink-0" />
             <p className="font-medium">
-              <span className="font-bold">Exam Preparation Tip:</span> Keep a physical rough sheet and pen ready to work out conversions, carries, and complements before entering your answers.
+              <span className="font-bold">Exam Preparation Tip:</span> {activeQuizUnit === 2 ? "Keep a physical rough sheet and pen ready to draw K-map grids, group adjacent 1s, and trace Boolean algebraic consensus terms before selecting your answer." : "Keep a physical rough sheet and pen ready to work out conversions, carries, and complements before entering your answers."}
             </p>
           </div>
 
@@ -664,11 +714,31 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
                 </label>
                 <div className="space-y-1.5 text-xs">
                   {[
-                    { id: 'random10', title: 'Random 10 Questions', desc: 'Quick 10-Question Balanced Diagnostic' },
-                    { id: 'random20', title: 'Random 20 Questions', desc: 'Comprehensive Unit 1 Mock Exam' },
-                    { id: 'setA', title: 'Set A: Standard Paper (15 Qs)', desc: 'Fundamental conversions & complement math' },
-                    { id: 'setB', title: 'Set B: Fractional & Edge-Cases (15 Qs)', desc: 'Zero-bridge borrows & fractional points' },
-                    { id: 'theory', title: 'Theory & Fill-in-the-Blanks Only (15 Qs)', desc: 'Core axioms, rules & fill-in-the-blanks' }
+                    {
+                      id: 'random10',
+                      title: 'Random 10 Questions',
+                      desc: activeQuizUnit === 2 ? 'Quick 10-Question Balanced Diagnostic (2 from each Sec 2.1-2.5)' : 'Quick 10-Question Balanced Diagnostic'
+                    },
+                    {
+                      id: 'random20',
+                      title: 'Random 20 Questions',
+                      desc: activeQuizUnit === 2 ? 'Comprehensive Unit 2 Mock Exam (4 from each Sec 2.1-2.5)' : 'Comprehensive Unit 1 Mock Exam'
+                    },
+                    {
+                      id: 'setA',
+                      title: 'Set A: Standard Paper (15 Qs)',
+                      desc: activeQuizUnit === 2 ? 'Core Boolean theorems, SOP/POS and 3-variable K-maps' : 'Fundamental conversions and complement math'
+                    },
+                    {
+                      id: 'setB',
+                      title: 'Set B: Advanced Paper (15 Qs)',
+                      desc: activeQuizUnit === 2 ? 'Corner loops, don\'t cares, XOR synthesis and 4-variable K-maps' : 'Zero-bridge borrows and fractional points'
+                    },
+                    {
+                      id: 'theory',
+                      title: 'Theory & Conceptual Only (15 Qs)',
+                      desc: activeQuizUnit === 2 ? 'Boolean postulates, canonical forms and prime implicant theory' : 'Core axioms, rules and fill-in-the-blanks'
+                    }
                   ].map((m) => (
                     <button
                       key={m.id}
@@ -747,7 +817,7 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
             <div className="pt-4 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-600">
                 <span className="font-bold text-slate-900">Current Setup: </span>
-                <span className="text-emerald-700 font-semibold">{quizTracks.find(t => t.id === selectedTrack)?.label}</span>
+                <span className="text-emerald-700 font-semibold">{currentTracks.find(t => t.id === selectedTrack)?.label}</span>
                 <span> • </span>
                 <span className="text-indigo-700 font-semibold">{selectedMode === 'random10' ? '10 Qs' : selectedMode === 'random20' ? '20 Qs' : '15 Qs'}</span>
                 <span> • </span>
@@ -855,7 +925,9 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
 
               // Type Badge
               const typeBadge = 
-                q.questionType === 'fill_blank' 
+                q.questionType === 'free_response'
+                  ? { label: 'Free-Response Assessment', color: 'bg-emerald-50 text-emerald-800 border-emerald-200', icon: PenTool }
+                  : q.questionType === 'fill_blank' 
                   ? { label: 'Fill in the Blank', color: 'bg-amber-50 text-amber-800 border-amber-200', icon: PenTool }
                   : q.questionType === 'conceptual_mcq'
                   ? { label: 'Conceptual Theory MCQ', color: 'bg-purple-50 text-purple-800 border-purple-200', icon: Lightbulb }
@@ -1444,18 +1516,26 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
 
               <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
-                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Practice Unit 1 Today</h3>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Available Practice Arenas</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Practice Unit 1 or Unit 2</h3>
                   <p className="text-xs text-emerald-800 leading-relaxed mt-1">
-                    Try the 110-question pool for Unit 1 Number Systems, Binary Arithmetic &amp; Complements.
+                    Try the 110-question pool for Unit 1 or the 125-question verified bank for Unit 2.
                   </p>
                 </div>
-                <button
-                  onClick={() => setActiveQuizUnit(1)}
-                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
-                >
-                  Start Unit 1 Quiz Arena
-                </button>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setActiveQuizUnit(1)}
+                    className="flex-1 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                  >
+                    Unit 1 (110 Qs)
+                  </button>
+                  <button
+                    onClick={() => setActiveQuizUnit(2)}
+                    className="flex-1 px-3 py-1.5 bg-[#1B4D3E] text-white rounded-lg text-xs font-semibold hover:bg-[#153e32] transition-colors text-center"
+                  >
+                    Unit 2 (125 Qs)
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1535,18 +1615,26 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
 
               <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
-                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Unit 1 Quiz Ready</h3>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Available Practice Arenas</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Practice Unit 1 or Unit 2</h3>
                   <p className="text-xs text-emerald-800 leading-relaxed mt-1">
-                    Master base conversions, 1s/2s complement subtraction, and signed overflow detection.
+                    Try the 110-question pool for Unit 1 or the 125-question verified bank for Unit 2.
                   </p>
                 </div>
-                <button
-                  onClick={() => setActiveQuizUnit(1)}
-                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
-                >
-                  Start Unit 1 Quiz Arena
-                </button>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setActiveQuizUnit(1)}
+                    className="flex-1 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                  >
+                    Unit 1 (110 Qs)
+                  </button>
+                  <button
+                    onClick={() => setActiveQuizUnit(2)}
+                    className="flex-1 px-3 py-1.5 bg-[#1B4D3E] text-white rounded-lg text-xs font-semibold hover:bg-[#153e32] transition-colors text-center"
+                  >
+                    Unit 2 (125 Qs)
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1626,18 +1714,26 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
 
               <div className="p-4 rounded-xl bg-emerald-50/60 border border-emerald-200 flex flex-col justify-between">
                 <div>
-                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Unit 1 Live</span>
-                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Unit 1 Practice</h3>
+                  <span className="text-[10px] font-mono font-bold uppercase text-emerald-800">Available Practice Arenas</span>
+                  <h3 className="text-sm font-bold text-emerald-950 mt-1">Practice Unit 1 or Unit 2</h3>
                   <p className="text-xs text-emerald-800 leading-relaxed mt-1">
-                    Try the 110-question pool for Unit 1 Number Systems, Binary Arithmetic &amp; Complements.
+                    Try the 110-question pool for Unit 1 or the 125-question verified bank for Unit 2.
                   </p>
                 </div>
-                <button
-                  onClick={() => setActiveQuizUnit(1)}
-                  className="mt-3 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
-                >
-                  Start Unit 1 Quiz Arena
-                </button>
+                <div className="mt-3 flex gap-2">
+                  <button
+                    onClick={() => setActiveQuizUnit(1)}
+                    className="flex-1 px-3 py-1.5 bg-[#2E6F40] text-white rounded-lg text-xs font-semibold hover:bg-[#255A34] transition-colors text-center"
+                  >
+                    Unit 1 (110 Qs)
+                  </button>
+                  <button
+                    onClick={() => setActiveQuizUnit(2)}
+                    className="flex-1 px-3 py-1.5 bg-[#1B4D3E] text-white rounded-lg text-xs font-semibold hover:bg-[#153e32] transition-colors text-center"
+                  >
+                    Unit 2 (125 Qs)
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -1710,14 +1806,22 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1 }) => {
             <div className="mt-6 p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-xs text-slate-700">
                 <span className="font-bold block text-slate-900 mb-0.5">Status: Grand Mock Simulator Pipeline</span>
-                <span>Unit 1 question pool is 100% verified. Units 2 through 5 are in staging. The full 60-question simulator unlocks upon completion of all units.</span>
+                <span>Unit 1 (110 Qs) and Unit 2 (125 Qs) question pools are 100% verified. Units 3 through 5 are in development. The full 60-question simulator unlocks upon completion of all units.</span>
               </div>
-              <button
-                onClick={() => setActiveQuizUnit(1)}
-                className="whitespace-nowrap px-4 py-2 bg-[#2E6F40] text-white rounded-xl text-xs font-bold hover:bg-[#255A34] transition-colors"
-              >
-                Practice Unit 1 Now (110 Qs)
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveQuizUnit(1)}
+                  className="whitespace-nowrap px-3.5 py-2 bg-[#2E6F40] text-white rounded-xl text-xs font-bold hover:bg-[#255A34] transition-colors"
+                >
+                  Practice Unit 1 (110 Qs)
+                </button>
+                <button
+                  onClick={() => setActiveQuizUnit(2)}
+                  className="whitespace-nowrap px-3.5 py-2 bg-[#1B4D3E] text-white rounded-xl text-xs font-bold hover:bg-[#153e32] transition-colors"
+                >
+                  Practice Unit 2 (125 Qs)
+                </button>
+              </div>
             </div>
           </div>
         </div>

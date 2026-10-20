@@ -5,7 +5,7 @@
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
 - Source files (.js/.jsx/.ts/.tsx/.css/.json): **77**
-- Verification script names discovered: **11**
+- Verification script names discovered: **12**
 
 ## Selected declared dependencies
 
@@ -36,6 +36,7 @@
 - `scripts/verifySection25Math.mjs`
 - `scripts/verifyUnit1Math.mjs`
 - `scripts/verifyUnit2Full.mjs`
+- `scripts/verifyUnit2PracticeArena.mjs`
 - `scripts/verifyUnit2Solvers.mjs`
 
 ## Source file inventory

@@ -247,6 +247,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-030 | 2026-10-20 | Unit II Practice Arena Independent Assessment Implementation, 125 Verified Questions, and Multi-Modal Grading Engine
+
+- **Decision**: (1) Built the complete Unit II Practice Arena with exactly 125 independent, mathematically verified questions across 6 tracks: all (Mixed Assessment, 125 Qs), sec21 (Section 2.1: Boolean Laws and Axioms, 20 Qs), sec22 (Section 2.2: Algebraic Simplification, 25 Qs), sec23 (Section 2.3: Canonical Forms, 20 Qs), sec24 (Section 2.4: SOP/POS Forms, 25 Qs), sec25 (Section 2.5: K-Map Minimization, 35 Qs); (2) Designated 12 questions for genuine free-response student entry (3 each across Sections 2.2, 2.3, 2.4, and 2.5) supporting algebraic minimization and canonical index-set entry; (3) Verified absolute question uniqueness against curriculum teaching models (0 memorization duplicates across all 237 teaching models); (4) Verified question u2-q111 mathematically ($F = A'B + B'D$) with a 16-row truth-table regression test and verified other cited examples (u2-q031, u2-q036, u2-q041); (5) Implemented 4 difficulty tiers: Easy (27), Medium (38), Hard (31), Challenge (29); (6) Enhanced src/utils/quizGrading.js with parseIndexSet (order-independent set comparisons) and areExpressionsEquivalent (AST-level Boolean equivalence evaluation with requireMinimal literal counting); (7) Enhanced src/components/PracticeArena.jsx with balanced topic sampling, responsive 6-track grid layout (lg:grid-cols-6), dynamic badges (SEC 2.1 to SEC 2.5), Unit 2 exam preparation tips, tailored question paper modes, and clear Unit 1 (110 Qs) vs Unit 2 (125 Qs) selection buttons; (8) Built and executed comprehensive verification suite scripts/verifyUnit2PracticeArena.mjs (2,715/2,715 checks passing) and updated scripts/verifyUnit2Full.mjs (948/948 checks passing); (9) Maintained strict zero em-dash and zero en-dash compliance and mandatory Unicode Sigma and Pi across all files.
+- **Rationale**: Provides students with a comprehensive, mathematically rigorous independent assessment environment that tests deep understanding and exam readiness without reusing classroom examples.
+- **Affected Files**: `src/data/unit2QuizBank.js`, `src/utils/quizGrading.js`, `src/components/PracticeArena.jsx`, `scripts/buildUnit2Bank.py`, `scripts/sec22_data.py`, `scripts/sec23_data.py`, `scripts/sec24_data.py`, `scripts/sec25_data.py`, `scripts/verifyUnit2PracticeArena.mjs`, `scripts/verifyUnit2Full.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+- **Approval Evidence**: `verifyUnit2PracticeArena.mjs` passes 2,715/2,715 checks; `verifyUnit2Full.mjs` passes 948/948 checks; total automated test checks equal 4,191 across 5 suites with 0 failures; `npm run build` succeeds in 4.03s with 0 errors. Strict zero-dash audit passed.
+- **Verification / Follow-up Requirements**: Maintained on `dld-unit2-development`. Do not merge into main, push to GitHub, or deploy to Vercel without user approval.
+
+---
+
 ## Decision Record Template
 
 ```markdown

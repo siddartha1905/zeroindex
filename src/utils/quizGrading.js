@@ -1,3 +1,15 @@
+import { areExpressionsEquivalent } from './booleanEngine.js';
+
+// Helper to extract and sort numerical index sets (e.g. "0, 2, 8, 10" or "m(0, 2, 8, 10)")
+export function parseIndexSet(raw) {
+  if (raw === undefined || raw === null) return null;
+  const s = String(raw).trim();
+  const matches = s.match(/\b\d+\b/g);
+  if (!matches || matches.length === 0) return null;
+  const nums = Array.from(new Set(matches.map(Number))).sort((a, b) => a - b);
+  return nums.join(',');
+}
+
 // Smart Answer Normalizer for student rough-paper inputs
 export function normalizeStudentAnswer(raw) {
   if (raw === undefined || raw === null) return "";
@@ -69,6 +81,37 @@ export function gradeStudentAnswer(userAns, question, selectedOptLabel) {
     });
     if (matchAccepted) {
       return { isAnswered: true, isCorrect: true, selectedOption: null };
+    }
+  }
+
+  // Check numerical index set equivalence (e.g. "0, 2, 8, 10" vs "10, 8, 0, 2" or "m(0, 2, 8, 10)")
+  const userIndexSet = parseIndexSet(rawInput);
+  const correctIndexSet = parseIndexSet(question.correctAnswer);
+  if (userIndexSet && correctIndexSet && userIndexSet === correctIndexSet) {
+    // Ensure this is an index set question (not an arithmetic calculation where digits coincide)
+    if (question.questionType === 'fill_blank' || question.questionType === 'free_response' || question.topicBadge?.includes('Canonical') || question.topicBadge?.includes('K-Map') || question.inputFormatHint?.includes('index') || question.inputFormatHint?.includes('minterm')) {
+      return { isAnswered: true, isCorrect: true, selectedOption: null };
+    }
+  }
+
+  // Check Boolean algebraic equivalence using Boolean AST evaluator
+  if (/[A-Za-z]/.test(rawInput) && /[A-Za-z]/.test(question.correctAnswer)) {
+    try {
+      const isEquiv = areExpressionsEquivalent(rawInput, question.correctAnswer);
+      if (isEquiv) {
+        if (question.requireMinimal) {
+          const userLiterals = (rawInput.match(/[A-Za-z]/g) || []).length;
+          const correctLiterals = (question.correctAnswer.match(/[A-Za-z]/g) || []).length;
+          if (userLiterals <= correctLiterals) {
+            return { isAnswered: true, isCorrect: true, selectedOption: null, note: "Equivalent minimal form accepted." };
+          } else {
+            return { isAnswered: true, isCorrect: false, selectedOption: null, note: "Logically equivalent, but not in minimal form." };
+          }
+        }
+        return { isAnswered: true, isCorrect: true, selectedOption: null };
+      }
+    } catch {
+      // Ignored if parser fails on informal rough typing
     }
   }
 
