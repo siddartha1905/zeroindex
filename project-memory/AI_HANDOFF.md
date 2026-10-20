@@ -23,6 +23,7 @@
 - **Publication Gate**: The 6 sample articles/essays in source are unapproved placeholders; do not publish them without written author approval.
 - **Academic Protection**: Protect DLD Unit 1 teaching, worked models, solvers, and quiz questions from unintended modification.
 - **Editorial Tone**: Maintain the scholarly, refined editorial design aesthetic (serif typography, muted slate surfaces, amber/emerald accents).
+- **Permanent WHY-FIRST Teaching Philosophy**: All academic lessons must follow the instructional progression: WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT. Students must understand why a concept exists before learning what it is or how it works.
 
 ---
 

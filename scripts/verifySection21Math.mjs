@@ -1,8 +1,9 @@
 /**
- * Mathematical Audit & Verification Script for DLD Unit 2 - Section 2.1
+ * Mathematical Audit & Verification Suite for DLD Unit 2 - Section 2.1
  * Course: Digital Logic Design (VR23 Autonomous)
- * Scope: Concept of Boolean Algebra, Huntington Postulates & Duality
- * Strict Rule: Zero em-dashes and zero en-dashes
+ * Section 2.1: Boolean Algebra: Fundamentals, Laws and Theorems
+ * 
+ * Strict Rule: Zero em-dashes and zero en-dashes throughout.
  */
 
 import fs from 'fs';
@@ -22,102 +23,291 @@ function assert(condition, message) {
 }
 
 console.log("=================================================================");
-console.log("      DIGITAL LOGIC DESIGN - SECTION 2.1 RIGOROUS AUDIT        ");
+console.log("   ZEROINDEX DLD SECTION 2.1: COMPREHENSIVE ACADEMIC AUDIT      ");
 console.log("=================================================================");
 
-// 1. Postulate 4(b) Perfect Induction: x + yz = (x + y)(x + z)
-console.log("\n--- Checking Huntington Postulate 4(b) Perfect Induction ---");
-let post4bMatches = true;
-const truthTable4b = [];
-for (let x = 0; x <= 1; x++) {
-  for (let y = 0; y <= 1; y++) {
-    for (let z = 0; z <= 1; z++) {
-      const lhs = x | (y & z);
-      const rhs = (x | y) & (x | z);
-      truthTable4b.push({ x, y, z, lhs, rhs });
-      if (lhs !== rhs) post4bMatches = false;
-    }
+// ----------------------------------------------------------------------------
+// 1. BEFORE & AFTER SIMPLIFICATION VISUAL CIRCUIT
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Before-and-After Circuit Equivalence (F = AB + AB' <=> F = A) ---");
+let visualCircuitMatches = true;
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    const originalF = (a & b) | (a & notB);
+    const simplifiedF = a;
+    if (originalF !== simplifiedF) visualCircuitMatches = false;
   }
 }
-assert(post4bMatches, "Postulate 4(b) x + yz = (x+y)(x+z) holds identically for all 8 valuations");
-assert(truthTable4b.length === 8, "Truth table 4(b) contains exactly 8 rows (2^3)");
+assert(visualCircuitMatches, "Before-and-after circuit: F = AB + AB' produces identical output to F = A for all 4 valuations");
 
-// Specific check of row x=0, y=1, z=1: 0 + (1*1) = 1, (0+1)*(0+1) = 1
-const row3 = truthTable4b.find(r => r.x === 0 && r.y === 1 && r.z === 1);
-assert(row3.lhs === 1 && row3.rhs === 1, "Row (0, 1, 1) evaluates to 1 on both sides");
-
-// Specific check of row x=0, y=1, z=0: 0 + (1*0) = 0, (0+1)*(0+0) = 0
-const row2 = truthTable4b.find(r => r.x === 0 && r.y === 1 && r.z === 0);
-assert(row2.lhs === 0 && row2.rhs === 0, "Row (0, 1, 0) evaluates to 0 on both sides");
-
-// 2. Postulate 4(a) Perfect Induction: x(y + z) = xy + xz
-console.log("\n--- Checking Huntington Postulate 4(a) Perfect Induction ---");
-let post4aMatches = true;
-for (let x = 0; x <= 1; x++) {
-  for (let y = 0; y <= 1; y++) {
-    for (let z = 0; z <= 1; z++) {
-      const lhs = x & (y | z);
-      const rhs = (x & y) | (x & z);
-      if (lhs !== rhs) post4aMatches = false;
-    }
-  }
-}
-assert(post4aMatches, "Postulate 4(a) x(y + z) = xy + xz holds identically for all 8 valuations");
-
-// 3. Postulate 2 (Identity Elements) and Postulate 5 (Complements)
-console.log("\n--- Checking Huntington Identity and Complement Axioms ---");
-for (let x = 0; x <= 1; x++) {
-  assert((x | 0) === x, `Postulate 2(a) Identity for OR: ${x} + 0 = ${x}`);
-  assert((x & 1) === x, `Postulate 2(b) Identity for AND: ${x} * 1 = ${x}`);
-  const notX = x === 0 ? 1 : 0;
-  assert((x | notX) === 1, `Postulate 5(a) Complementarity for OR: ${x} + ${notX} = 1`);
-  assert((x & notX) === 0, `Postulate 5(b) Complementarity for AND: ${x} * ${notX} = 0`);
-}
-
-// 4. Operator Precedence and Evaluation: F = A + B'C
-console.log("\n--- Checking Worked Model 4: Expression Evaluation ---");
-function evalModel4(a, b, c) {
-  const notB = b === 0 ? 1 : 0;
-  const bPrimeC = notB & c;
-  return a | bPrimeC;
-}
-assert(evalModel4(0, 1, 1) === 0, "Model 4 valuation at (0, 1, 1) yields exactly 0");
-assert(evalModel4(0, 0, 1) === 1, "Model 4 valuation at (0, 0, 1) yields exactly 1");
-assert(evalModel4(1, 1, 1) === 1, "Model 4 valuation at (1, 1, 1) yields exactly 1");
-
-// 5. Practice Problem 5 Evaluation: F(A, B, C) = (A + B')(B + C') + A'C
-console.log("\n--- Checking Practice Problem 5 Evaluation ---");
-function evalProblem5(a, b, c) {
+// ----------------------------------------------------------------------------
+// 2. GROUP 1: BASIC AXIOMATIC LAWS
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Group 1: Basic Axiomatic Laws ---");
+for (let a = 0; a <= 1; a++) {
   const notA = a === 0 ? 1 : 0;
-  const notB = b === 0 ? 1 : 0;
-  const notC = c === 0 ? 1 : 0;
-  const term1 = (a | notB) & (b | notC);
-  const term2 = notA & c;
-  return term1 | term2;
+  // Law 1: Identity
+  assert((a | 0) === a, `Law 1(a) Identity for OR: ${a} + 0 = ${a}`);
+  assert((a & 1) === a, `Law 1(b) Identity for AND: ${a} · 1 = ${a}`);
+
+  // Law 2: Null / Domination
+  assert((a | 1) === 1, `Law 2(a) Null for OR: ${a} + 1 = 1`);
+  assert((a & 0) === 0, `Law 2(b) Null for AND: ${a} · 0 = 0`);
+
+  // Law 3: Idempotent
+  assert((a | a) === a, `Law 3(a) Idempotent for OR: ${a} + ${a} = ${a}`);
+  assert((a & a) === a, `Law 3(b) Idempotent for AND: ${a} · ${a} = ${a}`);
+
+  // Law 4: Complement
+  assert((a | notA) === 1, `Law 4(a) Complement for OR: ${a} + ${notA} = 1`);
+  assert((a & notA) === 0, `Law 4(b) Complement for AND: ${a} · ${notA} = 0`);
+
+  // Law 5: Double Complement (Involution)
+  const doubleNotA = notA === 0 ? 1 : 0;
+  assert(doubleNotA === a, `Law 5 Involution: ((${a}')') = ${a}`);
 }
-// For A=1, B=0, C=1:
-// notA=0, notB=1, notC=0
-// (A + B') = 1 + 1 = 1
-// (B + C') = 0 + 0 = 0
-// term1 = 1 * 0 = 0
-// term2 = 0 * 1 = 0
-// F = 0 + 0 = 0
-assert(evalProblem5(1, 0, 1) === 0, "Practice Problem 5 valuation at (1, 0, 1) yields 0");
+assert((0 === 0 ? 1 : 0) === 1, "Constant complement: 0' = 1");
+assert((1 === 1 ? 0 : 1) === 0, "Constant complement: 1' = 0");
 
-// 6. Duality Rule Equivalence Checker
-console.log("\n--- Checking Duality Transformations ---");
-// Dual of f1 = AB + A'B -> dual1 = (A + B)(A' + B)
-// Let's verify truth tables of f1 and its dual:
-// Note: An expression and its dual are NOT necessarily equal; they are dual functions.
-// But self-dual check or operator-level check:
-// Dual rule: + <-> *, 0 <-> 1, variables unchanged.
-assert(true, "Duality swapping rule preserves algebraic structure: (+ <-> *, 0 <-> 1, variables unchanged)");
+// ----------------------------------------------------------------------------
+// 3. GROUP 2: STRUCTURAL LAWS
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Group 2: Structural Laws ---");
+// Law 6: Commutative
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    assert((a | b) === (b | a), `Law 6(a) Commutative OR: ${a}+${b} = ${b}+${a}`);
+    assert((a & b) === (b & a), `Law 6(b) Commutative AND: ${a}·${b} = ${b}·${a}`);
+  }
+}
 
-// 7. Dash Check on Unit 2 files
-console.log("\n--- Checking Zero Em-dash and En-dash Compliance ---");
+// Law 7: Associative & Law 8: Distributive (8 valuations)
+let assocOrMatches = true;
+let assocAndMatches = true;
+let dist1Matches = true;
+let dist2Matches = true;
+
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    for (let c = 0; c <= 1; c++) {
+      // Associative
+      if (((a | b) | c) !== (a | (b | c))) assocOrMatches = false;
+      if (((a & b) & c) !== (a & (b & c))) assocAndMatches = false;
+
+      // Distributive 1: A(B + C) = AB + AC
+      const lhsDist1 = a & (b | c);
+      const rhsDist1 = (a & b) | (a & c);
+      if (lhsDist1 !== rhsDist1) dist1Matches = false;
+
+      // Distributive 2: A + BC = (A + B)(A + C)
+      const lhsDist2 = a | (b & c);
+      const rhsDist2 = (a | b) & (a | c);
+      if (lhsDist2 !== rhsDist2) dist2Matches = false;
+    }
+  }
+}
+assert(assocOrMatches, "Law 7(a) Associative OR holds for all 8 valuations");
+assert(assocAndMatches, "Law 7(b) Associative AND holds for all 8 valuations");
+assert(dist1Matches, "Law 8(a) Distributive A(B+C) = AB + AC holds for all 8 valuations");
+assert(dist2Matches, "Law 8(b) Distributive A + BC = (A+B)(A+C) holds for all 8 valuations");
+
+// ----------------------------------------------------------------------------
+// 4. GROUP 3: SIMPLIFICATION LAWS
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Group 3: Simplification Laws ---");
+let absorbOrMatches = true;
+let absorbAndMatches = true;
+let combineOrMatches = true;
+let combineAndMatches = true;
+let redunOrMatches = true;
+let redunAndMatches = true;
+
+for (let a = 0; a <= 1; a++) {
+  const notA = a === 0 ? 1 : 0;
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+
+    // Law 9: Absorption: A + AB = A and A(A + B) = A
+    if ((a | (a & b)) !== a) absorbOrMatches = false;
+    if ((a & (a | b)) !== a) absorbAndMatches = false;
+
+    // Law 10: Combining: AB + AB' = A and (A + B)(A + B') = A
+    if (((a & b) | (a & notB)) !== a) combineOrMatches = false;
+    if (((a | b) & (a | notB)) !== a) combineAndMatches = false;
+
+    // Law 11: Redundancy: A + A'B = A + B and A(A' + B) = AB
+    if ((a | (notA & b)) !== (a | b)) redunOrMatches = false;
+    if ((a & (notA | b)) !== (a & b)) redunAndMatches = false;
+  }
+}
+assert(absorbOrMatches, "Law 9(a) Absorption: A + AB = A holds for all 4 valuations");
+assert(absorbAndMatches, "Law 9(b) Absorption: A(A + B) = A holds for all 4 valuations");
+assert(combineOrMatches, "Law 10(a) Combining: AB + AB' = A holds for all 4 valuations");
+assert(combineAndMatches, "Law 10(b) Combining: (A+B)(A+B') = A holds for all 4 valuations");
+assert(redunOrMatches, "Law 11(a) Redundancy: A + A'B = A + B holds for all 4 valuations");
+assert(redunAndMatches, "Law 11(b) Redundancy: A(A' + B) = AB holds for all 4 valuations");
+
+// ----------------------------------------------------------------------------
+// 5. GROUP 4: IMPORTANT THEOREMS
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Group 4: De Morgan's & Consensus Theorems ---");
+// De Morgan 2-variable
+let dm1Matches = true;
+let dm2Matches = true;
+for (let a = 0; a <= 1; a++) {
+  const notA = a === 0 ? 1 : 0;
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    // (AB)' = A' + B'
+    const lhsDm1 = (a & b) === 0 ? 1 : 0;
+    const rhsDm1 = notA | notB;
+    if (lhsDm1 !== rhsDm1) dm1Matches = false;
+
+    // (A + B)' = A'B'
+    const lhsDm2 = (a | b) === 0 ? 1 : 0;
+    const rhsDm2 = notA & notB;
+    if (lhsDm2 !== rhsDm2) dm2Matches = false;
+  }
+}
+assert(dm1Matches, "Law 12(a) De Morgan: (AB)' = A' + B' holds for all 4 valuations");
+assert(dm2Matches, "Law 12(b) De Morgan: (A + B)' = A'B' holds for all 4 valuations");
+
+// Generalized De Morgan 3-variable
+let genDm1Matches = true;
+let genDm2Matches = true;
+let consensusMatches = true;
+let dualConsensusMatches = true;
+
+for (let a = 0; a <= 1; a++) {
+  const notA = a === 0 ? 1 : 0;
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    for (let c = 0; c <= 1; c++) {
+      const notC = c === 0 ? 1 : 0;
+
+      // (A + B + C)' = A'B'C'
+      const lhsGen1 = (a | b | c) === 0 ? 1 : 0;
+      const rhsGen1 = notA & notB & notC;
+      if (lhsGen1 !== rhsGen1) genDm1Matches = false;
+
+      // (ABC)' = A' + B' + C'
+      const lhsGen2 = (a & b & c) === 0 ? 1 : 0;
+      const rhsGen2 = notA | notB | notC;
+      if (lhsGen2 !== rhsGen2) genDm2Matches = false;
+
+      // Consensus Theorem: AB + A'C + BC = AB + A'C
+      const lhsCons = (a & b) | (notA & c) | (b & c);
+      const rhsCons = (a & b) | (notA & c);
+      if (lhsCons !== rhsCons) consensusMatches = false;
+
+      // Dual Consensus Theorem: (A + B)(A' + C)(B + C) = (A + B)(A' + C)
+      const lhsDualCons = (a | b) & (notA | c) & (b | c);
+      const rhsDualCons = (a | b) & (notA | c);
+      if (lhsDualCons !== rhsDualCons) dualConsensusMatches = false;
+    }
+  }
+}
+assert(genDm1Matches, "Generalized De Morgan: (A + B + C)' = A'B'C' holds for all 8 valuations");
+assert(genDm2Matches, "Generalized De Morgan: (ABC)' = A' + B' + C' holds for all 8 valuations");
+assert(consensusMatches, "Law 13(a) Consensus Theorem holds for all 8 valuations");
+assert(dualConsensusMatches, "Law 13(b) Dual Consensus Theorem holds for all 8 valuations");
+
+// ----------------------------------------------------------------------------
+// 6. ALL 10 INTRODUCTORY WORKED EXAMPLES
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking All 10 Introductory Worked Examples ---");
+
+// Example 1: F = A + BC at (0, 1, 1)
+function evalEx1(a, b, c) {
+  return a | (b & c);
+}
+assert(evalEx1(0, 1, 1) === 1, "Example 1: F(0, 1, 1) evaluates to 1");
+assert(evalEx1(1, 1, 0) === 1, "Example 1: Precedence check F(1, 1, 0) evaluates to 1");
+
+// Example 2: F = (A + 0) · 1 = A
+for (let a = 0; a <= 1; a++) {
+  assert(((a | 0) & 1) === a, `Example 2: (A+0)·1 = ${a} matches A`);
+}
+
+// Example 3: F = A(B + B') = A
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    assert((a & (b | notB)) === a, `Example 3: A(B+B') at (${a},${b}) matches A`);
+  }
+}
+
+// Example 4: F = (A + A)B = AB
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    assert(((a | a) & b) === (a & b), `Example 4: (A+A)B matches AB at (${a},${b})`);
+  }
+}
+
+// Example 5: F = A + AB = A
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    assert((a | (a & b)) === a, `Example 5: A + AB matches A at (${a},${b})`);
+  }
+}
+
+// Example 6: F = AB + AB' = A
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    assert(((a & b) | (a & notB)) === a, `Example 6: AB + AB' matches A at (${a},${b})`);
+  }
+}
+
+// Example 7: F = (A + B')' = A'B
+for (let a = 0; a <= 1; a++) {
+  const notA = a === 0 ? 1 : 0;
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    const orig = (a | notB) === 0 ? 1 : 0;
+    const simp = notA & b;
+    assert(orig === simp, `Example 7: (A + B')' matches A'B at (${a},${b})`);
+  }
+}
+
+// Example 8: F = A + A'B = A + B
+for (let a = 0; a <= 1; a++) {
+  const notA = a === 0 ? 1 : 0;
+  for (let b = 0; b <= 1; b++) {
+    const orig = a | (notA & b);
+    const simp = a | b;
+    assert(orig === simp, `Example 8: A + A'B matches A + B at (${a},${b})`);
+  }
+}
+
+// Example 9: Duality of A + B'C is A(B' + C)
+// Note: Verification that Dual is not complement:
+let ex9IsComplement = true;
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    const notB = b === 0 ? 1 : 0;
+    for (let c = 0; c <= 1; c++) {
+      const origF = a | (notB & c);
+      const compF = origF === 0 ? 1 : 0;
+      const dualF = a & (notB | c);
+      if (dualF !== compF) ex9IsComplement = false;
+    }
+  }
+}
+assert(!ex9IsComplement, "Example 9: Dual A(B'+C) is confirmed NOT identical to Complement (distinction preserved)");
+
+// Example 10: Consensus Theorem: F = AB + A'C + BC = AB + A'C
+assert(consensusMatches, "Example 10: Consensus Theorem reduces 3 terms to 2 terms correctly");
+
+// ----------------------------------------------------------------------------
+// 7. ZERO EM-DASH AND ZERO EN-DASH AUDIT
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Zero Em-dash (\\u2014) and Zero En-dash (\\u2013) Compliance ---");
 const filesToCheck = [
-  "src/data/dldUnit2Master.js",
-  "src/components/Section21View.jsx"
+  "src/data/dldSection21Data.js",
+  "src/components/Section21View.jsx",
+  "src/data/dldUnit2Master.js"
 ];
 
 for (const relPath of filesToCheck) {

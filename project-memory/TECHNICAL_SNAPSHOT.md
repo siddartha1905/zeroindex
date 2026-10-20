@@ -4,7 +4,7 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **74**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **75**
 - Verification script names discovered: **6**
 
 ## Selected declared dependencies
@@ -88,6 +88,7 @@
 - `src/data/dldSection15Data.js`
 - `src/data/dldSection16Data.js`
 - `src/data/dldSection17Data.js`
+- `src/data/dldSection21Data.js`
 - `src/data/dldSection22Data.js`
 - `src/data/dldSection23Data.js`
 - `src/data/dldSection24Data.js`

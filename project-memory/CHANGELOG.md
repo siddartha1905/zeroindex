@@ -4,6 +4,55 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: DLD Unit 2 Section 2.1 Complete Academic Rebuild (WHY-FIRST 5-Tab Architecture)
+
+- **Type**: academic / curriculum / ui-rebuild / dld-unit-2
+- **Summary**: Rebuilt Section 2.1 ("Boolean Algebra: Fundamentals, Laws and Theorems") on dedicated branch `dld-unit2-development`:
+  1. **Adopted Permanent WHY-FIRST Learning Sequence**:
+     - Embedded WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT into curriculum and Project Memory.
+  2. **Implemented 5-Tab Pedagogical Architecture**:
+     - **Tab 1 (Start Here)**:
+       * "Why Do We Learn Boolean Algebra?" opening highlighting real-world digital devices and the core question: "What if we could produce exactly the same output using a simpler circuit?"
+       * Technically accurate Before-and-After logic circuit demonstration for $F = AB + AB' \implies F = A$, demonstrating reduction from 4 gates to 0 gates with full 4-row truth table verification.
+       * The Unit 2 Learning Journey (7-step progression).
+       * Essential Fundamentals: Definitions, binary variables/constants, basic operators (AND, OR, NOT) with truth tables and gate symbols, literals/terms/expressions, equivalence, ordinary arithmetic vs Boolean algebra comparison ($1+1=1$ vs $1+1=2$, dual distributive laws), operator precedence hierarchy with worked evaluation ($F = A + BC$), and why laws are needed.
+     - **Tab 2 (All Laws)**:
+       * "Why do we need Boolean laws?" introductory orientation.
+       * All 13 major laws across 4 logical groups + Duality, featuring uniform cards with Law Name, side-by-side OR and AND forms, "What it means?", "Why is it true?", quick example, and "Remember this" tip.
+       * Category filter selector: All, Basic Laws (1 to 5), Structural Laws (6 to 8), Simplification Laws (9 to 11), Important Theorems (12 to 13), and Principle of Duality.
+       * Prominent coverage of both Distributive Laws ($A(B+C) = AB + AC$ and $A + BC = (A+B)(A+C)$), Generalized De Morgan's for 3 variables, Consensus Theorem and Dual Consensus, and explicit distinction between Duality and Complementation.
+     - **Tab 3 (See & Prove)**:
+       * 8 interactive visual demonstrations and truth-table proofs (Identity, Complement, Idempotent, Absorption, Second Distributive Law, De Morgan's, Consensus Theorem, and Duality vs Complementation).
+       * Clear conclusion on every proof: "The two expressions are equivalent because their outputs match for every possible input combination."
+     - **Tab 4 (Worked Examples)**:
+       * 10 progressive introductory worked models with step-by-step numbers, named laws, explanations, final results, verification notes, and common pitfall notes.
+       * Integrated Common Misconceptions panel with 7 core errors formatted as "Common Mistake -> Correct Method -> Why".
+     - **Tab 5 (Cheat Sheet)**:
+       * Complete, searchable, and print-ready Boolean Laws Master Cheat Sheet categorized by law group with practical "When to Use" tips.
+  3. **Verification**:
+     - Updated `scripts/verifySection21Math.mjs` with 81 automated checks covering all laws, before/after circuits, worked models, proofs, and zero-dash audit. All 81 passed (100%).
+     - All 842 checks in `verifyUnit2Full.mjs` passed.
+     - All Unit 1 regression suites passed with 0 regressions.
+     - Production build verified (`npm run build` succeeds in 3.43s with 0 errors).
+- **Affected Files**:
+  * `src/data/dldSection21Data.js` (created)
+  * `src/components/Section21View.jsx` (rebuilt)
+  * `src/data/dldUnit2Master.js` (updated)
+  * `scripts/verifySection21Math.mjs` (updated)
+  * `project-memory/DECISIONS.md` (updated with D-017)
+  * `project-memory/AI_HANDOFF.md` (updated)
+  * `project-memory/CURRENT_STATE.md` (updated)
+- **Tests Performed**:
+  * `verifySection21Math.mjs`: 81 passed, 0 failed.
+  * `verifyUnit2Full.mjs`: 842 passed, 0 failed.
+  * `verifyUnit1Math.mjs`: 44 passed, 0 failed.
+  * `verifyInteractiveSolvers.mjs`: 34 passed, 0 failed.
+  * `npm run build`: Success in 3.43s, 0 errors.
+  * Zero dash scan: 0 em-dashes and 0 en-dashes across all modified files.
+- **Deployment State**: Staged cleanly on development branch `dld-unit2-development`.
+
+---
+
 ## 2026-10-19: DLD Unit 2 Master Implementation (Complete Academic Module, Solvers & Practice)
 
 - **Type**: academic / curriculum / interactive-solvers / practice-arena / dld-unit-2

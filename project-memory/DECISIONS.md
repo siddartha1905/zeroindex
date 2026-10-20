@@ -124,6 +124,12 @@ Record important architectural, design, and academic decisions with their date, 
 - **Rationale**: Fulfills the complete academic, interactive, and assessment requirements of DLD Unit 2 without cutting syllabus topics or introducing external AI dependencies.
 - **Consequences**: Zero regressions in Unit 1. Students gain an interactive laboratory for Boolean simplification, K-Map cell toggling with live prime implicant grouping, and universal NAND/NOR synthesis.
 
+## D-017 | 2026-10-20 | Permanent WHY-FIRST Teaching Philosophy and Section 2.1 Complete Academic Rebuild
+
+- **Decision**: (1) Formally adopt the WHY-FIRST instructional principle across all Workbench curriculum modules: WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT; (2) Rebuild Section 2.1 into a 5-tab pedagogical architecture: Start Here, All Laws, See & Prove, Worked Examples, and Cheat Sheet; (3) Feature a technically accurate Before-and-After logic circuit demonstration ($F = AB + AB' \implies F = A$, reducing 4 gates to 0 gates) and full truth table verification; (4) Provide structured, uniform coverage of all 13 major Boolean laws, both distributive laws, generalized De Morgan theorems, consensus theorems, and principle of duality; (5) Provide 8 interactive truth-table/visual proofs and 10 progressive introductory worked models with step-by-step law citations; (6) Integrate a comprehensive searchable/printable Boolean Laws Master Cheat Sheet.
+- **Rationale**: Students must understand WHY a concept exists before learning WHAT it is or HOW it works. Replaces dense formal axioms with an intuitive, student-friendly engineering learning sequence while strictly maintaining mathematical rigor.
+- **Consequences**: Applied to Section 2.1 without altering Sections 2.2 to 2.7 or Unit 1. Tested with 81/81 automated checks in `verifySection21Math.mjs`.
+
 ---
 
 ## Decision Record Template
