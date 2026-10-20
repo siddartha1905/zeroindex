@@ -132,6 +132,14 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-018 | 2026-10-20 | Section 2.1 Academic, Mathematical, and Visual Refinements
+
+- **Decision**: (1) Strengthen WHY-FIRST Tab 1 with a compact visual summary card ("Why Do We Simplify Boolean Expressions?") with 4 restrained educational points (Simpler Circuits, Smaller Hardware, Lower Power Consumption, Potentially Faster Operation), a 4-step pipeline banner, and an Engineering Distinction callout clarifying mathematical equivalence vs technology-dependent physical benefits; (2) Correct physical wiring bug in discrete-gate before-and-after circuit diagram for $F = AB + AB'$ so input $B$ visibly connects to the NOT gate input, connection dots mark junctions, crossing wires are clear, and gate symbols/labels are crisp; (3) Add optional expandable symbolic algebraic proofs in Tab 3 ("See & Prove") for Absorption, Second Distributive Law, De Morgan's Theorems (via uniqueness of Boolean complements $XY=0$ and $X+Y=1$), and Consensus Theorem ($AB + A'C + BC = AB + A'C$ via $A+A'=1$ expansion); (4) Fix Double Complement cheat sheet row by moving Involution $(A')'=A$ and Constant Complements $0'=1, 1'=0$ into an explicit "Complement Properties" group with dedicated 3-column table format, eliminating misleading OR/Dual column headers; (5) Integrate curated, authoritative video lessons (Neso Academy and ALL ABOUT ELECTRONICS) via `CuratedVideoCard.jsx` and `dldVideoConfig.js` with responsive 16:9 on-demand YouTube-nocookie iframe player; (6) Eliminate desktop clipping of the Cheat Sheet tab by adopting a responsive 5-column grid (`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2`).
+- **Rationale**: Direct response to academic and visual review of Section 2.1. Addresses schematic correctness, exam-level symbolic derivation readiness, and visual layout accessibility without scope creep.
+- **Consequences**: Section 2.1 is complete, self-contained, mathematically verified (95/95 checks passing), and accessible on all viewport sizes. Strict adherence to zero em-dashes and zero en-dashes maintained.
+
+---
+
 ## Decision Record Template
 
 ```markdown

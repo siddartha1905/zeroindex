@@ -41,20 +41,26 @@ export const BOOLEAN_LAWS_CATEGORIES = [
         andForm: "A · A' = 0",
         explanation: "A variable combined with its complement spans the entire binary universe or collapses to 0.",
         category: "Postulates"
-      },
+      }
+    ]
+  },
+  {
+    category: "Complement Properties & Constant Inversion",
+    description: "Involution (double complement) and negation of logical constants.",
+    laws: [
       {
-        name: "Involution Law",
-        orForm: "(A')' = A",
-        andForm: "-",
+        name: "Involution Law (Double Inversion)",
+        isComplementProperty: true,
+        identity: "(A')' = A",
         explanation: "Double complementation restores the original variable literal.",
-        category: "Postulates"
+        category: "Properties"
       },
       {
-        name: "Constants Complements",
-        orForm: "0' = 1",
-        andForm: "1' = 0",
-        explanation: "Complement of ground is VCC; complement of VCC is ground.",
-        category: "Postulates"
+        name: "Complement of Constants",
+        isComplementProperty: true,
+        identity: "0' = 1 and 1' = 0",
+        explanation: "Complement of ground (0) is VCC (1); complement of VCC (1) is ground (0).",
+        category: "Properties"
       }
     ]
   },
@@ -153,8 +159,9 @@ export const BooleanLawsCheatSheet = ({ onClose = null }) => {
   const filteredCategories = BOOLEAN_LAWS_CATEGORIES.map(cat => {
     const filteredLaws = cat.laws.filter(law => 
       law.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      law.orForm.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      law.andForm.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (law.orForm && law.orForm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (law.andForm && law.andForm.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (law.identity && law.identity.toLowerCase().includes(searchTerm.toLowerCase())) ||
       law.explanation.toLowerCase().includes(searchTerm.toLowerCase())
     );
     return { ...cat, laws: filteredLaws };
@@ -236,7 +243,7 @@ export const BooleanLawsCheatSheet = ({ onClose = null }) => {
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-[#1E293B]">{law.name}</span>
                       <button
-                        onClick={() => handleCopy(`${law.name}: ${law.orForm} | Dual: ${law.andForm}`, lawId)}
+                        onClick={() => handleCopy(law.identity ? `${law.name}: ${law.identity}` : `${law.name}: ${law.orForm} | Dual: ${law.andForm}`, lawId)}
                         className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-[#64748B] hover:text-[#2E6F40] transition-colors"
                         title="Copy formula"
                       >
@@ -254,17 +261,24 @@ export const BooleanLawsCheatSheet = ({ onClose = null }) => {
                       </button>
                     </div>
 
-                    {/* Dual Columns */}
-                    <div className="grid grid-cols-2 gap-2 text-xs font-mono">
-                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1]">
-                        <span className="text-[10px] uppercase font-bold text-[#2E6F40] block mb-0.5">OR Form (+)</span>
-                        <span className="text-[#1E293B] font-semibold">{law.orForm}</span>
+                    {/* Dual Columns or Complement Identity */}
+                    {law.isComplementProperty ? (
+                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1] text-xs font-mono">
+                        <span className="text-[10px] uppercase font-bold text-[#2E6F40] block mb-0.5">Complement Identity</span>
+                        <span className="text-[#1E293B] font-semibold">{law.identity}</span>
                       </div>
-                      <div className="p-2 rounded-lg bg-white border border-[#DCE7E1]">
-                        <span className="text-[10px] uppercase font-bold text-[#4F46E5] block mb-0.5">Dual Form (·)</span>
-                        <span className="text-[#1E293B] font-semibold">{law.andForm}</span>
+                    ) : (
+                      <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+                        <div className="p-2 rounded-lg bg-white border border-[#DCE7E1]">
+                          <span className="text-[10px] uppercase font-bold text-[#2E6F40] block mb-0.5">OR Form (+)</span>
+                          <span className="text-[#1E293B] font-semibold">{law.orForm}</span>
+                        </div>
+                        <div className="p-2 rounded-lg bg-white border border-[#DCE7E1]">
+                          <span className="text-[10px] uppercase font-bold text-[#4F46E5] block mb-0.5">Dual Form (·)</span>
+                          <span className="text-[#1E293B] font-semibold">{law.andForm}</span>
+                        </div>
                       </div>
-                    </div>
+                    )}
 
                     {/* Explanation */}
                     <p className="text-[11px] text-[#64748B] leading-relaxed">

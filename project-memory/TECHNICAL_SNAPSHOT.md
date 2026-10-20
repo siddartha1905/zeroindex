@@ -4,7 +4,7 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **75**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **77**
 - Verification script names discovered: **6**
 
 ## Selected declared dependencies
@@ -42,6 +42,7 @@
 - `src/components/BooleanLawsCheatSheet.jsx`
 - `src/components/BottomNav.jsx`
 - `src/components/BridgeLanding.jsx`
+- `src/components/CuratedVideoCard.jsx`
 - `src/components/DldSubjectHome.jsx`
 - `src/components/DldWorkspace.jsx`
 - `src/components/FolioLanding.jsx`
@@ -99,6 +100,7 @@
 - `src/data/dldUnit1.js`
 - `src/data/dldUnit1Master.js`
 - `src/data/dldUnit2Master.js`
+- `src/data/dldVideoConfig.js`
 - `src/data/folioEssaysConfig.js`
 - `src/data/portalConfig.js`
 - `src/data/readoutArticlesConfig.js`

@@ -31,6 +31,41 @@ export const dldSection21Data = {
       ]
     },
 
+    // Task 1: Compact, attractive visual summary
+    whySimplify: {
+      heading: "Why Do We Simplify Boolean Expressions?",
+      subheading: "The objective is to preserve the same logical behavior while finding a potentially more efficient circuit implementation.",
+      points: [
+        {
+          id: "p1",
+          title: "SIMPLER CIRCUITS",
+          desc: "Remove unnecessary logical operations and reduce circuit complexity."
+        },
+        {
+          id: "p2",
+          title: "SMALLER HARDWARE",
+          desc: "A simpler realization can sometimes reduce gate count, connections and chip area."
+        },
+        {
+          id: "p3",
+          title: "LOWER POWER CONSUMPTION",
+          desc: "Reduced hardware and switching activity may improve energy efficiency."
+        },
+        {
+          id: "p4",
+          title: "POTENTIALLY FASTER OPERATION",
+          desc: "Fewer logic stages may help reduce propagation delay in suitable implementations."
+        }
+      ],
+      visualFlow: [
+        { label: "Complex Boolean Expression", note: "Original multi-gate specification" },
+        { label: "Apply Boolean Laws", note: "Systematic algebraic reduction" },
+        { label: "Equivalent Simplified Expression", note: "Identical truth table guaranteed" },
+        { label: "Potentially More Efficient Circuit", note: "Reduced gate and connection footprint" }
+      ],
+      engineeringNote: "Guaranteed mathematical equivalence means the circuit produces identical output for all input combinations. Physical advantages (area, delay, power) depend on target silicon technology and library cell availability."
+    },
+
     visualDemonstration: {
       title: "Why Simplification Matters: Before and After",
       subtitle: "Same logical output. Simpler expression.",
@@ -314,7 +349,8 @@ export const dldSection21Data = {
         name: "Double Complement / Involution Law",
         category: "basic",
         orForm: "(A')' = A",
-        andForm: "0' = 1 and 1' = 0",
+        andForm: "-",
+        specialProperty: "Complement Properties: 0' = 1 and 1' = 0",
         whatItMeans: "Inverting a logical value twice restores its original value.",
         whyTrue: "Flipping 0 gives 1; flipping 1 gives 0. Two successive inversions cancel each other out completely.",
         quickExample: "((A + B)')' = A + B",
@@ -439,7 +475,7 @@ export const dldSection21Data = {
     ]
   },
 
-  // Tab 3: See & Prove Content
+  // Tab 3: See & Prove Content (Truth Tables & Algebraic Proofs)
   seeAndProve: [
     {
       id: "proof-1",
@@ -493,7 +529,18 @@ export const dldSection21Data = {
           [1, 1, 1, 1, 1, "Yes (1 = 1)"]
         ]
       },
-      conclusion: "Column 4 (A + AB) is identical to Column 5 (A) across all 4 valuations. The term AB is mathematically absorbed."
+      conclusion: "Column 4 (A + AB) is identical to Column 5 (A) across all 4 valuations. The term AB is mathematically absorbed.",
+      algebraicProof: {
+        title: "Algebraic Proof of Absorption Law",
+        statement: "Prove algebraically that A + AB = A without assuming absorption.",
+        steps: [
+          { step: 1, expr: "A + AB = A · 1 + AB", law: "Identity Law: A = A · 1", reason: "Introduce identity element 1 to allow common literal factoring." },
+          { step: 2, expr: "= A(1 + B)", law: "Distributive Law: ax + ay = a(x + y)", reason: "Factor out the common literal A." },
+          { step: 3, expr: "= A(1)", law: "Null / Domination Law: 1 + B = 1", reason: "1 ORed with any condition is Logic 1." },
+          { step: 4, expr: "= A", law: "Identity Law: A · 1 = A", reason: "ANDing A with 1 returns A." }
+        ],
+        conclusion: "Therefore, A + AB = A is established algebraically. Q.E.D."
+      }
     },
     {
       id: "proof-5",
@@ -506,13 +553,26 @@ export const dldSection21Data = {
           [0, 0, 1, 0, 0, 0, 1, 0, "Match"],
           [0, 1, 0, 0, 0, 1, 0, 0, "Match"],
           [0, 1, 1, 1, 1, 1, 1, 1, "Match"],
-          [1, 0, 0, 0, 1, 1, 1, 1, "Match"],
+          [1, 0, 0, 0, 1, 1, 1, 1, 1, "Match"],
           [1, 0, 1, 0, 1, 1, 1, 1, "Match"],
           [1, 1, 0, 0, 1, 1, 1, 1, "Match"],
           [1, 1, 1, 1, 1, 1, 1, 1, "Match"]
         ]
       },
-      conclusion: "Column 5 (A + BC) and Column 8 ((A+B)(A+C)) evaluate to 0, 0, 0, 1, 1, 1, 1, 1 identically for all 8 rows. Q.E.D."
+      conclusion: "Column 5 (A + BC) and Column 8 ((A+B)(A+C)) evaluate to 0, 0, 0, 1, 1, 1, 1, 1 identically for all 8 rows. Q.E.D.",
+      algebraicProof: {
+        title: "Algebraic Proof of Second Distributive Law",
+        statement: "Prove algebraically that (A + B)(A + C) = A + BC.",
+        steps: [
+          { step: 1, expr: "(A + B)(A + C) = A(A + C) + B(A + C)", law: "First Distributive Law", reason: "Distribute the term (A + B) across (A + C)." },
+          { step: 2, expr: "= AA + AC + BA + BC", law: "First Distributive Law", reason: "Multiply each individual literal across the sums." },
+          { step: 3, expr: "= A + AC + AB + BC", law: "Idempotent & Commutative Laws", reason: "AA = A (Idempotent) and BA = AB (Commutative)." },
+          { step: 4, expr: "= A(1 + C + B) + BC", law: "Distributive Law (Factoring)", reason: "Factor out the common literal A from the first three terms." },
+          { step: 5, expr: "= A(1) + BC", law: "Null / Domination Law", reason: "1 + C + B = 1 (1 dominates any OR sum)." },
+          { step: 6, expr: "= A + BC", law: "Identity Law: A · 1 = A", reason: "A · 1 equals A." }
+        ],
+        conclusion: "Since (A + B)(A + C) reduces algebraically to A + BC, the identity A + BC = (A + B)(A + C) is proven. Q.E.D."
+      }
     },
     {
       id: "proof-6",
@@ -527,7 +587,51 @@ export const dldSection21Data = {
           [1, 1, 1, 0, 0, 0, 0, 1, 0, 0]
         ]
       },
-      conclusion: "Column 4 ((AB)') matches Column 7 (A' + B') identically (1, 1, 1, 0). Column 9 ((A+B)') matches Column 10 (A'B') identically (1, 0, 0, 0)."
+      conclusion: "Column 4 ((AB)') matches Column 7 (A' + B') identically (1, 1, 1, 0). Column 9 ((A+B)') matches Column 10 (A'B') identically (1, 0, 0, 0).",
+      videoKey: "demorgan-theorems",
+      algebraicProof: {
+        title: "Algebraic Proof of De Morgan's Theorems via Uniqueness of Complements",
+        statement: "In Boolean algebra, the complement of an element X is the UNIQUE element Y satisfying both XY = 0 and X + Y = 1.",
+        partA: {
+          identity: "Theorem 1: (AB)' = A' + B'",
+          explanation: "Let X = AB and let candidate complement Y = A' + B'. We must demonstrate that XY = 0 and X + Y = 1.",
+          productProof: [
+            { step: 1, expr: "XY = (AB)(A' + B')", law: "Substitution", reason: "Multiply X by the candidate complement Y." },
+            { step: 2, expr: "= (AB)A' + (AB)B'", law: "Distributive Law", reason: "Distribute (AB) across the sum (A' + B')." },
+            { step: 3, expr: "= (AA')B + A(BB')", law: "Associative & Commutative", reason: "Rearrange to group complementary literal pairs." },
+            { step: 4, expr: "= (0)B + A(0)", law: "Complement Law: x · x' = 0", reason: "AA' = 0 and BB' = 0." },
+            { step: 5, expr: "= 0 + 0 = 0", law: "Null and Identity Laws", reason: "0 · B = 0 and A · 0 = 0." }
+          ],
+          sumProof: [
+            { step: 1, expr: "X + Y = AB + A' + B'", law: "Substitution", reason: "Form the logical sum of X and candidate complement Y." },
+            { step: 2, expr: "= (A' + AB) + B'", law: "Commutative & Associative", reason: "Group A' together with AB." },
+            { step: 3, expr: "= [(A' + A)(A' + B)] + B'", law: "Second Distributive Law: x + yz = (x+y)(x+z)", reason: "Apply distributivity without assuming De Morgan's theorem." },
+            { step: 4, expr: "= [(1)(A' + B)] + B'", law: "Complement Law: A' + A = 1", reason: "A' + A evaluates to 1." },
+            { step: 5, expr: "= (A' + B) + B'", law: "Identity Law: 1 · X = X", reason: "Multiplying by 1 leaves (A' + B) unchanged." },
+            { step: 6, expr: "= A' + (B + B')", law: "Associative Law", reason: "Regroup B with its complement B'." },
+            { step: 7, expr: "= A' + 1 = 1", law: "Complement & Null Laws", reason: "B + B' = 1, and A' + 1 = 1." }
+          ],
+          conclusion: "Since (AB)(A' + B') = 0 and (AB) + (A' + B') = 1, by uniqueness of complements: (AB)' = A' + B'. Q.E.D."
+        },
+        partB: {
+          identity: "Theorem 2: (A + B)' = A'B'",
+          explanation: "Let X = A + B and let candidate complement Y = A'B'. We must demonstrate that XY = 0 and X + Y = 1.",
+          productProof: [
+            { step: 1, expr: "XY = (A + B)(A'B')", law: "Substitution", reason: "Multiply X by the candidate complement Y." },
+            { step: 2, expr: "= A(A'B') + B(A'B')", law: "Distributive Law", reason: "Distribute across the sum (A + B)." },
+            { step: 3, expr: "= (AA')B' + A'(BB')", law: "Associative & Commutative", reason: "Group complementary literal pairs." },
+            { step: 4, expr: "= (0)B' + A'(0) = 0 + 0 = 0", law: "Complement & Null", reason: "AA' = 0 and BB' = 0." }
+          ],
+          sumProof: [
+            { step: 1, expr: "X + Y = (A + B) + A'B'", law: "Substitution", reason: "Form the logical sum of X and candidate complement Y." },
+            { step: 2, expr: "= [(A + B) + A'] · [(A + B) + B']", law: "Second Distributive Law", reason: "Treat (A + B) as single term x in x + yz = (x+y)(x+z)." },
+            { step: 3, expr: "= [(A + A') + B] · [A + (B + B')]", law: "Associative & Commutative", reason: "Regroup complementary literals." },
+            { step: 4, expr: "= [1 + B] · [A + 1]", law: "Complement Law: x + x' = 1", reason: "A + A' = 1 and B + B' = 1." },
+            { step: 5, expr: "= 1 · 1 = 1", law: "Null & Identity Laws", reason: "1 + B = 1 and A + 1 = 1." }
+          ],
+          conclusion: "Since (A + B)(A'B') = 0 and (A + B) + (A'B') = 1, by uniqueness of complements: (A + B)' = A'B'. Q.E.D."
+        }
+      }
     },
     {
       id: "proof-7",
@@ -546,7 +650,22 @@ export const dldSection21Data = {
           [1, 1, 1, 0, 1, 0, 1, 1, 1, "Match"]
         ]
       },
-      conclusion: "Column 8 and Column 9 produce identical outputs (0, 1, 0, 1, 0, 0, 1, 1) across all 8 rows. The third term BC is provably redundant."
+      conclusion: "Column 8 and Column 9 produce identical outputs (0, 1, 0, 1, 0, 0, 1, 1) across all 8 rows. The third term BC is provably redundant.",
+      videoKey: "redundancy-theorem",
+      algebraicProof: {
+        title: "Mandatory Algebraic Proof of Consensus Theorem",
+        statement: "Prove algebraically that AB + A'C + BC = AB + A'C.",
+        steps: [
+          { step: 1, expr: "AB + A'C + BC = AB + A'C + BC(1)", law: "Identity Law: BC = BC · 1", reason: "Introduce the identity element 1 to the third term." },
+          { step: 2, expr: "= AB + A'C + BC(A + A')", law: "Complement Law: A + A' = 1", reason: "Substitute 1 with (A + A'), introducing variable A from the other terms." },
+          { step: 3, expr: "= AB + A'C + ABC + A'BC", law: "Distributive Law: BC(A + A') = ABC + A'BC", reason: "Multiply BC across the complementary sum." },
+          { step: 4, expr: "= (AB + ABC) + (A'C + A'BC)", law: "Commutative & Associative Laws", reason: "Rearrange and group terms with common factors AB and A'C." },
+          { step: 5, expr: "= AB(1 + C) + A'C(1 + B)", law: "Distributive Law (Factoring)", reason: "Factor out AB from the first group and A'C from the second group." },
+          { step: 6, expr: "= AB(1) + A'C(1)", law: "Null / Domination Law: 1 + X = 1", reason: "1 + C = 1 and 1 + B = 1." },
+          { step: 7, expr: "= AB + A'C", law: "Identity Law: X · 1 = X", reason: "AB · 1 = AB and A'C · 1 = A'C. The consensus term BC is completely absorbed." }
+        ],
+        conclusion: "Therefore, AB + A'C + BC = AB + A'C is proven algebraically without assuming the theorem. Q.E.D."
+      }
     },
     {
       id: "proof-8",
@@ -914,22 +1033,32 @@ export const dldSection21Data = {
   ],
 
   // Tab 5: Cheat Sheet Master Data
+  // Task 4: Explicit Complement Properties category without misleading OR/AND dual columns
   cheatSheet: {
     title: "Boolean Laws Master Cheat Sheet",
     description: "Compact, examination-ready reference of all 13 Boolean laws, Huntington postulates, duality, and precedence rules.",
     groups: [
       {
         name: "Basic Axiomatic Laws",
+        type: "dual-pair",
         laws: [
           { name: "Identity", orForm: "A + 0 = A", andForm: "A · 1 = A", tip: "0 drops out of OR; 1 drops out of AND" },
           { name: "Null / Domination", orForm: "A + 1 = 1", andForm: "A · 0 = 0", tip: "1 forces OR to 1; 0 forces AND to 0" },
           { name: "Idempotent", orForm: "A + A = A", andForm: "A · A = A", tip: "Eliminate duplicate variables and terms" },
-          { name: "Complement", orForm: "A + A' = 1", andForm: "A · A' = 0", tip: "Opposite pairs generate constants" },
-          { name: "Double Complement", orForm: "(A')' = A", andForm: "0' = 1 and 1' = 0", tip: "Even complements cancel completely" }
+          { name: "Complement", orForm: "A + A' = 1", andForm: "A · A' = 0", tip: "Opposite pairs generate constants" }
+        ]
+      },
+      {
+        name: "Complement Properties",
+        type: "single-property",
+        laws: [
+          { name: "Double Complement (Involution)", property: "(A')' = A", tip: "Two successive inversions cancel completely (even count cancels)" },
+          { name: "Complements of Constants", property: "0' = 1 and 1' = 0", tip: "Ground complements to supply; supply complements to ground" }
         ]
       },
       {
         name: "Structural Laws",
+        type: "dual-pair",
         laws: [
           { name: "Commutative", orForm: "A + B = B + A", andForm: "AB = BA", tip: "Order of variables can be freely rearranged" },
           { name: "Associative", orForm: "(A + B) + C = A + (B + C)", andForm: "(AB)C = A(BC)", tip: "Parentheses can be shifted among identical operators" },
@@ -939,6 +1068,7 @@ export const dldSection21Data = {
       },
       {
         name: "Simplification Laws",
+        type: "dual-pair",
         laws: [
           { name: "Absorption", orForm: "A + AB = A", andForm: "A(A + B) = A", tip: "Shorter term absorbs longer term" },
           { name: "Combining", orForm: "AB + AB' = A", andForm: "(A + B)(A + B') = A", tip: "Foundation of Karnaugh Map pairing" },
@@ -947,6 +1077,7 @@ export const dldSection21Data = {
       },
       {
         name: "Important Theorems",
+        type: "dual-pair",
         laws: [
           { name: "De Morgan 1", orForm: "(AB)' = A' + B'", andForm: "NAND = bubbled OR", tip: "Break the bar and change AND to OR" },
           { name: "De Morgan 2", orForm: "(A + B)' = A'B'", andForm: "NOR = bubbled AND", tip: "Break the bar and change OR to AND" },
@@ -956,9 +1087,10 @@ export const dldSection21Data = {
       },
       {
         name: "Principle of Duality & Precedence",
+        type: "reference-rules",
         laws: [
           { name: "Duality Rule", orForm: "Swap + with ·", andForm: "Swap 0 with 1", tip: "Keep literals unchanged; preserve grouping with ( )" },
-          { name: "Precedence", orForm: "1. Parentheses ( )", andForm: "2. NOT -> 3. AND -> 4. OR", tip: "AND binds more tightly than OR" }
+          { name: "Operator Precedence", orForm: "1. Parentheses ( )", andForm: "2. NOT -> 3. AND -> 4. OR", tip: "AND binds more tightly than OR" }
         ]
       }
     ]

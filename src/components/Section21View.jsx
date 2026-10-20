@@ -22,11 +22,13 @@ import {
   Printer
 } from 'lucide-react';
 import { dldSection21Data } from '../data/dldSection21Data';
+import { CuratedVideoCard } from './CuratedVideoCard';
 
 export const Section21View = () => {
   const [activeTab, setActiveTab] = useState('start-here');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedProofs, setExpandedProofs] = useState({ 'proof-4': true, 'proof-5': true });
+  const [expandedAlgebraicProofs, setExpandedAlgebraicProofs] = useState({});
   const [revealedExamples, setRevealedExamples] = useState({ 'ex-1': true, 'ex-5': true });
   const [cheatSearch, setCheatSearch] = useState('');
 
@@ -34,6 +36,13 @@ export const Section21View = () => {
 
   const toggleProof = (id) => {
     setExpandedProofs(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  const toggleAlgebraic = (id) => {
+    setExpandedAlgebraicProofs(prev => ({
       ...prev,
       [id]: !prev[id]
     }));
@@ -79,9 +88,9 @@ export const Section21View = () => {
           </p>
         </div>
 
-        {/* Five Horizontal Navigation Tabs */}
+        {/* Five Responsive Navigation Tabs (Task 6 Refinement: Zero Desktop Clipping) */}
         <div className="pt-2 border-t border-[#DCE7E1]">
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
             {[
               { id: 'start-here', label: '1. Start Here', icon: Compass },
               { id: 'all-laws', label: '2. All Laws', icon: BookOpen },
@@ -95,14 +104,14 @@ export const Section21View = () => {
                 <button
                   key={tab.id}
                   onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold whitespace-nowrap transition-all duration-150 cursor-pointer ${
+                  className={`flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold transition-all duration-150 cursor-pointer text-center ${
                     isActive
                       ? 'bg-[#285C49] text-white shadow-xs'
                       : 'bg-[#FAF8F5] text-[#5F6C64] hover:text-[#293B32] hover:bg-[#F0EEEA] border border-[#DCE7E1]'
                   }`}
                 >
-                  <Icon className="w-4 h-4" />
-                  <span>{tab.label}</span>
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{tab.label}</span>
                 </button>
               );
             })}
@@ -131,6 +140,76 @@ export const Section21View = () => {
                   {p}
                 </p>
               ))}
+            </div>
+          </div>
+
+          {/* TASK 1: COMPACT VISUAL SUMMARY - WHY DO WE SIMPLIFY BOOLEAN EXPRESSIONS */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-[#EBF3ED] text-[#285C49] border border-[#285C49]/20">
+                  Core Engineering Rationale
+                </span>
+              </div>
+              <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32] mt-2">
+                {data.startHere.whySimplify.heading}
+              </h3>
+              <p className="text-sm text-[#5F6C64] mt-1 leading-relaxed">
+                {data.startHere.whySimplify.subheading}
+              </p>
+            </div>
+
+            {/* 4 Distinct Educational Points */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+              {data.startHere.whySimplify.points.map((pt, pIdx) => {
+                const icons = [Layers, Cpu, Zap, Clock];
+                const IconComponent = icons[pIdx] || Layers;
+                return (
+                  <div key={pt.id} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 flex flex-col justify-between">
+                    <div className="space-y-1.5">
+                      <div className="w-8 h-8 rounded-lg bg-[#EBF3ED] text-[#285C49] flex items-center justify-center">
+                        <IconComponent className="w-4 h-4" />
+                      </div>
+                      <h4 className="font-mono text-xs font-bold text-[#293B32] tracking-wide">
+                        {pt.title}
+                      </h4>
+                      <p className="text-xs text-[#5F6C64] leading-relaxed">
+                        {pt.desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Visual Flow Banner */}
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] block">
+                Engineering Transformation Pipeline
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 items-center">
+                {data.startHere.whySimplify.visualFlow.map((step, sIdx) => (
+                  <React.Fragment key={sIdx}>
+                    <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-center space-y-0.5 shadow-2xs">
+                      <span className="font-mono text-[11px] font-bold text-[#293B32] block">
+                        {step.label}
+                      </span>
+                      <span className="text-[10px] text-[#5F6C64] block">
+                        {step.note}
+                      </span>
+                    </div>
+                  </React.Fragment>
+                ))}
+              </div>
+            </div>
+
+            {/* Engineering Distinction Callout */}
+            <div className="p-3.5 rounded-xl bg-[#EBF3ED] border border-[#285C49]/20 text-xs text-[#285C49] flex items-start gap-2.5">
+              <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#285C49]" />
+              <p className="leading-relaxed">
+                <span className="font-bold">Engineering Distinction: </span>
+                {data.startHere.whySimplify.engineeringNote}
+              </p>
             </div>
           </div>
 
@@ -168,51 +247,71 @@ export const Section21View = () => {
                   F = AB + AB'
                 </div>
 
-                {/* SVG Circuit Diagram Before */}
+                {/* SVG Circuit Diagram Before (Corrected Wire-to-Pin Connectivity) */}
                 <div className="p-4 bg-white rounded-xl border border-[#FCD9BD] flex flex-col items-center justify-center">
-                  <svg viewBox="0 0 340 140" className="w-full max-w-[320px] h-auto">
-                    {/* Inputs */}
-                    <text x="10" y="35" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#293B32">A</text>
-                    <text x="10" y="95" fontFamily="monospace" fontSize="11" fontWeight="bold" fill="#293B32">B</text>
+                  <svg viewBox="0 0 350 145" className="w-full max-w-[340px] h-auto">
+                    {/* Signal Input Labels */}
+                    <text x="10" y="29" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#293B32">A</text>
+                    <text x="10" y="49" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#293B32">B</text>
 
-                    {/* Wires */}
-                    <line x1="25" y1="30" x2="110" y2="30" stroke="#285C49" strokeWidth="2" />
-                    <line x1="60" y1="30" x2="60" y2="85" stroke="#285C49" strokeWidth="2" />
-                    <line x1="60" y1="85" x2="110" y2="85" stroke="#285C49" strokeWidth="2" />
-                    <circle cx="60" cy="30" r="3" fill="#285C49" />
+                    {/* Input Wire A: Enters at (24, 25), feeds Upper AND pin 1 at (120, 25) */}
+                    <line x1="24" y1="25" x2="120" y2="25" stroke="#285C49" strokeWidth="2" />
+                    {/* Input A Branch Junction Dot at (45, 25) */}
+                    <circle cx="45" cy="25" r="3" fill="#285C49" />
+                    {/* Input A Branch down to y=85 */}
+                    <line x1="45" y1="25" x2="45" y2="85" stroke="#285C49" strokeWidth="2" />
+                    {/* Input A Wire to Lower AND pin 1 at (120, 85) */}
+                    <line x1="45" y1="85" x2="120" y2="85" stroke="#285C49" strokeWidth="2" />
 
-                    <line x1="25" y1="90" x2="40" y2="90" stroke="#285C49" strokeWidth="2" />
-                    <line x1="40" y1="45" x2="110" y2="45" stroke="#285C49" strokeWidth="2" />
-                    <line x1="40" y1="45" x2="40" y2="105" stroke="#285C49" strokeWidth="2" />
-                    <circle cx="40" cy="90" r="3" fill="#285C49" />
+                    {/* Input Wire B: Enters at (24, 45), feeds Upper AND pin 2 at (120, 45) */}
+                    {/* Clean wire crossing at (45, 45) over line A without dot */}
+                    <line x1="24" y1="45" x2="120" y2="45" stroke="#285C49" strokeWidth="2" />
+                    {/* Input B Branch Junction Dot at (68, 45) */}
+                    <circle cx="68" cy="45" r="3" fill="#285C49" />
+                    {/* Input B Branch down to y=105 */}
+                    <line x1="68" y1="45" x2="68" y2="105" stroke="#285C49" strokeWidth="2" />
+                    {/* Wire to NOT gate input pin at (82, 105) */}
+                    <line x1="68" y1="105" x2="82" y2="105" stroke="#285C49" strokeWidth="2" />
 
-                    {/* Inverter for B' */}
-                    <polygon points="55,105 75,105 65,95" transform="rotate(90 65 105)" fill="#FAF8F5" stroke="#285C49" strokeWidth="1.5" />
-                    <circle cx="78" cy="105" r="2.5" fill="#FAF8F5" stroke="#285C49" strokeWidth="1.5" />
-                    <line x1="81" y1="105" x2="110" y2="105" stroke="#285C49" strokeWidth="2" />
+                    {/* Inverter (NOT Gate) for B' */}
+                    {/* Triangle body from x=82 to x=98 */}
+                    <polygon points="82,97 82,113 98,105" fill="#FAF8F5" stroke="#285C49" strokeWidth="1.8" />
+                    {/* Inversion Bubble at (101.5, 105) */}
+                    <circle cx="101.5" cy="105" r="3" fill="#FAF8F5" stroke="#285C49" strokeWidth="1.8" />
+                    {/* Inverter output wire from bubble right edge (104.5, 105) to Lower AND pin 2 at (120, 105) */}
+                    <line x1="104.5" y1="105" x2="120" y2="105" stroke="#285C49" strokeWidth="2" />
+                    {/* Label B' */}
+                    <text x="105" y="118" fontFamily="monospace" fontSize="10" fontWeight="bold" fill="#285C49">B'</text>
 
-                    {/* AND Gate 1 (AB) */}
-                    <path d="M 110,20 L 125,20 A 17,17 0 0 1 125,55 L 110,55 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
-                    <text x="116" y="42" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AND</text>
-                    <line x1="142" y1="37" x2="190" y2="37" stroke="#285C49" strokeWidth="2" />
-                    <line x1="190" y1="37" x2="190" y2="60" stroke="#285C49" strokeWidth="2" />
+                    {/* Upper AND Gate (AB): Inputs at y=25 and y=45 */}
+                    <path d="M 120,17 L 133,17 A 18,18 0 0 1 133,53 L 120,53 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
+                    <text x="126" y="38" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AND</text>
+                    {/* Upper AND Output at (151, 35) to OR input at (194, 56) */}
+                    <line x1="151" y1="35" x2="188" y2="35" stroke="#285C49" strokeWidth="2" />
+                    <line x1="188" y1="35" x2="188" y2="56" stroke="#285C49" strokeWidth="2" />
+                    <line x1="188" y1="56" x2="194" y2="56" stroke="#285C49" strokeWidth="2" />
+                    <text x="154" y="30" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AB</text>
 
-                    {/* AND Gate 2 (AB') */}
-                    <path d="M 110,75 L 125,75 A 17,17 0 0 1 125,110 L 110,110 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
-                    <text x="116" y="97" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AND</text>
-                    <line x1="142" y1="92" x2="190" y2="92" stroke="#285C49" strokeWidth="2" />
-                    <line x1="190" y1="92" x2="190" y2="75" stroke="#285C49" strokeWidth="2" />
+                    {/* Lower AND Gate (AB'): Inputs at y=85 and y=105 */}
+                    <path d="M 120,77 L 133,77 A 18,18 0 0 1 133,113 L 120,113 Z" fill="#EBF3ED" stroke="#285C49" strokeWidth="2" />
+                    <text x="126" y="98" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AND</text>
+                    {/* Lower AND Output at (151, 95) to OR input at (194, 74) */}
+                    <line x1="151" y1="95" x2="188" y2="95" stroke="#285C49" strokeWidth="2" />
+                    <line x1="188" y1="95" x2="188" y2="74" stroke="#285C49" strokeWidth="2" />
+                    <line x1="188" y1="74" x2="194" y2="74" stroke="#285C49" strokeWidth="2" />
+                    <text x="154" y="106" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#285C49">AB'</text>
 
-                    {/* OR Gate */}
-                    <path d="M 190,52 Q 205,67 190,82 Q 215,82 225,67 Q 215,52 190,52 Z" fill="#FEF3C7" stroke="#92400E" strokeWidth="2" />
-                    <text x="199" y="70" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#92400E">OR</text>
+                    {/* OR Gate: Inputs at y=56 and y=74 */}
+                    <path d="M 190,48 Q 202,65 190,82 Q 220,82 232,65 Q 220,48 190,48 Z" fill="#FEF3C7" stroke="#92400E" strokeWidth="2" />
+                    <text x="201" y="69" fontFamily="monospace" fontSize="9" fontWeight="bold" fill="#92400E">OR</text>
 
-                    {/* Output F */}
-                    <line x1="225" y1="67" x2="270" y2="67" stroke="#285C49" strokeWidth="2" />
-                    <text x="278" y="71" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#285C49">F</text>
+                    {/* OR Output at (232, 65) to output terminal F */}
+                    <line x1="232" y1="65" x2="280" y2="65" stroke="#285C49" strokeWidth="2" />
+                    <circle cx="280" cy="65" r="3" fill="#285C49" />
+                    <text x="288" y="69" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#285C49">F</text>
                   </svg>
                   <p className="text-[11px] text-[#5F6C64] mt-2 font-mono">
-                    Complex routing: 2 AND gates, 1 Inverter, 1 OR gate
+                    Discrete gate implementation: 2 AND gates, 1 Inverter, 1 OR gate (4 gates total)
                   </p>
                 </div>
 
@@ -238,21 +337,29 @@ export const Section21View = () => {
 
                 {/* SVG Circuit Diagram After */}
                 <div className="p-4 bg-white rounded-xl border border-[#285C49]/20 flex flex-col items-center justify-center min-h-[160px]">
-                  <svg viewBox="0 0 340 140" className="w-full max-w-[320px] h-auto">
-                    {/* Inputs */}
-                    <text x="20" y="71" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#293B32">Input A</text>
-                    <line x1="75" y1="67" x2="250" y2="67" stroke="#285C49" strokeWidth="3" />
-                    <circle cx="250" cy="67" r="4" fill="#285C49" />
-                    <text x="260" y="71" fontFamily="monospace" fontSize="13" fontWeight="bold" fill="#285C49">Output F = A</text>
+                  <svg viewBox="0 0 350 145" className="w-full max-w-[340px] h-auto">
+                    {/* Signal Input Label */}
+                    <text x="15" y="69" fontFamily="monospace" fontSize="12" fontWeight="bold" fill="#293B32">Input A</text>
+                    <circle cx="70" cy="65" r="3.5" fill="#285C49" />
 
-                    {/* Badge */}
-                    <rect x="70" y="95" width="200" height="26" rx="6" fill="#EBF3ED" stroke="#285C49" strokeWidth="1" />
-                    <text x="80" y="112" fontFamily="monospace" fontSize="10" fontWeight="bold" fill="#285C49">
-                      Zero Gates Needed (Direct Wire)
+                    {/* Direct Conductor Line */}
+                    <line x1="70" y1="65" x2="235" y2="65" stroke="#285C49" strokeWidth="2.5" />
+                    <circle cx="235" cy="65" r="3.5" fill="#285C49" />
+
+                    {/* Output Label */}
+                    <text x="245" y="69" fontFamily="monospace" fontSize="13" fontWeight="bold" fill="#285C49">Output F = A</text>
+
+                    {/* Technical Specification Badge */}
+                    <rect x="55" y="94" width="240" height="32" rx="8" fill="#EBF3ED" stroke="#285C49" strokeWidth="1" />
+                    <text x="75" y="108" fontFamily="monospace" fontSize="10" fontWeight="bold" fill="#285C49">
+                      Discrete Gate Count: 0 Gates
+                    </text>
+                    <text x="75" y="120" fontFamily="monospace" fontSize="9" fill="#5F6C64">
+                      Input B has no physical effect on output
                     </text>
                   </svg>
                   <p className="text-[11px] text-[#285C49] mt-2 font-mono font-bold">
-                    Direct connection: Input B is completely irrelevant!
+                    Direct conductor connection: Input B is completely eliminated from the circuit.
                   </p>
                 </div>
 
@@ -506,6 +613,11 @@ export const Section21View = () => {
               </div>
             </div>
           </div>
+
+          {/* Curated Video Lesson for Tab 1 */}
+          <div className="pt-2">
+            <CuratedVideoCard videoKey="boolean-intro" />
+          </div>
         </div>
       )}
 
@@ -603,6 +715,11 @@ export const Section21View = () => {
               </div>
             ))}
           </div>
+
+          {/* Curated Video Lesson for Tab 2 */}
+          <div className="pt-2">
+            <CuratedVideoCard videoKey="boolean-laws" />
+          </div>
         </div>
       )}
 
@@ -676,6 +793,173 @@ export const Section21View = () => {
                         <CheckCircle2 className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#285C49]" />
                         <span>{proof.conclusion}</span>
                       </div>
+
+                      {/* Optional Expandable Symbolic Algebraic Proof (Task 3) */}
+                      {proof.algebraicProof && (
+                        <div className="pt-2 border-t border-[#DCE7E1]">
+                          <button
+                            onClick={() => toggleAlgebraic(proof.id)}
+                            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-white hover:bg-[#EBF3ED] border border-[#DCE7E1] text-xs font-mono font-bold text-[#285C49] transition-colors cursor-pointer shadow-2xs"
+                          >
+                            <Sparkles className="w-3.5 h-3.5 text-[#285C49]" />
+                            <span>{expandedAlgebraicProofs[proof.id] ? "Hide Algebraic Proof" : "Show Algebraic Proof"}</span>
+                            {expandedAlgebraicProofs[proof.id] ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                          </button>
+
+                          {expandedAlgebraicProofs[proof.id] && (
+                            <div className="mt-3 p-4 sm:p-5 rounded-xl bg-white border border-[#DCE7E1] space-y-4 shadow-soft animate-fadeIn">
+                              <div>
+                                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] bg-[#EBF3ED] px-2 py-0.5 rounded">
+                                  Symbolic Mathematical Derivation
+                                </span>
+                                <h4 className="font-editorial text-base sm:text-lg font-bold text-[#293B32] mt-1">
+                                  {proof.algebraicProof.title}
+                                </h4>
+                                <p className="text-xs text-[#5F6C64] mt-0.5 font-mono">
+                                  {proof.algebraicProof.statement}
+                                </p>
+                              </div>
+
+                              {/* Single Linear Steps Proof (Absorption, Distributive, Consensus) */}
+                              {proof.algebraicProof.steps && (
+                                <div className="space-y-2.5">
+                                  {proof.algebraicProof.steps.map((st) => (
+                                    <div key={st.step} className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                                      <div className="flex items-center gap-2.5">
+                                        <span className="w-5 h-5 rounded-full bg-[#EBF3ED] text-[#285C49] font-mono text-[10px] font-bold flex items-center justify-center flex-shrink-0">
+                                          {st.step}
+                                        </span>
+                                        <span className="font-mono font-bold text-[#293B32]">
+                                          {st.expr}
+                                        </span>
+                                      </div>
+                                      <div className="text-left sm:text-right">
+                                        <span className="font-mono text-[11px] font-bold text-[#285C49] bg-[#EBF3ED] px-2 py-0.5 rounded">
+                                          {st.law}
+                                        </span>
+                                        <p className="text-[11px] text-[#5F6C64] mt-0.5">{st.reason}</p>
+                                      </div>
+                                    </div>
+                                  ))}
+                                  <div className="p-3 rounded-lg bg-[#EBF3ED] border border-[#285C49]/20 text-xs font-mono font-bold text-[#285C49]">
+                                    {proof.algebraicProof.conclusion}
+                                  </div>
+                                </div>
+                              )}
+
+                              {/* De Morgan's Two-Part Proof via Uniqueness of Complements */}
+                              {proof.algebraicProof.partA && proof.algebraicProof.partB && (
+                                <div className="space-y-5">
+                                  {/* Part A */}
+                                  <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+                                    <div className="flex items-center justify-between">
+                                      <h5 className="font-editorial text-sm font-bold text-[#285C49]">
+                                        {proof.algebraicProof.partA.identity}
+                                      </h5>
+                                      <span className="text-[10px] font-mono font-bold text-[#285C49] bg-[#EBF3ED] px-2 py-0.5 rounded">
+                                        Part 1
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-[#5F6C64] leading-relaxed">
+                                      {proof.algebraicProof.partA.explanation}
+                                    </p>
+                                    
+                                    <div className="space-y-2">
+                                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] block">
+                                        Condition 1: Product Test (XY = 0)
+                                      </span>
+                                      {proof.algebraicProof.partA.productProof.map((st) => (
+                                        <div key={st.step} className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-[#5F6C64] font-mono text-[10px]">{st.step}.</span>
+                                            <span className="font-mono font-bold text-[#293B32]">{st.expr}</span>
+                                          </div>
+                                          <span className="font-mono text-[10px] text-[#285C49] bg-[#EBF3ED] px-1.5 py-0.5 rounded">{st.law}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <div className="space-y-2 pt-1">
+                                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] block">
+                                        Condition 2: Sum Test (X + Y = 1)
+                                      </span>
+                                      {proof.algebraicProof.partA.sumProof.map((st) => (
+                                        <div key={st.step} className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-[#5F6C64] font-mono text-[10px]">{st.step}.</span>
+                                            <span className="font-mono font-bold text-[#293B32]">{st.expr}</span>
+                                          </div>
+                                          <span className="font-mono text-[10px] text-[#285C49] bg-[#EBF3ED] px-1.5 py-0.5 rounded">{st.law}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <div className="p-2.5 rounded-lg bg-[#EBF3ED] border border-[#285C49]/20 text-xs font-mono font-bold text-[#285C49]">
+                                      {proof.algebraicProof.partA.conclusion}
+                                    </div>
+                                  </div>
+
+                                  {/* Part B */}
+                                  <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3">
+                                    <div className="flex items-center justify-between">
+                                      <h5 className="font-editorial text-sm font-bold text-[#285C49]">
+                                        {proof.algebraicProof.partB.identity}
+                                      </h5>
+                                      <span className="text-[10px] font-mono font-bold text-[#285C49] bg-[#EBF3ED] px-2 py-0.5 rounded">
+                                        Part 2
+                                      </span>
+                                    </div>
+                                    <p className="text-xs text-[#5F6C64] leading-relaxed">
+                                      {proof.algebraicProof.partB.explanation}
+                                    </p>
+                                    
+                                    <div className="space-y-2">
+                                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] block">
+                                        Condition 1: Product Test (XY = 0)
+                                      </span>
+                                      {proof.algebraicProof.partB.productProof.map((st) => (
+                                        <div key={st.step} className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-[#5F6C64] font-mono text-[10px]">{st.step}.</span>
+                                            <span className="font-mono font-bold text-[#293B32]">{st.expr}</span>
+                                          </div>
+                                          <span className="font-mono text-[10px] text-[#285C49] bg-[#EBF3ED] px-1.5 py-0.5 rounded">{st.law}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <div className="space-y-2 pt-1">
+                                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] block">
+                                        Condition 2: Sum Test (X + Y = 1)
+                                      </span>
+                                      {proof.algebraicProof.partB.sumProof.map((st) => (
+                                        <div key={st.step} className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-xs">
+                                          <div className="flex items-center gap-2">
+                                            <span className="text-[#5F6C64] font-mono text-[10px]">{st.step}.</span>
+                                            <span className="font-mono font-bold text-[#293B32]">{st.expr}</span>
+                                          </div>
+                                          <span className="font-mono text-[10px] text-[#285C49] bg-[#EBF3ED] px-1.5 py-0.5 rounded">{st.law}</span>
+                                        </div>
+                                      ))}
+                                    </div>
+
+                                    <div className="p-2.5 rounded-lg bg-[#EBF3ED] border border-[#285C49]/20 text-xs font-mono font-bold text-[#285C49]">
+                                      {proof.algebraicProof.partB.conclusion}
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Curated Video in See & Prove if proof has videoKey */}
+                      {proof.videoKey && (
+                        <div className="pt-2">
+                          <CuratedVideoCard videoKey={proof.videoKey} />
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -851,12 +1135,64 @@ export const Section21View = () => {
           {/* Cheat Sheet Table View */}
           <div className="space-y-6">
             {data.cheatSheet.groups.map((grp, gIdx) => {
+              if (grp.isComplementGroup) {
+                const matchingLaws = cheatSearch.trim() === ''
+                  ? grp.laws
+                  : grp.laws.filter(l => 
+                      l.name.toLowerCase().includes(cheatSearch.toLowerCase()) ||
+                      l.identity.toLowerCase().includes(cheatSearch.toLowerCase()) ||
+                      (l.tip && l.tip.toLowerCase().includes(cheatSearch.toLowerCase()))
+                    );
+
+                if (matchingLaws.length === 0) return null;
+
+                return (
+                  <div key={gIdx} className="p-5 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-3">
+                    <div className="flex items-center justify-between border-b border-[#DCE7E1] pb-2">
+                      <h3 className="font-editorial text-base font-bold text-[#293B32]">
+                        {grp.name}
+                      </h3>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#285C49] bg-[#EBF3ED] px-2 py-0.5 rounded">
+                        Specialized Single Inversion & Involution
+                      </span>
+                    </div>
+
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left text-xs border-collapse">
+                        <thead>
+                          <tr className="border-b border-[#DCE7E1] text-[#5F6C64] font-mono">
+                            <th className="py-2 px-3 font-bold w-1/3">Property Name</th>
+                            <th className="py-2 px-3 font-bold w-1/3">Identity / Form</th>
+                            <th className="py-2 px-3 font-bold w-1/3">When to Use / Meaning</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#DCE7E1]">
+                          {matchingLaws.map((law, lIdx) => (
+                            <tr key={lIdx} className="hover:bg-[#FAF8F5]/80">
+                              <td className="py-2.5 px-3 font-editorial font-bold text-[#293B32]">
+                                {law.name}
+                              </td>
+                              <td className="py-2.5 px-3 font-mono font-bold text-[#285C49] bg-[#EBF3ED]/30">
+                                {law.identity}
+                              </td>
+                              <td className="py-2.5 px-3 text-[#5F6C64]">
+                                {law.tip}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                );
+              }
+
               const matchingLaws = cheatSearch.trim() === ''
                 ? grp.laws
                 : grp.laws.filter(l => 
                     l.name.toLowerCase().includes(cheatSearch.toLowerCase()) ||
-                    l.orForm.toLowerCase().includes(cheatSearch.toLowerCase()) ||
-                    l.andForm.toLowerCase().includes(cheatSearch.toLowerCase())
+                    (l.orForm && l.orForm.toLowerCase().includes(cheatSearch.toLowerCase())) ||
+                    (l.andForm && l.andForm.toLowerCase().includes(cheatSearch.toLowerCase()))
                   );
 
               if (matchingLaws.length === 0) return null;

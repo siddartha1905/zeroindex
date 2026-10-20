@@ -4,6 +4,48 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: DLD Unit 2 Section 2.1 Final Academic and Visual Refinements
+
+- **Type**: academic / curriculum / visual-refinement / dld-unit-2
+- **Summary**: Implemented the approved educational, mathematical, and visual refinements for Section 2.1 on `dld-unit2-development`:
+  1. **Task 1: Strengthened WHY-FIRST Introduction**:
+     - Retained approved "Why Do We Learn Boolean Algebra?" text.
+     - Added compact visual summary card "Why Do We Simplify Boolean Expressions?" with 4 distinct educational points (Simpler Circuits, Smaller Hardware, Lower Power Consumption, Potentially Faster Operation).
+     - Added 4-step transformation pipeline visual flow banner: Complex Boolean Expression -> Apply Boolean Laws -> Equivalent Simplified Expression -> Potentially More Efficient Circuit.
+     - Added explicit Engineering Distinction callout clarifying guaranteed mathematical equivalence vs physical technology-dependent benefits.
+  2. **Task 2: Corrected Before-and-After Logic Circuit Schematic**:
+     - Fixed physical wiring bug in discrete-gate circuit for $F = AB + AB'$: input $B$ now visibly branches into the NOT gate input pin.
+     - Terminal connections physically touch pins, branch junction dots are clear, line crossings are unambiguous without dots, gate symbols and inversion bubbles follow standard notation.
+     - Retained discrete gate count comparison (4 discrete gates vs 0 gates / direct conductor) with mathematical derivation and 4-row truth table.
+  3. **Task 3: Added Symbolic Algebraic Proofs to See & Prove**:
+     - Added expandable "Show Algebraic Proof" toggles (collapsed by default) for Absorption, Second Distributive Law, De Morgan's Theorems, and Consensus Theorem.
+     - Implemented mandatory De Morgan proof via Uniqueness of Complements ($XY = 0$ and $X + Y = 1$) for both $(AB)' = A' + B'$ and $(A + B)' = A'B'$, using distributive law to expand $A' + AB = (A' + A)(A' + B) = A' + B$ without circularity.
+     - Implemented mandatory Consensus Theorem proof ($AB + A'C + BC = AB + A'C$) via expansion $BC(A + A')$ and factoring with explanations for each step.
+  4. **Task 4: Complete Law Coverage and Cheat-Sheet Audit**:
+     - Separated Involution $(A')'=A$ and Constant Complements $0'=1, 1'=0$ into an explicit "Complement Properties" group with dedicated 3-column table (`Property Name`, `Identity / Form`, `When to Use / Meaning`), eliminating misleading OR/Dual column headers.
+  5. **Task 5: Curated YouTube Learning Resources**:
+     - Created `src/data/dldVideoConfig.js` registry for verified Neso Academy and ALL ABOUT ELECTRONICS video lessons.
+     - Built `src/components/CuratedVideoCard.jsx` with responsive 16:9 on-demand YouTube-nocookie iframe player and external link fallback.
+     - Integrated video lessons at the bottom of Tab 1, Tab 2, and inside Proofs 6 and 7 in Tab 3.
+  6. **Task 6: Tab Navigation Refinement**:
+     - Replaced horizontal scrollbar with a responsive 5-column grid (`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2`) resolving desktop clipping of "5. Cheat Sheet".
+  7. **Task 8: Verification & Quality**:
+     - `scripts/verifySection21Math.mjs` expanded to 95/95 checks passing (100%).
+     - `verifyUnit2Full.mjs`: 842/842 passed.
+     - `verifyUnit1Math.mjs` & `verifyInteractiveSolvers.mjs`: 78/78 passed.
+     - Production build verified: `npm run build` succeeds in 3.51s with 0 errors.
+     - Verified 0 em-dashes and 0 en-dashes across all modified and created source files.
+- **Affected Files**:
+  * `src/components/Section21View.jsx` (updated)
+  * `src/data/dldSection21Data.js` (updated)
+  * `src/components/CuratedVideoCard.jsx` (created)
+  * `src/data/dldVideoConfig.js` (created)
+  * `src/components/BooleanLawsCheatSheet.jsx` (updated)
+  * `scripts/verifySection21Math.mjs` (updated)
+  * `project-memory/CURRENT_STATE.md` (updated)
+  * `project-memory/CHANGELOG.md` (updated)
+- **Deployment State**: Committed to branch `dld-unit2-development` (preview status `isLive: false`).
+
 ## 2026-10-20: DLD Unit 2 Section 2.1 Complete Academic Rebuild (WHY-FIRST 5-Tab Architecture)
 
 - **Type**: academic / curriculum / ui-rebuild / dld-unit-2

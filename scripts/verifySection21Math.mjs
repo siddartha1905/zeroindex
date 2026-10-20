@@ -301,12 +301,76 @@ assert(!ex9IsComplement, "Example 9: Dual A(B'+C) is confirmed NOT identical to 
 assert(consensusMatches, "Example 10: Consensus Theorem reduces 3 terms to 2 terms correctly");
 
 // ----------------------------------------------------------------------------
-// 7. ZERO EM-DASH AND ZERO EN-DASH AUDIT
+// 7. TASK 3 & 4 SYMBOLIC ALGEBRAIC PROOFS & CHEAT SHEET AUDIT
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Task 3 Algebraic Proofs and Equivalence ---");
+// De Morgan Uniqueness of Complements Check
+let demorganUniquenessPartA = true;
+let demorganUniquenessPartB = true;
+
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    const notA = a === 0 ? 1 : 0;
+    const notB = b === 0 ? 1 : 0;
+
+    // Part A: X = AB, candidate Y = A' + B'
+    const xA = a & b;
+    const yA = notA | notB;
+    if ((xA & yA) !== 0) demorganUniquenessPartA = false;
+    if ((xA | yA) !== 1) demorganUniquenessPartA = false;
+
+    // Part B: X = A + B, candidate Y = A'B'
+    const xB = a | b;
+    const yB = notA & notB;
+    if ((xB & yB) !== 0) demorganUniquenessPartB = false;
+    if ((xB | yB) !== 1) demorganUniquenessPartB = false;
+  }
+}
+assert(demorganUniquenessPartA, "Task 3 De Morgan Part A: (AB)(A'+B') = 0 and (AB)+(A'+B') = 1 holds for all inputs (Uniqueness Q.E.D.)");
+assert(demorganUniquenessPartB, "Task 3 De Morgan Part B: (A+B)(A'B') = 0 and (A+B)+(A'B') = 1 holds for all inputs (Uniqueness Q.E.D.)");
+
+// Consensus Theorem Step-by-Step Equivalence Check
+let consensusStepsAllMatch = true;
+for (let a = 0; a <= 1; a++) {
+  for (let b = 0; b <= 1; b++) {
+    for (let c = 0; c <= 1; c++) {
+      const notA = a === 0 ? 1 : 0;
+      const step0 = (a & b) | (notA & c) | (b & c);
+      const step2 = (a & b) | (notA & c) | ((b & c) & (a | notA));
+      const step3 = (a & b) | (notA & c) | (a & b & c) | (notA & b & c);
+      const step4 = ((a & b) & (1 | c)) | ((notA & c) & (1 | b));
+      const step5 = (a & b) | (notA & c);
+
+      if (step0 !== step2 || step0 !== step3 || step0 !== step4 || step0 !== step5) {
+        consensusStepsAllMatch = false;
+      }
+    }
+  }
+}
+assert(consensusStepsAllMatch, "Task 3 Consensus Theorem: All 5 algebraic proof transformation steps yield identical truth values across all 8 rows");
+
+// ----------------------------------------------------------------------------
+// 8. TASK 5 CURATED VIDEO REGISTRY AUDIT
+// ----------------------------------------------------------------------------
+console.log("\n--- Checking Task 5 Curated Video Lessons Registry ---");
+const videoConfigPath = path.resolve("src/data/dldVideoConfig.js");
+assert(fs.existsSync(videoConfigPath), "src/data/dldVideoConfig.js exists");
+const videoContent = fs.readFileSync(videoConfigPath, 'utf8');
+assert(videoContent.includes("WW-NPtIzHwk"), "Video registry contains verified Neso Academy Boolean Intro URL (WW-NPtIzHwk)");
+assert(videoContent.includes("RMe69AdlFdI"), "Video registry contains verified ALL ABOUT ELECTRONICS Boolean Laws URL (RMe69AdlFdI)");
+assert(videoContent.includes("W7YTfLaPWRY"), "Video registry contains verified ALL ABOUT ELECTRONICS De Morgan URL (W7YTfLaPWRY)");
+assert(videoContent.includes("3pbH9IhxwOg"), "Video registry contains verified Neso Academy Redundancy Theorem URL (3pbH9IhxwOg)");
+
+// ----------------------------------------------------------------------------
+// 9. ZERO EM-DASH AND ZERO EN-DASH AUDIT
 // ----------------------------------------------------------------------------
 console.log("\n--- Checking Zero Em-dash (\\u2014) and Zero En-dash (\\u2013) Compliance ---");
 const filesToCheck = [
   "src/data/dldSection21Data.js",
   "src/components/Section21View.jsx",
+  "src/data/dldVideoConfig.js",
+  "src/components/CuratedVideoCard.jsx",
+  "src/components/BooleanLawsCheatSheet.jsx",
   "src/data/dldUnit2Master.js"
 ];
 
