@@ -216,6 +216,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-027 | 2026-10-20 | Unit II Interactive Solvers Suite Architecture and Mathematical Engine Integration (Phase 1: Sections 2.1 to 2.5)
+
+- **Decision**: (1) Upgraded the core mathematical engine (`src/utils/booleanEngine.js`) to provide safe recursive-descent Boolean parsing (without `eval`), algebraic step-by-step trace with cited laws, explicit declared variable domain retention for truth tables, dual-expression equivalence checking with exact counterexample generation, missing-variable expansion for SOP/POS, canonical set complementation ($U \setminus S$), and subcube theorem K-Map group validation ($|S|=2^k$ and common bitmask dashes equal $k$) across toroidal wrapping, four-corner quads, and don't-cares; (2) Rebuilt `src/components/Unit2Solvers.jsx` with a 6-solver dashboard adhering to the ENTER -> UNDERSTAND -> SOLVE -> EXPLAIN -> VERIFY -> EXPERIMENT pedagogical workflow: Solver 1 (Boolean Simplifier with law-by-law trace and truth-table verification), Solver 2 (Truth Table Generator with domain retention and Equivalence Checker with counterexamples), Solver 3 (Minterm/Maxterm Explorer with bitwise polarity breakdown and live function builder), Solver 4 (SOP/POS Conversion Studio with 4 pathways including algebraic expansion and set complementation), Solver 5 (Interactive K-Map Solver with 2V/3V/4V standard Gray code maps, 4 input modes, SOP/POS modes, don't-care handling, Manual Grouping Studio with subcube validation, and Quine-McCluskey guided auto-solve), and Solver 6 (NAND/NOR Logic Synthesizer); (3) Preserved all Unit 1 interactive solvers and Section 2.1-2.5 lesson content; (4) Verified strictly 0 em-dashes and 0 en-dashes across all files.
+- **Rationale**: Replaces hardcoded demonstrations with genuinely interactive, mathematically sound engineering calculators that accept arbitrary student inputs, explain the underlying logic, and visually demonstrate reduction procedures without becoming dense textbooks.
+- **Affected Files**: `src/utils/booleanEngine.js`, `src/components/Unit2Solvers.jsx`, `scripts/verifyUnit2Solvers.mjs`, `scripts/testUnit2SolversSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/QUALITY_CHECKS.md`.
+- **Approval Evidence**: Dedicated automated verification suite `verifyUnit2Solvers.mjs` passes 90/90 checks (100%); Vite SSR smoke test `testUnit2SolversSSR.mjs` renders all 6 tabs cleanly; regression test suites across Unit 1 and Unit 2 pass 100%; `npm run build` succeeds in 5.68s with 0 errors. Strict zero-dash audit passed.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development`. Do not merge into main or proceed to Phase 2 without explicit approval.
+
+---
+
 ## Decision Record Template
 
 ```markdown

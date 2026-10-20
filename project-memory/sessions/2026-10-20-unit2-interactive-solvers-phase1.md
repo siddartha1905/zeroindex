@@ -1,0 +1,26 @@
+# ZeroIndex Session: 2026-10-20 - Unit II Interactive Solvers Suite (Phase 1)
+
+- **Starting Branch and Commit:** `dld-unit2-development` @ `6681347`
+- **Goal and Scope:** Implement Phase 1: Complete Unit II Interactive Solvers (Sections 2.1 to 2.5) with full development and integration inside the Digital Logic Design Interactive Solvers workspace. Deliver all 5 required solver experiences: 1. Boolean Algebra and Simplification Solver, 2. Truth Table Generator and Equivalence Checker, 3. Minterm and Maxterm Explorer, 4. SOP/POS Conversion Studio, 5. Interactive Karnaugh Map Solver (Manual Grouping + Quine-McCluskey Auto-Solve), plus retain the NAND/NOR logic synthesizer.
+- **Relevant Sources of Truth:** `AGENTS.md`, `project-memory/`, `src/utils/booleanEngine.js`, `src/components/Unit2Solvers.jsx`, `src/components/InteractiveSolvers.jsx`, `src/data/dldSection25Data.js`.
+- **Decisions Made and Approved:** Decision D-027. Mathematical subcube verification via bitmask dashes ($|S| = 2^k$ and dash count equals $k$), explicit declared variable domain retention for truth tables, step-by-step algebraic simplification trace with cited laws, missing variable algebraic expansion, canonical set complementation with universe $U$, dual mode equivalence checking with counterexample identification, and unified classroom visual styling.
+- **Changed Files:**
+  - `src/utils/booleanEngine.js` (Upgraded with AST parser, subcube grouping validator, expression comparator, SOP/POS term expansion, canonical set converters, POS edge cases).
+  - `src/components/Unit2Solvers.jsx` (Rebuilt 6-tab interactive solvers dashboard and full interactive workspaces).
+  - `scripts/verifyUnit2Solvers.mjs` (New comprehensive 90-test automated verification suite).
+  - `scripts/testUnit2SolversSSR.mjs` (New Vite SSR smoke test).
+  - `project-memory/CURRENT_STATE.md`, `CHANGELOG.md`, `DECISIONS.md`, `QUALITY_CHECKS.md`.
+- **Actual Progress (Done / Partial / Blocked):** Done. All 5 required solver experiences + 1 universal logic synthesizer are fully interactive, mathematically verified, responsive, and integrated into the Interactive Solvers workspace.
+- **Tests Executed and Exact Results:**
+  - `node scripts/verifyUnit2Solvers.mjs`: 90 / 90 tests passed (100%).
+  - `node scripts/testUnit2SolversSSR.mjs`: Passed (15,153 bytes generated, 0 exceptions).
+  - `node scripts/verifySection25Math.mjs`: 365 / 365 tests passed (100%).
+  - `node scripts/verifyUnit2Full.mjs`: 842 / 842 tests passed (100%).
+  - `node scripts/verifyInteractiveSolvers.mjs`: 34 / 34 tests passed (Unit 1 preserved).
+  - `node scripts/verifyUnit1Math.mjs`: 44 / 44 tests passed (100%).
+  - `npm run build`: Clean production build in 5.68s with 0 errors.
+  - Zero-dash check: 0 em-dashes and 0 en-dashes across all modified files.
+- **Identified Risks / Unverified Items:** None. All arbitrary user inputs are parsed safely via recursive-descent tokenization without dynamic evaluation or `eval`. All Unit 1 tools and Section 2.1-2.5 lesson contents remain intact.
+- **Next Action:** Report completion to the faculty lead for review and await Phase 2 instructions.
+- **Commit / Preview / Release Links (If Verified):** Committed to `dld-unit2-development` (pending final commit hash). Preview available locally on port 3004 at `#workspace/solvers`.
+- **Reusable Prompt or Lesson Learned:** Hypercube subcube verification using bitmask wildcard count is vastly cleaner, faster, and more robust than manual geometry lookups for cylindrical and toroidal wraparounds in K-Maps.

@@ -4,6 +4,51 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: Complete and Professionally Integrate Unit II Interactive Solvers Suite (Phase 1: Sections 2.1 to 2.5)
+
+- **Type**: feature / interactive-solvers / mathematics / dld-unit-2
+- **Summary**: Completed and integrated all five required Unit II interactive solvers (plus one universal logic synthesizer) inside the Digital Logic Design Interactive Solvers workspace on `dld-unit2-development`:
+  1. **Shared Mathematical Foundation (`src/utils/booleanEngine.js`)**:
+     - Upgraded expression tokenizer and recursive-descent AST parser supporting student notation (juxtaposition AND, explicit `*`/`&`, `+`/`|`, `'`/`~`/`!`, parentheses, constants 0 and 1) without dynamic code evaluation or `eval`.
+     - Added `validateKMapGroup(selectedCells, varCount, variables, cellStates, mode)`: Mathematical subcube hypercube verification ($2^k == |S|$ with $k$ wildcards across binary representations), Gray-code toroidal wrapping (horizontal, vertical, four-corner quad $B'D'$), invalid group rejection (non-power-of-two, diagonals, L-shapes, T-shapes, wrong-polarity cells), and Boolean term derivation.
+     - Added `compareExpressions(expr1, expr2, explicitVars)`: Evaluates dual expressions across all $2^n$ rows, provides exact counterexample rows if non-equivalent.
+     - Added `expandSOPTerm(term, allVars)` and `expandPOSTerm(term, allVars)`: Step-by-step missing variable algebraic expansion ($AB = AB(C+C') = ABC + ABC'$).
+     - Added `convertCanonicalSOPtoPOS` and `convertCanonicalPOStoSOP`: Universal set $U = \{0, \dots, 2^n-1\}$, subset $S$, and complement $U \setminus S$ calculation.
+     - Enhanced `traceAlgebraicSimplification(expression)`: Detailed classroom steps citing specific laws (Combining, Second Distributive, Redundancy, Consensus Theorem, Absorption, Identity, Complement) with truth table equivalence verification.
+     - Handled POS edge cases in `minimizeKMap` for constant $F=0$ and $F=1$.
+  2. **Solver 1: Boolean Algebra and Simplification Solver (Sections 2.1 & 2.2)**:
+     - Arbitrary student expression input with 6 curriculum presets.
+     - Minimal form summary banner with variable count and literal reduction metrics.
+     - Step-by-step numbered algebraic reduction trace citing specific laws.
+     - Optional toggleable full-row truth table equivalence verification showing input combinations, original output, and simplified output match.
+  3. **Solver 2: Truth Table Generator and Equivalence Checker (Sections 2.1 to 2.4)**:
+     - Single Mode: Generates responsive truth table preserving explicit declared variable domain (e.g., $F(A,B,C)=A$ preserves all 8 rows). Displays canonical SOP $\Sigma m$ and POS $\Pi M$ cards with Unicode symbols.
+     - Dual Mode (Equivalence Checker): Evaluates two student expressions side by side; identifies exact counterexample input rows if non-equivalent with evidence.
+  4. **Solver 3: Minterm and Maxterm Explorer (Section 2.3)**:
+     - 2V, 3V, and 4V interactive grid with bitwise polarity breakdown ($0 \to$ complemented in minterm, uncomplemented in maxterm; $1 \to$ uncomplemented in minterm, complemented in maxterm).
+     - Row selection inspector explaining minterm $m_i$ and maxterm $M_i$ formation.
+     - Dynamic function builder: Clicking table cells toggles $F=1/0$, auto-updating canonical $\Sigma m$ and $\Pi M$ expressions and algebraic representations.
+  5. **Solver 4: SOP/POS Conversion Studio (Section 2.4)**:
+     - 4 interactive conversion pathways: General SOP to Canonical SOP (missing variable expansion via $X + X'$), General POS to Canonical POS, Canonical Set Complementation ($U \setminus S$ set subtraction with universe explanation), and Dual SOP vs POS Hardware Comparison.
+  6. **Solver 5: Interactive Karnaugh Map Solver (Section 2.5 - Flagship)**:
+     - 2-variable ($2 \times 2$), 3-variable ($2 \times 4$), and 4-variable ($4 \times 4$) standard Gray-code maps ($00, 01, 11, 10$).
+     - 4 input methods: Canonical minterms ($\Sigma m$), Canonical maxterms ($\Pi M$), Boolean expression evaluation, and direct cell grid clicking ($0 \to 1 \to X \to 0$).
+     - Disjoint don't-care condition ($d$) support with validation against conflicting assignments.
+     - SOP mode (grouping 1s) and POS mode (grouping 0s) with proper literal polarity inversion.
+     - Manual Grouping Studio: Accessible cell selection, mathematical subcube validation, term derivation, complete cover checking, and group deletion.
+     - Guided Auto-Solve: Exact Quine-McCluskey minimization with prime implicants, essential prime implicants, and step-by-step term combination.
+  7. **Solver 6: NAND/NOR Universal Logic Synthesizer (Supplementary Tool)**:
+     - 2-level gate synthesis with De Morgan dual involution mathematical proof.
+  8. **Testing & Verification**:
+     - `scripts/verifyUnit2Solvers.mjs`: 90/90 tests passed (100% accuracy).
+     - `scripts/testUnit2SolversSSR.mjs`: Clean Vite SSR rendering across all 6 solver tabs.
+     - Regression suites for Unit 1 (`verifyUnit1Math.mjs`, `verifyInteractiveSolvers.mjs`), Section 2.5 (`verifySection25Math.mjs`, 365/365 passed), and `verifyUnit2Full.mjs` (842/842 passed) all pass 100%.
+     - Production build `npm run build` succeeds cleanly in 5.68s with 0 errors.
+     - Zero em-dashes and zero en-dashes confirmed across all modified source and test files.
+- **Affected Files**: `src/components/Unit2Solvers.jsx`, `src/utils/booleanEngine.js`, `scripts/verifyUnit2Solvers.mjs`, `scripts/testUnit2SolversSSR.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`, `project-memory/QUALITY_CHECKS.md`.
+
+---
+
 ## 2026-10-20: Fix Section 2.5 White Screen Rendering Crash and Add Defensive Guards
 
 - **Type**: bug-fix / dld-unit-2 / stability

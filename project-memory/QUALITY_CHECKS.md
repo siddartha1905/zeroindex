@@ -26,6 +26,21 @@ node scripts/verifyInteractiveSolvers.mjs
 node scripts/generateProjectSnapshot.mjs
 ```
 
+### Verified Test Run: DLD Unit 2 Interactive Solvers Suite - Phase 1 (2026-10-20)
+
+| Test Script / Build | Scope | Result | Details |
+|---|---|---|---|
+| `npm run build` | Vite 6 Production Bundle | **PASS** | 3,401 modules transformed in 5.68s; 0 errors; clean production bundle |
+| `verifyUnit2Solvers.mjs` | Unit 2 Interactive Solvers Engine & Mathematical Rules | **PASS** | 90/90 checks passed (Tokenizer, AST parser, truth tables, minterms/maxterms, canonical set conversions, SOP/POS expansion, subcube theorem K-Map validation, four-corner quads, wraparounds, Quine-McCluskey auto-solve, equivalence checker counterexamples, and zero-dash audit) |
+| `testUnit2SolversSSR.mjs` | Vite SSR Smoke Test | **PASS** | Clean server-side component rendering across all 6 solver tabs (15,153 bytes generated, zero runtime exceptions) |
+| `verifySection25Math.mjs` | Unit 2 Section 2.5 K-Maps Math Audit | **PASS** | 365/365 checks passed (100% accuracy, zero regressions) |
+| `verifyUnit2Full.mjs` | Unit 2 Comprehensive Audit (7 Groups) | **PASS** | 842/842 checks passed |
+| `verifyInteractiveSolvers.mjs` | 5 Unit 1 Interactive Solvers | **PASS** | 34/34 checks passed (100% accuracy, zero regressions) |
+| `verifyUnit1Math.mjs` | DLD Radix & Number Systems | **PASS** | 44/44 checks passed (100% accuracy, zero regressions) |
+| Dash Constraint Check | Em-dash & En-dash Scan | **PASS** | 0 em-dashes, 0 en-dashes across all modified and created files |
+
+---
+
 ### Verified Test Run: DLD Unit 2 Master Implementation (2026-10-19)
 
 | Test Script / Build | Scope | Result | Details |

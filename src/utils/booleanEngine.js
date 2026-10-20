@@ -305,13 +305,16 @@ export function getMintermTerm(index, variables) {
     .join('');
 }
 
+export const UNICODE_SIGMA = '\u03A3'; // Σ
+export const UNICODE_PI = '\u03A0';    // Π
+
 export function getMaxtermTerm(index, variables) {
   const n = variables.length;
   const bin = index.toString(2).padStart(n, '0');
   const sumParts = bin
     .split('')
     .map((bit, idx) => (bit === '0' ? variables[idx] : `${variables[idx]}'`));
-  return `(${sumParts.join('+')})`;
+  return `(${sumParts.join(' + ')})`;
 }
 
 export function formatCanonicalSOP(mintermIndices, variables) {
@@ -433,7 +436,7 @@ export function minimizeKMap(minterms, dontCares = [], variables = ['A', 'B', 'C
   if (targetMinterms.length === 0) {
     return {
       mode,
-      minimalExpression: mode === 'SOP' ? '0' : '0',
+      minimalExpression: mode === 'SOP' ? '0' : '1',
       primeImplicants: [],
       essentialPrimeImplicants: [],
       selectedGroups: [],
@@ -444,12 +447,12 @@ export function minimizeKMap(minterms, dontCares = [], variables = ['A', 'B', 'C
   if (targetMinterms.length + dontCares.length === totalCombinations) {
     return {
       mode,
-      minimalExpression: '1',
+      minimalExpression: mode === 'SOP' ? '1' : '0',
       primeImplicants: [],
       essentialPrimeImplicants: [],
       selectedGroups: [
         {
-          term: '1',
+          term: mode === 'SOP' ? '1' : '0',
           cells: Array.from({ length: totalCombinations }, (_, i) => i),
           isEssential: true,
           size: totalCombinations
@@ -600,9 +603,11 @@ export function minimizeKMap(minterms, dontCares = [], variables = ['A', 'B', 'C
     };
   });
 
-  const minimalExpression = mode === 'SOP'
-    ? formattedGroups.map(g => g.term).join(' + ')
-    : formattedGroups.map(g => `(${g.term})`).join(' · ');
+  const minimalExpression = formattedGroups.length === 0
+    ? (mode === 'SOP' ? '0' : '1')
+    : (mode === 'SOP'
+        ? formattedGroups.map(g => g.term).join(' + ')
+        : formattedGroups.map(g => g.term.startsWith('(') ? g.term : `(${g.term})`).join(' · '));
 
   return {
     mode,
@@ -707,11 +712,9 @@ export function areExpressionsEquivalent(expr1, expr2, customVars = null) {
 }
 
 /**
- * Algebraic Simplifier with transformation trace.
- * Detects common Boolean identities and logs step-by-step transformations.
+ * Detailed Classroom Step-by-Step Algebraic Simplifier
  */
 export function traceAlgebraicSimplification(expression) {
-  const steps = [];
   const initial = expression.trim();
 
   // Validate expression syntax first
@@ -730,6 +733,7 @@ export function traceAlgebraicSimplification(expression) {
   const tt = generateTruthTable(ast, vars);
   const kmapRes = minimizeKMap(tt.minterms, [], vars, 'SOP');
 
+  const steps = [];
   steps.push({
     stepNumber: 1,
     expression: initial,
@@ -737,42 +741,211 @@ export function traceAlgebraicSimplification(expression) {
     justification: 'Starting algebraic expression to simplify.'
   });
 
-  let currentExpr = initial;
+  const clean = initial.replace(/\s+/g, '');
 
-  // Pattern transformations
-  // Rule 1: A + A'B -> A + B (Redundancy Law)
+  // Case 1: Combining Law: AB + AB' -> A(B + B') -> A(1) -> A
+  const matchCombining = clean.match(/^([A-Za-z]+)([A-Za-z])\+([A-Za-z]+)\2'$/);
+  if (matchCombining && matchCombining[1] === matchCombining[3]) {
+    const common = matchCombining[1];
+    const varied = matchCombining[2];
+    steps.push({
+      stepNumber: 2,
+      expression: `${common}(${varied} + ${varied}')`,
+      law: 'Distributive Law (Factoring)',
+      justification: `Factor out common term ${common} from both product terms.`
+    });
+    steps.push({
+      stepNumber: 3,
+      expression: `${common}(1)`,
+      law: "Complement Law (x + x' = 1)",
+      justification: `The sum of variable ${varied} and its complement ${varied}' equals logic 1.`
+    });
+    steps.push({
+      stepNumber: 4,
+      expression: common,
+      law: 'Identity Law (x · 1 = x)',
+      justification: `ANDing ${common} with logic 1 leaves ${common} unchanged.`
+    });
+
+    return {
+      success: true,
+      original: initial,
+      simplified: common,
+      steps,
+      variables: vars,
+      minterms: tt.minterms,
+      maxterms: tt.maxterms,
+      isMinimal: true
+    };
+  }
+
+  // Case 2: Redundancy / Absorption 2: A + A'B -> (A + A')(A + B) -> (1)(A + B) -> A + B
+  const matchRedundancy = clean.match(/^([A-Za-z])\+\1'([A-Za-z])$/);
+  if (matchRedundancy) {
+    const x = matchRedundancy[1];
+    const y = matchRedundancy[2];
+    steps.push({
+      stepNumber: 2,
+      expression: `(${x} + ${x}')(${x} + ${y})`,
+      law: 'Second Distributive Law (x + yz = (x + y)(x + z))',
+      justification: `Distribute OR over AND with x = ${x}, y = ${x}', z = ${y}.`
+    });
+    steps.push({
+      stepNumber: 3,
+      expression: `(1)(${x} + ${y})`,
+      law: "Complement Law (x + x' = 1)",
+      justification: `The sum ${x} + ${x}' reduces identically to 1.`
+    });
+    steps.push({
+      stepNumber: 4,
+      expression: `${x} + ${y}`,
+      law: 'Identity Law (1 · x = x)',
+      justification: `ANDing the factor with logic 1 yields ${x} + ${y}.`
+    });
+
+    return {
+      success: true,
+      original: initial,
+      simplified: `${x} + ${y}`,
+      steps,
+      variables: vars,
+      minterms: tt.minterms,
+      maxterms: tt.maxterms,
+      isMinimal: true
+    };
+  }
+
+  // Case 3: Distributive Law 2: (A + B)(A + C) -> A + BC
+  const matchDist2 = clean.match(/^\(([A-Za-z])\+([A-Za-z])\)\(\1\+([A-Za-z])\)$/);
+  if (matchDist2) {
+    const x = matchDist2[1];
+    const y = matchDist2[2];
+    const z = matchDist2[3];
+    steps.push({
+      stepNumber: 2,
+      expression: `${x} + ${y}${z}`,
+      law: 'Second Distributive Law ((x + y)(x + z) = x + yz)',
+      justification: `Common term ${x} factored across OR sums produces ${x} + ${y}${z}.`
+    });
+
+    return {
+      success: true,
+      original: initial,
+      simplified: `${x} + ${y}${z}`,
+      steps,
+      variables: vars,
+      minterms: tt.minterms,
+      maxterms: tt.maxterms,
+      isMinimal: true
+    };
+  }
+
+  // Case 4: Consensus Theorem: AB + A'C + BC -> AB + A'C
+  const matchConsensus = clean.match(/^([A-Za-z])([A-Za-z])\+\1'([A-Za-z])\+\2\3$/);
+  if (matchConsensus) {
+    const a = matchConsensus[1];
+    const b = matchConsensus[2];
+    const c = matchConsensus[3];
+    steps.push({
+      stepNumber: 2,
+      expression: `${a}${b} + ${a}'${c} + ${b}${c}(${a} + ${a}')`,
+      law: "Identity Law (Expansion by 1 = x + x')",
+      justification: `Multiply redundant consensus term ${b}${c} by (${a} + ${a}').`
+    });
+    steps.push({
+      stepNumber: 3,
+      expression: `${a}${b} + ${a}'${c} + ${a}${b}${c} + ${a}'${b}${c}`,
+      law: 'Distributive Law (Multiplication)',
+      justification: 'Distribute product across parenthesized terms.'
+    });
+    steps.push({
+      stepNumber: 4,
+      expression: `${a}${b}(1 + ${c}) + ${a}'${c}(1 + ${b})`,
+      law: 'Distributive Law (Factoring)',
+      justification: `Group common terms ${a}${b} and ${a}'${c}.`
+    });
+    steps.push({
+      stepNumber: 5,
+      expression: `${a}${b}(1) + ${a}'${c}(1)`,
+      law: 'Null Law (1 + x = 1)',
+      justification: `1 + ${c} = 1 and 1 + ${b} = 1 by Null Law.`
+    });
+    steps.push({
+      stepNumber: 6,
+      expression: `${a}${b} + ${a}'${c}`,
+      law: 'Consensus Theorem Final Form',
+      justification: `Redundant third term ${b}${c} is completely absorbed.`
+    });
+
+    return {
+      success: true,
+      original: initial,
+      simplified: `${a}${b} + ${a}'${c}`,
+      steps,
+      variables: vars,
+      minterms: tt.minterms,
+      maxterms: tt.maxterms,
+      isMinimal: true
+    };
+  }
+
+  // Case 5: Absorption Law: A + AB -> A
+  const matchAbsorption = clean.match(/^([A-Za-z])\+\1([A-Za-z])$/);
+  if (matchAbsorption) {
+    const x = matchAbsorption[1];
+    const y = matchAbsorption[2];
+    steps.push({
+      stepNumber: 2,
+      expression: `${x}(1 + ${y})`,
+      law: 'Distributive Law (Factoring)',
+      justification: `Factor out common term ${x} to obtain ${x}(1 + ${y}).`
+    });
+    steps.push({
+      stepNumber: 3,
+      expression: `${x}(1)`,
+      law: 'Null Law (1 + x = 1)',
+      justification: `1 + ${y} equals logic 1 by the Null Law.`
+    });
+    steps.push({
+      stepNumber: 4,
+      expression: x,
+      law: 'Identity Law (x · 1 = x)',
+      justification: `ANDing ${x} with logic 1 leaves ${x} unchanged.`
+    });
+
+    return {
+      success: true,
+      original: initial,
+      simplified: x,
+      steps,
+      variables: vars,
+      minterms: tt.minterms,
+      maxterms: tt.maxterms,
+      isMinimal: true
+    };
+  }
+
+  // General reduction using pattern transforms + QM
+  let currentExpr = initial;
   const redundancyRegex = /([A-Za-z])\s*\+\s*\1'\s*([A-Za-z])/g;
   if (redundancyRegex.test(currentExpr)) {
     currentExpr = currentExpr.replace(redundancyRegex, '$1 + $2');
     steps.push({
       stepNumber: steps.length + 1,
       expression: currentExpr,
-      law: 'Redundancy Law (A + A\'B = A + B)',
-      justification: 'The complemented variable in the second term is eliminated by the first variable.'
+      law: "Redundancy Law (A + A'B = A + B)",
+      justification: 'The complemented variable in the second product is eliminated by the first variable.'
     });
   }
 
-  // Rule 2: AB + AB' -> A (Combining / Adjacency Law)
   const combiningRegex = /([A-Za-z]+)([A-Za-z])\s*\+\s*\1\2'/g;
   if (combiningRegex.test(currentExpr)) {
     currentExpr = currentExpr.replace(combiningRegex, '$1');
     steps.push({
       stepNumber: steps.length + 1,
       expression: currentExpr,
-      law: 'Combining Law (xy + xy\' = x)',
-      justification: 'Factoring out common terms yields x(y + y\') = x(1) = x.'
-    });
-  }
-
-  // Rule 3: A + AB -> A (Absorption Law)
-  const absorptionRegex = /([A-Za-z])\s*\+\s*\1([A-Za-z])/g;
-  if (absorptionRegex.test(currentExpr)) {
-    currentExpr = currentExpr.replace(absorptionRegex, '$1');
-    steps.push({
-      stepNumber: steps.length + 1,
-      expression: currentExpr,
-      law: 'Absorption Law (x + xy = x)',
-      justification: 'x + xy = x(1 + y) = x(1) = x by Identity and Null laws.'
+      law: "Combining Law (xy + xy' = x)",
+      justification: "Factoring out common terms yields x(y + y') = x(1) = x."
     });
   }
 
@@ -781,8 +954,18 @@ export function traceAlgebraicSimplification(expression) {
     steps.push({
       stepNumber: steps.length + 1,
       expression: kmapRes.minimalExpression,
-      law: 'Minimal Sum of Products',
-      justification: 'Exhaustive algebraic reduction reaches the canonical irreducible prime implicant cover.'
+      law: 'Minimal Sum of Products (Quine-McCluskey Reduction)',
+      justification: 'Systematic prime implicant optimization derives the minimal irreducible cover.'
+    });
+    currentExpr = kmapRes.minimalExpression;
+  }
+
+  if (steps.length === 1) {
+    steps.push({
+      stepNumber: 2,
+      expression: kmapRes.minimalExpression,
+      law: 'Irreducible Minimal Form',
+      justification: 'Expression is already in irreducible minimal form.'
     });
     currentExpr = kmapRes.minimalExpression;
   }
@@ -796,6 +979,342 @@ export function traceAlgebraicSimplification(expression) {
     minterms: tt.minterms,
     maxterms: tt.maxterms,
     isMinimal: true
+  };
+}
+
+/**
+ * Validate proposed K-Map group of cells.
+ */
+export function validateKMapGroup(selectedCells, varCount, variables, cellStates = {}, mode = 'SOP') {
+  if (!Array.isArray(selectedCells) || selectedCells.length === 0) {
+    return { isValid: false, reason: 'No cells selected.' };
+  }
+
+  const totalCells = Math.pow(2, varCount);
+  const uniqueCells = Array.from(new Set(selectedCells)).sort((a, b) => a - b);
+  const size = uniqueCells.length;
+
+  // Check bounds
+  for (const c of uniqueCells) {
+    if (c < 0 || c >= totalCells) {
+      return { isValid: false, reason: `Cell index ${c} is out of bounds (0 to ${totalCells - 1}).` };
+    }
+  }
+
+  // Check power of two size
+  const isPowerOfTwo = size > 0 && (size & (size - 1)) === 0 && size <= totalCells;
+  if (!isPowerOfTwo) {
+    return {
+      isValid: false,
+      reason: `Group size (${size}) must be a power of 2 (1, 2, 4, 8, or 16 cells).`
+    };
+  }
+
+  // Check cell values against mode
+  let targetCount = 0;
+  let dontCareCount = 0;
+  for (const c of uniqueCells) {
+    const val = cellStates[c] !== undefined ? cellStates[c] : 0;
+    if (mode === 'SOP') {
+      if (val === 0) {
+        return {
+          isValid: false,
+          reason: `Group contains cell m${c} with value 0. In SOP mode, groups can only include 1s and Xs.`
+        };
+      }
+      if (val === 1) targetCount++;
+      if (val === 'X') dontCareCount++;
+    } else {
+      if (val === 1) {
+        return {
+          isValid: false,
+          reason: `Group contains cell m${c} with value 1. In POS mode, groups can only include 0s and Xs.`
+        };
+      }
+      if (val === 0) targetCount++;
+      if (val === 'X') dontCareCount++;
+    }
+  }
+
+  if (targetCount === 0 && dontCareCount > 0) {
+    return {
+      isValid: false,
+      reason: "Group contains exclusively don't-care cells (X). Groups must contain at least one required target cell."
+    };
+  }
+
+  // Subcube geometry validation
+  const binaryStrings = uniqueCells.map(c => c.toString(2).padStart(varCount, '0'));
+  let mask = '';
+  let dashCount = 0;
+  const constantVars = [];
+  const eliminatedVars = [];
+
+  for (let bitIdx = 0; bitIdx < varCount; bitIdx++) {
+    const firstBit = binaryStrings[0][bitIdx];
+    let allSame = true;
+    for (let i = 1; i < binaryStrings.length; i++) {
+      if (binaryStrings[i][bitIdx] !== firstBit) {
+        allSame = false;
+        break;
+      }
+    }
+    const varName = variables[bitIdx] || String.fromCharCode(65 + bitIdx);
+    if (allSame) {
+      mask += firstBit;
+      constantVars.push({
+        variable: varName,
+        value: parseInt(firstBit, 10),
+        literal: mode === 'SOP'
+          ? (firstBit === '1' ? varName : `${varName}'`)
+          : (firstBit === '0' ? varName : `${varName}'`)
+      });
+    } else {
+      mask += '-';
+      dashCount++;
+      eliminatedVars.push(varName);
+    }
+  }
+
+  // Subcube property: 2^dashCount MUST equal size
+  if (Math.pow(2, dashCount) !== size) {
+    return {
+      isValid: false,
+      reason: `Selected ${size} cells do not form an adjacent rectangular subcube in Gray code.`
+    };
+  }
+
+  // Build resulting Boolean term
+  let term = '';
+  if (constantVars.length === 0) {
+    term = mode === 'SOP' ? '1' : '0';
+  } else {
+    term = mode === 'SOP'
+      ? constantVars.map(cv => cv.literal).join('')
+      : `(${constantVars.map(cv => cv.literal).join(' + ')})`;
+  }
+
+  return {
+    isValid: true,
+    size,
+    cells: uniqueCells,
+    mask,
+    term,
+    constantVars,
+    eliminatedVars,
+    reason: null
+  };
+}
+
+/**
+ * Compare two Boolean expressions over all 2^n combinations.
+ */
+export function compareExpressions(expr1, expr2, explicitVars = null) {
+  let ast1, ast2;
+  try {
+    ast1 = parseBooleanExpression(expr1);
+  } catch (err) {
+    return { success: false, error: `Expression 1 syntax error: ${err.message}` };
+  }
+  try {
+    ast2 = parseBooleanExpression(expr2);
+  } catch (err) {
+    return { success: false, error: `Expression 2 syntax error: ${err.message}` };
+  }
+
+  let vars = explicitVars;
+  if (!vars || vars.length === 0) {
+    const v1 = extractVariables(ast1);
+    const v2 = extractVariables(ast2);
+    vars = Array.from(new Set([...v1, ...v2])).sort();
+    if (vars.length === 0) vars = ['A'];
+  }
+
+  const n = vars.length;
+  const totalRows = Math.pow(2, n);
+  const rows = [];
+  const differingRows = [];
+
+  for (let i = 0; i < totalRows; i++) {
+    const assignment = {};
+    for (let vIdx = 0; vIdx < n; vIdx++) {
+      const bitWeight = Math.pow(2, n - 1 - vIdx);
+      assignment[vars[vIdx]] = (i & bitWeight) ? 1 : 0;
+    }
+    const val1 = evaluateAst(ast1, assignment);
+    const val2 = evaluateAst(ast2, assignment);
+    const match = val1 === val2;
+
+    const rowObj = {
+      index: i,
+      assignment,
+      val1,
+      val2,
+      match
+    };
+    rows.push(rowObj);
+    if (!match) {
+      differingRows.push(rowObj);
+    }
+  }
+
+  return {
+    success: true,
+    isEquivalent: differingRows.length === 0,
+    variables: vars,
+    totalRows,
+    matchingRowsCount: totalRows - differingRows.length,
+    differingRows,
+    counterExample: differingRows.length > 0 ? differingRows[0] : null,
+    rows
+  };
+}
+
+/**
+ * Expand SOP product term by multiplying missing variables by (V + V').
+ */
+export function expandSOPTerm(term, allVars) {
+  const literals = [];
+  let i = 0;
+  while (i < term.length) {
+    const ch = term[i];
+    if (/[A-Za-z]/.test(ch)) {
+      const varName = ch.toUpperCase();
+      let isComp = false;
+      if (i + 1 < term.length && (term[i + 1] === "'" || term[i + 1] === '’')) {
+        isComp = true;
+        i += 2;
+      } else {
+        i++;
+      }
+      literals.push({ variable: varName, isComplement: isComp, str: isComp ? `${varName}'` : varName });
+    } else {
+      i++;
+    }
+  }
+
+  const presentVars = new Set(literals.map(l => l.variable));
+  const missing = allVars.filter(v => !presentVars.has(v));
+
+  let currentTerms = [literals.map(l => l.str).join('')];
+  const steps = [];
+
+  for (const mVar of missing) {
+    const nextTerms = [];
+    const expansionDetails = [];
+    for (const cur of currentTerms) {
+      const t1 = cur + mVar;
+      const t2 = cur + `${mVar}'`;
+      nextTerms.push(t1, t2);
+      expansionDetails.push(`${cur}(${mVar} + ${mVar}') = ${t1} + ${t2}`);
+    }
+    steps.push({
+      missingVar: mVar,
+      detail: expansionDetails.join(' ; '),
+      resultingTerms: [...nextTerms]
+    });
+    currentTerms = nextTerms;
+  }
+
+  return {
+    originalTerm: term,
+    missingVars: missing,
+    steps,
+    finalMinterms: currentTerms
+  };
+}
+
+/**
+ * Expand POS sum term by adding missing variables as (V · V') and factoring.
+ */
+export function expandPOSTerm(term, allVars) {
+  const clean = term.replace(/[()]/g, '');
+  const parts = clean.split('+').map(p => p.trim()).filter(Boolean);
+  const literals = [];
+  for (const p of parts) {
+    const ch = p[0];
+    if (/[A-Za-z]/.test(ch)) {
+      const varName = ch.toUpperCase();
+      const isComp = p.includes("'") || p.includes('’');
+      literals.push({ variable: varName, isComplement: isComp, str: isComp ? `${varName}'` : varName });
+    }
+  }
+
+  const presentVars = new Set(literals.map(l => l.variable));
+  const missing = allVars.filter(v => !presentVars.has(v));
+
+  let currentTerms = [`(${literals.map(l => l.str).join(' + ')})`];
+  const steps = [];
+
+  for (const mVar of missing) {
+    const nextTerms = [];
+    const expansionDetails = [];
+    for (const cur of currentTerms) {
+      const baseInner = cur.replace(/[()]/g, '');
+      const t1 = `(${baseInner} + ${mVar})`;
+      const t2 = `(${baseInner} + ${mVar}')`;
+      nextTerms.push(t1, t2);
+      expansionDetails.push(`${cur} + ${mVar}${mVar}' = ${t1}${t2}`);
+    }
+    steps.push({
+      missingVar: mVar,
+      detail: expansionDetails.join(' ; '),
+      resultingTerms: [...nextTerms]
+    });
+    currentTerms = nextTerms;
+  }
+
+  return {
+    originalTerm: term,
+    missingVars: missing,
+    steps,
+    finalMaxterms: currentTerms
+  };
+}
+
+/**
+ * Canonical SOP to Canonical POS conversion.
+ */
+export function convertCanonicalSOPtoPOS(minterms, varCount, variables) {
+  const totalCells = Math.pow(2, varCount);
+  const mintermSet = new Set(minterms);
+  const maxterms = [];
+  for (let i = 0; i < totalCells; i++) {
+    if (!mintermSet.has(i)) {
+      maxterms.push(i);
+    }
+  }
+  return {
+    minterms: [...mintermSet].sort((a, b) => a - b),
+    maxterms,
+    canonicalSOP: formatCanonicalSOP(minterms, variables),
+    canonicalPOS: formatCanonicalPOS(maxterms, variables),
+    complementSOP: formatCanonicalSOP(maxterms, variables),
+    complementPOS: formatCanonicalPOS(minterms, variables),
+    universalSet: Array.from({ length: totalCells }, (_, i) => i)
+  };
+}
+
+/**
+ * Canonical POS to Canonical SOP conversion.
+ */
+export function convertCanonicalPOStoSOP(maxterms, varCount, variables) {
+  const totalCells = Math.pow(2, varCount);
+  const maxtermSet = new Set(maxterms);
+  const minterms = [];
+  for (let i = 0; i < totalCells; i++) {
+    if (!maxtermSet.has(i)) {
+      minterms.push(i);
+    }
+  }
+  return {
+    maxterms: [...maxtermSet].sort((a, b) => a - b),
+    minterms,
+    canonicalSOP: formatCanonicalSOP(minterms, variables),
+    canonicalPOS: formatCanonicalPOS(maxterms, variables),
+    complementSOP: formatCanonicalSOP(minterms, variables),
+    complementPOS: formatCanonicalPOS(maxterms, variables),
+    universalSet: Array.from({ length: totalCells }, (_, i) => i)
   };
 }
 
