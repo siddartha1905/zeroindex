@@ -42,6 +42,15 @@ function getMinterms2(fn) {
   return m;
 }
 
+function getMaxterms2(fn) {
+  const M = [];
+  for (let i = 0; i < 4; i++) {
+    const A = (i >> 1) & 1, B = i & 1;
+    if (fn(A, B) === 0) M.push(i);
+  }
+  return M;
+}
+
 function getMinterms3(fn) {
   const m = [];
   for (let i = 0; i < 8; i++) {
@@ -159,19 +168,33 @@ assert(arraysEqual(gd5_M, [0, 2, 4]), 'GD5 POS target (A+C)(B+C) evaluates to M(
 // GD6: F(A, B, C, D) = Sigma m(1, 3, 7, 11, 15) + d(0, 2, 5) -> CD + A'B'
 const gd6_eval = (A, B, C, D) => or(and(C, D), and(not(A), not(B)));
 const gd6_m = getMinterms4(gd6_eval);
-// Must cover all required minterms: 1, 3, 7, 11, 15
 const gd6_required = [1, 3, 7, 11, 15];
 assert(gd6_required.every(m => gd6_m.includes(m)), 'GD6 solution CD + A\'B\' covers all required minterms {1, 3, 7, 11, 15}');
-// Any additional minterms in gd6_m must belong to don't-cares {0, 2, 5}
 const gd6_dontCares = [0, 2, 5];
 const gd6_extras = gd6_m.filter(m => !gd6_required.includes(m));
 assert(gd6_extras.every(m => gd6_dontCares.includes(m)), 'GD6 solution extra 1s belong exclusively to don\'t-cares {0, 2, 5}');
 
 // -----------------------------------------------------------------------------
-// 3. WORKED MODELS EXHAUSTIVE TRUTH TABLE AUDIT (26 MODELS)
+// 3. WORKED MODELS AUDIT (34 MODELS - TASK 8)
 // -----------------------------------------------------------------------------
-console.log('\n--- 3. Checking All 26 Worked Models Truth Tables ---');
-assert(dldSection25Data.workedModels.length === 26, `Exactly 26 worked models present (found ${dldSection25Data.workedModels.length})`);
+console.log('\n--- 3. Checking All 34 Worked Models Truth Tables & Forms ---');
+assert(dldSection25Data.workedModels.length === 34, `Exactly 34 worked models present (found ${dldSection25Data.workedModels.length})`);
+
+const posModels = dldSection25Data.workedModels.filter(m => m.form === 'POS');
+assert(posModels.length >= 8, `At least 8 POS worked models present (found ${posModels.length})`);
+
+// Verify sample POS models mathematically
+// Model 24: F(A, B) = Pi M(0, 1) -> A
+const m24_eval = (A, B) => A;
+assert(arraysEqual(getMaxterms2(m24_eval), [0, 1]), 'Model 24 (POS): F = A evaluates to M(0, 1)');
+
+// Model 26: F(A, B, C) = Pi M(0, 2, 4) -> (A + C)(B + C)
+const m26_eval = (A, B, C) => and(or(A, C), or(B, C));
+assert(arraysEqual(getMaxterms3(m26_eval), [0, 2, 4]), 'Model 26 (POS): F = (A+C)(B+C) evaluates to M(0, 2, 4)');
+
+// Model 28: F(A, B, C, D) = Pi M(0, 2, 8, 10) -> (B + D)
+const m28_eval = (A, B, C, D) => or(B, D);
+assert(arraysEqual(getMaxterms4(m28_eval), [0, 2, 8, 10]), 'Model 28 (POS 4-Corner Wrap): F = B + D evaluates to M(0, 2, 8, 10)');
 
 for (const model of dldSection25Data.workedModels) {
   assert(model.id && model.title && model.problemStatement, `Model ${model.id} has id, title, and problem statement`);
@@ -186,12 +209,19 @@ for (const model of dldSection25Data.workedModels) {
 }
 
 // -----------------------------------------------------------------------------
-// 4. PRACTICE LAB AUDIT (28 PROBLEMS)
+// 4. PRACTICE LAB AUDIT (HANDS-ON PRESETS & 36 PROBLEMS - TASK 10)
 // -----------------------------------------------------------------------------
-console.log('\n--- 4. Checking All 28 Practice Problems ---');
-assert(dldSection25Data.practiceLab.length === 28, `Exactly 28 practice problems present (found ${dldSection25Data.practiceLab.length})`);
+console.log('\n--- 4. Checking Practice Lab Workspace & 36 Problems ---');
+assert(Array.isArray(dldSection25Data.practiceLab.interactivePresets), 'Practice lab has interactive presets');
+assert(dldSection25Data.practiceLab.interactivePresets.length === 3, 'Exactly 3 interactive practice presets');
 
-for (const problem of dldSection25Data.practiceLab) {
+assert(Array.isArray(dldSection25Data.practiceLab.problems), 'Practice lab has problems array');
+assert(dldSection25Data.practiceLab.problems.length === 36, `Exactly 36 practice problems present (found ${dldSection25Data.practiceLab.problems.length})`);
+
+const posPractice = dldSection25Data.practiceLab.problems.filter(p => p.form === 'POS');
+assert(posPractice.length >= 8, `At least 8 POS practice problems present (found ${posPractice.length})`);
+
+for (const problem of dldSection25Data.practiceLab.problems) {
   assert(problem.id && problem.problemStatement && problem.finalAnswer, `Problem ${problem.id} has statement and final answer`);
   assert(problem.hint, `Problem ${problem.id} has pedagogical hint`);
   assert(problem.steps && problem.steps.length >= 1, `Problem ${problem.id} has derivation steps`);
@@ -210,7 +240,7 @@ const viewContent = fs.readFileSync(viewFilePath, 'utf8');
 const sigmaCountData = (dataContent.match(/\u03A3/g) || []).length;
 const piCountData = (dataContent.match(/\u03A0/g) || []).length;
 assert(sigmaCountData >= 40, `dldSection25Data.js renders actual Σ glyph (found ${sigmaCountData} occurrences)`);
-assert(piCountData >= 10, `dldSection25Data.js renders actual Π glyph (found ${piCountData} occurrences)`);
+assert(piCountData >= 15, `dldSection25Data.js renders actual Π glyph (found ${piCountData} occurrences)`);
 
 const wordSigmaData = (dataContent.match(/Sigma\s*m\(/g) || []).length;
 const wordPiData = (dataContent.match(/Pi\s*M\(/g) || []).length;

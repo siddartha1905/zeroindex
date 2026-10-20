@@ -4,6 +4,43 @@ Record significant completed work in this document. Future intentions belong in 
 
 ---
 
+## 2026-10-20: DLD Unit 2 Section 2.5 Final Visual, Academic, and Practice Refinement (7 Tabs, Real Topologies, POS Coverage, Master Cheat Sheet, Interactive Workspace)
+
+- **Type**: academic / visual-refinement / interactive-lab / dld-unit-2
+- **Summary**: Implemented targeted visual, academic, navigation, and interactive practice refinements for Section 2.5 on `dld-unit2-development`:
+  1. **7-Tab Architecture & Non-Scrolling Navigation**:
+     - Separated Cheat Sheet and Practice Lab into dedicated tabs: 1. Start Here, 2. Gray Code & Topology, 3. Grouping Rules & Terms, 4. Guided Demonstrations, 5. Solved Models (34), 6. Master Cheat Sheet, 7. Practice Lab (36).
+     - Built a wrapped responsive navigation bar displaying all 7 tabs cleanly on desktop and mobile without horizontal scrollbars.
+  2. **Relocated Video Lesson (Task 1)**:
+     - Moved the curated lecture to the very bottom of Tab 1 under "Optional Video Lesson: Need Another Explanation?", making it secondary to ZeroIndex original pedagogy.
+  3. **Visual Group-Size Ladder (Task 2)**:
+     - Enhanced the 5 power-of-two cards with real miniature visual K-Map diagrams, variable elimination progression ($2^k \to k$ eliminated), remaining literal counts, and full-map boundary conditions ($F=1$ for all-ones SOP, $F=0$ for all-zeros POS).
+  4. **Real Visual K-Maps for Topology Gallery (Task 4)**:
+     - Redesigned the gallery around small, correctly indexed K-Maps for all 9 valid topologies (Singleton, Pair, Quad 2x2, Quad 1x4, Octet, Full Map, Corner Wraparound Quad $B'D'$, Edge Wrap, Overlap) and 6 invalid topologies (Diagonal, L-shaped, 3-cell, 5-cell, 9-cell, Nonrectangular/T-shaped) with distinct red/copper rejection badges and specific mathematical reasons.
+  5. **Refined 8 Grouping Axioms (Task 5)**:
+     - Removed unsupported exam error percentage claims, clarified group set coverage vs individual group rules, explained largest group heuristics, and defined redundancy.
+  6. **Fully Illustrated SOP and POS Term Derivations (Task 6)**:
+     - Added side-by-side illustrated K-Maps and variable analysis tables detailing constant vs changing variables and resulting terms ($BD$ for SOP, $(C)$ for POS).
+  7. **Accessible 6-Card Guided Demonstration Selector (Task 7)**:
+     - Replaced the horizontal scrolling strip with a 6-card responsive grid displaying GD number, variable count, and main technique.
+  8. **Strengthened POS Coverage in Solved Models (Task 8)**:
+     - Added a prominent SOP vs POS introduction banner before worked models.
+     - Implemented dual filtering by Category and Form (`All Forms`, `SOP (Σ m)`, `POS (Π M)`).
+     - Expanded worked models to 34 models (including 9 POS models across 2V, 3V, 4V, and POS Don't-Care).
+  9. **Dedicated Master Cheat Sheet (Task 9)**:
+     - Created Tab 6 with 2x2, 2x4, and 4x4 Gray code map references, visual ladder, dual SOP (green) and POS (purple) comparative panels, wraparound references, don't-care rules, 8-point exam checklist, common mistakes checklist, and print button.
+  10. **Interactive Practice Workspace & 36 Practice Problems (Task 10)**:
+      - Built "Try It Yourself: Build and Solve a K-Map" workspace: 3 presets (3-var SOP, 4-var corner wrap, 3-var POS), interactive cell selection, mathematical subcube validation, real-time term extraction, and cover completeness checking.
+      - Expanded progressive practice problems to 36 problems across Basic (8), Intermediate (10), Advanced (12), and Challenge (6) with difficulty and form filters, hints, and complete blackboard derivations.
+  11. **Testing & Verification**:
+      - `scripts/verifySection25Math.mjs` passed 365/365 checks with 0 failures.
+      - `scripts/testSection25RenderProps.mjs` passed 36/36 checks.
+      - `scripts/verifyUnit2Full.mjs` passed 842/842 checks; `scripts/verifyUnit1Math.mjs` passed 44/44 checks.
+      - Production build `npm run build` succeeds in 3.78s with 0 errors.
+      - Zero em-dashes and zero en-dashes verified across all created and modified source files.
+
+---
+
 ## 2026-10-20: DLD Unit 2 Section 2.5 Complete Academic Rebuild (K-Maps: 6-Tab Architecture, Gray Code Topologies, Corner Quads, POS & Don't-Care Minimization)
 
 - **Type**: academic / curriculum / ui-rebuild / dld-unit-2
