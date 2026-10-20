@@ -1,30 +1,23 @@
 import React, { useState } from 'react';
 import { 
   BookOpen, 
-  HelpCircle, 
   ChevronDown, 
   ChevronUp, 
   CheckCircle2, 
   Zap, 
   Layers, 
   AlertTriangle, 
-  ArrowRight,
   ShieldCheck, 
   Cpu, 
   Clock, 
   Sparkles, 
-  Calculator, 
   FileText, 
   Compass, 
-  Eye, 
   Check, 
-  Search, 
   Filter, 
   RotateCcw, 
   Info, 
-  ExternalLink,
-  X,
-  ArrowUpRight
+  X
 } from 'lucide-react';
 import { dldSection22Data } from '../data/dldSection22Data';
 import { CuratedVideoCard } from './CuratedVideoCard';
@@ -44,7 +37,6 @@ export const Section22View = ({ section }) => {
   const [revealedHints, setRevealedHints] = useState({});
   const [revealedPracticeSolutions, setRevealedPracticeSolutions] = useState({});
   const [showMasterCheatModal, setShowMasterCheatModal] = useState(false);
-  const [activeTechniqueIndex, setActiveTechniqueIndex] = useState(0);
   const [checkedChecklist, setCheckedChecklist] = useState({});
 
   const data = dldSection22Data;
@@ -71,19 +63,19 @@ export const Section22View = ({ section }) => {
     }));
   };
 
-  const toggleChecklistItem = (id) => {
+  const toggleChecklistItem = (index) => {
     setCheckedChecklist(prev => ({
       ...prev,
-      [id]: !prev[id]
+      [index]: !prev[index]
     }));
   };
 
-  // Filter worked models
+  // Filter worked models using level
   const filteredModels = modelFilter === 'All'
     ? data.workedModels
-    : data.workedModels.filter(m => m.difficulty === modelFilter);
+    : data.workedModels.filter(m => m.level === modelFilter);
 
-  // Filter practice problems
+  // Filter practice problems using difficulty
   const filteredPractice = practiceFilter === 'All'
     ? data.practiceLab
     : data.practiceLab.filter(p => p.difficulty === practiceFilter);
@@ -122,7 +114,8 @@ export const Section22View = ({ section }) => {
           <div className="flex items-center gap-2">
             <Info className="w-4 h-4 text-[#285C49] flex-shrink-0" />
             <span>
-              <strong className="text-[#293B32]">Prerequisite Context:</strong> Section 2.1 established the mathematical axioms and laws. Section 2.2 focuses on pattern recognition, law selection, and verified algebraic reductions.
+              <strong className="text-[#293B32]">Prerequisite Context: </strong>
+              {data.startHere.whySimplify.section21Ref}
             </span>
           </div>
           <button
@@ -175,16 +168,16 @@ export const Section22View = ({ section }) => {
             <div className="flex items-center gap-2 pb-2 border-b border-[#DCE7E1]">
               <Sparkles className="w-5 h-5 text-[#285C49]" />
               <h2 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
-                {data.startHere.teachingMessage.headline}
+                {data.startHere.whySimplify.headline}
               </h2>
             </div>
 
             <div className="p-4 sm:p-5 rounded-xl bg-[#F4F7F4] border-l-4 border-[#285C49] space-y-2">
               <p className="font-editorial text-base sm:text-lg text-[#293B32] leading-relaxed italic">
-                "{data.startHere.teachingMessage.quote}"
+                "{data.startHere.whySimplify.quote}"
               </p>
               <span className="text-xs font-mono font-bold text-[#285C49] block">
-                {data.startHere.teachingMessage.source}
+                ZeroIndex Academic Rationale: VR23 Digital Logic Design
               </span>
             </div>
 
@@ -194,11 +187,11 @@ export const Section22View = ({ section }) => {
                 Tangible Engineering and Hardware Benefits
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                {data.startHere.physicalBenefits.map((item, idx) => {
+                {data.startHere.whySimplify.benefits.map((item, idx) => {
                   const icons = [Layers, Cpu, Zap, Clock];
                   const IconComp = icons[idx] || Layers;
                   return (
-                    <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
+                    <div key={item.id} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
                       <div className="w-8 h-8 rounded-lg bg-[#EBF3ED] text-[#285C49] flex items-center justify-center">
                         <IconComp className="w-4 h-4" />
                       </div>
@@ -206,7 +199,7 @@ export const Section22View = ({ section }) => {
                         {item.title}
                       </h4>
                       <p className="text-xs text-[#5F6C64] leading-relaxed">
-                        {item.description}
+                        {item.desc}
                       </p>
                     </div>
                   );
@@ -219,7 +212,7 @@ export const Section22View = ({ section }) => {
               <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#285C49]" />
               <p className="leading-relaxed">
                 <span className="font-bold">Physical Circuit Caveat: </span>
-                {data.startHere.physicalCaveat}
+                {data.startHere.whySimplify.engineeringNote}
               </p>
             </div>
           </div>
@@ -232,11 +225,11 @@ export const Section22View = ({ section }) => {
                   Concrete Demonstration
                 </span>
                 <span className="font-mono text-xs font-bold text-[#285C49]">
-                  {data.startHere.objectiveDemonstration.subtitle}
+                  {data.startHere.objectiveDemo.lawApplied}
                 </span>
               </div>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32] mt-1">
-                {data.startHere.objectiveDemonstration.title}
+                {data.startHere.objectiveDemo.title}
               </h3>
             </div>
 
@@ -250,18 +243,17 @@ export const Section22View = ({ section }) => {
                     BEFORE SIMPLIFICATION
                   </span>
                   <span className="font-mono text-xs text-[#C05621] font-bold">
-                    {data.startHere.objectiveDemonstration.before.cost}
+                    {data.startHere.objectiveDemo.comparison.before.gateCount}
                   </span>
                 </div>
 
                 <div className="p-3 bg-white rounded-xl border border-[#FCD9BD] text-center font-mono text-lg font-bold text-[#293B32]">
-                  {data.startHere.objectiveDemonstration.before.expression}
+                  {data.startHere.objectiveDemo.comparison.before.expression}
                 </div>
 
                 <div className="space-y-1.5 text-xs text-[#5F6C64]">
-                  <p><strong className="text-[#293B32]">Circuit Gate Count:</strong> {data.startHere.objectiveDemonstration.before.gates}</p>
-                  <p><strong className="text-[#293B32]">Literal Inputs:</strong> {data.startHere.objectiveDemonstration.before.literals}</p>
-                  <p><strong className="text-[#293B32]">Propagation Delay:</strong> {data.startHere.objectiveDemonstration.before.delay}</p>
+                  <p><strong className="text-[#293B32]">Literal Count: </strong>{data.startHere.objectiveDemo.comparison.before.literalCount}</p>
+                  <p><strong className="text-[#293B32]">Routing: </strong>{data.startHere.objectiveDemo.comparison.before.routing}</p>
                 </div>
               </div>
 
@@ -272,18 +264,17 @@ export const Section22View = ({ section }) => {
                     AFTER SIMPLIFICATION
                   </span>
                   <span className="font-mono text-xs text-[#285C49] font-bold">
-                    {data.startHere.objectiveDemonstration.after.cost}
+                    {data.startHere.objectiveDemo.comparison.after.gateCount}
                   </span>
                 </div>
 
                 <div className="p-3 bg-white rounded-xl border border-[#BDE8CA] text-center font-mono text-lg font-bold text-[#285C49]">
-                  {data.startHere.objectiveDemonstration.after.expression}
+                  {data.startHere.objectiveDemo.comparison.after.expression}
                 </div>
 
                 <div className="space-y-1.5 text-xs text-[#5F6C64]">
-                  <p><strong className="text-[#293B32]">Circuit Gate Count:</strong> {data.startHere.objectiveDemonstration.after.gates}</p>
-                  <p><strong className="text-[#293B32]">Literal Inputs:</strong> {data.startHere.objectiveDemonstration.after.literals}</p>
-                  <p><strong className="text-[#293B32]">Propagation Delay:</strong> {data.startHere.objectiveDemonstration.after.delay}</p>
+                  <p><strong className="text-[#293B32]">Literal Count: </strong>{data.startHere.objectiveDemo.comparison.after.literalCount}</p>
+                  <p><strong className="text-[#293B32]">Routing: </strong>{data.startHere.objectiveDemo.comparison.after.routing}</p>
                 </div>
               </div>
             </div>
@@ -294,7 +285,7 @@ export const Section22View = ({ section }) => {
                 Logical Explanation of the Absorption Law
               </h4>
               <p className="text-xs sm:text-sm text-[#293B32] leading-relaxed">
-                {data.startHere.objectiveDemonstration.explanation}
+                {data.startHere.objectiveDemo.explanation}
               </p>
             </div>
 
@@ -316,16 +307,38 @@ export const Section22View = ({ section }) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DCE7E1] bg-white text-[#293B32]">
-                    {data.startHere.objectiveDemonstration.truthTable.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-[#FAF8F5]">
-                        <td className="p-2">{row.a}</td>
-                        <td className="p-2">{row.b}</td>
-                        <td className="p-2">{row.ab}</td>
-                        <td className="p-2 font-bold text-[#C05621]">{row.fOriginal}</td>
-                        <td className="p-2 font-bold text-[#285C49]">{row.fSimplified}</td>
-                        <td className="p-2 text-[#285C49] font-bold">{row.match}</td>
-                      </tr>
-                    ))}
+                    <tr className="hover:bg-[#FAF8F5]">
+                      <td className="p-2">0</td>
+                      <td className="p-2">0</td>
+                      <td className="p-2">0</td>
+                      <td className="p-2 font-bold text-[#C05621]">0</td>
+                      <td className="p-2 font-bold text-[#285C49]">0</td>
+                      <td className="p-2 text-[#285C49] font-bold">YES</td>
+                    </tr>
+                    <tr className="hover:bg-[#FAF8F5]">
+                      <td className="p-2">0</td>
+                      <td className="p-2">1</td>
+                      <td className="p-2">0</td>
+                      <td className="p-2 font-bold text-[#C05621]">0</td>
+                      <td className="p-2 font-bold text-[#285C49]">0</td>
+                      <td className="p-2 text-[#285C49] font-bold">YES</td>
+                    </tr>
+                    <tr className="hover:bg-[#FAF8F5]">
+                      <td className="p-2">1</td>
+                      <td className="p-2">0</td>
+                      <td className="p-2">0</td>
+                      <td className="p-2 font-bold text-[#C05621]">1</td>
+                      <td className="p-2 font-bold text-[#285C49]">1</td>
+                      <td className="p-2 text-[#285C49] font-bold">YES</td>
+                    </tr>
+                    <tr className="hover:bg-[#FAF8F5]">
+                      <td className="p-2">1</td>
+                      <td className="p-2">1</td>
+                      <td className="p-2">1</td>
+                      <td className="p-2 font-bold text-[#C05621]">1</td>
+                      <td className="p-2 font-bold text-[#285C49]">1</td>
+                      <td className="p-2 text-[#285C49] font-bold">YES</td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -340,52 +353,41 @@ export const Section22View = ({ section }) => {
                   Algorithmic Framework
                 </span>
                 <span className="font-mono text-xs font-bold text-[#285C49]">
-                  {data.startHere.sixStepMethod.subtitle}
+                  {data.startHere.sixSteps.subtitle}
                 </span>
               </div>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32] mt-1">
-                {data.startHere.sixStepMethod.title}
+                {data.startHere.sixSteps.title}
               </h3>
-              <p className="text-xs sm:text-sm text-[#5F6C64] mt-1">
-                {data.startHere.sixStepMethod.description}
-              </p>
             </div>
 
             {/* 6 Step Cards */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {data.startHere.sixStepMethod.steps.map((st) => (
+              {data.startHere.sixSteps.steps.map((st) => (
                 <div key={st.step} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2 flex flex-col justify-between">
                   <div className="space-y-1.5">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#EBF3ED] text-[#285C49]">
                         Step {st.step}
                       </span>
-                      <span className="font-mono text-[10px] text-[#5F6C64] uppercase tracking-wider">
-                        {st.title}
+                      <span className="font-mono text-xs font-bold text-[#293B32]">
+                        {st.name}
                       </span>
                     </div>
-                    <h4 className="font-mono text-sm font-bold text-[#293B32]">
-                      {st.name}
-                    </h4>
                     <p className="text-xs text-[#5F6C64] leading-relaxed">
-                      {st.action}
+                      {st.desc}
                     </p>
-                  </div>
-                  <div className="pt-2 border-t border-[#DCE7E1]/60">
-                    <span className="text-[11px] font-mono text-[#285C49] italic block">
-                      "{st.question}"
-                    </span>
                   </div>
                 </div>
               ))}
             </div>
 
-            {/* Repetition Note Callout */}
+            {/* Loop Note Callout */}
             <div className="p-3.5 rounded-xl bg-[#EBF3ED] border border-[#285C49]/20 text-xs text-[#285C49] flex items-start gap-2.5">
               <RotateCcw className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#285C49]" />
               <p className="leading-relaxed">
                 <span className="font-bold">Iterative Process Note: </span>
-                {data.startHere.sixStepMethod.repetitionNote}
+                {data.startHere.sixSteps.loopNote}
               </p>
             </div>
           </div>
@@ -399,45 +401,35 @@ export const Section22View = ({ section }) => {
                 </span>
               </div>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32] mt-1">
-                {data.startHere.equivalentVsMinimal.title}
+                {data.startHere.equivVsMinimal.title}
               </h3>
-              <p className="text-xs sm:text-sm text-[#5F6C64] mt-1">
-                {data.startHere.equivalentVsMinimal.description}
-              </p>
             </div>
 
             {/* 3 Categories Comparison */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {data.startHere.equivalentVsMinimal.categories.map((cat, idx) => (
+              {data.startHere.equivVsMinimal.definitions.map((def, idx) => (
                 <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
                   <div className="flex items-center gap-2">
                     <div className="w-6 h-6 rounded-full bg-[#EBF3ED] text-[#285C49] font-mono text-xs font-bold flex items-center justify-center">
                       {idx + 1}
                     </div>
                     <h4 className="font-mono text-xs font-bold text-[#293B32]">
-                      {cat.term}
+                      {def.term}
                     </h4>
                   </div>
                   <p className="text-xs text-[#5F6C64] leading-relaxed">
-                    {cat.definition}
-                  </p>
-                  <div className="p-2 rounded bg-white border border-[#DCE7E1] text-[11px] font-mono text-[#285C49]">
-                    <span className="text-[#5F6C64] block text-[10px]">Example:</span>
-                    {cat.example}
-                  </div>
-                  <p className="text-[11px] text-[#5F6C64] italic">
-                    {cat.implication}
+                    {def.meaning}
                   </p>
                 </div>
               ))}
             </div>
 
-            {/* Caveat Callout */}
+            {/* Caution Note Callout */}
             <div className="p-3.5 rounded-xl bg-[#FFF8F5] border border-[#FCD9BD] text-xs text-[#C05621] flex items-start gap-2.5">
               <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#C05621]" />
               <p className="leading-relaxed">
-                <span className="font-bold">Academic Caveat: </span>
-                {data.startHere.equivalentVsMinimal.caveat}
+                <span className="font-bold">Academic Caution: </span>
+                {data.startHere.equivVsMinimal.cautionNote}
               </p>
             </div>
           </div>
@@ -483,7 +475,7 @@ export const Section22View = ({ section }) => {
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#285C49]" />
                   <h3 className="font-editorial text-lg font-bold text-[#293B32]">
-                    {data.techniques.fundamentalOR.title}
+                    Four Fundamental OR Laws
                   </h3>
                 </div>
                 <span className="font-mono text-xs text-[#285C49] font-bold">
@@ -492,7 +484,7 @@ export const Section22View = ({ section }) => {
               </div>
 
               <div className="space-y-3">
-                {data.techniques.fundamentalOR.laws.map((l) => (
+                {data.techniques.fourOrLaws.map((l) => (
                   <div key={l.id} className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-[#285C49]">
@@ -506,8 +498,8 @@ export const Section22View = ({ section }) => {
                       {l.explanation}
                     </p>
                     <div className="pt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono border-t border-[#DCE7E1]/50 text-[#5F6C64]">
-                      <span>Sample: <strong className="text-[#293B32]">{l.sample}</strong></span>
-                      <span className="text-[#285C49]">App: {l.application}</span>
+                      <span>Example: <strong className="text-[#293B32]">{l.example}</strong></span>
+                      <span className="text-[#285C49]">Tip: {l.recognitionTip}</span>
                     </div>
                   </div>
                 ))}
@@ -520,7 +512,7 @@ export const Section22View = ({ section }) => {
                 <div className="flex items-center gap-2">
                   <span className="w-2.5 h-2.5 rounded-full bg-[#285C49]" />
                   <h3 className="font-editorial text-lg font-bold text-[#293B32]">
-                    {data.techniques.fundamentalAND.title}
+                    Four Fundamental AND Laws
                   </h3>
                 </div>
                 <span className="font-mono text-xs text-[#285C49] font-bold">
@@ -529,7 +521,7 @@ export const Section22View = ({ section }) => {
               </div>
 
               <div className="space-y-3">
-                {data.techniques.fundamentalAND.laws.map((l) => (
+                {data.techniques.fourAndLaws.map((l) => (
                   <div key={l.id} className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold text-[#285C49]">
@@ -543,8 +535,8 @@ export const Section22View = ({ section }) => {
                       {l.explanation}
                     </p>
                     <div className="pt-1.5 flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono border-t border-[#DCE7E1]/50 text-[#5F6C64]">
-                      <span>Sample: <strong className="text-[#293B32]">{l.sample}</strong></span>
-                      <span className="text-[#285C49]">App: {l.application}</span>
+                      <span>Example: <strong className="text-[#293B32]">{l.example}</strong></span>
+                      <span className="text-[#285C49]">Tip: {l.recognitionTip}</span>
                     </div>
                   </div>
                 ))}
@@ -556,26 +548,29 @@ export const Section22View = ({ section }) => {
           {/* DUALITY COMPARISON STRIP */}
           <div className="p-4 rounded-xl bg-[#F4F7F4] border border-[#DCE7E1] space-y-2">
             <h4 className="font-mono text-xs font-bold uppercase tracking-wider text-[#285C49]">
-              Duality and Boundary Constants Summary
+              {data.techniques.dualitySummary.headline}
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 text-xs font-mono text-[#293B32]">
               <div className="p-2 rounded bg-white border border-[#DCE7E1]">
                 <span className="text-[#5F6C64] block text-[10px]">OR Identity:</span>
-                0 is identity (A + 0 = A)
+                {data.techniques.dualitySummary.orIdentity}
               </div>
               <div className="p-2 rounded bg-white border border-[#DCE7E1]">
                 <span className="text-[#5F6C64] block text-[10px]">AND Identity:</span>
-                1 is identity (A · 1 = A)
+                {data.techniques.dualitySummary.andIdentity}
               </div>
               <div className="p-2 rounded bg-white border border-[#DCE7E1]">
                 <span className="text-[#5F6C64] block text-[10px]">OR Domination:</span>
-                1 dominates (A + 1 = 1)
+                {data.techniques.dualitySummary.orDominant}
               </div>
               <div className="p-2 rounded bg-white border border-[#DCE7E1]">
                 <span className="text-[#5F6C64] block text-[10px]">AND Domination:</span>
-                0 dominates (A · 0 = 0)
+                {data.techniques.dualitySummary.andDominant}
               </div>
             </div>
+            <p className="text-xs text-[#5F6C64] italic pt-1">
+              {data.techniques.dualitySummary.takeaway}
+            </p>
           </div>
 
           {/* TEN CORE PATTERN RECOGNITION TECHNIQUES */}
@@ -596,12 +591,12 @@ export const Section22View = ({ section }) => {
 
             {/* Technique Cards Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {data.techniques.recognitionTechniques.map((tech, idx) => (
-                <div key={tech.id} className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 flex flex-col justify-between">
+              {data.techniques.tenTechniques.map((tech) => (
+                <div key={tech.number} className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-3 flex flex-col justify-between">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
                       <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-[#EBF3ED] text-[#285C49]">
-                        Technique {idx + 1}
+                        Technique {tech.number}
                       </span>
                       <span className="font-mono text-xs text-[#5F6C64]">
                         Pattern: <code className="text-[#285C49] font-bold">{tech.pattern}</code>
@@ -609,7 +604,7 @@ export const Section22View = ({ section }) => {
                     </div>
 
                     <h4 className="font-mono text-sm font-bold text-[#293B32]">
-                      {tech.title}
+                      {tech.name}
                     </h4>
 
                     <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-center font-mono text-xs font-bold text-[#285C49]">
@@ -631,9 +626,9 @@ export const Section22View = ({ section }) => {
                     <div className="text-[#285C49]">
                       <strong>When to Apply: </strong>{tech.whenToApply}
                     </div>
-                    {tech.commonMistake && (
+                    {tech.mistake && (
                       <div className="text-[#C05621]">
-                        <strong>Watch Out: </strong>{tech.commonMistake}
+                        <strong>Watch Out: </strong>{tech.mistake}
                       </div>
                     )}
                   </div>
@@ -659,7 +654,7 @@ export const Section22View = ({ section }) => {
                 <div key={m.id} className="p-4 rounded-xl bg-[#FFF8F5] border border-[#FCD9BD] space-y-2">
                   <div className="flex items-center justify-between">
                     <span className="font-mono text-xs font-bold text-[#C05621]">
-                      {m.topic}
+                      {m.id.toUpperCase()}
                     </span>
                     <span className="font-mono text-[10px] px-2 py-0.5 rounded bg-[#FBE5D8] text-[#C05621]">
                       MISTAKE
@@ -709,22 +704,22 @@ export const Section22View = ({ section }) => {
               <span className="text-xs font-mono text-[#5F6C64] flex items-center gap-1.5 mr-1">
                 <Filter className="w-3.5 h-3.5" /> Filter:
               </span>
-              {['All', 'Basic', 'Intermediate', 'Advanced', 'Challenge'].map((level) => {
-                const count = level === 'All' 
+              {['All', 'Basic', 'Intermediate', 'Advanced', 'Challenge'].map((lvl) => {
+                const count = lvl === 'All' 
                   ? data.workedModels.length 
-                  : data.workedModels.filter(m => m.difficulty === level).length;
-                const isSelected = modelFilter === level;
+                  : data.workedModels.filter(m => m.level === lvl).length;
+                const isSelected = modelFilter === lvl;
                 return (
                   <button
-                    key={level}
-                    onClick={() => setModelFilter(level)}
+                    key={lvl}
+                    onClick={() => setModelFilter(lvl)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-[#285C49] text-white shadow-xs'
                         : 'bg-[#FAF8F5] text-[#5F6C64] hover:text-[#293B32] hover:bg-[#F0EEEA] border border-[#DCE7E1]'
                     }`}
                   >
-                    {level} ({count})
+                    {lvl} ({count})
                   </button>
                 );
               })}
@@ -755,8 +750,8 @@ export const Section22View = ({ section }) => {
                         <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-lg bg-white border border-[#DCE7E1] text-[#293B32]">
                           {model.number}
                         </span>
-                        <span className={`font-mono text-xs font-bold px-2.5 py-1 rounded-full border ${diffColors[model.difficulty]}`}>
-                          {model.difficulty}
+                        <span className={`font-mono text-xs font-bold px-2.5 py-1 rounded-full border ${diffColors[model.level] || ''}`}>
+                          {model.level}
                         </span>
                         <span className="font-mono text-xs text-[#5F6C64]">
                           {model.variables}
@@ -777,9 +772,6 @@ export const Section22View = ({ section }) => {
                       <h3 className="font-editorial text-lg sm:text-xl font-bold text-[#293B32]">
                         {model.title}
                       </h3>
-                      <p className="text-xs text-[#5F6C64] mt-0.5">
-                        {model.focus}
-                      </p>
                     </div>
 
                     {/* Original Expression & Target Result Banner */}
@@ -798,7 +790,7 @@ export const Section22View = ({ section }) => {
                             Target Result:
                           </span>
                           <span className="text-sm sm:text-base font-bold text-[#285C49] break-all">
-                            {model.expectedResult}
+                            {model.finalAnswer}
                           </span>
                         </div>
                         <button
@@ -847,7 +839,7 @@ export const Section22View = ({ section }) => {
                               </div>
 
                               <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] font-mono text-sm sm:text-base font-bold text-[#293B32] break-all">
-                                {st.expression}
+                                {st.expr}
                               </div>
 
                               <div className="text-xs text-[#5F6C64] leading-relaxed pt-1">
@@ -868,7 +860,7 @@ export const Section22View = ({ section }) => {
                               Final Verified Equivalent Expression
                             </span>
                             <span className="font-mono text-base font-bold text-[#285C49]">
-                              {model.finalResult}
+                              {model.finalAnswer}
                             </span>
                           </div>
                         </div>
@@ -877,24 +869,13 @@ export const Section22View = ({ section }) => {
                         </div>
                       </div>
 
-                      {/* Observation / Common Mistake / Alternative Approach */}
-                      {model.observation && (
+                      {/* Observation / Common Mistake / Pitfall */}
+                      {model.pitfall && (
                         <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] text-xs text-[#5F6C64] flex items-start gap-2">
                           <Info className="w-4 h-4 text-[#285C49] flex-shrink-0 mt-0.5" />
                           <p className="leading-relaxed">
                             <strong className="text-[#293B32]">Key Takeaway: </strong>
-                            {model.observation}
-                          </p>
-                        </div>
-                      )}
-
-                      {model.alternativeMethod && (
-                        <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] text-xs text-[#5F6C64] space-y-1">
-                          <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-[#285C49] block">
-                            Alternative Solution Path:
-                          </span>
-                          <p className="leading-relaxed">
-                            {model.alternativeMethod}
+                            {model.pitfall}
                           </p>
                         </div>
                       )}
@@ -923,10 +904,10 @@ export const Section22View = ({ section }) => {
                   Decision Strategy Guide
                 </span>
                 <h2 className="font-editorial text-2xl font-bold text-[#293B32] mt-2">
-                  Simplification Strategy Sheet and Decision Flowchart
+                  {data.cheatSheet.title}
                 </h2>
                 <p className="text-sm text-[#5F6C64] mt-1 leading-relaxed">
-                  Fast algebraic recognition patterns, operator precedence hierarchy, and systematic transformation checklists.
+                  {data.cheatSheet.description}
                 </p>
               </div>
               <button
@@ -948,46 +929,89 @@ export const Section22View = ({ section }) => {
                 </span>
               </div>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32] mt-1">
-                {data.cheatSheet.flowchart.title}
+                Law-Selection Decision Pipeline
               </h3>
-              <p className="text-xs sm:text-sm text-[#5F6C64] mt-1">
-                {data.cheatSheet.flowchart.description}
-              </p>
             </div>
 
             {/* Step Pipeline Cards */}
             <div className="space-y-3">
-              {data.cheatSheet.flowchart.steps.map((st) => (
-                <div key={st.order} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-start justify-between gap-3">
+              {data.cheatSheet.decisionGuide.map((dg, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex flex-wrap items-start justify-between gap-3">
                   <div className="flex items-start gap-3">
-                    <span className="w-6 h-6 rounded-full bg-[#285C49] text-white font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
-                      {st.order}
+                    <span className="w-7 h-7 rounded-full bg-[#285C49] text-white font-mono text-xs font-bold flex items-center justify-center flex-shrink-0 mt-0.5">
+                      {idx + 1}
                     </span>
                     <div className="space-y-1">
                       <span className="font-mono text-xs font-bold text-[#293B32] block">
-                        Condition: <em className="text-[#285C49]">{st.condition}</em>
+                        {dg.step}: <em className="text-[#285C49]">{dg.condition}</em>
                       </span>
                       <p className="text-xs text-[#5F6C64]">
-                        Action: {st.action}
+                        Action: {dg.action}
                       </p>
                     </div>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-mono text-xs font-bold text-[#285C49] px-2.5 py-1 rounded-lg bg-white border border-[#DCE7E1]">
-                      {st.law}
-                    </span>
                   </div>
                 </div>
               ))}
             </div>
+          </div>
 
-            <div className="p-3.5 rounded-xl bg-[#EBF3ED] border border-[#285C49]/20 text-xs text-[#285C49] flex items-start gap-2.5">
-              <ShieldCheck className="w-4 h-4 flex-shrink-0 mt-0.5 text-[#285C49]" />
-              <p className="leading-relaxed">
-                <span className="font-bold">Algorithmic Clarification: </span>
-                {data.cheatSheet.flowchart.caveat}
-              </p>
+          {/* FOUR OR AND AND LAWS TABLES */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            {/* OR Laws Table */}
+            <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+              <h3 className="font-editorial text-lg font-bold text-[#293B32]">
+                Four Fundamental OR Identities
+              </h3>
+              <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
+                <table className="w-full text-xs font-mono text-left">
+                  <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
+                    <tr>
+                      <th className="p-2.5">Name</th>
+                      <th className="p-2.5">Formula</th>
+                      <th className="p-2.5">Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#DCE7E1] bg-white">
+                    {data.cheatSheet.orLawsTable.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-[#FAF8F5]">
+                        <td className="p-2.5 font-bold text-[#285C49]">{row.name}</td>
+                        <td className="p-2.5 font-bold text-[#293B32]">{row.formula}</td>
+                        <td className="p-2.5 text-[#5F6C64] font-sans text-[11px]">{row.meaning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
+
+            {/* AND Laws Table */}
+            <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+              <h3 className="font-editorial text-lg font-bold text-[#293B32]">
+                Four Fundamental AND Identities
+              </h3>
+              <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
+                <table className="w-full text-xs font-mono text-left">
+                  <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
+                    <tr>
+                      <th className="p-2.5">Name</th>
+                      <th className="p-2.5">Formula</th>
+                      <th className="p-2.5">Meaning</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#DCE7E1] bg-white">
+                    {data.cheatSheet.andLawsTable.map((row, idx) => (
+                      <tr key={idx} className="hover:bg-[#FAF8F5]">
+                        <td className="p-2.5 font-bold text-[#285C49]">{row.name}</td>
+                        <td className="p-2.5 font-bold text-[#293B32]">{row.formula}</td>
+                        <td className="p-2.5 text-[#5F6C64] font-sans text-[11px]">{row.meaning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
           </div>
 
           {/* PATTERN RECOGNITION GUIDE TABLE */}
@@ -1010,12 +1034,12 @@ export const Section22View = ({ section }) => {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#DCE7E1] bg-white text-[#293B32]">
-                  {data.cheatSheet.patternGuide.map((pt, idx) => (
+                  {data.cheatSheet.patternRecognition.map((pt, idx) => (
                     <tr key={idx} className="hover:bg-[#FAF8F5]">
-                      <td className="p-3 font-bold text-[#C05621]">{pt.pattern}</td>
+                      <td className="p-3 font-bold text-[#C05621]">{pt.trigger}</td>
                       <td className="p-3 text-[#285C49] font-bold">{pt.law}</td>
                       <td className="p-3 font-bold">{pt.result}</td>
-                      <td className="p-3 text-[#5F6C64] font-sans">{pt.shortcut}</td>
+                      <td className="p-3 text-[#5F6C64] font-sans">{pt.note}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1029,23 +1053,20 @@ export const Section22View = ({ section }) => {
             {/* Operator Precedence */}
             <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
               <h3 className="font-editorial text-lg font-bold text-[#293B32]">
-                {data.cheatSheet.operatorPrecedence.title}
+                Operator Precedence Hierarchy
               </h3>
               <div className="space-y-2">
-                {data.cheatSheet.operatorPrecedence.levels.map((lvl) => (
-                  <div key={lvl.priority} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-between text-xs font-mono">
+                {data.cheatSheet.precedenceHierarchy.map((lvl) => (
+                  <div key={lvl.rank} className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-between text-xs font-mono">
                     <div className="flex items-center gap-2.5">
                       <span className="w-5 h-5 rounded-full bg-[#EBF3ED] text-[#285C49] font-bold flex items-center justify-center">
-                        {lvl.priority}
+                        {lvl.rank}
                       </span>
                       <span className="font-bold text-[#293B32]">{lvl.operator}</span>
                     </div>
-                    <span className="text-[#5F6C64]">{lvl.symbol}</span>
+                    <span className="text-[#5F6C64]">{lvl.rule}</span>
                   </div>
                 ))}
-              </div>
-              <div className="p-3 rounded-lg bg-[#FFF8F5] border border-[#FCD9BD] text-xs text-[#C05621]">
-                <strong>Warning: </strong>{data.cheatSheet.operatorPrecedence.warning}
               </div>
             </div>
 
@@ -1061,10 +1082,10 @@ export const Section22View = ({ section }) => {
                       {sc.name}
                     </span>
                     <div className="font-mono text-xs font-bold text-[#293B32]">
-                      {sc.formula}
+                      {sc.form}
                     </div>
                     <p className="text-[11px] text-[#5F6C64]">
-                      {sc.explanation}
+                      {sc.tip}
                     </p>
                   </div>
                 ))}
@@ -1083,12 +1104,12 @@ export const Section22View = ({ section }) => {
             </p>
 
             <div className="space-y-2 pt-2">
-              {data.cheatSheet.checklist.map((item) => {
-                const isChecked = !!checkedChecklist[item.id];
+              {data.cheatSheet.simplificationChecklist.map((item, idx) => {
+                const isChecked = !!checkedChecklist[idx];
                 return (
                   <div 
-                    key={item.id}
-                    onClick={() => toggleChecklistItem(item.id)}
+                    key={idx}
+                    onClick={() => toggleChecklistItem(idx)}
                     className={`p-3.5 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 ${
                       isChecked
                         ? 'bg-[#F0FAF4] border-[#BDE8CA] text-[#285C49]'
@@ -1104,7 +1125,7 @@ export const Section22View = ({ section }) => {
                         {isChecked && <Check className="w-3.5 h-3.5" />}
                       </div>
                       <span className="text-xs sm:text-sm font-normal">
-                        {item.text}
+                        {item}
                       </span>
                     </div>
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#5F6C64]">
@@ -1146,22 +1167,22 @@ export const Section22View = ({ section }) => {
               <span className="text-xs font-mono text-[#5F6C64] flex items-center gap-1.5 mr-1">
                 <Filter className="w-3.5 h-3.5" /> Filter:
               </span>
-              {['All', 'Basic', 'Intermediate', 'Advanced'].map((level) => {
-                const count = level === 'All' 
+              {['All', 'Basic', 'Intermediate', 'Advanced'].map((lvl) => {
+                const count = lvl === 'All' 
                   ? data.practiceLab.length 
-                  : data.practiceLab.filter(p => p.difficulty === level).length;
-                const isSelected = practiceFilter === level;
+                  : data.practiceLab.filter(p => p.difficulty === lvl).length;
+                const isSelected = practiceFilter === lvl;
                 return (
                   <button
-                    key={level}
-                    onClick={() => setPracticeFilter(level)}
+                    key={lvl}
+                    onClick={() => setPracticeFilter(lvl)}
                     className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
                       isSelected
                         ? 'bg-[#285C49] text-white shadow-xs'
                         : 'bg-[#FAF8F5] text-[#5F6C64] hover:text-[#293B32] hover:bg-[#F0EEEA] border border-[#DCE7E1]'
                     }`}
                   >
-                    {level} ({count})
+                    {lvl} ({count})
                   </button>
                 );
               })}
@@ -1195,7 +1216,7 @@ export const Section22View = ({ section }) => {
                         <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded bg-white border border-[#DCE7E1] text-[#293B32]">
                           {prob.number}
                         </span>
-                        <span className={`font-mono text-[11px] font-bold px-2 py-0.5 rounded-full border ${diffColors[prob.difficulty]}`}>
+                        <span className={`font-mono text-[11px] font-bold px-2 py-0.5 rounded-full border ${diffColors[prob.difficulty] || ''}`}>
                           {prob.difficulty}
                         </span>
                       </div>
@@ -1209,9 +1230,6 @@ export const Section22View = ({ section }) => {
                       <p className="text-xs text-[#5F6C64]">
                         {prob.problem}
                       </p>
-                      <div className="mt-2 p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-base font-bold text-[#293B32] text-center break-all">
-                        {prob.expression}
-                      </div>
                     </div>
 
                     {/* Techniques */}
@@ -1271,8 +1289,8 @@ export const Section22View = ({ section }) => {
                         </span>
 
                         <div className="space-y-2">
-                          {prob.solutionSteps.map((st, sIdx) => (
-                            <div key={sIdx} className="p-2.5 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] space-y-1 text-xs">
+                          {prob.solutionSteps.map((st) => (
+                            <div key={st.step} className="p-2.5 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] space-y-1 text-xs">
                               <div className="flex items-center justify-between">
                                 <span className="font-mono text-[10px] font-bold text-[#5F6C64]">
                                   Step {st.step}
@@ -1285,7 +1303,7 @@ export const Section22View = ({ section }) => {
                                 {st.expr}
                               </div>
                               <p className="text-[11px] text-[#5F6C64]">
-                                {st.note}
+                                {st.reason}
                               </p>
                             </div>
                           ))}
@@ -1297,14 +1315,16 @@ export const Section22View = ({ section }) => {
                             Answer:
                           </span>
                           <span className="font-mono text-sm font-bold text-[#285C49] break-all">
-                            {prob.answer}
+                            {prob.finalAnswer}
                           </span>
                         </div>
 
-                        {/* Observation */}
-                        <p className="text-[11px] text-[#5F6C64] italic">
-                          <strong>Note: </strong>{prob.observation}
-                        </p>
+                        {/* Key Takeaway */}
+                        {prob.keyTakeaway && (
+                          <p className="text-[11px] text-[#5F6C64] italic">
+                            <strong>Note: </strong>{prob.keyTakeaway}
+                          </p>
+                        )}
                       </div>
                     )}
 
