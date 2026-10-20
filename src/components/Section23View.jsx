@@ -28,6 +28,7 @@ import { CuratedVideoCard } from './CuratedVideoCard';
 /**
  * Section 2.3 View: Boolean Functions, Minterms, Maxterms, Canonical and Standard Forms
  * Strictly zero em-dashes and zero en-dashes throughout.
+ * All formulas use actual mathematical symbols: Σ (\u03A3) and Π (\u03A0).
  * Follows permanent ZeroIndex WHY-FIRST philosophy: WHY -> WHERE -> WHAT -> HOW -> TRY -> CONNECT
  */
 
@@ -189,8 +190,8 @@ export const Section23View = ({ section }) => {
       {activeTab === 'start-here' && (
         <div className="space-y-8 animate-fadeIn">
           
-          {/* WHY DO WE NEED MINTERMS AND MAXTERMS */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+          {/* WHY DO WE NEED MINTERMS AND MAXTERMS (Refined: Bullet Points, Bold Keywords) */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
             <div className="flex items-center gap-2 pb-2 border-b border-[#DCE7E1]">
               <Sparkles className="w-5 h-5 text-[#285C49]" />
               <h2 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
@@ -198,20 +199,36 @@ export const Section23View = ({ section }) => {
               </h2>
             </div>
 
-            <div className="p-4 sm:p-5 rounded-xl bg-[#F4F7F4] border-l-4 border-[#285C49] space-y-2">
-              <p className="font-editorial text-base sm:text-lg text-[#293B32] leading-relaxed">
-                "{data.startHere.whyMintermsMaxterms.lead}"
-              </p>
+            {/* 6 Informative Bullet Points */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 pt-1">
+              {data.startHere.whyMintermsMaxterms.bullets.map((bullet, idx) => (
+                <div 
+                  key={idx}
+                  className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex items-start gap-3"
+                >
+                  <span className="w-6 h-6 rounded-full bg-[#EBF3ED] text-[#285C49] font-mono font-bold text-xs flex items-center justify-center flex-shrink-0 mt-0.5 border border-[#285C49]/20">
+                    {idx + 1}
+                  </span>
+                  <div className="text-xs sm:text-sm leading-relaxed">
+                    <strong className="text-[#285C49] font-bold block mb-0.5 font-sans">
+                      {bullet.bold}
+                    </strong>
+                    <span className="text-[#5F6C64]">
+                      {bullet.text}
+                    </span>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            {/* Visual Question Callout */}
-            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] flex items-center justify-between gap-4">
+            {/* Visual Question Callout Card */}
+            <div className="p-4 sm:p-5 rounded-xl bg-[#EBF3ED]/40 border-2 border-[#285C49]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-lg bg-[#EBF3ED] text-[#285C49] flex items-center justify-center font-bold font-mono">
+                <div className="w-9 h-9 rounded-xl bg-[#285C49] text-white flex items-center justify-center font-bold font-mono text-base shadow-2xs flex-shrink-0">
                   ?
                 </div>
                 <div>
-                  <span className="text-xs font-mono font-bold text-[#285C49] uppercase tracking-wider block">
+                  <span className="text-[11px] font-mono font-bold text-[#285C49] uppercase tracking-wider block">
                     Core Academic Question
                   </span>
                   <span className="font-editorial text-base sm:text-lg font-bold text-[#293B32]">
@@ -219,10 +236,73 @@ export const Section23View = ({ section }) => {
                   </span>
                 </div>
               </div>
+              <span className="text-xs font-mono text-[#5F6C64] bg-white px-3 py-1 rounded-lg border border-[#DCE7E1] self-start sm:self-auto">
+                Solved via Minterms & Maxterms
+              </span>
             </div>
           </div>
 
-          {/* FIRST LEARNING DEMO: 2-INPUT ALARM SYSTEM */}
+          {/* FIRST-USE MATHEMATICAL NOTATION GUIDE: Σ and Π */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
+                First-Use Symbol Notation
+              </span>
+              <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
+                {data.startHere.symbolFirstUse.title}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Sigma Card */}
+              <div className="p-4 rounded-xl bg-[#EBF3ED]/40 border-2 border-[#285C49]/30 space-y-2 font-mono text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#285C49] text-base">
+                    {data.startHere.symbolFirstUse.sigma.symbol} {"->"} {data.startHere.symbolFirstUse.sigma.name}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#285C49] text-white font-bold text-[11px]">
+                    Logical OR (Sum)
+                  </span>
+                </div>
+                <p className="text-[#293B32] font-sans text-xs">
+                  {data.startHere.symbolFirstUse.sigma.meaning}
+                </p>
+                <div className="p-2.5 rounded bg-white border border-[#285C49]/20 space-y-1">
+                  <div className="text-[#5F6C64] text-[11px]">{data.startHere.symbolFirstUse.sigma.termType}</div>
+                  <div className="font-bold text-[#285C49] text-xs sm:text-sm whitespace-nowrap overflow-x-auto">
+                    {data.startHere.symbolFirstUse.sigma.example}
+                  </div>
+                </div>
+              </div>
+
+              {/* Pi Card */}
+              <div className="p-4 rounded-xl bg-[#EBF8FF]/50 border-2 border-[#2B6CB0]/30 space-y-2 font-mono text-xs">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[#2B6CB0] text-base">
+                    {data.startHere.symbolFirstUse.pi.symbol} {"->"} {data.startHere.symbolFirstUse.pi.name}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-[#2B6CB0] text-white font-bold text-[11px]">
+                    Logical AND (Product)
+                  </span>
+                </div>
+                <p className="text-[#293B32] font-sans text-xs">
+                  {data.startHere.symbolFirstUse.pi.meaning}
+                </p>
+                <div className="p-2.5 rounded bg-white border border-[#2B6CB0]/20 space-y-1">
+                  <div className="text-[#5F6C64] text-[11px]">{data.startHere.symbolFirstUse.pi.termType}</div>
+                  <div className="font-bold text-[#2B6CB0] text-xs sm:text-sm whitespace-nowrap overflow-x-auto">
+                    {data.startHere.symbolFirstUse.pi.example}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-xs text-[#5F6C64] font-mono">
+              <strong>Rule: </strong>{data.startHere.symbolFirstUse.indicesRule}
+            </p>
+          </div>
+
+          {/* FIRST LEARNING DEMO: 2-INPUT ALARM SYSTEM (Refined Alignment & Actual Symbols) */}
           <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
             <div>
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
@@ -236,11 +316,11 @@ export const Section23View = ({ section }) => {
               </p>
             </div>
 
-            {/* Truth Table with Green / Blue row highlights */}
+            {/* Carefully Aligned Truth Table */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <span className="text-xs font-mono font-bold text-[#293B32]">
-                  Alarm Truth Table (Inputs: A = Door, B = Motion | Output: F = Siren)
+                  Alarm Truth Table (A = Door, B = Motion | Output: F = Siren)
                 </span>
                 <span className="text-xs font-mono font-bold text-[#285C49]">
                   Physical Law: F = A + B
@@ -248,16 +328,16 @@ export const Section23View = ({ section }) => {
               </div>
 
               <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
-                <table className="w-full text-left text-xs font-mono">
+                <table className="w-full text-xs font-mono">
                   <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
                     <tr>
-                      <th className="p-3">Index</th>
-                      <th className="p-3">A (Door)</th>
-                      <th className="p-3">B (Motion)</th>
-                      <th className="p-3 font-bold text-center">F (Alarm)</th>
-                      <th className="p-3">Minterm (if F=1)</th>
-                      <th className="p-3">Maxterm (if F=0)</th>
-                      <th className="p-3">Physical Scenario</th>
+                      <th className="p-3 text-center w-16">Index</th>
+                      <th className="p-3 text-center w-24">A (Door)</th>
+                      <th className="p-3 text-center w-24">B (Motion)</th>
+                      <th className="p-3 text-center w-24 font-bold">F (Alarm)</th>
+                      <th className="p-3 text-center w-36 text-[#285C49]">Minterm (if F=1)</th>
+                      <th className="p-3 text-center w-36 text-[#2B6CB0]">Maxterm (if F=0)</th>
+                      <th className="p-3 text-left">Physical Scenario</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-[#DCE7E1]">
@@ -266,11 +346,11 @@ export const Section23View = ({ section }) => {
                         key={row.index}
                         className={row.F === 1 ? 'bg-[#EBF3ED]/60' : 'bg-[#EBF8FF]/70'}
                       >
-                        <td className="p-3 font-bold text-[#293B32]">Row {row.index}</td>
-                        <td className="p-3">{row.A}</td>
-                        <td className="p-3">{row.B}</td>
+                        <td className="p-3 text-center font-bold text-[#293B32]">Row {row.index}</td>
+                        <td className="p-3 text-center">{row.A}</td>
+                        <td className="p-3 text-center">{row.B}</td>
                         <td className="p-3 text-center">
-                          <span className={`inline-block px-2 py-0.5 rounded font-bold ${
+                          <span className={`inline-block px-2.5 py-0.5 rounded font-bold ${
                             row.F === 1 
                               ? 'bg-[#285C49] text-white' 
                               : 'bg-[#2B6CB0] text-white'
@@ -278,17 +358,17 @@ export const Section23View = ({ section }) => {
                             {row.F}
                           </span>
                         </td>
-                        <td className="p-3">
+                        <td className="p-3 text-center">
                           <span className={row.F === 1 ? 'font-bold text-[#285C49]' : 'text-gray-400'}>
                             {row.minterm}
                           </span>
                         </td>
-                        <td className="p-3">
+                        <td className="p-3 text-center">
                           <span className={row.F === 0 ? 'font-bold text-[#2B6CB0]' : 'text-gray-400'}>
                             {row.maxterm}
                           </span>
                         </td>
-                        <td className="p-3 text-[#5F6C64] font-sans text-xs">
+                        <td className="p-3 text-[#5F6C64] font-sans text-xs text-left">
                           {row.note}
                         </td>
                       </tr>
@@ -298,7 +378,7 @@ export const Section23View = ({ section }) => {
               </div>
             </div>
 
-            {/* Two Derivations: SOP (Green) vs POS (Blue) */}
+            {/* Two Derivations: SOP (Green) vs POS (Blue) with Actual Symbols */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* SOP Card */}
               <div className="p-5 rounded-xl bg-[#EBF3ED]/40 border-2 border-[#285C49]/30 space-y-3">
@@ -316,8 +396,8 @@ export const Section23View = ({ section }) => {
                   <div className="font-bold text-[#285C49] text-sm whitespace-nowrap overflow-x-auto">
                     {data.startHere.alarmDemo.sopDerivation.expandedExpr}
                   </div>
-                  <div className="text-[#5F6C64] pt-1">Compact Sigma Notation:</div>
-                  <div className="font-bold text-[#285C49] text-sm">
+                  <div className="text-[#5F6C64] pt-1">Compact Σm Notation:</div>
+                  <div className="font-bold text-[#285C49] text-base">
                     {data.startHere.alarmDemo.sopDerivation.compactNotation}
                   </div>
                 </div>
@@ -339,8 +419,8 @@ export const Section23View = ({ section }) => {
                   <div className="font-bold text-[#2B6CB0] text-sm whitespace-nowrap overflow-x-auto">
                     {data.startHere.alarmDemo.posDerivation.expandedExpr}
                   </div>
-                  <div className="text-[#5F6C64] pt-1">Compact Pi Notation:</div>
-                  <div className="font-bold text-[#2B6CB0] text-sm">
+                  <div className="text-[#5F6C64] pt-1">Compact ΠM Notation:</div>
+                  <div className="font-bold text-[#2B6CB0] text-base">
                     {data.startHere.alarmDemo.posDerivation.compactNotation}
                   </div>
                 </div>
@@ -531,7 +611,7 @@ export const Section23View = ({ section }) => {
       {activeTab === 'minterms-maxterms' && (
         <div className="space-y-8 animate-fadeIn">
           
-          {/* DEFINITIONS & POLARITY RULES */}
+          {/* DEFINITIONS HIERARCHY: SIMPLE -> FORMAL -> CONSTRUCT -> EXAMPLE -> PROPERTY */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             
             {/* Minterm Definition Card (Green) */}
@@ -539,37 +619,56 @@ export const Section23View = ({ section }) => {
               <div className="flex items-center gap-2 pb-2 border-b border-[#DCE7E1]">
                 <div className="w-3 h-3 rounded-full bg-[#285C49]"></div>
                 <h3 className="font-editorial text-lg sm:text-xl font-bold text-[#285C49]">
-                  {data.mintermsAndMaxterms.mintermDefinition.title}
+                  Minterm: Complete Academic Definition
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-[#293B32] leading-relaxed">
-                {data.mintermsAndMaxterms.mintermDefinition.definition}
-              </p>
 
-              {/* Polarity Rule */}
-              <div className="p-3.5 rounded-xl bg-[#EBF3ED] border border-[#285C49]/20 font-mono text-xs space-y-1">
+              {/* 1. Simple Definition */}
+              <div className="p-3.5 rounded-xl bg-[#EBF3ED] border border-[#285C49]/20 space-y-1">
+                <span className="font-mono text-xs font-bold text-[#285C49] uppercase tracking-wider block">
+                  1. Simple Definition:
+                </span>
+                <p className="text-xs sm:text-sm text-[#293B32] font-medium leading-relaxed">
+                  "{data.mintermsAndMaxterms.mintermDefinition.simpleDefinition}"
+                </p>
+              </div>
+
+              {/* 2. Formal Academic Definition */}
+              <div className="space-y-1">
+                <span className="font-mono text-xs font-bold text-[#5F6C64] uppercase tracking-wider block">
+                  2. Formal Examination Definition:
+                </span>
+                <p className="text-xs sm:text-sm text-[#293B32] leading-relaxed">
+                  {data.mintermsAndMaxterms.mintermDefinition.formalDefinition}
+                </p>
+              </div>
+
+              {/* 3. How to Construct */}
+              <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1">
                 <span className="font-bold text-[#285C49] block">
-                  Minterm Construction Polarity Rule:
+                  3. How to Construct:
                 </span>
                 <span className="text-[#293B32]">
-                  {data.mintermsAndMaxterms.mintermDefinition.polarityRule}
+                  {data.mintermsAndMaxterms.mintermDefinition.howToConstruct}
                 </span>
               </div>
 
-              {/* Example */}
-              <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1.5">
+              {/* 4. Example */}
+              <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1">
                 <div className="text-[#5F6C64]">
-                  Example for {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.inputs} (Index {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.index}):
-                </div>
-                <div className="text-[#285C49]">
-                  {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.calculation}
+                  4. Example ({data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.inputs}, Index {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.index}):
                 </div>
                 <div className="font-bold text-sm text-[#285C49]">
-                  Result: {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.resultSymbol} = {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.resultTerm}
+                  {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.resultSymbol} = {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.resultTerm}
                 </div>
-                <div className="text-[#5F6C64] font-sans text-xs pt-1 border-t border-[#DCE7E1]">
-                  <strong>Proof: </strong>{data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.proof}
+                <div className="text-[#5F6C64] text-[11px] font-sans">
+                  {data.mintermsAndMaxterms.mintermDefinition.exampleCalculation.proof}
                 </div>
+              </div>
+
+              {/* 5. Important Property */}
+              <div className="text-xs font-mono text-[#285C49] font-bold pt-1 border-t border-[#DCE7E1]">
+                Important Property: {data.mintermsAndMaxterms.mintermDefinition.importantProperty}
               </div>
             </div>
 
@@ -578,40 +677,125 @@ export const Section23View = ({ section }) => {
               <div className="flex items-center gap-2 pb-2 border-b border-[#DCE7E1]">
                 <div className="w-3 h-3 rounded-full bg-[#2B6CB0]"></div>
                 <h3 className="font-editorial text-lg sm:text-xl font-bold text-[#2B6CB0]">
-                  {data.mintermsAndMaxterms.maxtermDefinition.title}
+                  Maxterm: Complete Academic Definition
                 </h3>
               </div>
-              <p className="text-xs sm:text-sm text-[#293B32] leading-relaxed">
-                {data.mintermsAndMaxterms.maxtermDefinition.definition}
-              </p>
 
-              {/* Polarity Rule */}
-              <div className="p-3.5 rounded-xl bg-[#EBF8FF] border border-[#2B6CB0]/20 font-mono text-xs space-y-1">
+              {/* 1. Simple Definition */}
+              <div className="p-3.5 rounded-xl bg-[#EBF8FF] border border-[#2B6CB0]/20 space-y-1">
+                <span className="font-mono text-xs font-bold text-[#2B6CB0] uppercase tracking-wider block">
+                  1. Simple Definition:
+                </span>
+                <p className="text-xs sm:text-sm text-[#293B32] font-medium leading-relaxed">
+                  "{data.mintermsAndMaxterms.maxtermDefinition.simpleDefinition}"
+                </p>
+              </div>
+
+              {/* 2. Formal Academic Definition */}
+              <div className="space-y-1">
+                <span className="font-mono text-xs font-bold text-[#5F6C64] uppercase tracking-wider block">
+                  2. Formal Examination Definition:
+                </span>
+                <p className="text-xs sm:text-sm text-[#293B32] leading-relaxed">
+                  {data.mintermsAndMaxterms.maxtermDefinition.formalDefinition}
+                </p>
+              </div>
+
+              {/* 3. How to Construct */}
+              <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1">
                 <span className="font-bold text-[#2B6CB0] block">
-                  Maxterm Construction Polarity Rule:
+                  3. How to Construct:
                 </span>
                 <span className="text-[#293B32]">
-                  {data.mintermsAndMaxterms.maxtermDefinition.polarityRule}
+                  {data.mintermsAndMaxterms.maxtermDefinition.howToConstruct}
                 </span>
               </div>
 
-              {/* Example */}
-              <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1.5">
+              {/* 4. Example */}
+              <div className="p-3 rounded-lg bg-[#FAF8F5] border border-[#DCE7E1] font-mono text-xs space-y-1">
                 <div className="text-[#5F6C64]">
-                  Example for {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.inputs} (Index {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.index}):
-                </div>
-                <div className="text-[#2B6CB0]">
-                  {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.calculation}
+                  4. Example ({data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.inputs}, Index {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.index}):
                 </div>
                 <div className="font-bold text-sm text-[#2B6CB0]">
-                  Result: {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.resultSymbol} = {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.resultTerm}
+                  {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.resultSymbol} = {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.resultTerm}
                 </div>
-                <div className="text-[#5F6C64] font-sans text-xs pt-1 border-t border-[#DCE7E1]">
-                  <strong>Proof: </strong>{data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.proof}
+                <div className="text-[#5F6C64] text-[11px] font-sans">
+                  {data.mintermsAndMaxterms.maxtermDefinition.exampleCalculation.proof}
+                </div>
+              </div>
+
+              {/* 5. Important Property */}
+              <div className="text-xs font-mono text-[#2B6CB0] font-bold pt-1 border-t border-[#DCE7E1]">
+                Important Property: {data.mintermsAndMaxterms.maxtermDefinition.importantProperty}
+              </div>
+            </div>
+
+          </div>
+
+          {/* NOTATION DISTINCTION: LOWERCASE m vs UPPERCASE M */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
+                Standard Symbol Conventions
+              </span>
+              <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
+                {data.mintermsAndMaxterms.mVsMCallout.title}
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 font-mono text-xs">
+              <div className="p-4 rounded-xl bg-[#EBF3ED]/60 border border-[#285C49]/30 space-y-1">
+                <div className="font-bold text-sm text-[#285C49]">
+                  {data.mintermsAndMaxterms.mVsMCallout.mintermLabel}
+                </div>
+                <div className="text-xs text-[#293B32]">
+                  Examples: {data.mintermsAndMaxterms.mVsMCallout.mintermExample}
+                </div>
+              </div>
+
+              <div className="p-4 rounded-xl bg-[#EBF8FF]/70 border border-[#2B6CB0]/30 space-y-1">
+                <div className="font-bold text-sm text-[#2B6CB0]">
+                  {data.mintermsAndMaxterms.mVsMCallout.maxtermLabel}
+                </div>
+                <div className="text-xs text-[#293B32]">
+                  Examples: {data.mintermsAndMaxterms.mVsMCallout.maxtermExample}
                 </div>
               </div>
             </div>
 
+            {/* Connection with Sigma and Pi */}
+            <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
+              <table className="w-full text-left text-xs font-mono">
+                <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
+                  <tr>
+                    <th className="p-3">Classification</th>
+                    <th className="p-3">Symbol</th>
+                    <th className="p-3">Mathematical Structure</th>
+                    <th className="p-3">Truth Table Meaning</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#DCE7E1]">
+                  {data.mintermsAndMaxterms.mVsMCallout.connectionSummary.map((row, idx) => (
+                    <tr key={idx} className="hover:bg-[#FAF8F5]/40">
+                      <td className="p-3 font-bold text-[#293B32]">{row.term}</td>
+                      <td className="p-3 font-bold text-[#285C49] text-sm">{row.symbol}</td>
+                      <td className="p-3 text-[#5F6C64]">{row.type}</td>
+                      <td className="p-3 font-bold text-[#293B32]">{row.eval}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Standardize Complement Terminology */}
+            <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-l-4 border-[#285C49] text-xs text-[#5F6C64] space-y-1">
+              <span className="font-mono font-bold text-[#293B32] uppercase tracking-wider block">
+                Standardized Academic Vocabulary Note:
+              </span>
+              <p className="leading-relaxed">
+                {data.mintermsAndMaxterms.terminologyApostropheNote}
+              </p>
+            </div>
           </div>
 
           {/* SIDE-BY-SIDE VISUAL DEMONSTRATION & COMPLEMENT RELATION */}
@@ -818,7 +1002,7 @@ export const Section23View = ({ section }) => {
                       </span>
                     </div>
                     <div className="text-[11px] text-[#5F6C64] space-y-1">
-                      <div>Rule: 0 {"->"} prime ('), 1 {"->"} unprimed</div>
+                      <div>Rule: 0 {"->"} complemented ('), 1 {"->"} uncomplemented</div>
                       <div className="text-[#285C49]">
                         Bits: {selectedRowData.bin.split('').map((b, i) => {
                           const vars = activeVarTable === '2var' ? ['A','B'] : activeVarTable === '4var' ? ['A','B','C','D'] : ['A','B','C'];
@@ -839,7 +1023,7 @@ export const Section23View = ({ section }) => {
                       </span>
                     </div>
                     <div className="text-[11px] text-[#5F6C64] space-y-1">
-                      <div>Rule: 0 {"->"} unprimed, 1 {"->"} prime (')</div>
+                      <div>Rule: 0 {"->"} uncomplemented, 1 {"->"} complemented (')</div>
                       <div className="text-[#2B6CB0]">
                         Bits: {selectedRowData.bin.split('').map((b, i) => {
                           const vars = activeVarTable === '2var' ? ['A','B'] : activeVarTable === '4var' ? ['A','B','C','D'] : ['A','B','C'];
@@ -854,29 +1038,29 @@ export const Section23View = ({ section }) => {
 
             {/* Complete Interactive Table */}
             <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
-              <table className="w-full text-left text-xs font-mono">
+              <table className="w-full text-xs font-mono">
                 <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
                   <tr>
-                    <th className="p-3">Index</th>
-                    <th className="p-3">Binary Pattern</th>
+                    <th className="p-3 text-center w-16">Index</th>
+                    <th className="p-3 text-center w-24">Binary</th>
                     {activeVarTable === '2var' && <>
-                      <th className="p-3">A (MSB)</th>
-                      <th className="p-3">B (LSB)</th>
+                      <th className="p-3 text-center">A (MSB)</th>
+                      <th className="p-3 text-center">B (LSB)</th>
                     </>}
                     {activeVarTable === '3var' && <>
-                      <th className="p-3">A (MSB)</th>
-                      <th className="p-3">B</th>
-                      <th className="p-3">C (LSB)</th>
+                      <th className="p-3 text-center">A (MSB)</th>
+                      <th className="p-3 text-center">B</th>
+                      <th className="p-3 text-center">C (LSB)</th>
                     </>}
                     {activeVarTable === '4var' && <>
-                      <th className="p-3">A</th>
-                      <th className="p-3">B</th>
-                      <th className="p-3">C</th>
-                      <th className="p-3">D</th>
+                      <th className="p-3 text-center">A</th>
+                      <th className="p-3 text-center">B</th>
+                      <th className="p-3 text-center">C</th>
+                      <th className="p-3 text-center">D</th>
                     </>}
-                    <th className="p-3 text-[#285C49]">Minterm (SOP)</th>
-                    <th className="p-3 text-[#2B6CB0]">Maxterm (POS)</th>
-                    <th className="p-3">Select</th>
+                    <th className="p-3 text-center text-[#285C49]">Minterm (SOP)</th>
+                    <th className="p-3 text-center text-[#2B6CB0]">Maxterm (POS)</th>
+                    <th className="p-3 text-center w-20">Select</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#DCE7E1]">
@@ -890,30 +1074,30 @@ export const Section23View = ({ section }) => {
                           isSelected ? 'bg-[#EBF3ED]' : 'hover:bg-[#FAF8F5]'
                         }`}
                       >
-                        <td className="p-3 font-bold text-[#293B32]">{row.index}</td>
-                        <td className="p-3 font-bold">{row.bin}</td>
+                        <td className="p-3 text-center font-bold text-[#293B32]">{row.index}</td>
+                        <td className="p-3 text-center font-bold">{row.bin}</td>
                         {activeVarTable === '2var' && <>
-                          <td className="p-3">{row.A}</td>
-                          <td className="p-3">{row.B}</td>
+                          <td className="p-3 text-center">{row.A}</td>
+                          <td className="p-3 text-center">{row.B}</td>
                         </>}
                         {activeVarTable === '3var' && <>
-                          <td className="p-3">{row.A}</td>
-                          <td className="p-3">{row.B}</td>
-                          <td className="p-3">{row.C}</td>
+                          <td className="p-3 text-center">{row.A}</td>
+                          <td className="p-3 text-center">{row.B}</td>
+                          <td className="p-3 text-center">{row.C}</td>
                         </>}
                         {activeVarTable === '4var' && <>
-                          <td className="p-3">{row.A}</td>
-                          <td className="p-3">{row.B}</td>
-                          <td className="p-3">{row.C}</td>
-                          <td className="p-3">{row.D}</td>
+                          <td className="p-3 text-center">{row.A}</td>
+                          <td className="p-3 text-center">{row.B}</td>
+                          <td className="p-3 text-center">{row.C}</td>
+                          <td className="p-3 text-center">{row.D}</td>
                         </>}
-                        <td className="p-3 font-bold text-[#285C49]">
+                        <td className="p-3 text-center font-bold text-[#285C49]">
                           {row.mintermSymbol} = {row.mintermTerm}
                         </td>
-                        <td className="p-3 font-bold text-[#2B6CB0]">
+                        <td className="p-3 text-center font-bold text-[#2B6CB0]">
                           {row.maxtermSymbol} = ({row.maxtermTerm})
                         </td>
-                        <td className="p-3">
+                        <td className="p-3 text-center">
                           <span className={`text-[11px] px-2 py-0.5 rounded font-bold ${
                             isSelected 
                               ? 'bg-[#285C49] text-white' 
@@ -939,42 +1123,32 @@ export const Section23View = ({ section }) => {
       {activeTab === 'canonical-forms' && (
         <div className="space-y-8 animate-fadeIn">
           
-          {/* TERMINOLOGY DEFINITIONS */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
+          {/* HOW ARE STANDARD AND CANONICAL FORMS DIFFERENT? */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
             <div>
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
-                Structural Taxonomy
+                Conceptual Distinction
               </span>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
-                SOP, POS, Canonical SOP and Canonical POS
+                {data.canonicalForms.distinctionIntro.title}
               </h3>
-              <p className="text-sm text-[#5F6C64] mt-1">
-                Distinguish general algebraic expressions from true canonical standard forms.
-              </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {data.canonicalForms.terminologyDefinitions.map((item, idx) => (
-                <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
-                  <h4 className="font-editorial text-base font-bold text-[#293B32]">
-                    {item.term}
-                  </h4>
-                  <p className="text-xs text-[#293B32] leading-relaxed">
-                    {item.definition}
+              {data.canonicalForms.distinctionIntro.points.map((pt, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1.5">
+                  <span className="font-mono text-xs font-bold text-[#285C49] block">
+                    {pt.name}
+                  </span>
+                  <p className="text-xs text-[#5F6C64] leading-relaxed">
+                    {pt.desc}
                   </p>
-                  <div className="p-2.5 rounded bg-white border border-[#DCE7E1] font-mono text-xs">
-                    <span className="text-[#5F6C64]">Example: </span>
-                    <span className="font-bold text-[#285C49]">{item.example}</span>
-                  </div>
-                  <div className="text-[11px] font-mono text-[#5F6C64]">
-                    {item.standardStatus}
-                  </div>
                 </div>
               ))}
             </div>
 
             {/* Textbook Note */}
-            <div className="p-4 rounded-xl bg-[#FAF8F5] border-l-4 border-[#285C49] text-xs text-[#5F6C64] space-y-1">
+            <div className="p-3.5 rounded-xl bg-[#FAF8F5] border-l-4 border-[#285C49] text-xs text-[#5F6C64] space-y-1">
               <span className="font-mono font-bold text-[#293B32] uppercase tracking-wider block">
                 Academic Terminology Clarification
               </span>
@@ -984,103 +1158,145 @@ export const Section23View = ({ section }) => {
             </div>
           </div>
 
-          {/* CANONICAL VS NON-CANONICAL EXAMPLES */}
+          {/* MASTER DEMONSTRATION: ONE FUNCTION IN ALL FOUR FORMS (F = AB + C) */}
           <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6">
             <div>
               <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
-                Visual Comparison
+                Unified Function Exemplar
               </span>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
-                {data.canonicalForms.canonicalVsNonCanonical.title}
+                {data.canonicalForms.sameFunctionFourForms.title}
               </h3>
+              <p className="text-sm text-[#5F6C64] mt-1">
+                {data.canonicalForms.sameFunctionFourForms.subtitle}
+              </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* SOP Comparison */}
-              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
-                <span className="font-mono text-xs font-bold text-[#285C49] uppercase tracking-wider block">
-                  Sum of Products Comparison (Variables: A, B, C)
-                </span>
-                
-                {/* Non-Canonical SOP */}
-                <div className="p-3.5 rounded-lg bg-white border border-red-200 space-y-1">
+            {/* 4 Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {data.canonicalForms.sameFunctionFourForms.forms.map((item, idx) => (
+                <div 
+                  key={idx}
+                  className={`p-4 rounded-xl border space-y-2 ${
+                    item.name.includes('SOP') && item.name.includes('Canonical') ? 'bg-[#EBF3ED]/60 border-[#285C49]/40' :
+                    item.name.includes('POS') && item.name.includes('Canonical') ? 'bg-[#EBF8FF]/70 border-[#2B6CB0]/40' :
+                    'bg-[#FAF8F5] border-[#DCE7E1]'
+                  }`}
+                >
                   <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-red-700">
-                      Non-Canonical (Standard SOP)
+                    <span className="font-mono text-xs font-bold text-[#293B32]">
+                      {item.name}
                     </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-100 text-red-800">
-                      Incomplete Length
+                    <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded ${
+                      item.classification.includes('Canonical') ? 'bg-[#285C49] text-white' : 'bg-gray-200 text-gray-700'
+                    }`}>
+                      {item.classification}
                     </span>
                   </div>
-                  <div className="font-mono text-sm font-bold text-[#293B32]">
-                    {data.canonicalForms.canonicalVsNonCanonical.sop.nonCanonical.expr}
+                  <div className="font-mono text-sm sm:text-base font-bold text-[#293B32] whitespace-nowrap overflow-x-auto">
+                    {item.expr}
                   </div>
-                  <div className="text-xs text-[#5F6C64]">
-                    {data.canonicalForms.canonicalVsNonCanonical.sop.nonCanonical.flaw}
-                  </div>
+                  {item.expanded && (
+                    <div className="font-mono text-xs text-[#5F6C64] whitespace-nowrap overflow-x-auto">
+                      Expanded: {item.expanded}
+                    </div>
+                  )}
+                  <p className="text-xs text-[#5F6C64] font-sans pt-1 border-t border-[#DCE7E1]">
+                    {item.comment}
+                  </p>
                 </div>
+              ))}
+            </div>
 
-                {/* Canonical SOP */}
-                <div className="p-3.5 rounded-lg bg-white border border-[#285C49] space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-[#285C49]">
-                      Canonical SOP (Sum of Minterms)
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EBF3ED] text-[#285C49]">
-                      Complete Minterms
-                    </span>
-                  </div>
-                  <div className="font-mono text-xs font-bold text-[#285C49] whitespace-nowrap overflow-x-auto">
-                    {data.canonicalForms.canonicalVsNonCanonical.sop.canonical.expr}
-                  </div>
-                  <div className="text-xs text-[#5F6C64]">
-                    {data.canonicalForms.canonicalVsNonCanonical.sop.canonical.merit}
-                  </div>
-                </div>
+            {/* 8-Row Truth Table Verification */}
+            <div className="space-y-2">
+              <span className="font-mono text-xs font-bold text-[#293B32] block">
+                Exhaustive 8-Row Truth Table Verification of Functional Equivalence:
+              </span>
+              <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
+                <table className="w-full text-xs font-mono text-center">
+                  <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
+                    <tr>
+                      <th className="p-2.5">Index</th>
+                      <th className="p-2.5">ABC</th>
+                      <th className="p-2.5">General SOP: AB + C</th>
+                      <th className="p-2.5">General POS: (A+C)(B+C)</th>
+                      <th className="p-2.5 text-[#285C49]">Canonical SOP: Σm</th>
+                      <th className="p-2.5 text-[#2B6CB0]">Canonical POS: ΠM</th>
+                      <th className="p-2.5">Equivalence</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#DCE7E1]">
+                    {data.canonicalForms.sameFunctionFourForms.truthTableVerification.map((row) => (
+                      <tr 
+                        key={row.index}
+                        className={row.genSOP === 1 ? 'bg-[#EBF3ED]/40' : 'bg-[#EBF8FF]/50'}
+                      >
+                        <td className="p-2.5 font-bold text-[#293B32]">Row {row.index}</td>
+                        <td className="p-2.5">{row.bin}</td>
+                        <td className="p-2.5 font-bold">{row.genSOP}</td>
+                        <td className="p-2.5 font-bold">{row.genPOS}</td>
+                        <td className="p-2.5 font-bold text-[#285C49]">{row.canSOP}</td>
+                        <td className="p-2.5 font-bold text-[#2B6CB0]">{row.canPOS}</td>
+                        <td className="p-2.5 font-bold text-[#285C49]">Identical</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
+            </div>
 
-              {/* POS Comparison */}
-              <div className="p-5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-4">
-                <span className="font-mono text-xs font-bold text-[#2B6CB0] uppercase tracking-wider block">
-                  Product of Sums Comparison (Variables: A, B, C)
-                </span>
-                
-                {/* Non-Canonical POS */}
-                <div className="p-3.5 rounded-lg bg-white border border-red-200 space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-red-700">
-                      Non-Canonical (Standard POS)
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-red-100 text-red-800">
-                      Incomplete Length
-                    </span>
-                  </div>
-                  <div className="font-mono text-sm font-bold text-[#293B32]">
-                    {data.canonicalForms.canonicalVsNonCanonical.pos.nonCanonical.expr}
-                  </div>
-                  <div className="text-xs text-[#5F6C64]">
-                    {data.canonicalForms.canonicalVsNonCanonical.pos.nonCanonical.flaw}
-                  </div>
-                </div>
+            <p className="text-xs text-[#285C49] font-mono font-medium">
+              Takeaway: {data.canonicalForms.sameFunctionFourForms.takeaway}
+            </p>
+          </div>
 
-                {/* Canonical POS */}
-                <div className="p-3.5 rounded-lg bg-white border border-[#2B6CB0] space-y-1">
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-xs font-bold text-[#2B6CB0]">
-                      Canonical POS (Product of Maxterms)
-                    </span>
-                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#EBF8FF] text-[#2B6CB0]">
-                      Complete Maxterms
-                    </span>
-                  </div>
-                  <div className="font-mono text-xs font-bold text-[#2B6CB0] whitespace-nowrap overflow-x-auto">
-                    {data.canonicalForms.canonicalVsNonCanonical.pos.canonical.expr}
-                  </div>
-                  <div className="text-xs text-[#5F6C64]">
-                    {data.canonicalForms.canonicalVsNonCanonical.pos.canonical.merit}
-                  </div>
-                </div>
-              </div>
+          {/* MASTER COMPARISON TABLE: BOOLEAN FORMS AT A GLANCE */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+            <div>
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
+                Classification Matrix
+              </span>
+              <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
+                {data.canonicalForms.booleanFormsAtAGlance.title}
+              </h3>
+              <p className="text-sm text-[#5F6C64] mt-0.5">
+                {data.canonicalForms.booleanFormsAtAGlance.subtitle}
+              </p>
+            </div>
+
+            <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
+              <table className="w-full text-xs font-mono">
+                <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
+                  <tr>
+                    {data.canonicalForms.booleanFormsAtAGlance.headers.map((h, i) => (
+                      <th key={i} className="p-3 text-left font-bold">{h}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#DCE7E1]">
+                  {data.canonicalForms.booleanFormsAtAGlance.rows.map((row, idx) => {
+                    const isMintermSOP = row.name.includes('Minterm') || row.name.includes('Canonical SOP');
+                    const isMaxtermPOS = row.name.includes('Maxterm') || row.name.includes('Canonical POS');
+                    return (
+                      <tr 
+                        key={idx}
+                        className={
+                          isMintermSOP ? 'bg-[#EBF3ED]/30' :
+                          isMaxtermPOS ? 'bg-[#EBF8FF]/40' :
+                          'hover:bg-[#FAF8F5]/40'
+                        }
+                      >
+                        <td className="p-3 font-bold text-[#293B32]">{row.name}</td>
+                        <td className="p-3 font-sans text-xs text-[#5F6C64]">{row.meaning}</td>
+                        <td className="p-3 font-bold text-[#285C49]">{row.structure}</td>
+                        <td className="p-3 font-bold text-[#293B32] whitespace-nowrap">{row.example}</td>
+                        <td className="p-3 font-sans text-xs text-[#5F6C64]">{row.feature}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -1102,7 +1318,7 @@ export const Section23View = ({ section }) => {
               {/* SOP 7-Step Procedure */}
               <div className="p-5 rounded-xl bg-[#EBF3ED]/40 border border-[#285C49]/30 space-y-3">
                 <span className="font-mono text-xs font-bold text-[#285C49] uppercase tracking-wider block">
-                  Canonical SOP Extraction Algorithm
+                  Canonical SOP Extraction Algorithm (Σm)
                 </span>
                 <div className="space-y-2">
                   {data.canonicalForms.procedures.sopProcedure.map((st) => (
@@ -1122,7 +1338,7 @@ export const Section23View = ({ section }) => {
               {/* POS 7-Step Procedure */}
               <div className="p-5 rounded-xl bg-[#EBF8FF]/40 border border-[#2B6CB0]/30 space-y-3">
                 <span className="font-mono text-xs font-bold text-[#2B6CB0] uppercase tracking-wider block">
-                  Canonical POS Extraction Algorithm
+                  Canonical POS Extraction Algorithm (ΠM)
                 </span>
                 <div className="space-y-2">
                   {data.canonicalForms.procedures.posProcedure.map((st) => (
@@ -1155,17 +1371,29 @@ export const Section23View = ({ section }) => {
               </p>
             </div>
 
+            {/* Two Clear Rules */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+              <div className="p-3 rounded-xl bg-[#EBF3ED]/60 border border-[#285C49]/30">
+                <strong className="text-[#285C49] block">{data.canonicalForms.synchronizedTableDemo.twoRules[0].rule}:</strong>
+                <span className="text-[#293B32]">{data.canonicalForms.synchronizedTableDemo.twoRules[0].desc}</span>
+              </div>
+              <div className="p-3 rounded-xl bg-[#EBF8FF]/70 border border-[#2B6CB0]/30">
+                <strong className="text-[#2B6CB0] block">{data.canonicalForms.synchronizedTableDemo.twoRules[1].rule}:</strong>
+                <span className="text-[#293B32]">{data.canonicalForms.synchronizedTableDemo.twoRules[1].desc}</span>
+              </div>
+            </div>
+
             {/* Synchronized Table */}
             <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
-              <table className="w-full text-left text-xs font-mono">
+              <table className="w-full text-xs font-mono">
                 <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
                   <tr>
-                    <th className="p-3">Index</th>
-                    <th className="p-3">ABC</th>
-                    <th className="p-3 font-bold text-center">Output F</th>
-                    <th className="p-3">Selected For</th>
-                    <th className="p-3">Formulated Term</th>
-                    <th className="p-3">Role</th>
+                    <th className="p-3 text-center w-20">Index</th>
+                    <th className="p-3 text-center w-20">ABC</th>
+                    <th className="p-3 font-bold text-center w-24">Output F</th>
+                    <th className="p-3 text-center w-28">Selected For</th>
+                    <th className="p-3 text-center">Formulated Term</th>
+                    <th className="p-3 text-left">Role</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#DCE7E1]">
@@ -1174,24 +1402,24 @@ export const Section23View = ({ section }) => {
                       key={row.index}
                       className={row.F === 1 ? 'bg-[#EBF3ED]/60' : 'bg-[#EBF8FF]/60'}
                     >
-                      <td className="p-3 font-bold text-[#293B32]">Row {row.index}</td>
-                      <td className="p-3">{row.bin}</td>
+                      <td className="p-3 text-center font-bold text-[#293B32]">Row {row.index}</td>
+                      <td className="p-3 text-center">{row.bin}</td>
                       <td className="p-3 text-center">
-                        <span className={`inline-block px-2 py-0.5 rounded font-bold ${
+                        <span className={`inline-block px-2.5 py-0.5 rounded font-bold ${
                           row.F === 1 ? 'bg-[#285C49] text-white' : 'bg-[#2B6CB0] text-white'
                         }`}>
                           {row.F}
                         </span>
                       </td>
-                      <td className="p-3 font-bold">
+                      <td className="p-3 text-center font-bold">
                         {row.selectedFor}
                       </td>
-                      <td className="p-3 font-bold">
+                      <td className="p-3 text-center font-bold">
                         <span className={row.F === 1 ? 'text-[#285C49]' : 'text-[#2B6CB0]'}>
                           {row.term}
                         </span>
                       </td>
-                      <td className="p-3 text-[#5F6C64]">{row.role}</td>
+                      <td className="p-3 text-left text-[#5F6C64]">{row.role}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -1257,62 +1485,31 @@ export const Section23View = ({ section }) => {
             </div>
           </div>
 
-          {/* CONSTANT FUNCTIONS & FEATURE COMPARISON */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* CONSTANT FUNCTIONS */}
+          <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+            <h4 className="font-editorial text-lg font-bold text-[#293B32]">
+              {data.canonicalForms.constantFunctions.title}
+            </h4>
             
-            {/* Constant Functions */}
-            <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
-              <h4 className="font-editorial text-lg font-bold text-[#293B32]">
-                {data.canonicalForms.constantFunctions.title}
-              </h4>
-              
-              <div className="space-y-3 font-mono text-xs">
-                <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
-                  <span className="font-bold text-[#293B32]">Constant 0 (F = 0):</span>
-                  <div className="text-[#285C49]">SOP: {data.canonicalForms.constantFunctions.constantZero.mintermSet}</div>
-                  <div className="text-[#2B6CB0]">POS: {data.canonicalForms.constantFunctions.constantZero.maxtermSet}</div>
-                </div>
-
-                <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
-                  <span className="font-bold text-[#293B32]">Constant 1 (F = 1):</span>
-                  <div className="text-[#285C49]">SOP: {data.canonicalForms.constantFunctions.constantOne.mintermSet}</div>
-                  <div className="text-[#2B6CB0]">POS: {data.canonicalForms.constantFunctions.constantOne.maxtermSet}</div>
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 font-mono text-xs">
+              <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+                <span className="font-bold text-[#293B32]">{data.canonicalForms.constantFunctions.constantZero.function}:</span>
+                <div className="text-[#285C49]">SOP: {data.canonicalForms.constantFunctions.constantZero.mintermSet}</div>
+                <div className="text-[#2B6CB0]">POS: {data.canonicalForms.constantFunctions.constantZero.maxtermSet}</div>
+                <div className="text-[#5F6C64] font-sans text-xs pt-1">{data.canonicalForms.constantFunctions.constantZero.explanation}</div>
               </div>
 
-              <p className="text-xs text-[#5F6C64] leading-relaxed">
-                {data.canonicalForms.constantFunctions.formalConventions}
-              </p>
-            </div>
-
-            {/* Feature Comparison Table */}
-            <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
-              <h4 className="font-editorial text-lg font-bold text-[#293B32]">
-                Canonical SOP vs Canonical POS Summary
-              </h4>
-
-              <div className="overflow-x-auto rounded-xl border border-[#DCE7E1]">
-                <table className="w-full text-left text-xs font-mono">
-                  <thead className="bg-[#FAF8F5] border-b border-[#DCE7E1] text-[#293B32]">
-                    <tr>
-                      <th className="p-2.5">Feature</th>
-                      <th className="p-2.5 text-[#285C49]">Canonical SOP</th>
-                      <th className="p-2.5 text-[#2B6CB0]">Canonical POS</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-[#DCE7E1]">
-                    {data.canonicalForms.featureComparisonTable.map((row, idx) => (
-                      <tr key={idx}>
-                        <td className="p-2.5 font-bold text-[#293B32]">{row.feature}</td>
-                        <td className="p-2.5 text-[#285C49]">{row.canonicalSOP}</td>
-                        <td className="p-2.5 text-[#2B6CB0]">{row.canonicalPOS}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div className="p-3.5 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-1">
+                <span className="font-bold text-[#293B32]">{data.canonicalForms.constantFunctions.constantOne.function}:</span>
+                <div className="text-[#285C49]">SOP: {data.canonicalForms.constantFunctions.constantOne.mintermSet}</div>
+                <div className="text-[#2B6CB0]">POS: {data.canonicalForms.constantFunctions.constantOne.maxtermSet}</div>
+                <div className="text-[#5F6C64] font-sans text-xs pt-1">{data.canonicalForms.constantFunctions.constantOne.explanation}</div>
               </div>
             </div>
 
+            <p className="text-xs text-[#5F6C64] leading-relaxed">
+              {data.canonicalForms.constantFunctions.formalConventions}
+            </p>
           </div>
 
         </div>
@@ -1324,19 +1521,16 @@ export const Section23View = ({ section }) => {
       {activeTab === 'worked-models' && (
         <div className="space-y-8 animate-fadeIn">
           
-          {/* Header & Filter Controls */}
-          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-4">
+          {/* Header & Introductory Purpose Card */}
+          <div className="p-6 sm:p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <div>
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#285C49] block mb-1">
-                  Step-by-Step Mastery
+                  Guided Learning
                 </span>
                 <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
-                  15 Verified Worked Problem Models
+                  {data.workedModelsIntro.title}
                 </h3>
-                <p className="text-xs text-[#5F6C64] mt-0.5">
-                  14 core syllabus models plus 1 combinatorial challenge problem with full step-by-step transformations.
-                </p>
               </div>
 
               {/* Filter Pills */}
@@ -1353,6 +1547,21 @@ export const Section23View = ({ section }) => {
                   >
                     {lvl}
                   </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Why Are We Solving These Examples? */}
+            <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1] space-y-2">
+              <span className="font-mono text-xs font-bold text-[#285C49] uppercase tracking-wider block">
+                {data.workedModelsIntro.whyHeading}
+              </span>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-xs text-[#5F6C64]">
+                {data.workedModelsIntro.whyPoints.map((pt, idx) => (
+                  <div key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#285C49] flex-shrink-0 mt-0.5" />
+                    <span>{pt}</span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -1491,7 +1700,7 @@ export const Section23View = ({ section }) => {
                 Quick Revision
               </span>
               <h3 className="font-editorial text-xl sm:text-2xl font-bold text-[#293B32]">
-                Minterms and Maxterms Master Cheat Sheet
+                Minterms, Maxterms and Canonical Forms: One-Glance Reference
               </h3>
               <p className="text-xs text-[#5F6C64] mt-0.5">
                 Essential memory formulas, conversion checklists, and exam trap avoidance.

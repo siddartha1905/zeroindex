@@ -166,6 +166,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-022 | 2026-10-20 | Permanent Academic Presentation Conventions and Section 2.3 Final Academic and Visual Refinements
+
+- **Decision**: (1) Establish permanent ZeroIndex teaching-presentation rules: replace long introductory paragraphs with 4 to 6 structured, informative bullet points highlighting core concepts in bold typography, restrained forest-green, muted blue, or copper accents without flashy animations; (2) Lead definitions with an immediately understandable Simple Definition followed by the complete Formal Definition; (3) Mandate the use of actual Unicode mathematical symbols Σ (`\u03A3`) and Π (`\u03A0`) in all formulas involving canonical forms, SOP/POS, and K-Maps (strictly prohibiting the written words "Sigma" or "Pi" inside formulas); (4) Standardize complement terminology to "complemented" and "uncomplemented" ($A'$ means $A$ complement / $A$ prime); (5) Refine Section 2.3 Tab 1 by replacing the long quotation block with 6 structured introductory bullet points, adding a first-use explanation card for Σ and Π, and perfecting the alarm truth-table alignment (centered headers `A (Door)`, `B (Motion)`, `F (Alarm)`, centered binary values, left-aligned physical scenario); (6) Refine Tab 2 with a 5-tier definition hierarchy, an explicit lowercase m vs uppercase M callout, and verified complement terminology; (7) Refine Tab 3 with "How Are Standard and Canonical Forms Different?", a single-function master comparison across all 4 forms for $F(A,B,C) = AB+C$ with an 8-row truth-table proof, a 9-row "Boolean Forms at a Glance" matrix, and synchronized $F=C$ demo with Σ and Π; (8) Refine Tab 4 with an orientation card articulating the 5 pedagogical reasons for these examples and ensuring all 15 models use Σ and Π notation; (9) Refine Tab 5 Cheat Sheet and Tab 6 Practice Lab (all 24 exercises, hints, and revealed solutions) to strictly use Σ and Π symbols; (10) Expand verification suite `scripts/verifySection23Math.mjs` to 551 passing checks (including 4-form equivalence proof, Σ and Π glyph audits, and zero-dash compliance).
+- **Rationale**: Elevates educational readability, eliminates student ambiguity on mathematical symbols, prevents formula line-break glitches, and guarantees consistent academic rigor across all future ZeroIndex lessons.
+- **Affected Files**: `src/data/dldSection23Data.js`, `src/components/Section23View.jsx`, `scripts/verifySection23Math.mjs`, `AGENTS.md`, `.agents/rules/academic_presentation_conventions.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`, `project-memory/DECISIONS.md`.
+- **Approval Evidence**: `verifySection23Math.mjs` passes 551/551 checks (0 failures). Section 2.1 suite (95 passed) and Section 2.2 suite (78 passed) regression tests pass. Production build `npm run build` succeeds in 3.75s with zero errors and zero warnings. Visual alignment audit via browser subagent confirmed perfect alignment across all 6 tabs. Zero em-dashes and zero en-dashes confirmed.
+- **Verification / Follow-up Requirements**: Preserved on development branch `dld-unit2-development` (preview status `isLive: false`). Stop after Section 2.3 completion; do not merge to main or proceed to Section 2.4 without explicit user instruction.
+
+---
+
 ## Decision Record Template
 
 ```markdown
@@ -177,4 +187,5 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+
 

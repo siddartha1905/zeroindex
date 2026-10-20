@@ -16,4 +16,13 @@ For every substantive code/content change:
 
 Never fabricate progress percentages, publications, test results, working routes, academic correctness, external links, deployment success, or author approval. Do not publish or push without explicit user approval. Never commit secrets, private student information, or unpublished content intended to remain private. Keep approved URLs and DLD Unit 1 working. Preserve existing `.agents/rules/` instructions.
 
+## Permanent Academic Presentation Conventions
+1. **Introductory Bullets**: Replace long introductory paragraphs with 4 to 6 structured, informative bullet points (WHY, WHERE, WHAT, HOW, WHY CHOSEN, REMEMBER) communicating one clear idea each.
+2. **Restrained Keyword Emphasis**: Highlight central concepts in bold typography with restrained forest-green, muted blue, or copper accents. No bright gradients, metallic effects, or visual noise.
+3. **Academic Accuracy Hierarchy**: Lead with an immediately understandable Simple Definition, followed by the rigorous Formal Definition suitable for exams, construction rules, examples, and key properties.
+4. **Mandatory Mathematical Symbols**: Always render actual Unicode Σ (`\u03A3`) and Π (`\u03A0`) in all canonical form, SOP/POS, and K-Map formulas. Never substitute the words "Sigma" or "Pi" inside formulas.
+5. **Standardized Complement Terminology**: Use "complemented" and "uncomplemented" consistently ($A'$ means $A$ complement / $A$ prime).
+6. **Zero-Dash Standard**: Strictly zero em-dashes and zero en-dashes across all code, content, and documentation files.
+
 To transfer this work to another assistant, share `project-memory/AI_HANDOFF.md`, `CURRENT_STATE.md`, `ROADMAP.md`, `DECISIONS.md`, `QUALITY_CHECKS.md`, the relevant content registry and source files. The repo is the source of truth; revalidate any dated claims.
+

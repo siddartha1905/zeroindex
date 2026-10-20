@@ -3,6 +3,7 @@
  * Boolean Functions, Minterms, Maxterms, Canonical and Standard Forms
  * 
  * Strict formatting: Zero em-dashes and zero en-dashes throughout.
+ * All formulas use actual mathematical symbols: Σ (\u03A3) and Π (\u03A0).
  */
 
 export const dldSection23Data = {
@@ -18,8 +19,52 @@ export const dldSection23Data = {
   startHere: {
     whyMintermsMaxterms: {
       title: "Why Do We Need Minterms and Maxterms?",
-      lead: "Every digital circuit receives inputs and produces outputs. When a digital function contains only one or two conditions, describing its behavior may be straightforward. But when there are three, four or more inputs, how can we systematically describe every combination that should produce an output of 1 or 0? A truth table gives us the complete input-output behavior. The next challenge is to convert that truth table into a Boolean expression without missing any combination. Minterms and maxterms provide a systematic mathematical method for doing this. They let us build complete Boolean representations directly from the rows of a truth table. Once we understand this method, we can represent functions in canonical forms and prepare them for later conversion and minimization techniques.",
+      bullets: [
+        {
+          bold: "Digital circuits work with binary inputs and outputs.",
+          text: "Every input combination determines the required circuit output."
+        },
+        {
+          bold: "Truth tables describe all possible input combinations.",
+          text: "A complete truth table tells us exactly when the output should be 0 or 1."
+        },
+        {
+          bold: "We need a systematic mathematical representation.",
+          text: "Writing Boolean expressions directly from many input combinations can otherwise become difficult and error-prone."
+        },
+        {
+          bold: "Minterms represent individual input combinations where their term is 1.",
+          text: "They help construct canonical SOP expressions from the truth-table rows where F = 1."
+        },
+        {
+          bold: "Maxterms represent individual input combinations where their term is 0.",
+          text: "They help construct canonical POS expressions from the truth-table rows where F = 0."
+        },
+        {
+          bold: "Canonical forms give us a complete representation of a function.",
+          text: "They provide a foundation for the more detailed conversion and minimization methods studied later."
+        }
+      ],
       questionCallout: "How do we turn a truth table into a Boolean expression?"
+    },
+
+    symbolFirstUse: {
+      title: "First-Use Mathematical Notation Guide: Σ and Π",
+      sigma: {
+        symbol: "Σ",
+        name: "Capital Sigma (Sum)",
+        meaning: "Represents the logical OR (sum) of selected minterms.",
+        termType: "Lowercase m denotes a minterm (product term): m_i.",
+        example: "F = Σm(1, 2, 3) = m1 + m2 + m3"
+      },
+      pi: {
+        symbol: "Π",
+        name: "Capital Pi (Product)",
+        meaning: "Represents the logical AND (product) of selected maxterms.",
+        termType: "Uppercase M denotes a maxterm (sum term): M_i.",
+        example: "F = ΠM(0) = M0"
+      },
+      indicesRule: "Indices inside parentheses indicate the exact truth-table row numbers where the function condition holds."
     },
 
     alarmDemo: {
@@ -36,15 +81,15 @@ export const dldSection23Data = {
         title: "Canonical Sum of Products (SOP) via Minterms",
         explanation: "To guarantee F = 1 for rows 1, 2, and 3, we take the logical OR (sum) of the minterms corresponding to each 1-output row:",
         expandedExpr: "F = A'B + AB' + AB",
-        compactNotation: "F(A, B) = Sigma m(1, 2, 3)"
+        compactNotation: "F(A, B) = Σm(1, 2, 3)"
       },
       posDerivation: {
         title: "Canonical Product of Sums (POS) via Maxterms",
         explanation: "Alternatively, we can describe the exact conditions where the alarm stays quiet (F = 0). Row 0 is the only zero-output condition. Taking the logical AND (product) of the zero-row maxterms:",
         expandedExpr: "F = (A + B)",
-        compactNotation: "F(A, B) = Pi M(0)"
+        compactNotation: "F(A, B) = ΠM(0)"
       },
-      takeaway: "Both canonical representations describe the identical physical circuit behavior. Algebraic simplification confirms that A'B + AB' + AB simplifies to A + B, perfectly matching Pi M(0) = (A + B). Minterms and maxterms are two complementary lenses for specifying the exact same truth table."
+      takeaway: "Both canonical representations describe the identical physical circuit behavior. Algebraic simplification confirms that A'B + AB' + AB simplifies to A + B, perfectly matching ΠM(0) = (A + B). Minterms and maxterms are two complementary lenses for specifying the exact same truth table."
     },
 
     learningFlow: {
@@ -69,12 +114,12 @@ export const dldSection23Data = {
         {
           step: 4,
           name: "Construct Terms",
-          desc: "Apply the polarity rules: form product minterms (0 -> prime, 1 -> unprimed) or sum maxterms (0 -> unprimed, 1 -> prime)."
+          desc: "Apply the polarity rules: form product minterms (0 -> complemented, 1 -> uncomplemented) or sum maxterms (0 -> uncomplemented, 1 -> complemented)."
         },
         {
           step: 5,
           name: "Canonical Expression",
-          desc: "Combine terms: OR the minterms to yield Sigma m(...) or AND the maxterms to yield Pi M(...)."
+          desc: "Combine terms: OR the minterms to yield Σm(...) or AND the maxterms to yield ΠM(...)."
         }
       ]
     },
@@ -118,15 +163,15 @@ export const dldSection23Data = {
       {
         term: "Decimal Row Index",
         definition: "The decimal integer value obtained by converting the binary input string of that row into base-10.",
-        plainExplanation: "A compact integer tag identifying which row of the table we are referring to.",
-        smallExample: "Binary inputs A=1, B=0, C=1 evaluate to index 1*4 + 0*2 + 1*1 = 5.",
-        truthTableMeaning: "The integer label i (from 0 to 2^n - 1) identifying the row."
+        plainExplanation: "The unique integer tag (0 to 2^n - 1) identifying each row in the truth table.",
+        smallExample: "Binary 1010 has decimal row index 8(1) + 4(0) + 2(1) + 1(0) = 10.",
+        truthTableMeaning: "Shown as the index column; serves as the subscript for minterms (m_i) and maxterms (M_i)."
       },
       {
         term: "Literal",
-        definition: "A single instance of a variable appearing in either its uncomplemented (unprimed) or complemented (primed) form.",
-        plainExplanation: "Each appearance of an input letter in an algebraic formula.",
-        smallExample: "In F = AB' + C, there are 3 variables (A, B, C) and 3 literals (A, B', C).",
+        definition: "A single binary variable in either its uncomplemented (A) or complemented (A') form.",
+        plainExplanation: "The basic algebraic building block. A function with 3 variables has 6 possible literals: {A, A', B, B', C, C'}.",
+        smallExample: "In the term AB'C, there are 3 literals: A, B', and C.",
         truthTableMeaning: "Corresponds to checking whether a specific input column is 1 (A) or 0 (A')."
       },
       {
@@ -175,32 +220,50 @@ export const dldSection23Data = {
 
   // Tab 2: Minterms and Maxterms Content
   mintermsAndMaxterms: {
+    terminologyApostropheNote: "Notation Convention: A' means A complement. It may also be read as A prime. In this lesson, we use the formal academic term complemented variable.",
+
     mintermDefinition: {
-      title: "Formal Definition of a Minterm",
-      definition: "A minterm is a product (AND) term containing every variable of an n-variable Boolean function exactly once, either complemented or uncomplemented. A minterm evaluates to 1 for exactly one input combination and evaluates to 0 for all other 2^n - 1 input combinations.",
-      polarityRule: "Minterm Construction Rule: If a variable is 0 in the row, write it complemented (primed, e.g. A'). If a variable is 1 in the row, write it uncomplemented (unprimed, e.g. A).",
+      simpleDefinition: "A minterm is an AND term containing every variable exactly once. It becomes 1 for only one particular input combination.",
+      formalDefinition: "A minterm is a product (AND) term containing every variable of an n-variable Boolean function exactly once, either complemented or uncomplemented. A minterm evaluates to 1 for exactly one input combination and evaluates to 0 for all other 2^n - 1 input combinations.",
+      howToConstruct: "Binary 0 -> Complemented variable (e.g. A') | Binary 1 -> Uncomplemented variable (e.g. A).",
       exampleCalculation: {
         inputs: "ABC = 101",
         index: 5,
-        calculation: "A = 1 -> A, B = 0 -> B', C = 1 -> C",
+        calculation: "A = 1 -> A (uncomplemented), B = 0 -> B' (complemented), C = 1 -> C (uncomplemented)",
         resultSymbol: "m5",
         resultTerm: "AB'C",
         proof: "When A=1, B=0, C=1: m5 = (1) · (0)' · (1) = 1 · 1 · 1 = 1. For any other input row, at least one literal becomes 0, forcing the product to 0."
-      }
+      },
+      importantProperty: "A minterm evaluates to 1 for exactly its own indexed row, and 0 everywhere else."
     },
 
     maxtermDefinition: {
-      title: "Formal Definition of a Maxterm",
-      definition: "A maxterm is a sum (OR) term containing every variable of an n-variable Boolean function exactly once, either complemented or uncomplemented. A maxterm evaluates to 0 for exactly one input combination and evaluates to 1 for all other 2^n - 1 input combinations.",
-      polarityRule: "Maxterm Construction Rule: If a variable is 0 in the row, write it uncomplemented (unprimed, e.g. A). If a variable is 1 in the row, write it complemented (primed, e.g. A'). This is the exact opposite of the minterm rule!",
+      simpleDefinition: "A maxterm is an OR term containing every variable exactly once. It becomes 0 for only one particular input combination.",
+      formalDefinition: "A maxterm is a sum (OR) term containing every variable of an n-variable Boolean function exactly once, either complemented or uncomplemented. A maxterm evaluates to 0 for exactly one input combination and evaluates to 1 for all other 2^n - 1 input combinations.",
+      howToConstruct: "Binary 0 -> Uncomplemented variable (e.g. A) | Binary 1 -> Complemented variable (e.g. A'). This is the exact opposite of the minterm rule!",
       exampleCalculation: {
         inputs: "ABC = 101",
         index: 5,
-        calculation: "A = 1 -> A', B = 0 -> B, C = 1 -> C'",
+        calculation: "A = 1 -> A' (complemented), B = 0 -> B (uncomplemented), C = 1 -> C' (complemented)",
         resultSymbol: "M5",
         resultTerm: "A' + B + C'",
         proof: "When A=1, B=0, C=1: M5 = (1)' + (0) + (1)' = 0 + 0 + 0 = 0. For any other input row, at least one literal becomes 1, forcing the sum to 1."
-      }
+      },
+      importantProperty: "A maxterm evaluates to 0 for exactly its own indexed row, and 1 everywhere else."
+    },
+
+    mVsMCallout: {
+      title: "Crucial Notation Distinction: Lowercase m vs Uppercase M",
+      mintermLabel: "Lowercase m = Minterm (Product / AND Term)",
+      mintermExample: "m0, m1, m2, ..., m_(2^n - 1)",
+      maxtermLabel: "Uppercase M = Maxterm (Sum / OR Term)",
+      maxtermExample: "M0, M1, M2, ..., M_(2^n - 1)",
+      connectionSummary: [
+        { term: "Individual Minterm", symbol: "m_i", type: "Single product term", eval: "1 only at row i" },
+        { term: "Individual Maxterm", symbol: "M_i", type: "Single sum term", eval: "0 only at row i" },
+        { term: "Canonical SOP", symbol: "Σm(...)", type: "OR (sum) of selected minterms", eval: "F = 1 rows" },
+        { term: "Canonical POS", symbol: "ΠM(...)", type: "AND (product) of selected maxterms", eval: "F = 0 rows" }
+      ]
     },
 
     sideBySideComparison: {
@@ -279,6 +342,28 @@ export const dldSection23Data = {
 
   // Tab 3: Canonical and Standard Forms Content
   canonicalForms: {
+    distinctionIntro: {
+      title: "How Are Standard and Canonical Forms Different?",
+      points: [
+        {
+          name: "General SOP (Sum of Products)",
+          desc: "A Boolean expression formed by ORing product terms together. The terms do NOT necessarily contain all declared variables (e.g. F = AB + C)."
+        },
+        {
+          name: "Canonical SOP (Sum of Minterms)",
+          desc: "An SOP expression in which EVERY product term is a full minterm containing all declared variables exactly once (e.g. F = Σm(1, 3, 5, 6, 7))."
+        },
+        {
+          name: "General POS (Product of Sums)",
+          desc: "A Boolean expression formed by ANDing sum terms together. The terms do NOT necessarily contain all declared variables (e.g. F = (A + C)(B + C))."
+        },
+        {
+          name: "Canonical POS (Product of Maxterms)",
+          desc: "A POS expression in which EVERY sum term is a full maxterm containing all declared variables exactly once (e.g. F = ΠM(0, 2, 4))."
+        }
+      ]
+    },
+
     terminologyDefinitions: [
       {
         term: "Sum of Products (SOP)",
@@ -295,47 +380,134 @@ export const dldSection23Data = {
       {
         term: "Canonical SOP (Sum of Minterms)",
         definition: "An SOP expression in which EVERY product term is a true minterm containing all n declared variables exactly once.",
-        example: "F(A, B, C) = ABC + ABC' + A'BC",
-        standardStatus: "Canonical Form: Full variable presence required in every term. Denoted by Sigma m(...)."
+        example: "F(A, B, C) = ABC + ABC' + AB'C",
+        standardStatus: "Canonical Form: Full variable presence required in every term. Denoted by Σm(...)."
       },
       {
         term: "Canonical POS (Product of Maxterms)",
         definition: "A POS expression in which EVERY sum term is a true maxterm containing all n declared variables exactly once.",
         example: "F(A, B, C) = (A + B + C)(A + B' + C)(A' + B + C)",
-        standardStatus: "Canonical Form: Full variable presence required in every term. Denoted by Pi M(...)."
+        standardStatus: "Canonical Form: Full variable presence required in every term. Denoted by ΠM(...)."
       }
     ],
 
     textbookNote: "Terminology Convention Notice: In some academic syllabi and textbooks (e.g. Morris Mano), the term 'Standard Form' refers to any SOP or POS expression where terms may contain any subset of variables, whereas 'Canonical Form' strictly demands that every term contain all n variables. Other textbooks use 'standard minterm form' synonymously with canonical form. In ZeroIndex, we adhere to the standard distinction: standard forms permit varying term lengths, while canonical forms require complete variable presence.",
 
-    canonicalVsNonCanonical: {
-      title: "Canonical vs Non-Canonical Representation Comparison",
-      sop: {
-        declaredVariables: "A, B, C (3 variables declared)",
-        nonCanonical: {
-          expr: "F(A, B, C) = AB + C",
-          status: "Non-Canonical (General Standard SOP)",
-          flaw: "Term AB has length 2 (missing C). Term C has length 1 (missing A and B)."
+    // One Function Demonstrated in All Four Forms: F(A, B, C) = AB + C
+    sameFunctionFourForms: {
+      title: "One Function Demonstrated in All Four Boolean Forms: F(A, B, C) = AB + C",
+      subtitle: "Observe how four algebraically distinct representations express the EXACT SAME truth table.",
+      forms: [
+        {
+          name: "General SOP",
+          expr: "F = AB + C",
+          classification: "General Standard Form",
+          comment: "Contains product term AB (missing C) and product term C (missing A and B)."
         },
-        canonical: {
-          expr: "F(A, B, C) = ABC + ABC' + AB'C + A'BC + A'B'C",
-          status: "Canonical SOP (Sum of Minterms)",
-          merit: "Every single product term contains all 3 variables {A, B, C}. It maps directly to Sigma m(0, 2, 4, 6, 7)."
-        }
-      },
-      pos: {
-        declaredVariables: "A, B, C (3 variables declared)",
-        nonCanonical: {
-          expr: "F(A, B, C) = (A + B)C",
-          status: "Non-Canonical (General Standard POS)",
-          flaw: "Factor (A + B) is missing C; Factor C is missing A and B."
+        {
+          name: "General POS",
+          expr: "F = (A + C)(B + C)",
+          classification: "General Standard Form",
+          comment: "Obtained via the second distributive law A + BC = (A + B)(A + C). Terms omit variables."
         },
-        canonical: {
-          expr: "F(A, B, C) = (A + B + C)(A + B + C')(A + B' + C)(A' + B + C)",
-          status: "Canonical POS (Product of Maxterms)",
-          merit: "Every single sum term contains all 3 variables {A, B, C}. It maps directly to Pi M(0, 1, 2, 4)."
+        {
+          name: "Canonical SOP",
+          expr: "F = Σm(1, 3, 5, 6, 7)",
+          expanded: "F = A'B'C + A'BC + AB'C + ABC' + ABC",
+          classification: "Canonical Form (Sum of Minterms)",
+          comment: "OR-sum of all rows where F = 1. Every product term contains all 3 variables {A, B, C}."
+        },
+        {
+          name: "Canonical POS",
+          expr: "F = ΠM(0, 2, 4)",
+          expanded: "F = (A + B + C)(A + B' + C)(A' + B + C)",
+          classification: "Canonical Form (Product of Maxterms)",
+          comment: "AND-product of all rows where F = 0. Every sum term contains all 3 variables {A, B, C}."
         }
-      }
+      ],
+      truthTableVerification: [
+        { index: 0, bin: "000", A: 0, B: 0, C: 0, genSOP: 0, genPOS: 0, canSOP: 0, canPOS: 0, matches: true },
+        { index: 1, bin: "001", A: 0, B: 0, C: 1, genSOP: 1, genPOS: 1, canSOP: 1, canPOS: 1, matches: true },
+        { index: 2, bin: "010", A: 0, B: 1, C: 0, genSOP: 0, genPOS: 0, canSOP: 0, canPOS: 0, matches: true },
+        { index: 3, bin: "011", A: 0, B: 1, C: 1, genSOP: 1, genPOS: 1, canSOP: 1, canPOS: 1, matches: true },
+        { index: 4, bin: "100", A: 1, B: 0, C: 0, genSOP: 0, genPOS: 0, canSOP: 0, canPOS: 0, matches: true },
+        { index: 5, bin: "101", A: 1, B: 0, C: 1, genSOP: 1, genPOS: 1, canSOP: 1, canPOS: 1, matches: true },
+        { index: 6, bin: "110", A: 1, B: 1, C: 0, genSOP: 1, genPOS: 1, canSOP: 1, canPOS: 1, matches: true },
+        { index: 7, bin: "111", A: 1, B: 1, C: 1, genSOP: 1, genPOS: 1, canSOP: 1, canPOS: 1, matches: true }
+      ],
+      takeaway: "All four forms evaluate to identical output column [0, 1, 0, 1, 0, 1, 1, 1]. They are completely equivalent mathematical specifications of the exact same digital logic switching function."
+    },
+
+    // Master Comparison Table: Boolean Forms at a Glance
+    booleanFormsAtAGlance: {
+      title: "Boolean Forms at a Glance",
+      subtitle: "A complete classification reference for all structural building blocks and representations.",
+      headers: ["Name", "Meaning", "Mathematical Structure", "Example", "Key Identifying Feature"],
+      rows: [
+        {
+          name: "Literal",
+          meaning: "A single variable in either normal or complemented form.",
+          structure: "x or x'",
+          example: "A, B', C",
+          feature: "Smallest atomic building block; represents one physical signal or wire."
+        },
+        {
+          name: "Product Term",
+          meaning: "One or more literals combined exclusively by logical AND.",
+          structure: "L1 · L2 ··· Lk",
+          example: "AB, A'BC, X",
+          feature: "Evaluates to 1 only when every literal is 1; does not need all variables."
+        },
+        {
+          name: "Sum Term",
+          meaning: "One or more literals combined exclusively by logical OR.",
+          structure: "L1 + L2 + ··· + Lk",
+          example: "(A + B), (A' + C), Y",
+          feature: "Evaluates to 0 only when every literal is 0; does not need all variables."
+        },
+        {
+          name: "Minterm",
+          meaning: "An AND product term containing EVERY declared variable exactly once.",
+          structure: "Product of n literals (m_i)",
+          example: "m5 = AB'C (for n=3)",
+          feature: "Evaluates to 1 for exactly ONE input row (0 -> complemented, 1 -> uncomplemented)."
+        },
+        {
+          name: "Maxterm",
+          meaning: "An OR sum term containing EVERY declared variable exactly once.",
+          structure: "Sum of n literals (M_i)",
+          example: "M5 = (A' + B + C') (for n=3)",
+          feature: "Evaluates to 0 for exactly ONE input row (0 -> uncomplemented, 1 -> complemented)."
+        },
+        {
+          name: "General SOP",
+          meaning: "An expression formed by ORing general product terms together.",
+          structure: "P1 + P2 + ··· + Pk",
+          example: "F = AB + C",
+          feature: "Product terms may omit variables; provides two-level AND-OR realization."
+        },
+        {
+          name: "General POS",
+          meaning: "An expression formed by ANDing general sum terms together.",
+          structure: "S1 · S2 ··· Sk",
+          example: "F = (A + C)(B + C)",
+          feature: "Sum terms may omit variables; provides two-level OR-AND realization."
+        },
+        {
+          name: "Canonical SOP",
+          meaning: "An SOP expression in which EVERY product term is a true minterm.",
+          structure: "Σm(i1, i2, ...)",
+          example: "F = Σm(1, 3, 5, 6, 7)",
+          feature: "Every term contains all n variables; selected from all rows where F = 1."
+        },
+        {
+          name: "Canonical POS",
+          meaning: "An POS expression in which EVERY sum term is a true maxterm.",
+          structure: "ΠM(i1, i2, ...)",
+          example: "F = ΠM(0, 2, 4)",
+          feature: "Every term contains all n variables; selected from all rows where F = 0."
+        }
+      ]
     },
 
     procedures: {
@@ -343,18 +515,18 @@ export const dldSection23Data = {
         { step: 1, title: "Establish Variable Order", action: "Determine the exact input variable sequence (e.g. A as MSB, B, C as LSB)." },
         { step: 2, title: "Construct Truth Table", action: "Write out the 2^n binary input permutations and compute the functional output for each row." },
         { step: 3, title: "Identify F = 1 Rows", action: "Scan the output column and select only those rows where the function evaluates to logic 1." },
-        { step: 4, title: "Formulate Minterms", action: "For each selected row, write its minterm: variable is 0 -> prime (A'), variable is 1 -> unprimed (A)." },
+        { step: 4, title: "Formulate Minterms", action: "For each selected row, write its minterm: variable is 0 -> complemented (A'), variable is 1 -> uncomplemented (A)." },
         { step: 5, title: "Logical OR (Sum)", action: "Connect all formulated minterms together using the logical OR (+) operator." },
-        { step: 6, title: "Express Compact Notation", action: "Write the result in compact summation form: F = Sigma m(index1, index2, ...)." },
+        { step: 6, title: "Express Compact Notation", action: "Write the result in compact summation form: F = Σm(index1, index2, ...)." },
         { step: 7, title: "Verify Completeness", action: "Confirm that every 1-row is represented and no 0-rows are mistakenly included." }
       ],
       posProcedure: [
         { step: 1, title: "Establish Variable Order", action: "Determine the exact input variable sequence (e.g. A as MSB, B, C as LSB)." },
         { step: 2, title: "Construct Truth Table", action: "Write out the 2^n binary input permutations and compute the functional output for each row." },
         { step: 3, title: "Identify F = 0 Rows", action: "Scan the output column and select only those rows where the function evaluates to logic 0." },
-        { step: 4, title: "Formulate Maxterms", action: "For each selected row, write its maxterm: variable is 0 -> unprimed (A), variable is 1 -> prime (A')." },
+        { step: 4, title: "Formulate Maxterms", action: "For each selected row, write its maxterm: variable is 0 -> uncomplemented (A), variable is 1 -> complemented (A')." },
         { step: 5, title: "Logical AND (Product)", action: "Connect all formulated maxterms together using the logical AND (·) operator or parentheses." },
-        { step: 6, title: "Express Compact Notation", action: "Write the result in compact product form: F = Pi M(index1, index2, ...)." },
+        { step: 6, title: "Express Compact Notation", action: "Write the result in compact product form: F = ΠM(index1, index2, ...)." },
         { step: 7, title: "Verify Completeness", action: "Confirm that every 0-row is represented and no 1-rows are mistakenly included." }
       ]
     },
@@ -362,6 +534,10 @@ export const dldSection23Data = {
     synchronizedTableDemo: {
       title: "Synchronized Truth Table Demonstration: F(A, B, C) = C",
       subtitle: "Observe how F = 1 rows generate Canonical SOP while F = 0 rows generate Canonical POS for the exact same function.",
+      twoRules: [
+        { rule: "Canonical SOP Selection", desc: "Select all rows where F = 1 and connect their minterms using logical OR (+)." },
+        { rule: "Canonical POS Selection", desc: "Select all rows where F = 0 and connect their maxterms using logical AND (·)." }
+      ],
       rows: [
         { index: 0, bin: "000", A: 0, B: 0, C: 0, F: 0, selectedFor: "POS (M0)", term: "M0 = (A + B + C)", role: "F = 0 Row" },
         { index: 1, bin: "001", A: 0, B: 0, C: 1, F: 1, selectedFor: "SOP (m1)", term: "m1 = A'B'C", role: "F = 1 Row" },
@@ -372,9 +548,9 @@ export const dldSection23Data = {
         { index: 6, bin: "110", A: 1, B: 1, C: 0, F: 0, selectedFor: "POS (M6)", term: "M6 = (A' + B' + C)", role: "F = 0 Row" },
         { index: 7, bin: "111", A: 1, B: 1, C: 1, F: 1, selectedFor: "SOP (m7)", term: "m7 = ABC", role: "F = 1 Row" }
       ],
-      canonicalSOPResult: "F(A, B, C) = Sigma m(1, 3, 5, 7) = A'B'C + A'BC + AB'C + ABC",
-      canonicalPOSResult: "F(A, B, C) = Pi M(0, 2, 4, 6) = (A + B + C)(A + B' + C)(A' + B + C)(A' + B' + C)",
-      simplificationProof: "Both expressions algebraically reduce to F = C. For SOP: (A'B' + A'B + AB' + AB)C = [1]C = C. For POS: (A + C)(A' + C) = AA' + C = C. Perfect functional equivalence is verified."
+      canonicalSOPResult: "F(A, B, C) = Σm(1, 3, 5, 7) = A'B'C + A'BC + AB'C + ABC",
+      canonicalPOSResult: "F(A, B, C) = ΠM(0, 2, 4, 6) = (A + B + C)(A + B' + C)(A' + B + C)(A' + B' + C)",
+      simplificationProof: "Both canonical representations reduce to F = C. For SOP: (A'B' + A'B + AB' + AB)C = [1]C = C. For POS: (A + C)(A' + C) = AA' + C = C. Perfect functional equivalence is verified."
     },
 
     complementaryIndexSets: {
@@ -382,28 +558,28 @@ export const dldSection23Data = {
       universeFormula: "Universe of indices U = {0, 1, 2, ..., 2^n - 1}",
       partitionRule: "For any Boolean function F of n variables, the minterm set S and the maxterm set S_c partition the index universe U into two mutually exclusive and exhaustive subsets:",
       dualFormulas: [
-        { name: "Canonical POS of Same Function F", formula: "F = Sigma m(S)  <=>  F = Pi M(U \\ S)", meaning: "To convert a function from SOP to POS, simply list all the missing indices from the universe." },
-        { name: "Complement Function F' in SOP", formula: "[F]' = [Sigma m(S)]' = Sigma m(U \\ S)", meaning: "The complement function F' produces 1 wherever F produces 0." },
-        { name: "Complement Function F' in POS", formula: "[F]' = [Pi M(U \\ S)]' = Pi M(S)", meaning: "The complement function in POS uses the original 1-row indices of F." }
+        { name: "Canonical POS of Same Function F", formula: "F = Σm(S)  <=>  F = ΠM(U \\ S)", meaning: "To convert a function from SOP to POS, simply list all the missing indices from the universe." },
+        { name: "Complement Function F' in SOP", formula: "[F]' = [Σm(S)]' = Σm(U \\ S)", meaning: "The complement function F' produces 1 wherever F produces 0." },
+        { name: "Complement Function F' in POS", formula: "[F]' = [ΠM(U \\ S)]' = ΠM(S)", meaning: "The complement function in POS uses the original 1-row indices of F." }
       ],
-      distinctionWarning: "Crucial Academic Distinction: Converting F to canonical POS (F = Pi M(U \\ S)) leaves the function output unchanged! In contrast, complementing the function ([F]' = Sigma m(U \\ S) = Pi M(S)) inverts the physical circuit output."
+      distinctionWarning: "Crucial Academic Distinction: Converting F to canonical POS (F = ΠM(U \\ S)) leaves the function output unchanged! In contrast, complementing the function ([F]' = Σm(U \\ S) = ΠM(S)) inverts the physical circuit output."
     },
 
     constantFunctions: {
       title: "Constant Functions and Empty Index Conventions",
       constantZero: {
         function: "F = 0 (Contradiction / Ground)",
-        mintermSet: "Sigma m(empty set) = 0",
-        maxtermSet: "Pi M(0, 1, ..., 2^n - 1)",
+        mintermSet: "Σm(empty set) = 0",
+        maxtermSet: "ΠM(0, 1, ..., 2^n - 1)",
         explanation: "F is never 1 on any row. Therefore its minterm set is empty (empty sum = 0), and its maxterm set contains all 2^n rows."
       },
       constantOne: {
         function: "F = 1 (Tautology / VCC)",
-        mintermSet: "Sigma m(0, 1, ..., 2^n - 1)",
-        maxtermSet: "Pi M(empty set) = 1",
+        mintermSet: "Σm(0, 1, ..., 2^n - 1)",
+        maxtermSet: "ΠM(empty set) = 1",
         explanation: "F is 1 on every row. Therefore its minterm set contains all 2^n rows, and its maxterm set is empty (empty product = 1)."
       },
-      formalConventions: "Mathematical Identity Conventions: By standard algebraic convention, an empty sum (Sigma of 0 terms) is defined as the additive identity 0, and an empty product (Pi of 0 terms) is defined as the multiplicative identity 1."
+      formalConventions: "Mathematical Identity Conventions: By standard algebraic convention, an empty sum (Σ of 0 terms) is defined as the additive identity 0, and an empty product (Π of 0 terms) is defined as the multiplicative identity 1."
     },
 
     featureComparisonTable: [
@@ -411,7 +587,7 @@ export const dldSection23Data = {
       { feature: "Inner Operator (within term)", canonicalSOP: "AND (Conjunction, ·)", canonicalPOS: "OR (Disjunction, +)" },
       { feature: "Outer Operator (between terms)", canonicalSOP: "OR (Disjunction, +)", canonicalPOS: "AND (Conjunction, ·)" },
       { feature: "Row Selection Criterion", canonicalSOP: "Rows where F = 1", canonicalPOS: "Rows where F = 0" },
-      { feature: "Standard Notation", canonicalSOP: "Sigma m(i_1, i_2, ...)", canonicalPOS: "Pi M(i_1, i_2, ...)" },
+      { feature: "Standard Notation", canonicalSOP: "Σm(i_1, i_2, ...)", canonicalPOS: "ΠM(i_1, i_2, ...)" },
       { feature: "Variable Completeness", canonicalSOP: "Every term MUST contain all n variables", canonicalPOS: "Every term MUST contain all n variables" },
       { feature: "Literal Polarity for Binary 0", canonicalSOP: "Complemented (A')", canonicalPOS: "Uncomplemented (A)" },
       { feature: "Literal Polarity for Binary 1", canonicalSOP: "Uncomplemented (A)", canonicalPOS: "Complemented (A')" }
@@ -419,6 +595,18 @@ export const dldSection23Data = {
   },
 
   // Tab 4: Worked Models Content (14 Core + 1 Challenge = 15 Total)
+  workedModelsIntro: {
+    title: "From Truth Tables to Boolean Terms: Guided Worked Examples",
+    whyHeading: "Why are we solving these examples?",
+    whyPoints: [
+      "To read binary input combinations correctly.",
+      "To construct minterms and maxterms without polarity mistakes.",
+      "To identify the correct truth-table indices.",
+      "To understand how canonical expressions are formed from selected rows.",
+      "To prepare for more advanced SOP/POS conversions in Section 2.4."
+    ]
+  },
+
   workedModels: [
     // Level 1: Basic Models (B01 - B04)
     {
@@ -433,7 +621,7 @@ export const dldSection23Data = {
         { step: 2, expr: "Index = 2(A) + 1(B) = 2(1) + 1(0) = 2", rule: "Binary to Decimal Conversion", reason: "Decimal index tag is 2." },
         { step: 3, expr: "m2 = A · B' = AB'", rule: "Minterm Polarity Rule", reason: "Binary 1 -> uncomplemented (A); Binary 0 -> complemented (B')." },
         { step: 4, expr: "M2 = (A' + B)", rule: "Maxterm Polarity Rule", reason: "Binary 1 -> complemented (A'); Binary 0 -> uncomplemented (B)." },
-        { step: 5, expr: "(m2)' = (AB')' = A' + (B')' = A' + B = M2", rule: "De Morgan Inversion Check", reason: "Verifies the fundamental complement identity (m_i)' = M_i." }
+        { step: 5, expr: "(m2)' = (AB')' = A' + (B')' = A' + B = M2", rule: "De Morgan Inversion Check", reason: "Verifies the fundamental complement identity (m_i)' = M_i via De Morgan's Law." }
       ],
       finalAnswer: "Index = 2 | m2 = AB' | M2 = (A' + B)",
       verification: "At AB = 10: m2 = (1)(0)' = 1 · 1 = 1. M2 = (1)' + 0 = 0 + 0 = 0. Exactly matches formal definitions.",
@@ -448,9 +636,9 @@ export const dldSection23Data = {
       problem: "Construct the minterm and maxterm for decimal index 5 with declared variable sequence (A, B, C).",
       solutionSteps: [
         { step: 1, expr: "5 in 3-bit binary = 101", rule: "Decimal to Binary Encoding", reason: "4(1) + 2(0) + 1(1) = 5. Hence A = 1, B = 0, C = 1." },
-        { step: 2, expr: "m5 = A · B' · C = AB'C", rule: "Minterm Construction", reason: "A=1 -> A, B=0 -> B', C=1 -> C. Combined with AND." },
-        { step: 3, expr: "M5 = (A' + B + C')", rule: "Maxterm Construction", reason: "A=1 -> A', B=0 -> B, C=1 -> C'. Combined with OR." },
-        { step: 4, expr: "(m5)' = (AB'C)' = A' + B + C' = M5", rule: "Complement Equivalence", reason: "De Morgan's theorem confirms exact duality." }
+        { step: 2, expr: "m5 = A · B' · C = AB'C", rule: "Minterm Construction", reason: "A=1 -> A (uncomplemented), B=0 -> B' (complemented), C=1 -> C (uncomplemented). Combined with AND." },
+        { step: 3, expr: "M5 = (A' + B + C')", rule: "Maxterm Construction", reason: "A=1 -> A' (complemented), B=0 -> B (uncomplemented), C=1 -> C' (complemented). Combined with OR." },
+        { step: 4, expr: "(m5)' = (AB'C)' = A' + B + C' = M5", rule: "Complement Equivalence", reason: "De Morgan's theorem confirms exact Boolean complementation." }
       ],
       finalAnswer: "m5 = AB'C | M5 = (A' + B + C')",
       verification: "At ABC = 101: m5 = (1)(1)(1) = 1. M5 = (0) + (0) + (0) = 0. All other 7 combinations produce m5 = 0 and M5 = 1.",
@@ -465,8 +653,8 @@ export const dldSection23Data = {
       problem: "Determine the minterm and maxterm for index 10 in a four-variable system (A, B, C, D).",
       solutionSteps: [
         { step: 1, expr: "10 in 4-bit binary = 1010", rule: "Decimal to 4-bit Binary", reason: "8(1) + 4(0) + 2(1) + 1(0) = 10. Thus A = 1, B = 0, C = 1, D = 0." },
-        { step: 2, expr: "m10 = A · B' · C · D' = AB'CD'", rule: "Minterm Polarity", reason: "1 -> unprimed (A, C); 0 -> primed (B', D'). Product term." },
-        { step: 3, expr: "M10 = (A' + B + C' + D)", rule: "Maxterm Polarity", reason: "1 -> primed (A', C'); 0 -> unprimed (B, D). Sum term." },
+        { step: 2, expr: "m10 = A · B' · C · D' = AB'CD'", rule: "Minterm Polarity", reason: "1 -> uncomplemented (A, C); 0 -> complemented (B', D'). Product term." },
+        { step: 3, expr: "M10 = (A' + B + C' + D)", rule: "Maxterm Polarity", reason: "1 -> complemented (A', C'); 0 -> uncomplemented (B, D). Sum term." },
         { step: 4, expr: "(m10)' = (AB'CD')' = A' + B + C' + D = M10", rule: "De Morgan Verification", reason: "Complement identity holds for any number of variables." }
       ],
       finalAnswer: "m10 = AB'CD' | M10 = (A' + B + C' + D)",
@@ -479,18 +667,17 @@ export const dldSection23Data = {
       level: "Basic",
       title: "Two-Variable Canonical Function Construction",
       variables: "A, B (2 variables)",
-      problem: "A two-variable logic circuit evaluates to logic 1 at input combinations 01, 10, and 11, and evaluates to 0 at 00. Construct its complete canonical SOP and canonical POS representations, and draw its truth table.",
+      problem: "Construct the complete truth table, canonical SOP, and canonical POS for a two-variable function F that outputs logic 1 at indices 1, 2, and 3.",
       solutionSteps: [
-        { step: 1, expr: "Input rows: 00 (idx 0 -> F=0), 01 (idx 1 -> F=1), 10 (idx 2 -> F=1), 11 (idx 3 -> F=1)", rule: "Truth Table Construction", reason: "4 rows completely specify the 2-variable domain." },
-        { step: 2, expr: "1-row set = {1, 2, 3} -> Minterms: m1 = A'B, m2 = AB', m3 = AB", rule: "Canonical SOP Selection", reason: "Select rows where F = 1 and sum minterms." },
-        { step: 3, expr: "F_SOP = A'B + AB' + AB = Sigma m(1, 2, 3)", rule: "Canonical SOP Formulation", reason: "Sum of Products notation." },
-        { step: 4, expr: "0-row set = {0} -> Maxterm: M0 = (A + B)", rule: "Canonical POS Selection", reason: "Select rows where F = 0 and product maxterms." },
-        { step: 5, expr: "F_POS = (A + B) = Pi M(0)", rule: "Canonical POS Formulation", reason: "Product of Sums notation." },
-        { step: 6, expr: "Algebraic simplification: A'B + AB' + AB = A'B + A(B' + B) = A'B + A(1) = A + A'B = A + B", rule: "Simplification Check", reason: "Both canonical forms equal the simple OR gate F = A + B." }
+        { step: 1, expr: "Index space: {0, 1, 2, 3}. 1-rows: {1, 2, 3}. 0-rows: {0}.", rule: "Truth Table Index Partition", reason: "Outputs are F(0)=0, F(1)=1, F(2)=1, F(3)=1." },
+        { step: 2, expr: "m1 = A'B, m2 = AB', m3 = AB", rule: "Minterm Formulation", reason: "Construct product terms for rows where F = 1." },
+        { step: 3, expr: "F_SOP = A'B + AB' + AB = Σm(1, 2, 3)", rule: "Canonical SOP Formulation", reason: "Sum of Products notation." },
+        { step: 4, expr: "M0 = (A + B)", rule: "Maxterm Formulation", reason: "Construct sum term for the single row where F = 0." },
+        { step: 5, expr: "F_POS = (A + B) = ΠM(0)", rule: "Canonical POS Formulation", reason: "Product of Maxterms notation." }
       ],
-      finalAnswer: "Canonical SOP = Sigma m(1, 2, 3) | Canonical POS = Pi M(0) | Reduced: F = A + B",
-      verification: "Evaluated at all 4 rows, both Sigma m(1, 2, 3) and Pi M(0) produce outputs [0, 1, 1, 1].",
-      pitfall: "Do not forget the single zero-row: Pi M(0) is a single factor (A + B)."
+      finalAnswer: "Canonical SOP = Σm(1, 2, 3) | Canonical POS = ΠM(0) | Reduced: F = A + B",
+      verification: "Evaluated at all 4 rows, both Σm(1, 2, 3) and ΠM(0) produce outputs [0, 1, 1, 1].",
+      pitfall: "Do not forget row 0: if F(0) = 0, ΠM must contain index 0."
     },
 
     // Level 2: Intermediate Models (I01 - I05)
@@ -498,101 +685,98 @@ export const dldSection23Data = {
       id: "WM2.3-I01",
       number: 5,
       level: "Intermediate",
-      title: "Three-Variable Canonical Form Equivalence",
+      title: "Three-Variable Canonical Conversion and Verification",
       variables: "A, B, C (3 variables)",
-      problem: "For the function F(A, B, C) = Sigma m(1, 3, 5, 7), construct its expanded canonical SOP, determine its canonical POS, and prove algebraically that both equal F = C.",
+      problem: "For the function F(A, B, C) = Σm(1, 3, 5, 7), construct its expanded canonical SOP, determine its canonical POS, and prove algebraically that both equal F = C.",
       solutionSteps: [
-        { step: 1, expr: "Indices: 1 (001 -> A'B'C), 3 (011 -> A'BC), 5 (101 -> AB'C), 7 (111 -> ABC)", rule: "Minterm Expansion", reason: "Expand each index into its full 3-literal minterm." },
-        { step: 2, expr: "F_SOP = A'B'C + A'BC + AB'C + ABC", rule: "Canonical SOP", reason: "OR the minterms." },
-        { step: 3, expr: "U = {0, 1, 2, 3, 4, 5, 6, 7}. Complementary set: U \\ {1, 3, 5, 7} = {0, 2, 4, 6}", rule: "Complementary Set Deduction", reason: "Maxterms correspond to zero-output rows." },
-        { step: 4, expr: "Maxterms: 0 (A+B+C), 2 (A+B'+C), 4 (A'+B+C), 6 (A'+B'+C)", rule: "Maxterm Formulation", reason: "Apply maxterm polarity rule (0 -> unprimed, 1 -> primed)." },
-        { step: 5, expr: "F_POS = Pi M(0, 2, 4, 6) = (A+B+C)(A+B'+C)(A'+B+C)(A'+B'+C)", rule: "Canonical POS", reason: "AND the maxterms." },
-        { step: 6, expr: "SOP Reduction: C(A'B' + A'B + AB' + AB) = C[A'(B'+B) + A(B'+B)] = C[A'(1) + A(1)] = C[A'+A] = C(1) = C", rule: "Boolean Factoring", reason: "Factor out common variable C." },
-        { step: 7, expr: "POS Reduction: [(A+C) + B][(A+C) + B'] · [(A'+C) + B][(A'+C) + B'] = (A+C)(A'+C) = AA' + C = 0 + C = C", rule: "Distributive Combining", reason: "Combine conjugate maxterm pairs." }
+        { step: 1, expr: "F = Σm(1, 3, 5, 7) = A'B'C + A'BC + AB'C + ABC", rule: "Canonical SOP Expansion", reason: "Sum of minterms at indices 1, 3, 5, 7." },
+        { step: 2, expr: "Index Universe U = {0, 1, 2, 3, 4, 5, 6, 7}", rule: "3-Variable Universe", reason: "2^3 = 8 possible rows." },
+        { step: 3, expr: "0-rows: U \\ {1, 3, 5, 7} = {0, 2, 4, 6}", rule: "Complementary Index Set", reason: "Indices where F evaluates to 0." },
+        { step: 4, expr: "F_POS = ΠM(0, 2, 4, 6) = (A + B + C)(A + B' + C)(A' + B + C)(A' + B' + C)", rule: "Canonical POS Formulation", reason: "Product of maxterms." },
+        { step: 5, expr: "SOP Reduction: C(A'B' + A'B + AB' + AB) = C(A'(B'+B) + A(B'+B)) = C(A' + A) = C(1) = C", rule: "Algebraic SOP Reduction", reason: "Factoring out literal C." },
+        { step: 6, expr: "POS Reduction: [(A+C) + BB'] · [(A'+C) + BB'] = (A + C)(A' + C) = AA' + C = C", rule: "Algebraic POS Reduction", reason: "Using combining law on maxterms." }
       ],
-      finalAnswer: "F_SOP = Sigma m(1, 3, 5, 7) | F_POS = Pi M(0, 2, 4, 6) | Reduced Form: F = C",
-      verification: "F is logic 1 whenever C = 1 regardless of A and B. Perfect equivalence confirmed.",
-      pitfall: "Do not leave out parentheses when writing the product of maxterms."
+      finalAnswer: "F_SOP = Σm(1, 3, 5, 7) | F_POS = ΠM(0, 2, 4, 6) | Reduced Form: F = C",
+      verification: "At all 8 binary states, F is 1 whenever C = 1, and 0 whenever C = 0. Equivalence verified.",
+      pitfall: "Do not miss any 0-indices: the complement of {1, 3, 5, 7} in universe {0..7} must contain all even numbers."
     },
     {
       id: "WM2.3-I02",
       number: 6,
       level: "Intermediate",
-      title: "Mandatory Model Walkthrough: F(A, B, C) = AB + C'",
+      title: "Mandatory Benchmark Walkthrough: F(A, B, C) = AB + C'",
       variables: "A, B, C (3 variables)",
-      problem: "Convert the non-canonical Boolean expression F(A, B, C) = AB + C' into both canonical SOP and canonical POS representations, and verify equivalence.",
+      problem: "Convert F(A, B, C) = AB + C' into canonical SOP (Σm) and canonical POS (ΠM), demonstrating full row selection and non-duplicate indexing.",
       solutionSteps: [
-        { step: 1, expr: "Variable declaration: A (MSB, weight 4), B (weight 2), C (LSB, weight 1)", rule: "Variable Declaration", reason: "Declaring 3 variables establishes universe U = {0, 1, 2, 3, 4, 5, 6, 7}." },
-        { step: 2, expr: "Analyze term C': C' = 1 when C = 0. Combinations: 000 (0), 010 (2), 100 (4), 110 (6)", rule: "Sub-expression Truth Mapping", reason: "C is 0 on all four even row indices." },
-        { step: 3, expr: "Analyze term AB: AB = 1 when A = 1 and B = 1. Combinations: 110 (6), 111 (7)", rule: "Sub-expression Truth Mapping", reason: "A=1 and B=1 occurs on rows 6 and 7." },
-        { step: 4, expr: "Union of 1-rows: {0, 2, 4, 6} U {6, 7} = {0, 2, 4, 6, 7}", rule: "Disjunctive Set Union", reason: "Index 6 is shared by both terms; do not count it twice (idempotence)." },
-        { step: 5, expr: "F_SOP = Sigma m(0, 2, 4, 6, 7) = A'B'C' + A'BC' + AB'C' + ABC' + ABC", rule: "Canonical SOP Formulation", reason: "Write out the 5 expanded minterms." },
-        { step: 6, expr: "Complementary zero-output set: U \\ {0, 2, 4, 6, 7} = {1, 3, 5}", rule: "Complementary Set Deduction", reason: "Rows where F = 0 become the maxterm indices." },
-        { step: 7, expr: "F_POS = Pi M(1, 3, 5) = (A + B + C')(A + B' + C')(A' + B + C')", rule: "Canonical POS Formulation", reason: "Apply maxterm polarity: 1=001 (A+B+C'), 3=011 (A+B'+C'), 5=101 (A'+B+C')." },
-        { step: 8, expr: "Truth-table verification: Evaluate AB + C' across all 8 rows -> [1, 0, 1, 0, 1, 0, 1, 1]. Matches {0, 2, 4, 6, 7} exactly.", rule: "Exhaustive Validation", reason: "Proves mathematical correctness of both representations." }
+        { step: 1, expr: "Declared variable order: (A, B, C) where A is MSB and C is LSB.", rule: "Variable Declaration", reason: "Positional values: A=4, B=2, C=1." },
+        { step: 2, expr: "Identify where C' = 1: C must be 0. Occurs at binary rows * * 0 -> {000, 010, 100, 110} -> indices {0, 2, 4, 6}.", rule: "Subterm 1 Evaluation", reason: "Term C' covers 4 rows." },
+        { step: 3, expr: "Identify where AB = 1: A=1 and B=1. Occurs at binary rows 1 1 * -> {110, 111} -> indices {6, 7}.", rule: "Subterm 2 Evaluation", reason: "Term AB covers 2 rows." },
+        { step: 4, expr: "Union of 1-rows: {0, 2, 4, 6} U {6, 7} = {0, 2, 4, 6, 7}. Notice index 6 is shared; by idempotence (x + x = x), count it once.", rule: "Set Union without Duplication", reason: "A row cannot be counted twice." },
+        { step: 5, expr: "F_SOP = Σm(0, 2, 4, 6, 7) = A'B'C' + A'BC' + AB'C' + ABC' + ABC", rule: "Canonical SOP Formulation", reason: "Write out the 5 expanded minterms." },
+        { step: 6, expr: "Index Universe U = {0, 1, 2, 3, 4, 5, 6, 7}. 0-rows: U \\ {0, 2, 4, 6, 7} = {1, 3, 5}.", rule: "Zero-Row Identification", reason: "Complementary index set." },
+        { step: 7, expr: "F_POS = ΠM(1, 3, 5) = (A + B + C')(A + B' + C')(A' + B + C')", rule: "Canonical POS Formulation", reason: "Product of maxterms at 0-rows." },
+        { step: 8, expr: "Truth-table verification: Evaluate AB + C', Σm, and ΠM across all 8 rows. Outputs: [1, 0, 1, 0, 1, 0, 1, 1]. All match.", rule: "Exhaustive Equivalence Check", reason: "8-row verification confirmed." }
       ],
-      finalAnswer: "F_SOP = Sigma m(0, 2, 4, 6, 7) | F_POS = Pi M(1, 3, 5)",
-      verification: "5 minterms + 3 maxterms = 8 total domain rows. All rows accounted for.",
-      pitfall: "Avoid duplicate counting: index 6 satisfies both AB and C'; it must appear only once in Sigma m."
+      finalAnswer: "F_SOP = Σm(0, 2, 4, 6, 7) | F_POS = ΠM(1, 3, 5)",
+      verification: "Original AB + C' evaluates to 1 at rows 0, 2, 4, 6, 7 and 0 at rows 1, 3, 5. Matches canonical expressions exactly.",
+      pitfall: "Avoid duplicate counting: index 6 satisfies both AB and C'; it must appear only once in Σm."
     },
     {
       id: "WM2.3-I03",
       number: 7,
       level: "Intermediate",
-      title: "Expansion of Non-Canonical SOP: F(A, B, C) = A'B + BC",
+      title: "Canonical Expansion of F(A, B, C) = A'B + BC",
       variables: "A, B, C (3 variables)",
-      problem: "Convert F(A, B, C) = A'B + BC into canonical SOP and POS forms.",
+      problem: "Determine the canonical SOP and canonical POS for F(A, B, C) = A'B + BC.",
       solutionSteps: [
-        { step: 1, expr: "Term A'B lacks variable C. Expand: A'B(C + C') = A'BC + A'BC'", rule: "Identity & Complement Multiplication", reason: "Multiplying by (C + C') = 1 preserves truth value." },
-        { step: 2, expr: "Term BC lacks variable A. Expand: (A + A')BC = ABC + A'BC", rule: "Identity & Complement Multiplication", reason: "Multiplying by (A + A') = 1 introduces variable A." },
-        { step: 3, expr: "Combine: F = A'BC + A'BC' + ABC + A'BC = A'BC' + A'BC + ABC", rule: "Idempotent Redundancy Elimination", reason: "A'BC appears twice; eliminate duplicate." },
-        { step: 4, expr: "Map binary to indices: A'BC' = 010 (2), A'BC = 011 (3), ABC = 111 (7)", rule: "Binary Index Mapping", reason: "Indices are {2, 3, 7}." },
-        { step: 5, expr: "F_SOP = Sigma m(2, 3, 7)", rule: "Canonical SOP", reason: "Sum of minterms." },
-        { step: 6, expr: "Complementary set: U \\ {2, 3, 7} = {0, 1, 4, 5, 6}", rule: "Complementary Set Deduction", reason: "Zero-output rows." },
-        { step: 7, expr: "F_POS = Pi M(0, 1, 4, 5, 6)", rule: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "Universe U = {0, 1, 2, 3, 4, 5, 6, 7} with weights A=4, B=2, C=1.", rule: "Coordinate System", reason: "3-variable truth table." },
+        { step: 2, expr: "A'B = 1 when A=0, B=1, C=* -> rows {010, 011} -> indices {2, 3}.", rule: "Minterm expansion of A'B", reason: "A'B(C + C') = A'BC + A'BC' = m3 + m2." },
+        { step: 3, expr: "BC = 1 when A=*, B=1, C=1 -> rows {011, 111} -> indices {3, 7}.", rule: "Minterm expansion of BC", reason: "(A + A')BC = ABC + A'BC = m7 + m3." },
+        { step: 4, expr: "1-rows: {2, 3} U {3, 7} = {2, 3, 7}.", rule: "Union of minterm indices", reason: "Collapse duplicate m3." },
+        { step: 5, expr: "F_SOP = Σm(2, 3, 7)", rule: "Canonical SOP", reason: "Sum of minterms." },
+        { step: 6, expr: "0-rows: U \\ {2, 3, 7} = {0, 1, 4, 5, 6} -> F_POS = ΠM(0, 1, 4, 5, 6)", rule: "Canonical POS", reason: "Product of maxterms at missing indices." }
       ],
-      finalAnswer: "F_SOP = Sigma m(2, 3, 7) | F_POS = Pi M(0, 1, 4, 5, 6)",
-      verification: "Testing row 3 (ABC=011): A'B=1, BC=1 -> F=1. Testing row 0 (ABC=000): A'B=0, BC=0 -> F=0. Matches index sets.",
-      pitfall: "Remember to remove duplicate minterm A'BC after algebraic expansion."
+      finalAnswer: "F_SOP = Σm(2, 3, 7) | F_POS = ΠM(0, 1, 4, 5, 6)",
+      verification: "Rows 2, 3, 7 yield F = 1; rows 0, 1, 4, 5, 6 yield F = 0. Total rows: 3 + 5 = 8. Verified.",
+      pitfall: "Do not write Σm(2, 3, 3, 7): duplicate indices are algebraically invalid in set notation."
     },
     {
       id: "WM2.3-I04",
       number: 8,
       level: "Intermediate",
-      title: "Single-Literal Function in Three-Variable Universe: F = C'",
+      title: "Single Literal Function: F(A, B, C) = C'",
       variables: "A, B, C (3 variables)",
-      problem: "A three-variable system has the simple logic function F(A, B, C) = C'. Find its canonical SOP and canonical POS representations.",
+      problem: "Construct the full canonical SOP and POS representations for the single literal function F(A, B, C) = C'.",
       solutionSteps: [
-        { step: 1, expr: "C' means F = 1 whenever C = 0, regardless of the values of A and B.", rule: "Functional Analysis", reason: "A and B are 'don't care' variables with respect to the output." },
-        { step: 2, expr: "Enumerate all rows where C = 0: 000 (0), 010 (2), 100 (4), 110 (6)", rule: "Binary Truth Search", reason: "4 rows have C = 0." },
-        { step: 3, expr: "Minterms: m0 = A'B'C', m2 = A'BC', m4 = AB'C', m6 = ABC'", rule: "Minterm Formulation", reason: "Formulate standard product for each 1-row." },
-        { step: 4, expr: "F_SOP = Sigma m(0, 2, 4, 6) = A'B'C' + A'BC' + AB'C' + ABC'", rule: "Canonical SOP", reason: "4 minterms." },
-        { step: 5, expr: "Complementary rows (where C = 1): 001 (1), 011 (3), 101 (5), 111 (7)", rule: "Zero-Row Search", reason: "4 rows have C = 1." },
-        { step: 6, expr: "F_POS = Pi M(1, 3, 5, 7) = (A+B+C')(A+B'+C')(A'+B+C')(A'+B'+C')", rule: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "Declared variables: (A, B, C). Function depends only on C'.", rule: "Variable Declaration", reason: "Variables A and B are absent in the expression." },
+        { step: 2, expr: "C' = 1 whenever C = 0. In an 8-row table, C=0 at indices {0, 2, 4, 6}.", rule: "Row Identification", reason: "Even decimal numbers have binary LSB = 0." },
+        { step: 3, expr: "C' = 0 whenever C = 1. In an 8-row table, C=1 at indices {1, 3, 5, 7}.", rule: "Complementary Row Identification", reason: "Odd decimal numbers have binary LSB = 1." },
+        { step: 4, expr: "F_SOP = Σm(0, 2, 4, 6) = A'B'C' + A'BC' + AB'C' + ABC'", rule: "Canonical SOP", reason: "4 minterms." },
+        { step: 5, expr: "F_POS = ΠM(1, 3, 5, 7) = (A + B + C')(A + B' + C')(A' + B + C')(A' + B' + C')", rule: "Canonical POS", reason: "4 maxterms." }
       ],
-      finalAnswer: "F_SOP = Sigma m(0, 2, 4, 6) | F_POS = Pi M(1, 3, 5, 7)",
-      verification: "4 minterms + 4 maxterms = 8 rows. Expanding F_POS using distributivity collapses directly back to C'.",
-      pitfall: "Do not assume a single literal has only 1 minterm: in a 3-variable universe, C' spans exactly 4 minterms."
+      finalAnswer: "F_SOP = Σm(0, 2, 4, 6) | F_POS = ΠM(1, 3, 5, 7)",
+      verification: "Algebraic expansion: (A'B' + A'B + AB' + AB)C' = [1]C' = C'. Verified.",
+      pitfall: "A single literal in 3 variables expands to 4 minterms (2^(3-1) = 4)."
     },
     {
       id: "WM2.3-I05",
       number: 9,
       level: "Intermediate",
-      title: "Non-Canonical POS Expansion: F(A, B, C) = (A + B)(A' + C)",
+      title: "Product of Sums to Canonical Expansion: F = (A + B)(A' + C)",
       variables: "A, B, C (3 variables)",
-      problem: "Convert the factored expression F(A, B, C) = (A + B)(A' + C) into canonical POS and canonical SOP forms.",
+      problem: "Determine the canonical SOP and POS for F(A, B, C) = (A + B)(A' + C).",
       solutionSteps: [
-        { step: 1, expr: "Factor (A + B) lacks C. Add CC' = 0: (A + B) + CC' = (A + B + C)(A + B + C')", rule: "Second Distributive Law (X + YZ = (X+Y)(X+Z))", reason: "Expands into two standard sum terms." },
-        { step: 2, expr: "Factor (A' + C) lacks B. Add BB' = 0: (A' + C) + BB' = (A' + B + C)(A' + B' + C)", rule: "Second Distributive Law", reason: "Expands into two standard sum terms." },
-        { step: 3, expr: "Combine factors: F = (A + B + C)(A + B + C')(A' + B + C)(A' + B' + C)", rule: "Conjunction", reason: "No duplicates generated." },
-        { step: 4, expr: "Map maxterms to indices: (A+B+C) = 000 (0), (A+B+C') = 001 (1), (A'+B+C) = 100 (4), (A'+B'+C) = 110 (6)", rule: "Maxterm Index Mapping", reason: "Remember 0 -> unprimed, 1 -> primed." },
-        { step: 5, expr: "F_POS = Pi M(0, 1, 4, 6)", rule: "Canonical POS", reason: "Product of maxterms." },
-        { step: 6, expr: "Complementary 1-rows: U \\ {0, 1, 4, 6} = {2, 3, 5, 7}", rule: "Complementary Set Deduction", reason: "Minterm set." },
-        { step: 7, expr: "F_SOP = Sigma m(2, 3, 5, 7) = A'BC' + A'BC + AB'C + ABC", rule: "Canonical SOP", reason: "Sum of minterms." }
+        { step: 1, expr: "F evaluates to 0 when (A + B) = 0 OR (A' + C) = 0.", rule: "Zero Condition Analysis", reason: "An AND product is 0 if any factor is 0." },
+        { step: 2, expr: "(A + B) = 0 when A=0 and B=0 -> rows 00* -> {000, 001} -> indices {0, 1}.", rule: "Factor 1 Zero-rows", reason: "Maxterms M0 and M1." },
+        { step: 3, expr: "(A' + C) = 0 when A=1 and C=0 -> rows 1*0 -> {100, 110} -> indices {4, 6}.", rule: "Factor 2 Zero-rows", reason: "Maxterms M4 and M6." },
+        { step: 4, expr: "0-row set: {0, 1} U {4, 6} = {0, 1, 4, 6}.", rule: "Union of Zero-rows", reason: "No overlap between these factors." },
+        { step: 5, expr: "F_POS = ΠM(0, 1, 4, 6)", rule: "Canonical POS Formulation", reason: "Product of maxterms at 0-rows." },
+        { step: 6, expr: "1-row set: U \\ {0, 1, 4, 6} = {2, 3, 5, 7}.", rule: "Complementary SOP Rows", reason: "Remaining indices where F evaluates to 1." },
+        { step: 7, expr: "F_SOP = Σm(2, 3, 5, 7) = A'BC' + A'BC + AB'C + ABC", rule: "Canonical SOP", reason: "Sum of minterms." }
       ],
-      finalAnswer: "F_POS = Pi M(0, 1, 4, 6) | F_SOP = Sigma m(2, 3, 5, 7)",
-      verification: "At ABC = 010 (2): (0+1)(1+0) = 1 · 1 = 1. At ABC = 000 (0): (0+0)(1+0) = 0 · 1 = 0. Matches perfectly.",
-      pitfall: "Do not multiply out into SOP first if POS is requested: use the second distributive identity directly on each factor."
+      finalAnswer: "F_POS = ΠM(0, 1, 4, 6) | F_SOP = Σm(2, 3, 5, 7)",
+      verification: "Multiplying out: (A+B)(A'+C) = AA' + AC + A'B + BC = A'B + AC. Evaluates to 1 at rows 2, 3, 5, 7. Verified.",
+      pitfall: "Remember maxterm polarity: (A + B) = 0 requires A = 0 and B = 0, which corresponds to binary 00, not 11."
     },
 
     // Level 3: Advanced Models (A01 - A05)
@@ -600,118 +784,117 @@ export const dldSection23Data = {
       id: "WM2.3-A01",
       number: 10,
       level: "Advanced",
-      title: "Four-Variable Dual Product Expansion: F(A, B, C, D) = AB + CD",
+      title: "Four-Variable Canonical Expansion: F = AB + CD",
       variables: "A, B, C, D (4 variables)",
-      problem: "For the four-variable Boolean function F(A, B, C, D) = AB + CD, determine the complete canonical SOP and POS index sets.",
+      problem: "Construct the complete canonical SOP and canonical POS for F(A, B, C, D) = AB + CD.",
       solutionSteps: [
-        { step: 1, expr: "Universe U = {0, 1, 2, ..., 15} (16 rows total).", rule: "4-Variable Domain", reason: "A=8, B=4, C=2, D=1." },
-        { step: 2, expr: "Term AB: A = 1, B = 1, with C and D taking all 4 combinations (00, 01, 10, 11). Indices: 1100 (12), 1101 (13), 1110 (14), 1111 (15)", rule: "Minterm Sub-domain Expansion", reason: "4 minterms generated by AB." },
-        { step: 3, expr: "Term CD: C = 1, D = 1, with A and B taking all 4 combinations (00, 01, 10, 11). Indices: 0011 (3), 0111 (7), 1011 (11), 1111 (15)", rule: "Minterm Sub-domain Expansion", reason: "4 minterms generated by CD." },
-        { step: 4, expr: "Union of 1-rows: {12, 13, 14, 15} U {3, 7, 11, 15} = {3, 7, 11, 12, 13, 14, 15}", rule: "Set Union", reason: "Index 15 (ABCD = 1111) is common to both terms; include once." },
-        { step: 5, expr: "F_SOP = Sigma m(3, 7, 11, 12, 13, 14, 15) [7 minterms]", rule: "Canonical SOP", reason: "Sum of all 7 minterms." },
-        { step: 6, expr: "0-row set: U \\ {3, 7, 11, 12, 13, 14, 15} = {0, 1, 2, 4, 5, 6, 8, 9, 10} [9 maxterms]", rule: "Complementary Set Deduction", reason: "All 9 zero-output rows." },
-        { step: 7, expr: "F_POS = Pi M(0, 1, 2, 4, 5, 6, 8, 9, 10)", rule: "Canonical POS", reason: "Product of all 9 maxterms." }
+        { step: 1, expr: "Variables: (A, B, C, D) with weights A=8, B=4, C=2, D=1. Total rows = 16 (0 to 15).", rule: "4-Variable Coordinate Setup", reason: "2^4 = 16 rows." },
+        { step: 2, expr: "AB = 1 when A=1, B=1, C=*, D=* -> rows 1100, 1101, 1110, 1111 -> indices {12, 13, 14, 15}.", rule: "Subterm 1 Minterms", reason: "Covers 4 rows." },
+        { step: 3, expr: "CD = 1 when A=*, B=*, C=1, D=1 -> rows 0011, 0111, 1011, 1111 -> indices {3, 7, 11, 15}.", rule: "Subterm 2 Minterms", reason: "Covers 4 rows." },
+        { step: 4, expr: "1-rows: {12, 13, 14, 15} U {3, 7, 11, 15} = {3, 7, 11, 12, 13, 14, 15}.", rule: "Set Union", reason: "Index 15 (ABCD) is shared; count once." },
+        { step: 5, expr: "F_SOP = Σm(3, 7, 11, 12, 13, 14, 15) [7 minterms]", rule: "Canonical SOP", reason: "Sum of all 7 minterms." },
+        { step: 6, expr: "0-rows: {0..15} \\ {3, 7, 11, 12, 13, 14, 15} = {0, 1, 2, 4, 5, 6, 8, 9, 10} [9 maxterms].", rule: "Complementary Set", reason: "Remaining rows." },
+        { step: 7, expr: "F_POS = ΠM(0, 1, 2, 4, 5, 6, 8, 9, 10)", rule: "Canonical POS", reason: "Product of 9 maxterms." }
       ],
-      finalAnswer: "F_SOP = Sigma m(3, 7, 11, 12, 13, 14, 15) | F_POS = Pi M(0, 1, 2, 4, 5, 6, 8, 9, 10)",
-      verification: "7 minterms + 9 maxterms = 16 total rows. Evaluated at 1111 (15): 1 + 1 = 1. Evaluated at 0000 (0): 0 + 0 = 0.",
-      pitfall: "Index 15 is shared by both terms. Writing 8 minterms instead of 7 is a frequent exam error."
+      finalAnswer: "F_SOP = Σm(3, 7, 11, 12, 13, 14, 15) | F_POS = ΠM(0, 1, 2, 4, 5, 6, 8, 9, 10)",
+      verification: "7 minterms + 9 maxterms = 16 total rows. Exhaustive truth-table check on all 16 rows confirms 100% agreement.",
+      pitfall: "Index 15 appears in both AB and CD. Ensure it is not counted twice."
     },
     {
       id: "WM2.3-A02",
       number: 11,
       level: "Advanced",
-      title: "Four-Variable Factorized POS Function: F = (A + B)(C + D)",
+      title: "Four-Variable Factored POS Expansion: F = (A + B)(C + D)",
       variables: "A, B, C, D (4 variables)",
-      problem: "Given the four-variable expression F(A, B, C, D) = (A + B)(C + D), derive its canonical SOP and POS index representations.",
+      problem: "Determine the canonical SOP and POS for the four-variable expression F(A, B, C, D) = (A + B)(C + D).",
       solutionSteps: [
-        { step: 1, expr: "F = 0 whenever either factor (A + B) = 0 OR (C + D) = 0.", rule: "Zero-Product Logic", reason: "An AND product is zero if ANY input factor is zero." },
-        { step: 2, expr: "Factor (A + B) = 0 when A = 0 and B = 0. C and D vary freely (4 rows): 0000 (0), 0001 (1), 0010 (2), 0011 (3)", rule: "Zero-Row Mapping", reason: "Indices {0, 1, 2, 3}." },
-        { step: 3, expr: "Factor (C + D) = 0 when C = 0 and D = 0. A and B vary freely (4 rows): 0000 (0), 0100 (4), 1000 (8), 1100 (12)", rule: "Zero-Row Mapping", reason: "Indices {0, 4, 8, 12}." },
-        { step: 4, expr: "Union of 0-rows: {0, 1, 2, 3} U {0, 4, 8, 12} = {0, 1, 2, 3, 4, 8, 12} [7 maxterms]", rule: "Set Union", reason: "Row 0 is common to both factors; include once." },
-        { step: 5, expr: "F_POS = Pi M(0, 1, 2, 3, 4, 8, 12)", rule: "Canonical POS", reason: "Product of 7 maxterms." },
-        { step: 6, expr: "Complementary 1-rows: U \\ {0, 1, 2, 3, 4, 8, 12} = {5, 6, 7, 9, 10, 11, 13, 14, 15} [9 minterms]", rule: "Complementary Set Deduction", reason: "All 9 rows where F = 1." },
-        { step: 7, expr: "F_SOP = Sigma m(5, 6, 7, 9, 10, 11, 13, 14, 15)", rule: "Canonical SOP", reason: "Sum of 9 minterms." }
+        { step: 1, expr: "F evaluates to 0 when (A + B) = 0 OR (C + D) = 0.", rule: "Zero Product Property", reason: "AND operator produces 0 if either sum term is 0." },
+        { step: 2, expr: "(A + B) = 0 when A=0, B=0, C=*, D=* -> rows 0000, 0001, 0010, 0011 -> indices {0, 1, 2, 3}.", rule: "Factor 1 Zero Rows", reason: "4 rows." },
+        { step: 3, expr: "(C + D) = 0 when A=*, B=*, C=0, D=0 -> rows 0000, 0100, 1000, 1100 -> indices {0, 4, 8, 12}.", rule: "Factor 2 Zero Rows", reason: "4 rows." },
+        { step: 4, expr: "0-rows: {0, 1, 2, 3} U {0, 4, 8, 12} = {0, 1, 2, 3, 4, 8, 12} [7 maxterms].", rule: "Union of Zero Rows", reason: "Index 0 is shared." },
+        { step: 5, expr: "F_POS = ΠM(0, 1, 2, 3, 4, 8, 12)", rule: "Canonical POS Formulation", reason: "7 maxterms." },
+        { step: 6, expr: "1-rows: U \\ {0, 1, 2, 3, 4, 8, 12} = {5, 6, 7, 9, 10, 11, 13, 14, 15} [9 minterms].", rule: "Complementary Set", reason: "16 - 7 = 9 minterms." },
+        { step: 7, expr: "F_SOP = Σm(5, 6, 7, 9, 10, 11, 13, 14, 15)", rule: "Canonical SOP", reason: "Sum of 9 minterms." }
       ],
-      finalAnswer: "F_POS = Pi M(0, 1, 2, 3, 4, 8, 12) | F_SOP = Sigma m(5, 6, 7, 9, 10, 11, 13, 14, 15)",
-      verification: "7 maxterms + 9 minterms = 16 rows. Testing row 5 (0101): (0+1)(0+1) = 1 · 1 = 1. Testing row 4 (0100): (0+1)(0+0) = 1 · 0 = 0. Correct.",
-      pitfall: "Notice that row 0000 (index 0) makes both factors zero simultaneously: do not list it twice in the maxterm index set."
+      finalAnswer: "F_POS = ΠM(0, 1, 2, 3, 4, 8, 12) | F_SOP = Σm(5, 6, 7, 9, 10, 11, 13, 14, 15)",
+      verification: "7 maxterm indices + 9 minterm indices = 16 rows. All 16 combinations verified.",
+      pitfall: "Index 0 (0000) makes both factors zero simultaneously; ensure it is not duplicated in set notation."
     },
     {
       id: "WM2.3-A03",
       number: 12,
       level: "Advanced",
-      title: "Four-Variable Mixed Literals: F(A, B, C, D) = A'C + BD",
+      title: "Four-Variable SOP Expansion: F = A'C + BD",
       variables: "A, B, C, D (4 variables)",
-      problem: "Convert F(A, B, C, D) = A'C + BD into both canonical SOP and canonical POS representations.",
+      problem: "Construct the canonical SOP and POS for F(A, B, C, D) = A'C + BD.",
       solutionSteps: [
-        { step: 1, expr: "Term A'C: A = 0, C = 1. B and D vary across {00, 01, 10, 11}: 0010 (2), 0011 (3), 0110 (6), 0111 (7)", rule: "Minterm Expansion", reason: "4 rows produced by A'C." },
-        { step: 2, expr: "Term BD: B = 1, D = 1. A and C vary across {00, 01, 10, 11}: 0101 (5), 0111 (7), 1101 (13), 1111 (15)", rule: "Minterm Expansion", reason: "4 rows produced by BD." },
-        { step: 3, expr: "Union of 1-rows: {2, 3, 6, 7} U {5, 7, 13, 15} = {2, 3, 5, 6, 7, 13, 15} [7 minterms]", rule: "Set Union", reason: "Row 7 (0111) is common to both terms." },
-        { step: 4, expr: "F_SOP = Sigma m(2, 3, 5, 6, 7, 13, 15)", rule: "Canonical SOP", reason: "Sum of 7 minterms." },
-        { step: 5, expr: "0-row set: U \\ {2, 3, 5, 6, 7, 13, 15} = {0, 1, 4, 8, 9, 10, 11, 12, 14} [9 maxterms]", rule: "Complementary Set Deduction", reason: "Remaining 9 rows." },
-        { step: 6, expr: "F_POS = Pi M(0, 1, 4, 8, 9, 10, 11, 12, 14)", rule: "Canonical POS", reason: "Product of 9 maxterms." }
+        { step: 1, expr: "Universe U = {0..15} with weights A=8, B=4, C=2, D=1.", rule: "Coordinate Weights", reason: "4 variables." },
+        { step: 2, expr: "A'C = 1 when A=0, B=*, C=1, D=* -> binary 0010, 0011, 0110, 0111 -> indices {2, 3, 6, 7}.", rule: "Term 1 Minterms", reason: "4 rows." },
+        { step: 3, expr: "BD = 1 when A=*, B=1, C=*, D=1 -> binary 0101, 0111, 1101, 1111 -> indices {5, 7, 13, 15}.", rule: "Term 2 Minterms", reason: "4 rows." },
+        { step: 4, expr: "1-rows: {2, 3, 6, 7} U {5, 7, 13, 15} = {2, 3, 5, 6, 7, 13, 15} [7 minterms].", rule: "Union of Minterm Rows", reason: "Index 7 (A'BCD) is shared." },
+        { step: 5, expr: "F_SOP = Σm(2, 3, 5, 6, 7, 13, 15)", rule: "Canonical SOP", reason: "Sum of 7 minterms." },
+        { step: 6, expr: "0-rows: {0..15} \\ {2, 3, 5, 6, 7, 13, 15} = {0, 1, 4, 8, 9, 10, 11, 12, 14} [9 maxterms].", rule: "Complementary Set", reason: "Remaining 9 rows." },
+        { step: 7, expr: "F_POS = ΠM(0, 1, 4, 8, 9, 10, 11, 12, 14)", rule: "Canonical POS", reason: "Product of 9 maxterms." }
       ],
-      finalAnswer: "F_SOP = Sigma m(2, 3, 5, 6, 7, 13, 15) | F_POS = Pi M(0, 1, 4, 8, 9, 10, 11, 12, 14)",
-      verification: "At row 7 (0111): A'C = 1·1 = 1, BD = 1·1 = 1 -> F=1. At row 0 (0000): A'C = 0, BD = 0 -> F=0.",
-      pitfall: "Carefully expand the two 'free' variables in each product term to avoid missing indices."
+      finalAnswer: "F_SOP = Σm(2, 3, 5, 6, 7, 13, 15) | F_POS = ΠM(0, 1, 4, 8, 9, 10, 11, 12, 14)",
+      verification: "Exhaustive evaluation of A'C + BD across all 16 states matches Σm and ΠM with zero discrepancies.",
+      pitfall: "Index 7 belongs to both subterms (0111 has A=0, C=1 AND B=1, D=1). Do not count it twice."
     },
     {
       id: "WM2.3-A04",
       number: 13,
       level: "Advanced",
-      title: "Symmetric Four-Variable Function and Equivalence Check",
+      title: "Canonical POS and Equivalence Verification: F = Σm(0, 2, 5, 7, 8, 10, 13, 15)",
       variables: "A, B, C, D (4 variables)",
-      problem: "Given F(A, B, C, D) = Sigma m(0, 2, 5, 7, 8, 10, 13, 15), determine its canonical POS representation and verify that it simplifies to F = B'D' + BD.",
+      problem: "Given F(A, B, C, D) = Σm(0, 2, 5, 7, 8, 10, 13, 15), determine its canonical POS representation and verify that it simplifies to F = B'D' + BD.",
       solutionSteps: [
-        { step: 1, expr: "Minterm set: S = {0, 2, 5, 7, 8, 10, 13, 15} (8 minterms).", rule: "Minterm Definition", reason: "Exactly half of the 16 rows evaluate to 1." },
-        { step: 2, expr: "Complementary 0-row set: U \\ S = {1, 3, 4, 6, 9, 11, 12, 14} (8 maxterms).", rule: "Complementary Set Deduction", reason: "Remaining 8 rows." },
-        { step: 3, expr: "F_POS = Pi M(1, 3, 4, 6, 9, 11, 12, 14)", rule: "Canonical POS", reason: "Product of 8 maxterms." },
-        { step: 4, expr: "Group minterms {0, 2, 8, 10}: A'B'C'D' + A'B'CD' + AB'C'D' + AB'CD' = B'D'(A'C' + A'C + AC' + AC) = B'D'(1) = B'D'", rule: "Algebraic Factoring", reason: "Variables A and C eliminate completely." },
-        { step: 5, expr: "Group minterms {5, 7, 13, 15}: A'BC'D + A'BCD + ABC'D + ABCD = BD(A'C' + A'C + AC' + AC) = BD(1) = BD", rule: "Algebraic Factoring", reason: "Variables A and C eliminate completely." },
-        { step: 6, expr: "Combine: F = B'D' + BD", rule: "Disjunction", reason: "This is the XNOR function of variables B and D." }
+        { step: 1, expr: "Universe U = {0, 1, ..., 15}. Minterm index set S = {0, 2, 5, 7, 8, 10, 13, 15} (8 minterms).", rule: "Given Specification", reason: "Half of the 16 rows produce F = 1." },
+        { step: 2, expr: "Maxterm index set S_c = U \\ S = {1, 3, 4, 6, 9, 11, 12, 14} (8 maxterms).", rule: "Complementary Set Deduction", reason: "Indices where F evaluates to logic 0." },
+        { step: 3, expr: "F_POS = ΠM(1, 3, 4, 6, 9, 11, 12, 14)", rule: "Canonical POS Formulation", reason: "Product of all 8 complementary maxterms." },
+        { step: 4, expr: "Group 1-rows: {0, 2, 8, 10} have B=0, D=0 -> B'D'. {5, 7, 13, 15} have B=1, D=1 -> BD.", rule: "Equivalence Grouping", reason: "Notice variables A and C take all combinations {00, 01, 10, 11} within each group." },
+        { step: 5, expr: "B'D'(A'C' + A'C + AC' + AC) + BD(A'C' + A'C + AC' + AC) = B'D'(1) + BD(1) = B'D' + BD", rule: "Algebraic Equivalence Proof", reason: "Variables A and C are completely redundant." }
       ],
-      finalAnswer: "F_POS = Pi M(1, 3, 4, 6, 9, 11, 12, 14) | Simplified Equivalence: F = B'D' + BD",
-      verification: "Testing B=0, D=0 (rows 0, 2, 8, 10): B'D' = 1 -> F=1. Testing B=1, D=1 (rows 5, 7, 13, 15): BD = 1 -> F=1. All 8 rows match.",
-      pitfall: "Notice the symmetry: the function is completely independent of variables A and C."
+      finalAnswer: "F_POS = ΠM(1, 3, 4, 6, 9, 11, 12, 14) | Reduced Equivalence: F = B'D' + BD (XNOR function)",
+      verification: "B'D' + BD evaluates to 1 when B=D (both 0 or both 1). Truth table confirms 1 at {0, 2, 5, 7, 8, 10, 13, 15}. Verified.",
+      pitfall: "Do not attempt complete K-Map grouping here: algebraic verification confirms equivalence as an introductory check."
     },
     {
       id: "WM2.3-A05",
       number: 14,
       level: "Advanced",
-      title: "Exhaustive Truth Table Construction: F(A, B, C, D) = A'B + CD'",
+      title: "Complete 16-Row Truth Table Analysis: F(A, B, C, D) = A'B + CD'",
       variables: "A, B, C, D (4 variables)",
-      problem: "Construct the complete 16-row truth table for F(A, B, C, D) = A'B + CD', and derive both canonical forms directly from the table.",
+      problem: "Construct the complete 16-row truth table for F(A, B, C, D) = A'B + CD', and extract both canonical forms.",
       solutionSteps: [
-        { step: 1, expr: "Rows where A'B = 1: A = 0, B = 1 -> Rows 4 (0100), 5 (0101), 6 (0110), 7 (0111)", rule: "Truth Evaluation", reason: "A'B is high for 4 consecutive rows." },
-        { step: 2, expr: "Rows where CD' = 1: C = 1, D = 0 -> Rows 2 (0010), 6 (0110), 10 (1010), 14 (1110)", rule: "Truth Evaluation", reason: "CD' is high for 4 dispersed rows." },
-        { step: 3, expr: "Evaluate F = A'B + CD' across all 16 rows:\nRow 0 (0000): 0+0 = 0\nRow 1 (0001): 0+0 = 0\nRow 2 (0010): 0+1 = 1\nRow 3 (0011): 0+0 = 0\nRow 4 (0100): 1+0 = 1\nRow 5 (0101): 1+0 = 1\nRow 6 (0110): 1+1 = 1\nRow 7 (0111): 1+0 = 1\nRow 8 (1000): 0+0 = 0\nRow 9 (1001): 0+0 = 0\nRow 10 (1010): 0+1 = 1\nRow 11 (1011): 0+0 = 0\nRow 12 (1100): 0+0 = 0\nRow 13 (1101): 0+0 = 0\nRow 14 (1110): 0+1 = 1\nRow 15 (1111): 0+0 = 0", rule: "Truth Table Construction", reason: "Exact evaluation of the 16 rows." },
-        { step: 4, expr: "1-rows: {2, 4, 5, 6, 7, 10, 14} -> Canonical SOP = Sigma m(2, 4, 5, 6, 7, 10, 14)", rule: "Canonical SOP Extraction", reason: "7 minterms." },
-        { step: 5, expr: "0-rows: {0, 1, 3, 8, 9, 11, 12, 13, 15} -> Canonical POS = Pi M(0, 1, 3, 8, 9, 11, 12, 13, 15)", rule: "Canonical POS Extraction", reason: "9 maxterms." }
+        { step: 1, expr: "16-row truth table input permutations: ABCD from 0000 to 1111.", rule: "Complete State Space", reason: "Binary count order 0 to 15." },
+        { step: 2, expr: "A'B = 1 at indices {4, 5, 6, 7} (binary 0100, 0101, 0110, 0111).", rule: "Term 1 Row Evaluation", reason: "4 rows." },
+        { step: 3, expr: "CD' = 1 at indices {2, 6, 10, 14} (binary 0010, 0110, 1010, 1110).", rule: "Term 2 Row Evaluation", reason: "4 rows." },
+        { step: 4, expr: "1-rows: {4, 5, 6, 7} U {2, 6, 10, 14} = {2, 4, 5, 6, 7, 10, 14} -> Canonical SOP = Σm(2, 4, 5, 6, 7, 10, 14)", rule: "Canonical SOP Extraction", reason: "7 minterms." },
+        { step: 5, expr: "0-rows: {0..15} \\ {2, 4, 5, 6, 7, 10, 14} = {0, 1, 3, 8, 9, 11, 12, 13, 15} -> Canonical POS = ΠM(0, 1, 3, 8, 9, 11, 12, 13, 15)", rule: "Canonical POS Extraction", reason: "9 maxterms." }
       ],
-      finalAnswer: "F_SOP = Sigma m(2, 4, 5, 6, 7, 10, 14) | F_POS = Pi M(0, 1, 3, 8, 9, 11, 12, 13, 15)",
-      verification: "7 + 9 = 16 rows. Row 6 satisfies both product terms (1+1=1).",
-      pitfall: "Row 6 (0110) has both A'B=1 and CD'=1: do not list it twice in the index set."
+      finalAnswer: "F_SOP = Σm(2, 4, 5, 6, 7, 10, 14) | F_POS = ΠM(0, 1, 3, 8, 9, 11, 12, 13, 15)",
+      verification: "Index 6 (0110) has A'B=1 and CD'=1; counted once. Total rows: 7 minterms + 9 maxterms = 16 rows. Verified.",
+      pitfall: "Index 2 (0010) has A=0, B=0, C=1, D=0: A'B is 0, but CD' is 1 · 1 = 1. Do not miss it!"
     },
 
-    // Optional Enrichment Model (CH01)
+    // Enrichment Model (Optional Combinatorial Counting)
     {
       id: "WM2.3-CH01",
       number: 15,
       level: "Challenge",
-      title: "Optional Enrichment: Combinatorial Counting of Boolean Function Space",
-      variables: "n = 4 variables (16 input combinations)",
-      problem: "A four-variable Boolean function has 16 possible input combinations. Prove mathematically that out of the 65,536 total possible 4-variable Boolean functions, exactly 32,768 functions contain an odd number of 1-output rows.",
+      title: "Combinatorial Enrichment: Counting Functions with Odd Number of Ones",
+      variables: "A, B, C, D (4 variables)",
+      problem: "A four-variable Boolean function has 16 possible truth-table rows. How many distinct single-output Boolean functions have an odd number of 1-output rows?",
       solutionSteps: [
-        { step: 1, expr: "A 4-variable truth table has 2^4 = 16 rows. The output column F is a 16-bit binary vector: (F0, F1, ..., F15) in {0, 1}^16.", rule: "Vector Space Representation", reason: "Total possible output vectors = 2^16 = 65,536." },
-        { step: 2, expr: "The number of 1-output rows is the Hamming weight k of the output vector, where k ranges from 0 to 16.", rule: "Hamming Weight Definition", reason: "The number of functions with exactly k ones is given by the binomial coefficient C(16, k)." },
-        { step: 3, expr: "An odd number of 1-rows corresponds to k in {1, 3, 5, 7, 9, 11, 13, 15}.", rule: "Odd Partition Condition", reason: "Sum of C(16, k) for all odd k." },
-        { step: 4, expr: "By the Binomial Theorem: (1 + 1)^16 = Sum_{k=0..16} C(16, k) = 2^16 = 65,536.", rule: "Total Sum Identity", reason: "Sum of all subsets." },
-        { step: 5, expr: "Also: (1 - 1)^16 = 0 = Sum_{k even} C(16, k) - Sum_{k odd} C(16, k) = 0.", rule: "Alternating Sum Identity", reason: "Shows that Sum_{k even} C(16, k) = Sum_{k odd} C(16, k)." },
-        { step: 6, expr: "Therefore: Sum_{k odd} C(16, k) = 2^16 / 2 = 2^(16 - 1) = 2^15 = 32,768.", rule: "Bisection Property", reason: "Exactly half of the function space has odd weight." }
+        { step: 1, expr: "Total rows n_rows = 2^4 = 16.", rule: "Truth Table Row Count", reason: "Each row can be assigned output 0 or 1." },
+        { step: 2, expr: "Total possible Boolean functions = 2^(n_rows) = 2^16 = 65,536.", rule: "Function Space Theorem", reason: "Each truth table is a 16-bit binary string." },
+        { step: 3, expr: "The number of functions with exactly k ones is given by the binomial coefficient C(16, k).", rule: "Binomial Counting", reason: "Selecting k rows out of 16 to be 1." },
+        { step: 4, expr: "Total functions with odd number of ones = C(16, 1) + C(16, 3) + C(16, 5) + ··· + C(16, 15).", rule: "Odd Parity Sum", reason: "Sum of odd binomial coefficients." },
+        { step: 5, expr: "By the binomial parity identity: Sum_{k odd} C(N, k) = 2^(N-1). For N = 16: 2^(16 - 1) = 2^15 = 32,768.", rule: "Combinatorial Identity", reason: "Exactly half of all possible functions have an odd number of ones." }
       ],
-      finalAnswer: "Exactly 32,768 four-variable Boolean functions have an odd number of 1-output rows (exactly 50% of the function space).",
-      verification: "C(16, 1) + C(16, 3) + C(16, 5) + C(16, 7) + C(16, 9) + C(16, 11) + C(16, 13) + C(16, 15) = 16 + 560 + 4368 + 11440 + 11440 + 4368 + 560 + 16 = 32,768. Mathematically exact.",
-      pitfall: "This property holds for any number of inputs n: exactly 2^(2^n - 1) functions have odd parity."
+      finalAnswer: "Total Functions with Odd Number of Ones = 32,768 (which is exactly half of the 65,536 total functions)",
+      verification: "C(16,1)=16, C(16,3)=560, C(16,5)=4368, C(16,7)=11440, C(16,9)=11440, C(16,11)=4368, C(16,13)=560, C(16,15)=16. Sum = 32,768. Matches 2^15.",
+      pitfall: "Distinguish between input combinations (16 rows) and function space (65,536 functions)."
     }
   ],
 
@@ -719,24 +902,29 @@ export const dldSection23Data = {
   cheatSheet: {
     oneGlanceRules: [
       {
-        concept: "Minterm Polarity (SOP)",
-        rule: "0 -> Complemented (A')  |  1 -> Uncomplemented (A)",
+        concept: "Minterm Polarity Rule",
+        rule: "Binary 0 -> Complemented (A')  |  Binary 1 -> Uncomplemented (A)",
         tip: "Formulate product terms (AND). Evaluates to 1 ONLY at that indexed row."
       },
       {
-        concept: "Maxterm Polarity (POS)",
-        rule: "0 -> Uncomplemented (A)  |  1 -> Complemented (A')",
+        concept: "Maxterm Polarity Rule",
+        rule: "Binary 0 -> Uncomplemented (A)  |  Binary 1 -> Complemented (A')",
         tip: "Formulate sum terms (OR). Evaluates to 0 ONLY at that indexed row."
+      },
+      {
+        concept: "Lowercase m vs Uppercase M",
+        rule: "m_i = Minterm (Product)  |  M_i = Maxterm (Sum)",
+        tip: "Lowercase m represents product term; uppercase M represents sum term."
       },
       {
         concept: "Canonical SOP Selection",
         rule: "Select all rows where F = 1",
-        tip: "F = Sigma m(1-rows). Connect minterms with logical OR (+)."
+        tip: "F = Σm(1-rows). Connect minterms with logical OR (+)."
       },
       {
         concept: "Canonical POS Selection",
         rule: "Select all rows where F = 0",
-        tip: "F = Pi M(0-rows). Connect maxterms with logical AND (·)."
+        tip: "F = ΠM(0-rows). Connect maxterms with logical AND (·)."
       },
       {
         concept: "De Morgan Complement",
@@ -745,7 +933,7 @@ export const dldSection23Data = {
       },
       {
         concept: "Index Conversion Shortcut",
-        rule: "F = Sigma m(S)  <=>  F = Pi M(U \\ S)",
+        rule: "F = Σm(S)  <=>  F = ΠM(U \\ S)",
         tip: "The maxterm index list is simply the missing indices from universe U = {0, 1, ..., 2^n - 1}."
       }
     ],
@@ -755,10 +943,10 @@ export const dldSection23Data = {
       "Are all 2^n binary permutations written in correct ascending count order?",
       "For Canonical SOP: have I selected ONLY the rows where F = 1?",
       "For Canonical POS: have I selected ONLY the rows where F = 0?",
-      "Have I verified minterm polarity: 0 -> prime, 1 -> unprimed?",
-      "Have I verified maxterm polarity: 0 -> unprimed, 1 -> prime?",
+      "Have I verified minterm polarity: 0 -> complemented, 1 -> uncomplemented?",
+      "Have I verified maxterm polarity: 0 -> uncomplemented, 1 -> complemented?",
       "Does every term in my canonical expression contain ALL n declared variables?",
-      "Have duplicate indices been eliminated from the Sigma m or Pi M list?",
+      "Have duplicate indices been eliminated from the Σm or ΠM list?",
       "Do minterm count + maxterm count equal exactly 2^n?"
     ],
 
@@ -802,35 +990,35 @@ export const dldSection23Data = {
         id: "err6",
         title: "Confusing SOP with Canonical SOP",
         incorrect: "Writing F = AB + C and calling it canonical SOP.",
-        correct: "F = AB + C is standard SOP. Canonical SOP requires expansion to Sigma m: ABC + ABC' + AB'C + A'BC + A'B'C.",
+        correct: "F = AB + C is standard SOP. Canonical SOP requires expansion to Σm: ABC + ABC' + AB'C + A'BC + A'B'C.",
         why: "Canonical form is an exhaustive expansion where every term has identical full length."
       },
       {
         id: "err7",
         title: "Selecting F = 0 Rows for Canonical SOP",
-        incorrect: "Writing F_SOP = Sigma m(zero-rows).",
+        incorrect: "Writing F_SOP = Σm(zero-rows).",
         correct: "Canonical SOP sums minterms where F = 1. Canonical POS products maxterms where F = 0.",
         why: "Minterms are ORed together; if you include a 0-row minterm, F would incorrectly become 1 at that row."
       },
       {
         id: "err8",
         title: "Selecting F = 1 Rows for Canonical POS",
-        incorrect: "Writing F_POS = Pi M(one-rows).",
+        incorrect: "Writing F_POS = ΠM(one-rows).",
         correct: "Canonical POS products maxterms where F = 0.",
         why: "Maxterms are ANDed together; if you include a 1-row maxterm, F would incorrectly become 0 at that row."
       },
       {
         id: "err9",
         title: "Confusing POS Conversion with Function Complementation",
-        incorrect: "Thinking that converting F = Sigma m(1, 2) to F = Pi M(0, 3) creates the inverted function F'.",
-        correct: "F = Sigma m(1, 2) and F = Pi M(0, 3) are the EXACT SAME function F. The complement is F' = Sigma m(0, 3) = Pi M(1, 2).",
+        incorrect: "Thinking that converting F = Σm(1, 2) to F = ΠM(0, 3) creates the inverted function F'.",
+        correct: "F = Σm(1, 2) and F = ΠM(0, 3) are the EXACT SAME function F. The complement is F' = Σm(0, 3) = ΠM(1, 2).",
         why: "Rewriting in POS changes the algebraic perspective, NOT the truth values of the function."
       },
       {
         id: "err10",
         title: "Duplicate Index Counting in SOP Union",
-        incorrect: "Writing F = Sigma m(2, 3, 3, 7) because term 1 and term 2 both generated index 3.",
-        correct: "F = Sigma m(2, 3, 7). By Boolean idempotence (x + x = x), duplicate terms collapse.",
+        incorrect: "Writing F = Σm(2, 3, 3, 7) because term 1 and term 2 both generated index 3.",
+        correct: "F = Σm(2, 3, 7). By Boolean idempotence (x + x = x), duplicate terms collapse.",
         why: "A truth-table row cannot be selected more than once."
       }
     ]
@@ -862,7 +1050,7 @@ export const dldSection23Data = {
       variables: "A, B",
       problem: "For the two-variable combination AB = 11, identify its minterm and maxterm.",
       hint1: "Both variables are logic 1. What index is binary 11?",
-      hint2: "In minterms, 1 stays unprimed. In maxterms, 1 becomes primed.",
+      hint2: "In minterms, 1 stays uncomplemented. In maxterms, 1 becomes complemented.",
       solutionSteps: [
         { step: 1, expr: "Index: 2(1) + 1(1) = 3", law: "Binary Conversion", reason: "Binary 11 is decimal 3." },
         { step: 2, expr: "m3 = AB", law: "Minterm Polarity", reason: "Both variables uncomplemented." },
@@ -878,7 +1066,7 @@ export const dldSection23Data = {
       variables: "A, B, C",
       problem: "For the three-variable input combination ABC = 011, identify its decimal index, minterm, and maxterm.",
       hint1: "Binary 011: calculate 4(0) + 2(1) + 1(1).",
-      hint2: "Minterm: A is 0 (prime), B and C are 1 (unprimed).",
+      hint2: "Minterm: A is 0 (complemented), B and C are 1 (uncomplemented).",
       solutionSteps: [
         { step: 1, expr: "Index: 4(0) + 2(1) + 1(1) = 3", law: "Binary Conversion", reason: "Binary 011 is decimal 3." },
         { step: 2, expr: "m3 = A'BC", law: "Minterm Polarity", reason: "0 -> A', 1 -> B, 1 -> C." },
@@ -900,40 +1088,40 @@ export const dldSection23Data = {
         { step: 2, expr: "m6 = ABC'", law: "Minterm Polarity", reason: "1 -> A, 1 -> B, 0 -> C'." },
         { step: 3, expr: "M6 = (A' + B' + C)", law: "Maxterm Polarity", reason: "1 -> A', 1 -> B', 0 -> C." }
       ],
-      finalAnswer: "Binary = 110 | m6 = ABC' | M6 = (A' + B' + C)",
-      keyTakeaway: "Index 6 corresponds to binary 110, minterm ABC', and maxterm (A' + B' + C)."
+      finalAnswer: "Binary: 110 | m6 = ABC' | M6 = (A' + B' + C)",
+      keyTakeaway: "Index 6 produces minterm ABC' and maxterm (A' + B' + C)."
     },
     {
       id: "P05",
       number: 5,
       difficulty: "Basic",
       variables: "A, B, C, D",
-      problem: "For the four-variable combination ABCD = 1001, identify its decimal index, minterm, and maxterm.",
-      hint1: "Positional weights: A=8, B=4, C=2, D=1. What is 8(1) + 1(1)?",
-      hint2: "Minterm: 1 -> unprimed, 0 -> primed. Maxterm: 1 -> primed, 0 -> unprimed.",
+      problem: "For the four-variable input combination ABCD = 1001, identify its decimal index, minterm, and maxterm.",
+      hint1: "Binary 1001: calculate 8(1) + 4(0) + 2(0) + 1(1).",
+      hint2: "Variables with 1 are uncomplemented; variables with 0 are complemented in minterms.",
       solutionSteps: [
-        { step: 1, expr: "Index: 8(1) + 4(0) + 2(0) + 1(1) = 9", law: "Binary Conversion", reason: "Binary 1001 is decimal 9." },
-        { step: 2, expr: "m9 = AB'C'D", law: "Minterm Polarity", reason: "1 -> A, 0 -> B', 0 -> C', 1 -> D." },
-        { step: 3, expr: "M9 = (A' + B + C + D')", law: "Maxterm Polarity", reason: "1 -> A', 0 -> B, 0 -> C, 1 -> D'." }
+        { step: 1, expr: "Index: 8(1) + 4(0) + 2(0) + 1(1) = 9", law: "Binary to Decimal", reason: "Binary 1001 is decimal 9." },
+        { step: 2, expr: "m9 = AB'C'D", law: "Minterm Polarity", reason: "A=1, B=0, C=0, D=1." },
+        { step: 3, expr: "M9 = (A' + B + C + D')", law: "Maxterm Polarity", reason: "A=1 -> A', B=0 -> B, C=0 -> C, D=1 -> D'." }
       ],
       finalAnswer: "m9 = AB'C'D | M9 = (A' + B + C + D')",
-      keyTakeaway: "Row 9 in a 4-variable table is m9 = AB'C'D and M9 = (A' + B + C + D')."
+      keyTakeaway: "Row 9 corresponds to minterm AB'C'D and maxterm (A' + B + C + D')."
     },
     {
       id: "P06",
       number: 6,
       difficulty: "Basic",
       variables: "A, B, C, D",
-      problem: "For the four-variable combination ABCD = 1110, determine its decimal index, minterm, and maxterm.",
-      hint1: "Weights: 8 + 4 + 2 + 0 = 14.",
-      hint2: "D is 0; A, B, C are 1.",
+      problem: "For the four-variable combination ABCD = 1110, determine its minterm and maxterm.",
+      hint1: "Binary 1110: 8 + 4 + 2 = 14.",
+      hint2: "In maxterm: 1 becomes complemented, 0 becomes uncomplemented.",
       solutionSteps: [
-        { step: 1, expr: "Index: 8(1) + 4(1) + 2(1) + 1(0) = 14", law: "Binary Conversion", reason: "Binary 1110 is decimal 14." },
-        { step: 2, expr: "m14 = ABCD'", law: "Minterm Polarity", reason: "1 -> A, B, C; 0 -> D'." },
-        { step: 3, expr: "M14 = (A' + B' + C' + D)", law: "Maxterm Polarity", reason: "1 -> A', B', C'; 0 -> D." }
+        { step: 1, expr: "Index: 8(1) + 4(1) + 2(1) + 1(0) = 14", law: "Binary to Decimal", reason: "Binary 1110 is decimal 14." },
+        { step: 2, expr: "m14 = ABCD'", law: "Minterm Polarity", reason: "A, B, C are 1; D is 0." },
+        { step: 3, expr: "M14 = (A' + B' + C' + D)", law: "Maxterm Polarity", reason: "A, B, C become primed; D stays unprimed." }
       ],
       finalAnswer: "m14 = ABCD' | M14 = (A' + B' + C' + D)",
-      keyTakeaway: "Row 14 is m14 = ABCD' and M14 = (A' + B' + C' + D)."
+      keyTakeaway: "Row 14 gives m14 = ABCD' and M14 = (A' + B' + C' + D)."
     },
 
     // Intermediate (P07 - P12)
@@ -942,98 +1130,94 @@ export const dldSection23Data = {
       number: 7,
       difficulty: "Intermediate",
       variables: "A, B",
-      problem: "A two-variable function evaluates to logic 1 at input combinations 01 and 10, and evaluates to 0 elsewhere. Express F in compact Sigma m and Pi M notation.",
-      hint1: "Identify the 1-rows and the 0-rows from the 4-row universe {0, 1, 2, 3}.",
-      hint2: "1-rows are indices 1 and 2. 0-rows are the remaining indices.",
+      problem: "A two-variable function evaluates to logic 1 at input combinations 01 and 10, and evaluates to 0 elsewhere. Express F in compact Σm and ΠM notation.",
+      hint1: "Row 01 is index 1; row 10 is index 2.",
+      hint2: "Universe for 2 variables is {0, 1, 2, 3}. 0-rows are the missing indices.",
       solutionSteps: [
-        { step: 1, expr: "1-rows: index 1 (01) and index 2 (10) -> Sigma m(1, 2)", law: "Canonical SOP", reason: "Rows where F = 1." },
-        { step: 2, expr: "0-rows: index 0 (00) and index 3 (11) -> Pi M(0, 3)", law: "Canonical POS", reason: "Rows where F = 0." }
+        { step: 1, expr: "1-rows: index 1 (01) and index 2 (10) -> Σm(1, 2)", law: "Canonical SOP", reason: "Rows where F = 1." },
+        { step: 2, expr: "0-rows: index 0 (00) and index 3 (11) -> ΠM(0, 3)", law: "Canonical POS", reason: "Rows where F = 0." }
       ],
-      finalAnswer: "F = Sigma m(1, 2) = Pi M(0, 3)",
-      keyTakeaway: "This is the classic XOR function: F = A'B + AB' = (A + B)(A' + B')."
+      finalAnswer: "F = Σm(1, 2) = ΠM(0, 3)",
+      keyTakeaway: "This is the standard Exclusive-OR (XOR) function: F = A'B + AB'."
     },
     {
       id: "P08",
       number: 8,
       difficulty: "Intermediate",
       variables: "A, B, C",
-      problem: "For the three-variable function F(A, B, C) = Sigma m(1, 3, 5, 7), determine its canonical POS representation.",
-      hint1: "Universe U has 8 indices: {0, 1, 2, 3, 4, 5, 6, 7}.",
-      hint2: "Subtract the given minterm set from the universe.",
+      problem: "For the three-variable function F(A, B, C) = Σm(1, 3, 5, 7), determine its canonical POS representation.",
+      hint1: "The 3-variable universe has indices {0, 1, 2, 3, 4, 5, 6, 7}.",
+      hint2: "Canonical POS collects all indices NOT present in the minterm set.",
       solutionSteps: [
-        { step: 1, expr: "U = {0, 1, 2, 3, 4, 5, 6, 7}", law: "Index Universe", reason: "3-variable universe." },
-        { step: 2, expr: "0-rows = U \\ {1, 3, 5, 7} = {0, 2, 4, 6}", law: "Complementary Set Deduction", reason: "All even indices have F = 0." },
-        { step: 3, expr: "F = Pi M(0, 2, 4, 6)", law: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "Minterm index set S = {1, 3, 5, 7}", law: "Given SOP", reason: "4 minterms." },
+        { step: 2, expr: "Maxterm index set = {0..7} \\ {1, 3, 5, 7} = {0, 2, 4, 6}", law: "Complementary Set", reason: "Missing indices." },
+        { step: 3, expr: "F = ΠM(0, 2, 4, 6)", law: "Canonical POS", reason: "Product of maxterms." }
       ],
-      finalAnswer: "F(A, B, C) = Pi M(0, 2, 4, 6)",
-      keyTakeaway: "The maxterm set is the exact complement of the minterm set within universe U."
+      finalAnswer: "F = ΠM(0, 2, 4, 6)",
+      keyTakeaway: "The canonical POS of F = Σm(1, 3, 5, 7) is ΠM(0, 2, 4, 6). Both equal F = C."
     },
     {
       id: "P09",
       number: 9,
       difficulty: "Intermediate",
       variables: "A, B, C",
-      problem: "For F(A, B, C) = Pi M(1, 2, 6), determine its canonical SOP representation.",
-      hint1: "Find all indices from 0 to 7 that are NOT 1, 2, or 6.",
-      hint2: "Universe U = {0, 1, 2, 3, 4, 5, 6, 7}.",
+      problem: "Given F(A, B, C) = ΠM(1, 2, 6), determine its canonical SOP expression in Σm notation.",
+      hint1: "Universe has 8 indices: 0 through 7.",
+      hint2: "Minterm indices are the universe elements minus {1, 2, 6}.",
       solutionSteps: [
-        { step: 1, expr: "Given 0-rows: {1, 2, 6}", law: "Maxterm Set", reason: "Rows where F = 0." },
-        { step: 2, expr: "1-rows: {0, 1, 2, 3, 4, 5, 6, 7} \\ {1, 2, 6} = {0, 3, 4, 5, 7}", law: "Complementary Set", reason: "Rows where F = 1." },
-        { step: 3, expr: "F = Sigma m(0, 3, 4, 5, 7)", law: "Canonical SOP", reason: "Sum of minterms." }
+        { step: 1, expr: "Maxterm index set S_c = {1, 2, 6}", law: "Given POS", reason: "Rows where F = 0." },
+        { step: 2, expr: "Minterm index set = {0..7} \\ {1, 2, 6} = {0, 3, 4, 5, 7}", law: "Complementary Set", reason: "Rows where F = 1." },
+        { step: 3, expr: "F = Σm(0, 3, 4, 5, 7)", law: "Canonical SOP", reason: "Sum of minterms." }
       ],
-      finalAnswer: "F(A, B, C) = Sigma m(0, 3, 4, 5, 7)",
-      keyTakeaway: "3 maxterms + 5 minterms = 8 total domain rows."
+      finalAnswer: "F = Σm(0, 3, 4, 5, 7)",
+      keyTakeaway: "F = ΠM(1, 2, 6) converts directly to F = Σm(0, 3, 4, 5, 7)."
     },
     {
       id: "P10",
       number: 10,
       difficulty: "Intermediate",
       variables: "A, B, C",
-      problem: "For the expression F(A, B, C) = AB + C', find both Sigma m and Pi M index notations.",
-      hint1: "Where is C' equal to 1? (All rows where C = 0). Where is AB equal to 1? (Rows 6 and 7).",
-      hint2: "Take the union of these row sets.",
+      problem: "Convert F(A, B, C) = AB + C' into both compact canonical forms Σm and ΠM.",
+      hint1: "AB covers rows {6, 7}; C' covers even rows {0, 2, 4, 6}.",
+      hint2: "Take the union of indices without repeating index 6.",
       solutionSteps: [
-        { step: 1, expr: "C' is 1 at indices {0, 2, 4, 6}", law: "Truth Mapping", reason: "Even rows have C = 0." },
-        { step: 2, expr: "AB is 1 at indices {6, 7}", law: "Truth Mapping", reason: "A=1, B=1." },
-        { step: 3, expr: "1-rows = {0, 2, 4, 6} U {6, 7} = {0, 2, 4, 6, 7} -> F = Sigma m(0, 2, 4, 6, 7)", law: "Set Union", reason: "Canonical SOP." },
-        { step: 4, expr: "0-rows = {0, 1, 2, 3, 4, 5, 6, 7} \\ {0, 2, 4, 6, 7} = {1, 3, 5} -> F = Pi M(1, 3, 5)", law: "Complementary Set", reason: "Canonical POS." }
+        { step: 1, expr: "AB = 1 at {6, 7}; C' = 1 at {0, 2, 4, 6}", law: "Term Evaluation", reason: "Map to row indices." },
+        { step: 2, expr: "Union: {0, 2, 4, 6} U {6, 7} = {0, 2, 4, 6, 7} -> F = Σm(0, 2, 4, 6, 7)", law: "Canonical SOP", reason: "Minterm set." },
+        { step: 3, expr: "Missing indices from {0..7}: {1, 3, 5} -> F = ΠM(1, 3, 5)", law: "Canonical POS", reason: "Maxterm set." }
       ],
-      finalAnswer: "F = Sigma m(0, 2, 4, 6, 7) = Pi M(1, 3, 5)",
-      keyTakeaway: "Union the minterms of each product term and complement to find maxterms."
+      finalAnswer: "F = Σm(0, 2, 4, 6, 7) = ΠM(1, 3, 5)",
+      keyTakeaway: "Union eliminates duplicate index 6: Σm(0, 2, 4, 6, 7) and ΠM(1, 3, 5)."
     },
     {
       id: "P11",
       number: 11,
       difficulty: "Intermediate",
       variables: "A, B, C",
-      problem: "For F(A, B, C) = A'B + BC, determine both canonical index sets.",
-      hint1: "A'B is 1 when A=0, B=1. What rows are these?",
-      hint2: "BC is 1 when B=1, C=1. What rows are these?",
+      problem: "For F(A, B, C) = A'B + BC, determine its complete canonical index sets.",
+      hint1: "A'B covers binary 01* -> rows 2, 3.",
+      hint2: "BC covers binary *11 -> rows 3, 7.",
       solutionSteps: [
-        { step: 1, expr: "A'B is 1 at ABC = 010 (2) and 011 (3)", law: "Product Expansion", reason: "A=0, B=1, C varies." },
-        { step: 2, expr: "BC is 1 at ABC = 011 (3) and 111 (7)", law: "Product Expansion", reason: "B=1, C=1, A varies." },
-        { step: 3, expr: "1-rows: {2, 3} U {3, 7} = {2, 3, 7} -> F = Sigma m(2, 3, 7)", law: "Set Union", reason: "Canonical SOP." },
-        { step: 4, expr: "0-rows: {0, 1, 4, 5, 6} -> F = Pi M(0, 1, 4, 5, 6)", law: "Complementary Set", reason: "Canonical POS." }
+        { step: 1, expr: "A'B covers indices {2, 3}; BC covers indices {3, 7}", law: "Subterm Evaluation", reason: "Find 1-rows." },
+        { step: 2, expr: "1-rows: {2, 3} U {3, 7} = {2, 3, 7} -> F = Σm(2, 3, 7)", law: "Canonical SOP", reason: "Sum of minterms." },
+        { step: 3, expr: "0-rows: {0..7} \\ {2, 3, 7} = {0, 1, 4, 5, 6} -> F = ΠM(0, 1, 4, 5, 6)", law: "Canonical POS", reason: "Product of maxterms." }
       ],
-      finalAnswer: "F = Sigma m(2, 3, 7) = Pi M(0, 1, 4, 5, 6)",
-      keyTakeaway: "Row 3 is common to both terms; include it once in Sigma m."
+      finalAnswer: "Σm(2, 3, 7) | ΠM(0, 1, 4, 5, 6)",
+      keyTakeaway: "Index 3 is shared; canonical sets are Σm(2, 3, 7) and ΠM(0, 1, 4, 5, 6)."
     },
     {
       id: "P12",
       number: 12,
       difficulty: "Intermediate",
       variables: "A, B, C",
-      problem: "For the function F(A, B, C) = C', construct both canonical representations.",
+      problem: "Construct both canonical representations for the function F(A, B, C) = C'.",
       hint1: "C' is 1 whenever C = 0.",
-      hint2: "Which rows in the 3-variable table have C = 0?",
+      hint2: "C = 0 at all even indices: {0, 2, 4, 6}.",
       solutionSteps: [
-        { step: 1, expr: "C = 0 on rows: 000 (0), 010 (2), 100 (4), 110 (6)", law: "Truth Mapping", reason: "4 rows." },
-        { step: 2, expr: "F = Sigma m(0, 2, 4, 6)", law: "Canonical SOP", reason: "Sum of minterms." },
-        { step: 3, expr: "C = 1 on remaining rows: 001 (1), 011 (3), 101 (5), 111 (7)", law: "Complementary Rows", reason: "4 rows." },
-        { step: 4, expr: "F = Pi M(1, 3, 5, 7)", law: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "C = 0 at rows {0, 2, 4, 6} -> F = Σm(0, 2, 4, 6)", law: "Canonical SOP", reason: "Even rows where C=0." },
+        { step: 2, expr: "C = 1 at rows {1, 3, 5, 7} -> F = ΠM(1, 3, 5, 7)", law: "Canonical POS", reason: "Odd rows where C=1." }
       ],
-      finalAnswer: "F = Sigma m(0, 2, 4, 6) = Pi M(1, 3, 5, 7)",
-      keyTakeaway: "A single literal in 3 variables spans exactly 4 minterms."
+      finalAnswer: "F = Σm(0, 2, 4, 6) = ΠM(1, 3, 5, 7)",
+      keyTakeaway: "Single literal C' expands to 4 minterms Σm(0, 2, 4, 6) and 4 maxterms ΠM(1, 3, 5, 7)."
     },
 
     // Advanced (P13 - P20)
@@ -1042,18 +1226,16 @@ export const dldSection23Data = {
       number: 13,
       difficulty: "Advanced",
       variables: "A, B, C, D",
-      problem: "For F(A, B, C, D) = AB + CD, determine the canonical index sets.",
-      hint1: "AB is 1 for ABCD in {1100, 1101, 1110, 1111} (indices 12, 13, 14, 15).",
-      hint2: "CD is 1 for ABCD in {0011, 0111, 1011, 1111} (indices 3, 7, 11, 15).",
+      problem: "For the four-variable function F(A, B, C, D) = AB + CD, determine both canonical index sets.",
+      hint1: "AB covers rows 11** -> {12, 13, 14, 15}.",
+      hint2: "CD covers rows **11 -> {3, 7, 11, 15}.",
       solutionSteps: [
-        { step: 1, expr: "AB minterms: {12, 13, 14, 15}", law: "Product Expansion", reason: "A=1, B=1." },
-        { step: 2, expr: "CD minterms: {3, 7, 11, 15}", law: "Product Expansion", reason: "C=1, D=1." },
-        { step: 3, expr: "1-rows: {12, 13, 14, 15} U {3, 7, 11, 15} = {3, 7, 11, 12, 13, 14, 15}", law: "Set Union", reason: "Index 15 shared." },
-        { step: 4, expr: "F = Sigma m(3, 7, 11, 12, 13, 14, 15)", law: "Canonical SOP", reason: "7 minterms." },
-        { step: 5, expr: "F = Pi M(0, 1, 2, 4, 5, 6, 8, 9, 10)", law: "Canonical POS", reason: "Remaining 9 maxterms from {0..15}." }
+        { step: 1, expr: "AB 1-rows: {12, 13, 14, 15}; CD 1-rows: {3, 7, 11, 15}", law: "4-Var Subterms", reason: "Find active rows." },
+        { step: 2, expr: "Union: {3, 7, 11, 12, 13, 14, 15} -> F = Σm(3, 7, 11, 12, 13, 14, 15)", law: "Canonical SOP", reason: "7 minterms." },
+        { step: 3, expr: "Missing from {0..15}: {0, 1, 2, 4, 5, 6, 8, 9, 10} -> F = ΠM(0, 1, 2, 4, 5, 6, 8, 9, 10)", law: "Canonical POS", reason: "9 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(3, 7, 11, 12, 13, 14, 15) | Pi M(0, 1, 2, 4, 5, 6, 8, 9, 10)",
-      keyTakeaway: "7 minterms and 9 maxterms partition the 16-row universe."
+      finalAnswer: "Σm(3, 7, 11, 12, 13, 14, 15) | ΠM(0, 1, 2, 4, 5, 6, 8, 9, 10)",
+      keyTakeaway: "F = AB + CD yields 7 minterms and 9 maxterms."
     },
     {
       id: "P14",
@@ -1061,18 +1243,15 @@ export const dldSection23Data = {
       difficulty: "Advanced",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = (A + B)(C + D), determine both canonical representations.",
-      hint1: "Find when (A + B) = 0 (A=0, B=0 -> rows 0, 1, 2, 3).",
-      hint2: "Find when (C + D) = 0 (C=0, D=0 -> rows 0, 4, 8, 12). Take their union for maxterms.",
+      hint1: "Find zero-rows: (A+B)=0 at {0, 1, 2, 3}; (C+D)=0 at {0, 4, 8, 12}.",
+      hint2: "Union of zero-rows gives ΠM; remaining indices give Σm.",
       solutionSteps: [
-        { step: 1, expr: "(A + B) = 0 at {0, 1, 2, 3}", law: "Zero Factor Analysis", reason: "A=0, B=0." },
-        { step: 2, expr: "(C + D) = 0 at {0, 4, 8, 12}", law: "Zero Factor Analysis", reason: "C=0, D=0." },
-        { step: 3, expr: "0-rows = {0, 1, 2, 3} U {0, 4, 8, 12} = {0, 1, 2, 3, 4, 8, 12}", law: "Set Union", reason: "7 maxterms." },
-        { step: 4, expr: "F = Pi M(0, 1, 2, 3, 4, 8, 12)", law: "Canonical POS", reason: "Product of maxterms." },
-        { step: 5, expr: "1-rows = {0..15} \\ {0, 1, 2, 3, 4, 8, 12} = {5, 6, 7, 9, 10, 11, 13, 14, 15}", law: "Complementary Deduction", reason: "9 minterms." },
-        { step: 6, expr: "F = Sigma m(5, 6, 7, 9, 10, 11, 13, 14, 15)", law: "Canonical SOP", reason: "Sum of minterms." }
+        { step: 1, expr: "0-rows: {0, 1, 2, 3} U {0, 4, 8, 12} = {0, 1, 2, 3, 4, 8, 12}", law: "Zero Row Identification", reason: "7 maxterms." },
+        { step: 2, expr: "F = ΠM(0, 1, 2, 3, 4, 8, 12)", law: "Canonical POS", reason: "Product of maxterms." },
+        { step: 3, expr: "1-rows: {0..15} \\ {0, 1, 2, 3, 4, 8, 12} = {5, 6, 7, 9, 10, 11, 13, 14, 15} -> F = Σm(5, 6, 7, 9, 10, 11, 13, 14, 15)", law: "Canonical SOP", reason: "9 minterms." }
       ],
-      finalAnswer: "F = Sigma m(5, 6, 7, 9, 10, 11, 13, 14, 15) | Pi M(0, 1, 2, 3, 4, 8, 12)",
-      keyTakeaway: "Row 0 makes both sum factors zero; union prevents duplicate counting."
+      finalAnswer: "Σm(5, 6, 7, 9, 10, 11, 13, 14, 15) | ΠM(0, 1, 2, 3, 4, 8, 12)",
+      keyTakeaway: "F = (A+B)(C+D) has 7 maxterms and 9 minterms."
     },
     {
       id: "P15",
@@ -1080,17 +1259,15 @@ export const dldSection23Data = {
       difficulty: "Advanced",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = A'C + BD, determine both canonical index sets.",
-      hint1: "A'C produces 4 minterms: A=0, C=1, with B and D varying.",
-      hint2: "BD produces 4 minterms: B=1, D=1, with A and C varying.",
+      hint1: "A'C covers {2, 3, 6, 7}; BD covers {5, 7, 13, 15}.",
+      hint2: "Notice index 7 is common to both subterms.",
       solutionSteps: [
-        { step: 1, expr: "A'C minterms: 0010 (2), 0011 (3), 0110 (6), 0111 (7)", law: "Product Expansion", reason: "A=0, C=1." },
-        { step: 2, expr: "BD minterms: 0101 (5), 0111 (7), 1101 (13), 1111 (15)", law: "Product Expansion", reason: "B=1, D=1." },
-        { step: 3, expr: "1-rows: {2, 3, 6, 7} U {5, 7, 13, 15} = {2, 3, 5, 6, 7, 13, 15}", law: "Set Union", reason: "Index 7 shared." },
-        { step: 4, expr: "F = Sigma m(2, 3, 5, 6, 7, 13, 15)", law: "Canonical SOP", reason: "7 minterms." },
-        { step: 5, expr: "F = Pi M(0, 1, 4, 8, 9, 10, 11, 12, 14)", law: "Canonical POS", reason: "Remaining 9 maxterms." }
+        { step: 1, expr: "A'C = 1 at {2, 3, 6, 7}; BD = 1 at {5, 7, 13, 15}", law: "4-Var Evaluation", reason: "Binary patterns 0*1* and *1*1." },
+        { step: 2, expr: "Union: {2, 3, 5, 6, 7, 13, 15} -> F = Σm(2, 3, 5, 6, 7, 13, 15)", law: "Canonical SOP", reason: "7 minterms." },
+        { step: 3, expr: "0-rows: {0, 1, 4, 8, 9, 10, 11, 12, 14} -> F = ΠM(0, 1, 4, 8, 9, 10, 11, 12, 14)", law: "Canonical POS", reason: "9 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(2, 3, 5, 6, 7, 13, 15) | Pi M(0, 1, 4, 8, 9, 10, 11, 12, 14)",
-      keyTakeaway: "Union row 7 once; 7 minterms and 9 maxterms."
+      finalAnswer: "Σm(2, 3, 5, 6, 7, 13, 15) | ΠM(0, 1, 4, 8, 9, 10, 11, 12, 14)",
+      keyTakeaway: "Index 7 is counted once: Σm(2, 3, 5, 6, 7, 13, 15) and ΠM(0, 1, 4, 8, 9, 10, 11, 12, 14)."
     },
     {
       id: "P16",
@@ -1098,51 +1275,46 @@ export const dldSection23Data = {
       difficulty: "Advanced",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = A'B + CD', determine both canonical index sets.",
-      hint1: "A'B is high on rows 4, 5, 6, 7.",
-      hint2: "CD' is high on rows 2, 6, 10, 14.",
+      hint1: "A'B covers {4, 5, 6, 7}; CD' covers {2, 6, 10, 14}.",
+      hint2: "Index 6 is shared; compute union and complement.",
       solutionSteps: [
-        { step: 1, expr: "A'B rows: {4, 5, 6, 7}", law: "Product Expansion", reason: "A=0, B=1." },
-        { step: 2, expr: "CD' rows: {2, 6, 10, 14}", law: "Product Expansion", reason: "C=1, D=0." },
-        { step: 3, expr: "1-rows: {4, 5, 6, 7} U {2, 6, 10, 14} = {2, 4, 5, 6, 7, 10, 14}", law: "Set Union", reason: "Row 6 shared." },
-        { step: 4, expr: "F = Sigma m(2, 4, 5, 6, 7, 10, 14)", law: "Canonical SOP", reason: "7 minterms." },
-        { step: 5, expr: "F = Pi M(0, 1, 3, 8, 9, 11, 12, 13, 15)", law: "Canonical POS", reason: "Remaining 9 maxterms." }
+        { step: 1, expr: "A'B: {4, 5, 6, 7}; CD': {2, 6, 10, 14}", law: "Minterm Rows", reason: "Active rows." },
+        { step: 2, expr: "1-rows: {2, 4, 5, 6, 7, 10, 14} -> F = Σm(2, 4, 5, 6, 7, 10, 14)", law: "Canonical SOP", reason: "7 minterms." },
+        { step: 3, expr: "0-rows: {0, 1, 3, 8, 9, 11, 12, 13, 15} -> F = ΠM(0, 1, 3, 8, 9, 11, 12, 13, 15)", law: "Canonical POS", reason: "9 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(2, 4, 5, 6, 7, 10, 14) | Pi M(0, 1, 3, 8, 9, 11, 12, 13, 15)",
-      keyTakeaway: "Sigma m(2, 4, 5, 6, 7, 10, 14) has 7 minterms."
+      finalAnswer: "Σm(2, 4, 5, 6, 7, 10, 14) | ΠM(0, 1, 3, 8, 9, 11, 12, 13, 15)",
+      keyTakeaway: "Canonical forms: Σm(2, 4, 5, 6, 7, 10, 14) and ΠM(0, 1, 3, 8, 9, 11, 12, 13, 15)."
     },
     {
       id: "P17",
       number: 17,
       difficulty: "Advanced",
       variables: "A, B, C, D",
-      problem: "Convert Sigma m(0, 2, 5, 7, 8, 10, 13, 15) into canonical POS for variables A, B, C, D.",
-      hint1: "4 variables means universe U has indices 0 through 15.",
-      hint2: "List all indices from {0..15} that are NOT in the given Sigma m list.",
+      problem: "Convert F(A, B, C, D) = Σm(0, 2, 5, 7, 8, 10, 13, 15) into canonical POS.",
+      hint1: "Identify all missing indices from the 16-element universe {0..15}.",
+      hint2: "There are 8 missing indices.",
       solutionSteps: [
-        { step: 1, expr: "Universe U = {0, 1, 2, ..., 15}", law: "4-Variable Universe", reason: "16 rows total." },
-        { step: 2, expr: "Given minterm set S = {0, 2, 5, 7, 8, 10, 13, 15}", law: "Minterm Set", reason: "8 minterms." },
-        { step: 3, expr: "U \\ S = {1, 3, 4, 6, 9, 11, 12, 14}", law: "Complementary Set", reason: "8 maxterms." },
-        { step: 4, expr: "F = Pi M(1, 3, 4, 6, 9, 11, 12, 14)", law: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "Universe U = {0, 1, ..., 15}", law: "4-Var Universe", reason: "16 rows total." },
+        { step: 2, expr: "Missing indices: {1, 3, 4, 6, 9, 11, 12, 14}", law: "Complementary Set", reason: "Rows where F = 0." },
+        { step: 3, expr: "F = ΠM(1, 3, 4, 6, 9, 11, 12, 14)", law: "Canonical POS", reason: "Product of maxterms." }
       ],
-      finalAnswer: "F = Pi M(1, 3, 4, 6, 9, 11, 12, 14)",
-      keyTakeaway: "Direct set subtraction from U yields the canonical POS notation."
+      finalAnswer: "F = ΠM(1, 3, 4, 6, 9, 11, 12, 14)",
+      keyTakeaway: "Canonical POS is directly obtained by listing missing indices: ΠM(1, 3, 4, 6, 9, 11, 12, 14)."
     },
     {
       id: "P18",
       number: 18,
       difficulty: "Advanced",
       variables: "A, B, C, D",
-      problem: "For a four-variable function, F = 1 exactly when D = 1. Determine its canonical SOP and POS index sets.",
-      hint1: "Which binary numbers between 0 and 15 end with 1?",
-      hint2: "All odd numbers have D = 1 (1, 3, 5, 7, 9, 11, 13, 15).",
+      problem: "For a four-variable function, F = 1 exactly when D = 1. Determine its canonical index sets.",
+      hint1: "D = 1 at all odd indices: {1, 3, 5, 7, 9, 11, 13, 15}.",
+      hint2: "D = 0 at all even indices: {0, 2, 4, 6, 8, 10, 12, 14}.",
       solutionSteps: [
-        { step: 1, expr: "D = 1 on all odd indices: {1, 3, 5, 7, 9, 11, 13, 15}", law: "Binary Parity Analysis", reason: "LSB is 1." },
-        { step: 2, expr: "F = Sigma m(1, 3, 5, 7, 9, 11, 13, 15)", law: "Canonical SOP", reason: "8 minterms." },
-        { step: 3, expr: "D = 0 on all even indices: {0, 2, 4, 6, 8, 10, 12, 14}", law: "Binary Parity Analysis", reason: "LSB is 0." },
-        { step: 4, expr: "F = Pi M(0, 2, 4, 6, 8, 10, 12, 14)", law: "Canonical POS", reason: "8 maxterms." }
+        { step: 1, expr: "D = 1 at all 8 odd rows: {1, 3, 5, 7, 9, 11, 13, 15} -> F = Σm(1, 3, 5, 7, 9, 11, 13, 15)", law: "Canonical SOP", reason: "8 minterms." },
+        { step: 2, expr: "D = 0 at all 8 even rows: {0, 2, 4, 6, 8, 10, 12, 14} -> F = ΠM(0, 2, 4, 6, 8, 10, 12, 14)", law: "Canonical POS", reason: "8 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(1, 3, 5, 7, 9, 11, 13, 15) | Pi M(0, 2, 4, 6, 8, 10, 12, 14)",
-      keyTakeaway: "Single literal D in a 4-variable universe spans exactly 8 minterms (all odd rows)."
+      finalAnswer: "Σm(1, 3, 5, 7, 9, 11, 13, 15) | ΠM(0, 2, 4, 6, 8, 10, 12, 14)",
+      keyTakeaway: "A single literal in 4 variables expands to 8 minterms (odd rows) and 8 maxterms (even rows)."
     },
     {
       id: "P19",
@@ -1150,18 +1322,15 @@ export const dldSection23Data = {
       difficulty: "Advanced",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = (A + B')(C + D), construct both canonical index sets.",
-      hint1: "(A + B') = 0 when A = 0, B = 1 (rows 4, 5, 6, 7).",
-      hint2: "(C + D) = 0 when C = 0, D = 0 (rows 0, 4, 8, 12). Union gives maxterm indices.",
+      hint1: "(A + B') = 0 when A=0, B=1, C=*, D=* -> rows {4, 5, 6, 7}.",
+      hint2: "(C + D) = 0 when A=*, B=*, C=0, D=0 -> rows {0, 4, 8, 12}.",
       solutionSteps: [
-        { step: 1, expr: "(A + B') = 0 at ABCD in {0100(4), 0101(5), 0110(6), 0111(7)}", law: "Zero Factor Analysis", reason: "A=0, B=1." },
-        { step: 2, expr: "(C + D) = 0 at ABCD in {0000(0), 0100(4), 1000(8), 1100(12)}", law: "Zero Factor Analysis", reason: "C=0, D=0." },
-        { step: 3, expr: "0-rows: {4, 5, 6, 7} U {0, 4, 8, 12} = {0, 4, 5, 6, 7, 8, 12}", law: "Set Union", reason: "Row 4 common; 7 maxterms." },
-        { step: 4, expr: "F = Pi M(0, 4, 5, 6, 7, 8, 12)", law: "Canonical POS", reason: "7 maxterms." },
-        { step: 5, expr: "1-rows: {0..15} \\ {0, 4, 5, 6, 7, 8, 12} = {1, 2, 3, 9, 10, 11, 13, 14, 15}", law: "Complementary Set", reason: "9 minterms." },
-        { step: 6, expr: "F = Sigma m(1, 2, 3, 9, 10, 11, 13, 14, 15)", law: "Canonical SOP", reason: "9 minterms." }
+        { step: 1, expr: "(A + B') = 0 at {4, 5, 6, 7}; (C + D) = 0 at {0, 4, 8, 12}", law: "Zero Row Identification", reason: "Factor zeroes." },
+        { step: 2, expr: "0-rows: {4, 5, 6, 7} U {0, 4, 8, 12} = {0, 4, 5, 6, 7, 8, 12} -> F = ΠM(0, 4, 5, 6, 7, 8, 12)", law: "Canonical POS", reason: "7 maxterms." },
+        { step: 3, expr: "1-rows: {0..15} \\ {0, 4, 5, 6, 7, 8, 12} = {1, 2, 3, 9, 10, 11, 13, 14, 15} -> F = Σm(1, 2, 3, 9, 10, 11, 13, 14, 15)", law: "Canonical SOP", reason: "9 minterms." }
       ],
-      finalAnswer: "F = Sigma m(1, 2, 3, 9, 10, 11, 13, 14, 15) | Pi M(0, 4, 5, 6, 7, 8, 12)",
-      keyTakeaway: "Row 4 makes both factors zero; 7 maxterms and 9 minterms."
+      finalAnswer: "Σm(1, 2, 3, 9, 10, 11, 13, 14, 15) | ΠM(0, 4, 5, 6, 7, 8, 12)",
+      keyTakeaway: "Index 4 is shared; canonical sets are Σm(1, 2, 3, 9, 10, 11, 13, 14, 15) and ΠM(0, 4, 5, 6, 7, 8, 12)."
     },
     {
       id: "P20",
@@ -1169,18 +1338,15 @@ export const dldSection23Data = {
       difficulty: "Advanced",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = AB' + C'D, determine its canonical representations.",
-      hint1: "AB' = 1 when A=1, B=0 (rows 8, 9, 10, 11).",
-      hint2: "C'D = 1 when C=0, D=1 (rows 1, 5, 9, 13).",
+      hint1: "AB' covers 10** -> {8, 9, 10, 11}.",
+      hint2: "C'D covers **01 -> {1, 5, 9, 13}.",
       solutionSteps: [
-        { step: 1, expr: "AB' minterms: {8, 9, 10, 11}", law: "Product Expansion", reason: "A=1, B=0." },
-        { step: 2, expr: "C'D minterms: {1, 5, 9, 13}", law: "Product Expansion", reason: "C=0, D=1." },
-        { step: 3, expr: "1-rows: {8, 9, 10, 11} U {1, 5, 9, 13} = {1, 5, 8, 9, 10, 11, 13}", law: "Set Union", reason: "Row 9 common; 7 minterms." },
-        { step: 4, expr: "F = Sigma m(1, 5, 8, 9, 10, 11, 13)", law: "Canonical SOP", reason: "7 minterms." },
-        { step: 5, expr: "0-rows: {0, 2, 3, 4, 6, 7, 12, 14, 15}", law: "Complementary Set", reason: "9 maxterms." },
-        { step: 6, expr: "F = Pi M(0, 2, 3, 4, 6, 7, 12, 14, 15)", law: "Canonical POS", reason: "9 maxterms." }
+        { step: 1, expr: "AB' = 1 at {8, 9, 10, 11}; C'D = 1 at {1, 5, 9, 13}", law: "Minterm Rows", reason: "Find active rows." },
+        { step: 2, expr: "1-rows: {1, 5, 8, 9, 10, 11, 13} -> F = Σm(1, 5, 8, 9, 10, 11, 13)", law: "Canonical SOP", reason: "7 minterms." },
+        { step: 3, expr: "0-rows: {0, 2, 3, 4, 6, 7, 12, 14, 15} -> F = ΠM(0, 2, 3, 4, 6, 7, 12, 14, 15)", law: "Canonical POS", reason: "9 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(1, 5, 8, 9, 10, 11, 13) | Pi M(0, 2, 3, 4, 6, 7, 12, 14, 15)",
-      keyTakeaway: "Index 9 is shared by both product terms; include it once in Sigma m."
+      finalAnswer: "Σm(1, 5, 8, 9, 10, 11, 13) | ΠM(0, 2, 3, 4, 6, 7, 12, 14, 15)",
+      keyTakeaway: "Index 9 is shared; canonical sets are Σm(1, 5, 8, 9, 10, 11, 13) and ΠM(0, 2, 3, 4, 6, 7, 12, 14, 15)."
     },
 
     // Challenge (P21 - P24)
@@ -1190,68 +1356,63 @@ export const dldSection23Data = {
       difficulty: "Challenge",
       variables: "A, B, C, D",
       problem: "For F(A, B, C, D) = A'B' + CD, determine the full canonical index sets.",
-      hint1: "A'B' = 1 on rows where A=0, B=0 (indices 0, 1, 2, 3).",
-      hint2: "CD = 1 on rows where C=1, D=1 (indices 3, 7, 11, 15).",
+      hint1: "A'B' covers 00** -> {0, 1, 2, 3}.",
+      hint2: "CD covers **11 -> {3, 7, 11, 15}.",
       solutionSteps: [
-        { step: 1, expr: "A'B' produces: 0000 (0), 0001 (1), 0010 (2), 0011 (3)", law: "Product Expansion", reason: "4 minterms." },
-        { step: 2, expr: "CD produces: 0011 (3), 0111 (7), 1011 (11), 1111 (15)", law: "Product Expansion", reason: "4 minterms." },
-        { step: 3, expr: "1-rows: {0, 1, 2, 3} U {3, 7, 11, 15} = {0, 1, 2, 3, 7, 11, 15}", law: "Set Union", reason: "Index 3 shared; 7 minterms." },
-        { step: 4, expr: "F = Sigma m(0, 1, 2, 3, 7, 11, 15)", law: "Canonical SOP", reason: "7 minterms." },
-        { step: 5, expr: "0-rows: {4, 5, 6, 8, 9, 10, 12, 13, 14}", law: "Complementary Set", reason: "9 maxterms." },
-        { step: 6, expr: "F = Pi M(4, 5, 6, 8, 9, 10, 12, 13, 14)", law: "Canonical POS", reason: "9 maxterms." }
+        { step: 1, expr: "A'B' 1-rows: {0, 1, 2, 3}; CD 1-rows: {3, 7, 11, 15}", law: "4-Var Subterms", reason: "Binary expansion." },
+        { step: 2, expr: "Union: {0, 1, 2, 3, 7, 11, 15} -> F = Σm(0, 1, 2, 3, 7, 11, 15)", law: "Canonical SOP", reason: "7 minterms." },
+        { step: 3, expr: "0-rows: {0..15} \\ {0, 1, 2, 3, 7, 11, 15} = {4, 5, 6, 8, 9, 10, 12, 13, 14} -> F = ΠM(4, 5, 6, 8, 9, 10, 12, 13, 14)", law: "Canonical POS", reason: "9 maxterms." }
       ],
-      finalAnswer: "F = Sigma m(0, 1, 2, 3, 7, 11, 15) | Pi M(4, 5, 6, 8, 9, 10, 12, 13, 14)",
-      keyTakeaway: "Row 3 satisfies both terms. Total minterms = 7, total maxterms = 9."
+      finalAnswer: "Σm(0, 1, 2, 3, 7, 11, 15) | ΠM(4, 5, 6, 8, 9, 10, 12, 13, 14)",
+      keyTakeaway: "Index 3 is shared; canonical sets are Σm(0, 1, 2, 3, 7, 11, 15) and ΠM(4, 5, 6, 8, 9, 10, 12, 13, 14)."
     },
     {
       id: "P22",
       number: 22,
       difficulty: "Challenge",
       variables: "A, B, C",
-      problem: "Given F(A, B, C) = Sigma m(1, 2, 4, 7), write the equivalent canonical POS index notation.",
-      hint1: "Universe U for 3 variables contains indices 0 through 7.",
-      hint2: "List the complementary indices.",
+      problem: "Given F(A, B, C) = Σm(1, 2, 4, 7), write the equivalent canonical POS index notation.",
+      hint1: "Universe has 8 rows: {0, 1, 2, 3, 4, 5, 6, 7}.",
+      hint2: "List all indices from {0..7} not present in {1, 2, 4, 7}.",
       solutionSteps: [
-        { step: 1, expr: "Universe U = {0, 1, 2, 3, 4, 5, 6, 7}", law: "3-Variable Universe", reason: "8 rows total." },
-        { step: 2, expr: "Given minterm set S = {1, 2, 4, 7}", law: "Minterm Set", reason: "Odd-parity and symmetric rows." },
-        { step: 3, expr: "U \\ S = {0, 3, 5, 6}", law: "Complementary Set", reason: "Zero-output rows." },
-        { step: 4, expr: "F = Pi M(0, 3, 5, 6)", law: "Canonical POS", reason: "Product of maxterms." }
+        { step: 1, expr: "Minterm set S = {1, 2, 4, 7}", law: "Odd Parity 3-Var Function", reason: "4 minterms." },
+        { step: 2, expr: "Missing indices: {0..7} \\ {1, 2, 4, 7} = {0, 3, 5, 6}", law: "Complementary Set", reason: "4 maxterms." },
+        { step: 3, expr: "F = ΠM(0, 3, 5, 6)", law: "Canonical POS", reason: "Product of maxterms." }
       ],
-      finalAnswer: "F(A, B, C) = Pi M(0, 3, 5, 6)",
-      keyTakeaway: "F = Sigma m(1, 2, 4, 7) = Pi M(0, 3, 5, 6). Notice this is the 3-variable odd parity (XOR) function!"
+      finalAnswer: "F = ΠM(0, 3, 5, 6)",
+      keyTakeaway: "F = Σm(1, 2, 4, 7) (3-input XOR) is identically F = ΠM(0, 3, 5, 6)."
     },
     {
       id: "P23",
       number: 23,
       difficulty: "Challenge",
-      variables: "n = 4 variables (16 rows)",
+      variables: "A, B, C, D",
       problem: "A four-variable Boolean function has 16 possible input rows. How many different output columns contain an odd number of ones?",
-      hint1: "Total output vectors = 2^16 = 65,536.",
-      hint2: "The number of subsets of size k from a set of 16 is C(16, k). What is the sum of C(16, k) for all odd k?",
+      hint1: "Total possible 4-variable functions is 2^16 = 65,536.",
+      hint2: "Use the binomial identity: the sum of odd binomial coefficients equals 2^(N-1).",
       solutionSteps: [
-        { step: 1, expr: "Total possible 4-variable truth table output vectors = 2^16 = 65,536.", law: "Function Space", reason: "Each of the 16 rows can be independently 0 or 1." },
-        { step: 2, expr: "The number of functions with exactly k ones is C(16, k).", law: "Combinatorics", reason: "Binomial coefficient." },
-        { step: 3, expr: "Odd number of ones means k in {1, 3, 5, 7, 9, 11, 13, 15}.", law: "Parity Condition", reason: "Odd Hamming weight." },
-        { step: 4, expr: "Sum_{k odd} C(16, k) = 2^(16 - 1) = 2^15 = 32,768.", law: "Binomial Theorem Bisection", reason: "Exactly half of all subsets of any non-empty finite set have odd size." }
+        { step: 1, expr: "Total truth-table rows N = 2^4 = 16.", law: "Row Count", reason: "16 rows." },
+        { step: 2, expr: "Total possible functions = 2^16 = 65,536.", law: "Function Space", reason: "2^16 output columns." },
+        { step: 3, expr: "Functions with k ones = C(16, k). Odd ones = C(16,1) + C(16,3) + ··· + C(16,15).", law: "Binomial Sum", reason: "Odd parity selection." },
+        { step: 4, expr: "Identity: Sum_{k odd} C(N, k) = 2^(N-1) = 2^(16-1) = 2^15 = 32,768.", law: "Combinatorial Half-Space", reason: "Exactly half of all functions." }
       ],
-      finalAnswer: "32,768 functions (exactly 2^15, or half of the 65,536 total function space).",
-      keyTakeaway: "Exactly half of all Boolean functions for any number of inputs n have an odd number of minterms: 2^(2^n - 1)."
+      finalAnswer: "32,768 functions",
+      keyTakeaway: "Exactly half of all 4-variable functions (32,768 out of 65,536) have an odd number of ones."
     },
     {
       id: "P24",
       number: 24,
       difficulty: "Challenge",
-      variables: "A, B, C (3 variables)",
-      problem: "For three variables A, B, C, construct the canonical index-set representations for the constant functions F = 0 and F = 1, and state the governing empty-set algebraic conventions.",
-      hint1: "Constant 0 is never 1 on any row. What is its minterm set?",
-      hint2: "Constant 1 is never 0 on any row. What is its maxterm set?",
+      variables: "A, B, C",
+      problem: "For three variables A, B, C, construct the canonical index-set representations for the constant functions F = 0 and F = 1.",
+      hint1: "For F = 0, F is never 1 on any row. What is its minterm set?",
+      hint2: "For F = 1, F is 1 on all rows. What is its maxterm set?",
       solutionSteps: [
-        { step: 1, expr: "For F = 0 (Constant False): F is never 1 on any row -> Minterm set is empty: Sigma m(empty set). F is 0 on all 8 rows -> Maxterm set contains all rows: Pi M(0, 1, 2, 3, 4, 5, 6, 7).", law: "Constant Zero Definition", reason: "Empty sum = 0." },
-        { step: 2, expr: "For F = 1 (Constant True): F is 1 on all 8 rows -> Minterm set contains all rows: Sigma m(0, 1, 2, 3, 4, 5, 6, 7). F is never 0 on any row -> Maxterm set is empty: Pi M(empty set).", law: "Constant One Definition", reason: "Empty product = 1." },
-        { step: 3, expr: "Algebraic convention: Empty sum (disjunction over 0 terms) = additive identity 0. Empty product (conjunction over 0 terms) = multiplicative identity 1.", law: "Formal Mathematical Conventions", reason: "Preserves algebraic consistency across all Boolean ring operations." }
+        { step: 1, expr: "For F = 0: 1-rows: empty set -> Σm(empty set) = 0. 0-rows: all rows -> ΠM(0, 1, 2, 3, 4, 5, 6, 7).", law: "Constant Zero Representation", reason: "Empty sum equals additive identity 0." },
+        { step: 2, expr: "For F = 1: 1-rows: all rows -> Σm(0, 1, 2, 3, 4, 5, 6, 7). 0-rows: empty set -> ΠM(empty set) = 1.", law: "Constant One Representation", reason: "Empty product equals multiplicative identity 1." }
       ],
-      finalAnswer: "F = 0: Sigma m(empty set) = Pi M(0, 1, 2, 3, 4, 5, 6, 7) | F = 1: Sigma m(0, 1, 2, 3, 4, 5, 6, 7) = Pi M(empty set)",
-      keyTakeaway: "Empty sum = 0 and empty product = 1 ensure mathematical consistency for constant functions."
+      finalAnswer: "F=0: Σm(empty set), ΠM(0, 1, 2, 3, 4, 5, 6, 7) | F=1: Σm(0, 1, 2, 3, 4, 5, 6, 7), ΠM(empty set)",
+      keyTakeaway: "Empty sum = 0 and empty product = 1 represent the edge-case constant functions."
     }
   ]
 };
