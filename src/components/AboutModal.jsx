@@ -3,7 +3,7 @@ import { X, BookOpen, Compass, Briefcase, Radio, FileText, Heart, ShieldCheck } 
 import { ViitCrest } from './ViitCrest';
 import { ZeroIndexMark } from './ZeroIndexMark';
 
-export const AboutModal = ({ isOpen, onClose }) => {
+export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin }) => {
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
@@ -110,7 +110,23 @@ export const AboutModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Modal Footer */}
-        <div className="pt-2 flex justify-end">
+        <div className="pt-2 flex items-center justify-between">
+          <div>
+            {isAdmin && (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenAdmin) onOpenAdmin();
+                }}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F0F5F2] hover:bg-[#E0EBDF] text-[#285C49] text-xs font-bold transition-colors cursor-pointer border border-[#D5E3DB]"
+                id="about-admin-panel-link"
+              >
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Admin Panel</span>
+              </button>
+            )}
+          </div>
           <button
             onClick={onClose}
             className="px-5 py-2.5 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white text-xs font-bold transition-colors cursor-pointer"
@@ -124,3 +140,4 @@ export const AboutModal = ({ isOpen, onClose }) => {
 };
 
 export default AboutModal;
+
