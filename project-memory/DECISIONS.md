@@ -301,6 +301,14 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:** `verifyAdminControlSystem.mjs` passed 64/64 checks; `verifyUnit1Math.mjs`, `verifyUnit2Full.mjs`, and `verifyDldResources.mjs` passed 238/238 checks; clean Vite build in 4.30s (0 errors); zero em/en-dashes confirmed.
 - **Verification / Follow-up Requirements:** Work maintained locally on development branch `admin-control-system`. Do not merge into main, push to GitHub, or deploy to Vercel until user review and authorization.
 
+## D-037 | 2026-10-21 | Pre-Release Public Visibility Enforcement, MFA Activation Fix, and Database RLS Refinement
+
+- **Decision:** (1) Resolved MFA enrollment error by ensuring valid Supabase TOTP factor ID retention and verified challenge flow in `MfaEnrollModal.jsx` and `authService.js`; (2) Removed redundant client-side audit insertions in `contentRegistryService.js` and `AdminDashboard.jsx`, relying entirely on the PostgreSQL `trg_audit_content_registry` trigger; (3) Enforced fail-closed public visibility across all public routes, navigation bars (`SiteHeader.jsx`), footers (`SiteFooter.jsx`), homepage cards (`MainHome.jsx`), and knowledge tree branches (`KnowledgeTreeIllustration.jsx`); (4) Created safe incremental SQL patch `supabase/migrations/20261021000002_fix_anon_content_policy.sql` granting execute on `is_admin()` and partitioning SELECT policies between `anon` and `authenticated`; (5) Confirmed zero mock/AI drafts in production bundles, empty `readoutArticles` and `folioEssays` arrays, and isolated admin preview mode; (6) Verified 36/36 checks in `testBridgeVisibilityLifecycle.mjs`, 64/64 checks in `verifyAdminControlSystem.mjs`, clean build in 4.57s, and zero em-dashes and zero en-dashes across all files.
+- **Rationale / Alternatives Considered:** Guarantees that toggling visibility in Supabase immediately and unconditionally hides or restores content for anonymous visitors across all routes and UI surfaces, while avoiding destructive database reseeding.
+- **Affected Files and Components:** `src/App.jsx`, `src/components/MainHome.jsx`, `src/components/KnowledgeTreeIllustration.jsx`, `src/components/SiteHeader.jsx`, `src/components/SiteFooter.jsx`, `src/components/admin/AdminDashboard.jsx`, `src/components/admin/MfaEnrollModal.jsx`, `src/services/authService.js`, `src/services/contentRegistryService.js`, `src/services/supabaseClient.js`, `supabase/migrations/20261021000002_fix_anon_content_policy.sql`, `scripts/testBridgeVisibilityLifecycle.mjs`.
+- **Approval Evidence:** `testBridgeVisibilityLifecycle.mjs` (36/36 passed), `verifyAdminControlSystem.mjs` (64/64 passed), `npm run build` (0 errors), Zero-Dash audit (0 em/en-dashes).
+- **Verification / Follow-up Requirements:** Maintain on `admin-control-system`. Obtain faculty approval before committing, pushing to GitHub, or deploying to Vercel.
+
 ---
 
 ## Decision Record Template

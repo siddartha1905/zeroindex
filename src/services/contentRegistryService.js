@@ -94,15 +94,45 @@ export async function fetchContentRegistry() {
               updatedAt: dbRow.updated_at
             };
           }
-          return item;
+          // Fail closed: Any item omitted by Supabase RLS is hidden or unpublished
+          return {
+            ...item,
+            isPublic: false
+          };
         });
       }
+
+      // If anon direct SELECT encountered a policy restriction, evaluate live access via RPC
+      const rpcResults = await Promise.all(
+        centralContentRegistry.map(async item => {
+          try {
+            const { data: isAcc } = await supabase.rpc('is_content_item_accessible', { item_id: item.id });
+            return { id: item.id, isAccessible: Boolean(isAcc) };
+          } catch {
+            return { id: item.id, isAccessible: false };
+          }
+        })
+      );
+
+      const rpcMap = new Map(rpcResults.map(r => [r.id, r.isAccessible]));
+      return centralContentRegistry.map(item => ({
+        ...item,
+        isPublic: Boolean(rpcMap.get(item.id))
+      }));
     } catch {
-      // Fallback to local configuration on network error
+      // Supabase is configured but query threw network error.
+      // Fail closed: Do not expose restricted content through static fallback.
+      return centralContentRegistry.map(item => {
+        const isCoreApproved = item.id === 'pillar-workbench' || item.id === 'workbench-subject-dld';
+        return {
+          ...item,
+          isPublic: isCoreApproved && item.editorialStatus === 'published'
+        };
+      });
     }
   }
 
-  // 2. Local Simulation Mode / Baseline Fallback
+  // 2. Local Simulation Mode (only active when Supabase credentials are absent)
   const localOverrides = getLocalVisibilityOverrides();
   return centralContentRegistry.map(item => {
     if (Object.prototype.hasOwnProperty.call(localOverrides, item.id)) {
@@ -176,27 +206,26 @@ export async function updateItemVisibility({ itemId, isPublic, adminSession }) {
     }
 
     try {
+      const updatePayload = {
+        is_public: isPublic,
+        updated_at: new Date().toISOString()
+      };
+      if (adminSession.userId && typeof adminSession.userId === 'string' && adminSession.userId.length > 20) {
+        updatePayload.updated_by = adminSession.userId;
+      }
+
       const { error: updateError } = await supabase
         .from('content_registry')
-        .update({
-          is_public: isPublic,
-          updated_at: new Date().toISOString(),
-          updated_by: adminSession.userId
-        })
+        .update(updatePayload)
         .eq('id', itemId);
 
       if (updateError) {
         return { success: false, error: updateError.message };
       }
 
-      // Record audit log entry in Supabase
-      await supabase.from('admin_audit_logs').insert({
-        user_id: adminSession.userId,
-        action: isPublic ? 'PUBLISH' : 'HIDE',
-        target_id: itemId,
-        previous_state: { is_public: !isPublic },
-        new_state: { is_public: isPublic }
-      }).catch(() => {});
+      // Note: Publishing audit logs are automatically and atomically recorded
+      // by PostgreSQL trigger trg_audit_content_registry AFTER UPDATE on content_registry.
+      // Client-side insertion is neither needed nor allowed.
 
       return { success: true };
     } catch (err) {
@@ -289,8 +318,8 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
     }
   }
 
-  // 2. Offline Reference Archive (Readout & Folio Drafts)
-  // These drafts are securely inspected by the administrator
+  // 2. Offline Reference Archive (Simulation Test Harness)
+  // Ensures zero generated faculty prose is bundled into the client build
   const archivedReadouts = {
     'readout-article-relays-to-tensors': {
       id: 'readout-article-relays-to-tensors',
@@ -299,9 +328,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       category: 'Hardware Architecture',
       readTime: '7 min read',
       date: '12 Oct 2026',
-      abstract: 'How physical voltage differentials and mechanical relay logic evolved through discrete semiconductors into today massively parallel systolic tensor arrays.',
-      content: 'The fundamental question of computer hardware has remained invariant for nearly a century: how can we represent symbolic truth states using physical phenomena?\n\nIn Claude Shannon 1937 master thesis, the breakthrough was demonstrating that electrical switches arranged in series and parallel were isomorphic to the Boolean algebraic operations of AND and OR. A physical circuit was no longer merely a conduit for electrical power; it was an apparatus capable of formal logical deduction.\n\nWhen we examine modern tensor processing units (TPUs) and systolic arrays, the underlying premise has not changed. An 8-bit multiplier-accumulator cell is fundamentally composed of full adders and Boolean gates, exactly as studied in introductory Digital Logic Design. Understanding computing from index zero ensures that modern hardware abstractions remain transparent rather than magical.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'How physical voltage differentials and relay logic evolved into systolic tensor arrays.',
+      content: 'Confidential faculty draft. Full manuscript is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     },
     'readout-article-zero-based-indexing': {
       id: 'readout-article-zero-based-indexing',
@@ -310,9 +339,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       category: 'Systems & C',
       readTime: '5 min read',
       date: '28 Sep 2026',
-      abstract: 'An architectural examination of pointer arithmetic: why indexing at zero minimizes CPU machine instruction cycles and directly matches contiguous memory offsets.',
-      content: 'Students frequently ask why programming languages count array elements starting at index zero instead of one. In C, an array identifier acts as a constant pointer to the memory location of its initial element. When a program accesses arr[i], the hardware evaluates: Address = Base + i * sizeof(Type).\n\nIf indexing were one-based, the CPU would be required to execute a subtraction instruction on every single array dereference: Base + (i - 1) * sizeof(Type). By defining the initial element at offset zero, the offset becomes precisely zero, saving millions of CPU arithmetic cycles in nested loops. Index zero is an architectural optimization.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'An architectural examination of pointer arithmetic and contiguous memory offsets.',
+      content: 'Confidential faculty draft. Full manuscript is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     },
     'readout-article-attention-geometry': {
       id: 'readout-article-attention-geometry',
@@ -321,9 +350,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       category: 'Machine Learning',
       readTime: '9 min read',
       date: '14 Sep 2026',
-      abstract: 'Deconstructing dot-product attention as an angle-based similarity lookup in high-dimensional vector spaces, stripped of hype and marketing vocabulary.',
-      content: 'At the heart of the modern transformer architecture lies scaled dot-product attention: Attention(Q, K, V) = softmax((Q * K^T) / sqrt(d_k)) * V.\n\nDespite anthropomorphic language, attention is fundamentally an exercise in linear algebra and high-dimensional geometry. When two normalized vectors have a small angle between them, their dot product approaches unity. When orthogonal, their dot product is zero.\n\nBy computing pairwise dot products between query and key projections, the model constructs a dynamic, data-dependent weighting matrix.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'Deconstructing dot-product attention as an angle-based similarity lookup in vector spaces.',
+      content: 'Confidential faculty draft. Full manuscript is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     }
   };
 
@@ -335,9 +364,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       topic: 'Pedagogy & Foundations',
       readTime: '6 min read',
       date: '04 Oct 2026',
-      abstract: 'Why cognitive overload happens when textbooks skip foundational assumptions, and how deliberate first-principles instruction rebuilds academic confidence.',
-      content: 'One of the most persistent observations in my classroom over the years is how frequently student anxiety originates not from intrinsic mathematical difficulty, but from unstated prerequisites.\n\nIn traditional curricula, textbooks routinely present high-level algorithms or circuit syntheses as self-evident facts. In computer science, index zero signifies the memory location where an array actually begins. In academic instruction, index zero means refusing to leave gaps in the foundation. When we take the time to trace an idea from basic voltage levels to Boolean gates before introducing complex sequential systems, students develop intellectual sovereignty over the subject.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'Why cognitive overload happens when textbooks skip foundational assumptions.',
+      content: 'Confidential faculty draft. Full essay text is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     },
     'folio-essay-quiet-craft-engineering': {
       id: 'folio-essay-quiet-craft-engineering',
@@ -346,9 +375,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       topic: 'Faculty Reflections',
       readTime: '5 min read',
       date: '18 Sep 2026',
-      abstract: 'Observations on preparing lecture models, drawing circuit schematics by hand on the blackboard, and resisting the rush toward superficial automation.',
-      content: 'There is a distinct, understated craftsmanship in drawing an electrical logic diagram on a physical blackboard. As the chalk moves across the slate, establishing wire runs and gate bodies, the pacing naturally synchronizes with human cognition.\n\nZeroIndex is an attempt to synthesize the best of both worlds: digital tools that preserve the contemplative, paced dignity of a chalkboard derivation, paired with interactive visual solvers that let students verify their derivations on their own time.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'Observations on preparing lecture models and drawing circuit schematics by hand.',
+      content: 'Confidential faculty draft. Full essay text is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     },
     'folio-essay-deep-reading-summaries': {
       id: 'folio-essay-deep-reading-summaries',
@@ -357,9 +386,9 @@ export async function fetchUnpublishedDraft(draftId, adminSession) {
       topic: 'Books & Mindset',
       readTime: '7 min read',
       date: '22 Aug 2026',
-      abstract: 'Why engineering students must cultivate the endurance to read primary textbooks and papers rather than relying exclusively on cheat sheets and video snippets.',
-      content: 'In technical education today, there is a dangerous temptation to substitute concise summaries for foundational reading. While summaries are valuable for rapid recall, they cannot build architectural intuition. When an engineer encounters an unprecedented production bug, there is no prefabricated summary available. Reading technical prose deeply is a muscle that must be exercised deliberately.',
-      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead. Stored for developer reference only.'
+      abstract: 'Why engineering students must cultivate the endurance to read primary textbooks.',
+      content: 'Confidential faculty draft. Full essay text is stored securely in Supabase unpublished_drafts.',
+      archivedReason: 'Unpublished Phase 1A: Not authored or approved by faculty lead.'
     }
   };
 

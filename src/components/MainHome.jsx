@@ -9,13 +9,17 @@ import {
   FileText
 } from 'lucide-react';
 import { KnowledgeTreeIllustration } from './KnowledgeTreeIllustration';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
 export const MainHome = ({ 
   onNavigate, 
   onOpenAboutModal, 
-  onOpenInstallModal 
+  onOpenInstallModal,
+  contentOverrides = {},
+  isRegistryLoaded = true
 }) => {
   const pillarsRef = useRef(null);
+  const isBridgeVisible = isRegistryLoaded && isItemPubliclyAccessible('pillar-bridge', contentOverrides);
 
   const scrollToPillars = () => {
     pillarsRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -142,6 +146,7 @@ export const MainHome = ({
           <div className="lg:col-span-6">
             <KnowledgeTreeIllustration 
               onSelectBranch={(pillarId) => onNavigate(pillarId)}
+              contentOverrides={contentOverrides}
             />
           </div>
 
@@ -169,7 +174,10 @@ export const MainHome = ({
         </div>
 
         {/* 5 Pillar Cards: Desktop arrangement: 
-            First row: Workbench, Atlas, Bridge (each lg:col-span-2)
+            If Bridge is visible:
+              First row: Workbench, Atlas, Bridge (each lg:col-span-2)
+            If Bridge is hidden:
+              First row: Workbench, Atlas (each lg:col-span-3, equal-width balanced cards)
             Second row: Readout, Folio (each lg:col-span-3, equal-width balanced cards)
         */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 text-left">
@@ -185,7 +193,7 @@ export const MainHome = ({
                 onNavigate('workbench');
               }
             }}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#285C49] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49]"
+            className={`p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#285C49] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 ${isBridgeVisible ? 'lg:col-span-2' : 'lg:col-span-3'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49]`}
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -224,7 +232,7 @@ export const MainHome = ({
                 onNavigate('atlas');
               }
             }}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#496D91] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#496D91]"
+            className={`p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#496D91] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 ${isBridgeVisible ? 'lg:col-span-2' : 'lg:col-span-3'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#496D91]`}
           >
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -253,43 +261,45 @@ export const MainHome = ({
           </div>
 
           {/* Card 03: The Bridge */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onNavigate('bridge')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNavigate('bridge');
-              }
-            }}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#C38A63] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-2 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C38A63]"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F5EBE1] text-[#C38A63]">
-                  03
-                </span>
-                <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                  {pillars[2].category}
-                </span>
+          {isBridgeVisible && (
+            <div
+              role="button"
+              tabIndex={0}
+              onClick={() => onNavigate('bridge')}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onNavigate('bridge');
+                }
+              }}
+              className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#C38A63] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-2 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C38A63]"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F5EBE1] text-[#C38A63]">
+                    03
+                  </span>
+                  <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
+                    {pillars[2].category}
+                  </span>
+                </div>
+
+                <div>
+                  <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#C38A63] transition-colors">
+                    {pillars[2].name}
+                  </h3>
+                  <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
+                    {pillars[2].description}
+                  </p>
+                </div>
               </div>
 
-              <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#C38A63] transition-colors">
-                  {pillars[2].name}
-                </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                  {pillars[2].description}
-                </p>
+              <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#C38A63]">
+                <span>{pillars[2].actionLabel}</span>
+                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
-
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#C38A63]">
-              <span>{pillars[2].actionLabel}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
+          )}
 
           {/* Card 04: The Readout (Balanced Row 2 - spans 3 cols on lg) */}
           <div

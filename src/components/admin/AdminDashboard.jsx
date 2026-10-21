@@ -43,7 +43,8 @@ export const AdminDashboard = ({
   adminSession, 
   onLogout, 
   onNavigatePublicRoute, 
-  onNavigateHome 
+  onNavigateHome,
+  onPreviewRoute
 }) => {
   const [registry, setRegistry] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -401,14 +402,26 @@ export const AdminDashboard = ({
 
             {/* Inspect / Preview Button */}
             {item.editorialStatus === 'published' ? (
-              <button
-                type="button"
-                onClick={() => onNavigatePublicRoute ? onNavigatePublicRoute(item.route) : window.open('#' + item.route, '_blank')}
-                className="p-2 rounded-xl hover:bg-[#F0F1EB] text-[#5F6C64] hover:text-[#285C49] transition-colors cursor-pointer"
-                title="View on live website"
-              >
-                <ExternalLink className="w-4 h-4" />
-              </button>
+              (!isDirectlyPublic || isParentHidden) ? (
+                <button
+                  type="button"
+                  onClick={() => onPreviewRoute ? onPreviewRoute(item.route) : (onNavigatePublicRoute && onNavigatePublicRoute(item.route))}
+                  className="px-2.5 py-1.5 rounded-xl bg-[#FFF9F2] border border-[#F0DBC5] hover:border-[#C38A63] text-[#956A43] font-bold text-[11px] transition-colors cursor-pointer flex items-center gap-1"
+                  title="Open authorized administrator preview for hidden content"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Admin Preview</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onNavigatePublicRoute ? onNavigatePublicRoute(item.route) : window.open('#' + item.route, '_blank')}
+                  className="p-2 rounded-xl hover:bg-[#F0F1EB] text-[#5F6C64] hover:text-[#285C49] transition-colors cursor-pointer"
+                  title="View on live website"
+                >
+                  <ExternalLink className="w-4 h-4" />
+                </button>
+              )
             ) : (
               <button
                 type="button"

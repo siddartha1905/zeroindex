@@ -66,6 +66,12 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Simplified Admin Control System development complete on local branch `admin-control-system`. (Central Content Registry tracking 70 items across 5 pillars, Supabase Auth and PostgreSQL integration, TOTP Multi-Factor Authentication, hierarchical inheritance and draft protection safeguards, admin dashboard with visibility controls and confidential draft inspection, production SQL migration with RLS, setup guide, content confidentiality audit, and 64 automated verification tests passing with 100% accuracy).
-* **Immediate Next Action**: Present the Admin Control System verification report to the faculty lead for local review.
-* **Downstream Progression**: Maintain all work locally on `admin-control-system`. Do not push to GitHub or deploy to Vercel until authorized.
+* **Current Stage**: Final Admin System Pre-Release verification complete on local branch `admin-control-system`. Central Content Registry tracking 70 items across 5 pillars, live Supabase Auth and PostgreSQL integration with AAL2 MFA enforcement, hierarchical inheritance and draft protection safeguards, admin dashboard with visibility controls and confidential draft inspection, production SQL migrations with RLS, setup guide, content confidentiality audit, and all automated verification tests passing with 100% accuracy.
+* **Verified Evidence**:
+  - `node scripts/verifyAdminControlSystem.mjs`: 64/64 passed.
+  - `node scripts/testBridgeVisibilityLifecycle.mjs`: 36/36 passed.
+  - `npm run build`: built in 4.57s with zero errors.
+  - Live Supabase: The Bridge restored to Public (`is_public: true`), 7 child domains accessible, 26 unreviewed Atlas roadmaps inaccessible, all DLD Unit 1 and Unit 2 public sections accessible.
+  - Incremental SQL patch prepared in `supabase/migrations/20261021000002_fix_anon_content_policy.sql`.
+* **Immediate Next Action**: Provide the Pre-Release Verification Report and incremental SQL migration patch to faculty owner for review.
+* **Downstream Progression**: Maintain all work locally on `admin-control-system`. Do not push to GitHub or deploy to Vercel until explicit author approval is given.

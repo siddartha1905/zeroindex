@@ -939,11 +939,18 @@ export function isItemPubliclyAccessible(itemId, visibilityOverrides = {}) {
  */
 export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
   if (!route) return true;
-  const normalizedRoute = route.replace(/^#\/?/, '').trim().toLowerCase();
+  let normalizedRoute = route.replace(/^#\/?/, '').trim().toLowerCase();
 
   // Root homepage is always public
   if (!normalizedRoute || normalizedRoute === 'home') {
     return true;
+  }
+
+  // Canonical route aliases
+  if (normalizedRoute === 'placements' || normalizedRoute.startsWith('placements/')) {
+    normalizedRoute = normalizedRoute.replace(/^placements/, 'bridge');
+  } else if (normalizedRoute === 'roadmaps' || normalizedRoute.startsWith('roadmaps/')) {
+    normalizedRoute = normalizedRoute.replace(/^roadmaps/, 'atlas');
   }
 
   // Find matching items by route

@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **80**
-- Verification script names discovered: **14**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **90**
+- Verification script names discovered: **15**
 
 ## Selected declared dependencies
 
@@ -26,6 +26,7 @@
 
 ## Existing verification scripts (not executed here)
 
+- `scripts/verifyAdminControlSystem.mjs`
 - `scripts/verifyDldResources.mjs`
 - `scripts/verifyInteractiveSolvers.mjs`
 - `scripts/verifySection15Math.mjs`
@@ -90,8 +91,15 @@
 - `src/components/WorkbenchLanding.jsx`
 - `src/components/ZeroIndexMark.jsx`
 - `src/components/ZeroIndexSideWings.jsx`
+- `src/components/admin/AdminDashboard.jsx`
+- `src/components/admin/AdminLogin.jsx`
+- `src/components/admin/AuditLogModal.jsx`
+- `src/components/admin/MfaEnrollModal.jsx`
+- `src/components/admin/SecureDraftPreviewModal.jsx`
+- `src/components/admin/SupabaseSetupModal.jsx`
 - `src/data/atlasRoadmapsConfig.js`
 - `src/data/bridgePlacementConfig.js`
+- `src/data/centralContentRegistry.js`
 - `src/data/dldAvailabilityConfig.js`
 - `src/data/dldResourceConfig.js`
 - `src/data/dldSection13PracticeData.js`
@@ -120,6 +128,9 @@
 - `src/data/unit2QuizBank.js`
 - `src/index.css`
 - `src/main.jsx`
+- `src/services/authService.js`
+- `src/services/contentRegistryService.js`
+- `src/services/supabaseClient.js`
 - `src/theme/pastelTheme.js`
 - `src/utils/booleanEngine.js`
 - `src/utils/quizGrading.js`

@@ -242,48 +242,137 @@ export async function loginAdmin(email, password) {
 
 /**
  * Verify TOTP Multi-Factor Authentication Code.
+ * Follows the official Supabase challenge and verify sequence.
+ * Never submits an empty factor ID or empty challenge ID.
  * 
  * @param {string} factorId
- * @param {string} challengeId
+ * @param {string} [challengeId]
  * @param {string} code - 6-digit TOTP code
- * @returns {Promise<{ success: boolean, error?: string }>}
+ * @returns {Promise<{ success: boolean, assuranceLevel?: string, error?: string }>}
  */
 export async function verifyMfaCode(factorId, challengeId, code) {
+  const cleanFactorId = (factorId || '').trim();
+  const cleanCode = (code || '').trim();
+  let cleanChallengeId = (challengeId || '').trim();
+
+  // Validate factor ID
+  if (!cleanFactorId) {
+    return {
+      success: false,
+      error: 'Invalid MFA Factor: Factor ID is missing or empty. Please initialize a fresh enrollment.'
+    };
+  }
+
+  // Validate 6-digit numeric format
+  if (!/^\d{6}$/.test(cleanCode)) {
+    return {
+      success: false,
+      error: 'Please enter a valid 6-digit verification code.'
+    };
+  }
+
+  // 1. Live Supabase Connection
   if (isSupabaseConfigured()) {
     try {
-      const { error } = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId,
-        code: (code || '').trim()
-      });
+      // Step A: If no challenge ID is provided, create a real challenge first
+      if (!cleanChallengeId) {
+        // Try challengeAndVerify if available on the client
+        if (typeof supabase.auth.mfa.challengeAndVerify === 'function') {
+          const { error: cvError } = await supabase.auth.mfa.challengeAndVerify({
+            factorId: cleanFactorId,
+            code: cleanCode
+          });
 
-      if (error) {
-        return { success: false, error: error.message };
+          if (!cvError) {
+            // Refresh session so the JWT receives the updated AAL2 claim
+            await supabase.auth.refreshSession().catch(() => {});
+            const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+            return {
+              success: true,
+              assuranceLevel: aalData?.currentLevel || 'aal2'
+            };
+          }
+
+          // If challengeAndVerify failed with a regular verification error, return it
+          if (cvError.message && !cvError.message.toLowerCase().includes('not implemented')) {
+            return { success: false, error: cvError.message };
+          }
+        }
+
+        // Fallback to explicit challenge creation
+        const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({
+          factorId: cleanFactorId
+        });
+
+        if (challengeError || !challengeData?.id) {
+          return {
+            success: false,
+            error: challengeError?.message || 'Failed to initiate MFA challenge.'
+          };
+        }
+
+        cleanChallengeId = challengeData.id;
       }
 
-      return { success: true };
+      // Step B: Verify the code with the valid challenge ID
+      const { error: verifyError } = await supabase.auth.mfa.verify({
+        factorId: cleanFactorId,
+        challengeId: cleanChallengeId,
+        code: cleanCode
+      });
+
+      if (verifyError) {
+        return { success: false, error: verifyError.message };
+      }
+
+      // Step C: Refresh session so active JWT is upgraded to AAL2
+      await supabase.auth.refreshSession().catch(() => {});
+      const { data: aalData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+
+      return {
+        success: true,
+        assuranceLevel: aalData?.currentLevel || 'aal2'
+      };
     } catch (err) {
       return { success: false, error: err.message || 'MFA verification failed.' };
     }
   }
 
-  // Local simulation mode
-  if (/^\d{6}$/.test((code || '').trim())) {
-    return { success: true };
-  }
-
-  return { success: false, error: 'Please enter a valid 6-digit verification code.' };
+  // 2. Simulation mode (strictly only when Supabase credentials are NOT configured)
+  return { success: true, assuranceLevel: 'aal2' };
 }
 
 /**
  * Enroll a new TOTP Multi-Factor Authentication Factor.
- * Returns QR code URI and secret for Google Authenticator or Authy.
+ * Cleans up any abandoned unverified factors (ensuring exposed secrets are discarded),
+ * and requests a fresh Supabase-generated QR code and secret.
+ * Never removes any existing verified factors.
  * 
  * @returns {Promise<{ success: boolean, factorId?: string, qrCode?: string, secret?: string, uri?: string, error?: string }>}
  */
 export async function enrollMfaFactor() {
   if (isSupabaseConfigured()) {
     try {
+      // Step A: Discard any abandoned, unverified factors
+      const { data: factorsData, error: listError } = await supabase.auth.mfa.listFactors();
+      if (!listError && factorsData) {
+        const factorList = [
+          ...(factorsData.all || []),
+          ...(factorsData.totp || [])
+        ];
+        const seenIds = new Set();
+        const unverified = factorList.filter(f => {
+          if (!f?.id || seenIds.has(f.id)) return false;
+          seenIds.add(f.id);
+          return f.status === 'unverified';
+        });
+
+        for (const factor of unverified) {
+          await supabase.auth.mfa.unenroll({ factorId: factor.id }).catch(() => {});
+        }
+      }
+
+      // Step B: Request completely new Supabase-generated factor
       const { data, error } = await supabase.auth.mfa.enroll({
         factorType: 'totp',
         issuer: 'ZeroIndex'
@@ -291,6 +380,13 @@ export async function enrollMfaFactor() {
 
       if (error) {
         return { success: false, error: error.message };
+      }
+
+      if (!data?.id || !data?.totp?.qr_code || !data?.totp?.secret) {
+        return {
+          success: false,
+          error: 'Supabase MFA enrollment failed: Incomplete factor details returned.'
+        };
       }
 
       return {
@@ -301,11 +397,11 @@ export async function enrollMfaFactor() {
         uri: data.totp.uri
       };
     } catch (err) {
-      return { success: false, error: err.message || 'Failed to enroll MFA.' };
+      return { success: false, error: err.message || 'Failed to initialize MFA factor with Supabase.' };
     }
   }
 
-  // Simulation mode
+  // Simulation mode (strictly only when Supabase credentials are NOT configured)
   return {
     success: true,
     factorId: 'simulated-totp-factor-001',
