@@ -13,12 +13,15 @@ import {
   Info
 } from 'lucide-react';
 import { ZeroIndexMark } from './ZeroIndexMark';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
 export const SiteHeader = ({ 
   currentSection = 'home', 
   onNavigate,
   onOpenInstallModal,
-  onOpenAboutModal
+  onOpenAboutModal,
+  contentOverrides = {},
+  isRegistryLoaded = true
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -48,13 +51,18 @@ export const SiteHeader = ({
     timeZone: 'Asia/Kolkata'
   });
 
-  const navigationItems = [
+  const allNavigationItems = [
     { id: 'workbench', label: 'The Workbench', number: '01', color: '#285C49' },
     { id: 'atlas', label: 'The Atlas', number: '02', color: '#496D91' },
     { id: 'bridge', label: 'The Bridge', number: '03', color: '#C38A63' },
     { id: 'readout', label: 'The Readout', number: '04', color: '#765C90' },
     { id: 'folio', label: 'The Folio', number: '05', color: '#935F5D' },
   ];
+
+  // Only render pillars that are verified publicly visible
+  const navigationItems = isRegistryLoaded
+    ? allNavigationItems.filter(item => isItemPubliclyAccessible('pillar-' + item.id, contentOverrides))
+    : allNavigationItems.filter(item => item.id === 'workbench');
 
   return (
     <header 

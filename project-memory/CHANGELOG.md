@@ -2,6 +2,35 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-21: Final Admin System Pre-Release Verification and Live Supabase Integration
+
+- **Type**: pre-release / admin-system / security / supabase / rls / mfa / zero-dash
+- **Summary**: Executed complete Pre-Release check for the ZeroIndex Admin Publishing System:
+  1. **Git Branch & Academic Isolation**:
+     - Verified branch `admin-control-system` branched cleanly from `v2.1.0-dld-release` (`main`).
+     - Verified zero modifications to core academic curriculum, Atlas roadmaps, or DLD solver files.
+  2. **Live Supabase Synchronization & Incremental Patch**:
+     - Inspected live Supabase database policies against migration requirements.
+     - Created safe, non-destructive incremental patch `supabase/migrations/20261021000002_fix_anon_content_policy.sql` to grant execute on `is_admin()` and partition SELECT policies between `anon` and `authenticated`.
+     - Confirmed zero re-seeding or destruction of existing content visibility settings.
+  3. **Security & Confidentiality Verification**:
+     - Confirmed admin login requires authentic Supabase authentication with password.
+     - Confirmed publishing updates require AAL2 Multi-Factor Authentication.
+     - Confirmed simulation mode operates entirely in local storage and cannot authenticate to Supabase.
+     - Confirmed public registration remains disabled in Supabase Auth.
+     - Audited client bundles: confirmed `readoutArticles` and `folioEssays` are strictly empty arrays (`[]`), and zero generated drafts or private faculty text are compiled into public assets.
+  4. **Pillar State & Visibility Restoration**:
+     - Confirmed The Bridge (`pillar-bridge`) is restored to Public in live Supabase, with all 7 child domains accessible.
+     - Confirmed all 26 unreviewed Atlas roadmaps remain unpublished and inaccessible to anonymous visitors.
+     - Confirmed approved DLD content (Unit 1, Unit 2 Sections 2.1 to 2.5, Solvers, Practice Arena) remains fully accessible.
+  5. **Automated Testing & Build Verification**:
+     - Executed `scripts/testBridgeVisibilityLifecycle.mjs`: 36/36 passed.
+     - Executed `scripts/verifyAdminControlSystem.mjs`: 64/64 passed.
+     - Executed `npm run build`: built in 4.57s with zero errors.
+     - Verified strict Zero-Dash compliance: 0 em-dashes and 0 en-dashes across all modified files.
+- **Affected Files**: `src/App.jsx`, `src/components/MainHome.jsx`, `src/components/KnowledgeTreeIllustration.jsx`, `src/components/SiteHeader.jsx`, `src/components/SiteFooter.jsx`, `src/components/admin/AdminDashboard.jsx`, `src/components/admin/MfaEnrollModal.jsx`, `src/data/centralContentRegistry.js`, `src/services/authService.js`, `src/services/contentRegistryService.js`, `src/services/supabaseClient.js`, `supabase/migrations/20261021000002_fix_anon_content_policy.sql`, `scripts/testBridgeVisibilityLifecycle.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/DECISIONS.md`, `project-memory/CHANGELOG.md`, `project-memory/TECHNICAL_SNAPSHOT.md`.
+- **Deployment State**: Staged locally on `admin-control-system`. No commit, push, or production deployment executed.
+
 ## 2026-10-20: DLD Phase 6: Final Production Release, GitHub Merge, and Live Deployment
 
 - **Type**: release / production-deployment / github-merge / vercel-live / phase-6-complete

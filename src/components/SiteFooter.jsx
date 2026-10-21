@@ -1,15 +1,25 @@
 import React from 'react';
 import { ViitCrest } from './ViitCrest';
 import { ZeroIndexMark } from './ZeroIndexMark';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
-export const SiteFooter = ({ onNavigate, onOpenAboutModal }) => {
-  const pillars = [
+export const SiteFooter = ({ 
+  onNavigate, 
+  onOpenAboutModal,
+  contentOverrides = {},
+  isRegistryLoaded = true
+}) => {
+  const allPillars = [
     { id: 'workbench', name: 'The Workbench', number: '01', color: '#285C49' },
     { id: 'atlas', name: 'The Atlas', number: '02', color: '#496D91' },
     { id: 'bridge', name: 'The Bridge', number: '03', color: '#C38A63' },
     { id: 'readout', name: 'The Readout', number: '04', color: '#765C90' },
     { id: 'folio', name: 'The Folio', number: '05', color: '#935F5D' },
   ];
+
+  const pillars = isRegistryLoaded
+    ? allPillars.filter(pillar => isItemPubliclyAccessible('pillar-' + pillar.id, contentOverrides))
+    : allPillars.filter(pillar => pillar.id === 'workbench');
 
   return (
     <footer className="w-full bg-[#F5F2EB] border-t border-[#DDE2DA] mt-auto">

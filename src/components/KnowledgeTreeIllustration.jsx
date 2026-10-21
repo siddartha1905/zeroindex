@@ -1,10 +1,17 @@
 import React, { useState } from 'react';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
 export const KnowledgeTreeIllustration = ({ 
   activeBranch = null, 
-  onSelectBranch 
+  onSelectBranch,
+  contentOverrides = {}
 }) => {
   const [hoveredBranch, setHoveredBranch] = useState(null);
+
+  const isBranchAccessible = (branchId) => {
+    return isItemPubliclyAccessible('pillar-' + branchId, contentOverrides);
+  };
+  const isBridgePublic = isBranchAccessible('bridge');
 
   const branches = [
     {
@@ -184,16 +191,17 @@ export const KnowledgeTreeIllustration = ({
             BRANCH 3: THE BRIDGE (Center vertical up to x:270, y:55)
         ------------------------------------------------------------- */}
         <g 
-          tabIndex={0}
-          role="button"
-          aria-label="The Bridge: Career Prep"
-          className="cursor-pointer transition-all duration-150 focus:outline-none"
-          onMouseEnter={() => setHoveredBranch('bridge')}
+          tabIndex={isBridgePublic ? 0 : -1}
+          role={isBridgePublic ? "button" : "presentation"}
+          aria-label={isBridgePublic ? "The Bridge: Career Prep" : "The Bridge: Temporarily Offline"}
+          aria-disabled={!isBridgePublic}
+          className={isBridgePublic ? "cursor-pointer transition-all duration-150 focus:outline-none" : "opacity-25 cursor-not-allowed pointer-events-none"}
+          onMouseEnter={() => isBridgePublic && setHoveredBranch('bridge')}
           onMouseLeave={() => setHoveredBranch(null)}
-          onFocus={() => setHoveredBranch('bridge')}
+          onFocus={() => isBridgePublic && setHoveredBranch('bridge')}
           onBlur={() => setHoveredBranch(null)}
-          onKeyDown={(e) => handleKeyDown(e, 'bridge')}
-          onClick={() => onSelectBranch && onSelectBranch('bridge')}
+          onKeyDown={(e) => isBridgePublic && handleKeyDown(e, 'bridge')}
+          onClick={() => isBridgePublic && onSelectBranch && onSelectBranch('bridge')}
         >
           {/* Main Trunk & Branch */}
           <path 
@@ -334,7 +342,7 @@ export const KnowledgeTreeIllustration = ({
           </span>
         </div>
 
-        {currentHover && (
+        {currentHover && isBranchAccessible(currentHover) && (
           <button
             onClick={() => onSelectBranch && onSelectBranch(currentHover)}
             className="inline-flex items-center gap-1 px-3 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer self-start sm:self-auto"

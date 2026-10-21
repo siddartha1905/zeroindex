@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ConfigProvider } from 'antd';
 import { antdThemeConfig } from './theme/pastelTheme';
+import { AlertCircle } from 'lucide-react';
 import { SiteHeader } from './components/SiteHeader';
 import { SiteFooter } from './components/SiteFooter';
 import { MainHome } from './components/MainHome';
@@ -13,19 +14,60 @@ import { DldSubjectHome } from './components/DldSubjectHome';
 import { DldWorkspace } from './components/DldWorkspace';
 import { AboutModal } from './components/AboutModal';
 import { InstallModal } from './components/InstallModal';
+import { AdminLogin } from './components/admin/AdminLogin';
+import { AdminDashboard } from './components/admin/AdminDashboard';
+import { getAdminSession } from './services/authService';
+import { fetchContentRegistry } from './services/contentRegistryService';
+import { isItemPubliclyAccessible, isRoutePubliclyAccessible } from './data/centralContentRegistry';
 
 export function App() {
   // Navigation Section State:
-  // 'home' | 'workbench' | 'atlas' | 'bridge' | 'readout' | 'folio' | 'dld-home' | 'dld-workspace'
+  // 'home' | 'workbench' | 'atlas' | 'bridge' | 'readout' | 'folio' | 'dld-home' | 'dld-workspace' | 'admin-dashboard' | 'admin-login'
   const [currentSection, setCurrentSection] = useState('home');
   const [workspaceTab, setWorkspaceTab] = useState('units');
   const [workspaceSubId, setWorkspaceSubId] = useState('1.1');
   const [readoutSlug, setReadoutSlug] = useState(null);
   const [folioSlug, setFolioSlug] = useState(null);
 
+  // Administrator authentication and content overrides state
+  const [adminSession, setAdminSession] = useState({
+    isAuthenticated: false,
+    isOwner: false,
+    email: '',
+    userId: '',
+    assuranceLevel: 'aal1',
+    hasMfaEnrolled: false,
+    isSimulated: false
+  });
+  const [contentOverrides, setContentOverrides] = useState({});
+  const [isRegistryLoaded, setIsRegistryLoaded] = useState(false);
+  const [adminPreviewSection, setAdminPreviewSection] = useState(null);
+
   // Modals state
   const [isAboutModalOpen, setIsAboutModalOpen] = useState(false);
   const [isInstallModalOpen, setIsInstallModalOpen] = useState(false);
+
+  // Initialize and check admin session & content registry overrides
+  const refreshAdminState = async () => {
+    try {
+      const session = await getAdminSession();
+      setAdminSession(session);
+      const registryItems = await fetchContentRegistry();
+      const overridesMap = {};
+      registryItems.forEach(item => {
+        overridesMap[item.id] = item.isPublic;
+      });
+      setContentOverrides(overridesMap);
+    } catch {
+      // Fail closed on unhandled error
+    } finally {
+      setIsRegistryLoaded(true);
+    }
+  };
+
+  useEffect(() => {
+    refreshAdminState();
+  }, []);
 
   // Sync hash routing on initial load, hashchange, and popstate
   useEffect(() => {
@@ -37,11 +79,15 @@ export function App() {
         setCurrentSection('home');
         setReadoutSlug(null);
         setFolioSlug(null);
-      } else if (lowerHash === 'workbench') {
+      } else if (lowerHash === 'admin' || lowerHash === 'admin/dashboard' || lowerHash === 'admin-dashboard') {
+        setCurrentSection('admin-dashboard');
+      } else if (lowerHash === 'admin/login' || lowerHash === 'admin-login') {
+        setCurrentSection('admin-login');
+      } else if (lowerHash === 'workbench' || lowerHash.startsWith('workbench/')) {
         setCurrentSection('workbench');
-      } else if (lowerHash === 'atlas' || lowerHash === 'roadmaps') {
+      } else if (lowerHash === 'atlas' || lowerHash === 'roadmaps' || lowerHash.startsWith('atlas/') || lowerHash.startsWith('roadmaps/')) {
         setCurrentSection('atlas');
-      } else if (lowerHash === 'bridge' || lowerHash === 'placements') {
+      } else if (lowerHash === 'bridge' || lowerHash === 'placements' || lowerHash.startsWith('bridge/') || lowerHash.startsWith('placements/')) {
         setCurrentSection('bridge');
       } else if (lowerHash.startsWith('readout')) {
         const parts = rawHash.split('/');
@@ -186,6 +232,40 @@ export function App() {
   };
 
   const isDldView = currentSection === 'dld-home' || currentSection === 'dld-workspace';
+  const isAdminView = currentSection === 'admin-dashboard' || currentSection === 'admin-login';
+
+  const renderOfflinePillarNotice = (pillarTitle) => (
+    <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
+      <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-[#DDE2DA] shadow-xs space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-[#FFF9F2] text-[#956A43] flex items-center justify-center mx-auto">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <div className="space-y-1">
+          <h2 className="font-editorial text-xl font-bold text-[#293B32]">
+            {pillarTitle} is Temporarily Offline
+          </h2>
+          <p className="text-xs text-[#5F6C64] leading-relaxed">
+            This section has been taken offline by the administrator for curriculum maintenance or review.
+          </p>
+        </div>
+        <button
+          onClick={() => navigateTo('home')}
+          className="px-5 py-2.5 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white text-xs font-bold transition-colors cursor-pointer"
+        >
+          Return to ZeroIndex Home
+        </button>
+      </div>
+    </div>
+  );
+
+  const renderLoadingNotice = () => (
+    <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
+      <div className="flex flex-col items-center gap-3">
+        <div className="w-8 h-8 rounded-full border-2 border-[#285C49] border-t-transparent animate-spin" />
+        <span className="font-technical text-xs text-[#5F6C64]">Verifying publication status...</span>
+      </div>
+    </div>
+  );
 
   return (
     <ConfigProvider theme={antdThemeConfig}>
@@ -199,13 +279,49 @@ export function App() {
           Skip to main content
         </a>
 
+        {/* Administrator Preview Notification Banner */}
+        {adminPreviewSection && adminSession.isAuthenticated && adminSession.isOwner && (
+          <div className="bg-[#FFF9F2] border-b border-[#F0DBC5] px-4 py-2.5 text-xs font-technical flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-[#956A43] sticky top-16 z-30 shadow-xs">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#C38A63] animate-pulse" />
+              <span className="font-bold">AUTHORIZED ADMIN PREVIEW:</span>
+              <span>Inspecting restricted section as verified owner. Anonymous visitors see offline notice.</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('admin-dashboard');
+                }}
+                className="px-3 py-1 rounded-lg bg-white border border-[#F0DBC5] hover:bg-[#FDF3E7] text-[#956A43] font-bold transition-colors cursor-pointer"
+              >
+                Return to Admin Dashboard
+              </button>
+              <button
+                onClick={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                className="px-3 py-1 rounded-lg bg-[#285C49] hover:bg-[#1E4738] text-white font-bold transition-colors cursor-pointer"
+              >
+                Exit to Public Site
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* Render SiteHeader on all top-level public pages (Home & 5 Pillars) */}
-        {!isDldView && (
+        {!isDldView && !isAdminView && (
           <SiteHeader 
             currentSection={currentSection}
-            onNavigate={navigateTo}
+            onNavigate={(sec) => {
+              setAdminPreviewSection(null);
+              navigateTo(sec);
+            }}
             onOpenInstallModal={() => setIsInstallModalOpen(true)}
             onOpenAboutModal={() => setIsAboutModalOpen(true)}
+            contentOverrides={contentOverrides}
+            isRegistryLoaded={isRegistryLoaded}
           />
         )}
 
@@ -214,84 +330,220 @@ export function App() {
         ===================================================================== */}
         <main id="main-content" tabIndex="-1" className="flex-1 outline-none">
           
+          {/* Admin Login Route */}
+          {currentSection === 'admin-login' && (
+            <AdminLogin 
+              onLoginSuccess={() => {
+                refreshAdminState();
+                navigateTo('admin-dashboard');
+              }}
+              onNavigateHome={() => navigateTo('home')}
+            />
+          )}
+
+          {/* Admin Dashboard Route */}
+          {currentSection === 'admin-dashboard' && (
+            adminSession.isAuthenticated && adminSession.isOwner ? (
+              <AdminDashboard 
+                adminSession={adminSession}
+                onLogout={() => {
+                  setAdminPreviewSection(null);
+                  refreshAdminState();
+                  navigateTo('home');
+                }}
+                onNavigatePublicRoute={handleGenericSectionRoute}
+                onPreviewRoute={(route) => {
+                  setAdminPreviewSection(route);
+                  navigateTo(route);
+                }}
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+              />
+            ) : (
+              <AdminLogin 
+                onLoginSuccess={() => {
+                  refreshAdminState();
+                  navigateTo('admin-dashboard');
+                }}
+                onNavigateHome={() => navigateTo('home')}
+              />
+            )
+          )}
+
           {/* 00. Homepage (Clean Editorial Front Door) */}
           {currentSection === 'home' && (
             <MainHome 
               onNavigate={navigateTo}
               onOpenAboutModal={() => setIsAboutModalOpen(true)}
               onOpenInstallModal={() => setIsInstallModalOpen(true)}
+              contentOverrides={contentOverrides}
+              isRegistryLoaded={isRegistryLoaded}
             />
           )}
 
           {/* 01. Pillar 1: The Workbench */}
           {currentSection === 'workbench' && (
-            <WorkbenchLanding 
-              onNavigateHome={() => navigateTo('home')}
-              onSelectDld={goToDldHome}
-              onOpenWorkspaceTab={goToDldWorkspace}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : (adminPreviewSection === 'workbench' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              <WorkbenchLanding 
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                onSelectDld={goToDldHome}
+                onOpenWorkspaceTab={goToDldWorkspace}
+              />
+            ) : isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+              <WorkbenchLanding 
+                onNavigateHome={() => navigateTo('home')}
+                onSelectDld={goToDldHome}
+                onOpenWorkspaceTab={goToDldWorkspace}
+              />
+            ) : (
+              renderOfflinePillarNotice('The Workbench')
+            )
           )}
 
           {/* 02. Pillar 2: The Atlas */}
           {currentSection === 'atlas' && (
-            <AtlasLanding 
-              onNavigateHome={() => navigateTo('home')}
-              onNavigateWorkbench={() => navigateTo('workbench')}
-              onNavigateSection={handleGenericSectionRoute}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : (adminPreviewSection === 'atlas' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              <AtlasLanding 
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                onNavigateWorkbench={() => navigateTo('workbench')}
+                onNavigateSection={handleGenericSectionRoute}
+              />
+            ) : isItemPubliclyAccessible('pillar-atlas', contentOverrides) ? (
+              <AtlasLanding 
+                onNavigateHome={() => navigateTo('home')}
+                onNavigateWorkbench={() => navigateTo('workbench')}
+                onNavigateSection={handleGenericSectionRoute}
+              />
+            ) : (
+              renderOfflinePillarNotice('The Atlas')
+            )
           )}
 
           {/* 03. Pillar 3: The Bridge */}
           {currentSection === 'bridge' && (
-            <BridgeLanding 
-              onNavigateHome={() => navigateTo('home')}
-              onNavigateWorkbench={() => navigateTo('workbench')}
-              onNavigateSection={handleGenericSectionRoute}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : (adminPreviewSection === 'bridge' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              <BridgeLanding 
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                onNavigateWorkbench={() => navigateTo('workbench')}
+                onNavigateSection={handleGenericSectionRoute}
+              />
+            ) : isItemPubliclyAccessible('pillar-bridge', contentOverrides) ? (
+              <BridgeLanding 
+                onNavigateHome={() => navigateTo('home')}
+                onNavigateWorkbench={() => navigateTo('workbench')}
+                onNavigateSection={handleGenericSectionRoute}
+              />
+            ) : (
+              renderOfflinePillarNotice('The Bridge')
+            )
           )}
 
           {/* 04. Pillar 4: The Readout */}
           {currentSection === 'readout' && (
-            <ReadoutLanding 
-              onNavigateHome={() => navigateTo('home')}
-              activeSlug={readoutSlug}
-              onSelectArticle={handleSelectReadoutArticle}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : (adminPreviewSection === 'readout' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              <ReadoutLanding 
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                activeSlug={readoutSlug}
+                onSelectArticle={handleSelectReadoutArticle}
+              />
+            ) : isItemPubliclyAccessible('pillar-readout', contentOverrides) ? (
+              <ReadoutLanding 
+                onNavigateHome={() => navigateTo('home')}
+                activeSlug={readoutSlug}
+                onSelectArticle={handleSelectReadoutArticle}
+              />
+            ) : (
+              renderOfflinePillarNotice('The Readout')
+            )
           )}
 
           {/* 05. Pillar 5: The Folio */}
           {currentSection === 'folio' && (
-            <FolioLanding 
-              onNavigateHome={() => navigateTo('home')}
-              activeSlug={folioSlug}
-              onSelectEssay={handleSelectFolioEssay}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : (adminPreviewSection === 'folio' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              <FolioLanding 
+                onNavigateHome={() => {
+                  setAdminPreviewSection(null);
+                  navigateTo('home');
+                }}
+                activeSlug={folioSlug}
+                onSelectEssay={handleSelectFolioEssay}
+              />
+            ) : isItemPubliclyAccessible('pillar-folio', contentOverrides) ? (
+              <FolioLanding 
+                onNavigateHome={() => navigateTo('home')}
+                activeSlug={folioSlug}
+                onSelectEssay={handleSelectFolioEssay}
+              />
+            ) : (
+              renderOfflinePillarNotice('The Folio')
+            )
           )}
 
           {/* INTERNAL COURSE: Digital Logic Design Subject Home Page */}
           {currentSection === 'dld-home' && (
-            <DldSubjectHome 
-              onBackToPortal={() => navigateTo('workbench')}
-              onOpenWorkspaceTab={goToDldWorkspace}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) && isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+              <DldSubjectHome 
+                onBackToPortal={() => navigateTo('workbench')}
+                onOpenWorkspaceTab={goToDldWorkspace}
+              />
+            ) : (
+              renderOfflinePillarNotice('Digital Logic Design')
+            )
           )}
 
           {/* INTERNAL WORKSPACE: Units, Solvers, Quiz Arena, Subject Resources */}
           {currentSection === 'dld-workspace' && (
-            <DldWorkspace 
-              onBackToDldHome={goToDldHome}
-              initialTab={workspaceTab}
-              initialSubModuleId={workspaceSubId}
-            />
+            !isRegistryLoaded ? (
+              renderLoadingNotice()
+            ) : isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) && isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+              <DldWorkspace 
+                onBackToDldHome={goToDldHome}
+                initialTab={workspaceTab}
+                initialSubModuleId={workspaceSubId}
+              />
+            ) : (
+              renderOfflinePillarNotice('Digital Logic Design Workspace')
+            )
           )}
 
         </main>
 
         {/* Render SiteFooter on all top-level public pages */}
-        {!isDldView && (
+        {!isDldView && !isAdminView && (
           <SiteFooter 
-            onNavigate={navigateTo}
+            onNavigate={(sec) => {
+              setAdminPreviewSection(null);
+              navigateTo(sec);
+            }}
             onOpenAboutModal={() => setIsAboutModalOpen(true)}
+            contentOverrides={contentOverrides}
+            isRegistryLoaded={isRegistryLoaded}
           />
         )}
 
@@ -299,6 +551,8 @@ export function App() {
         <AboutModal 
           isOpen={isAboutModalOpen}
           onClose={() => setIsAboutModalOpen(false)}
+          isAdmin={adminSession.isAuthenticated && adminSession.isOwner}
+          onOpenAdmin={() => navigateTo('admin-dashboard')}
         />
 
         <InstallModal 
