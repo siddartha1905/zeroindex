@@ -50,7 +50,7 @@ async function runTest() {
   console.log('TEST SUITE: THE BRIDGE VISIBILITY LIFECYCLE');
   console.log('=================================================================\n');
 
-  console.log('--- Phase 1: Verify Current Restored State from Live Supabase ---');
+  console.log('--- Phase 1: Verify Current Live Supabase State (4 Public, 3 Hidden) ---');
   const itemsLive = await fetchContentRegistry();
   const overridesLive = {};
   itemsLive.forEach(item => {
@@ -58,55 +58,85 @@ async function runTest() {
   });
 
   const bridgeLive = itemsLive.find(i => i.id === 'pillar-bridge');
-  assert(bridgeLive && bridgeLive.isPublic === true, 'The Bridge root pillar is confirmed restored to Public in live Supabase');
+  assert(bridgeLive && bridgeLive.isPublic === true, 'The Bridge root pillar is confirmed Public in live Supabase');
 
-  const childDomains = [
+  // Currently hidden domains in live Supabase Admin Dashboard
+  const hiddenDomainsLive = [
     'bridge-domain-quant',
     'bridge-domain-logical',
-    'bridge-domain-verbal',
-    'bridge-domain-cs-core',
-    'bridge-domain-coding',
-    'bridge-domain-systems',
     'bridge-domain-interview'
   ];
 
-  childDomains.forEach(childId => {
+  hiddenDomainsLive.forEach(childId => {
+    const isAccessible = isItemPubliclyAccessible(childId, overridesLive);
+    assert(!isAccessible, `Child domain "${childId}" is correctly hidden for public visitors`);
+  });
+
+  // Currently public domains in live Supabase Admin Dashboard
+  const publicDomainsLive = [
+    'bridge-domain-verbal',
+    'bridge-domain-cs-core',
+    'bridge-domain-coding',
+    'bridge-domain-systems'
+  ];
+
+  publicDomainsLive.forEach(childId => {
     const isAccessible = isItemPubliclyAccessible(childId, overridesLive);
     assert(isAccessible, `Child domain "${childId}" is publicly accessible`);
   });
 
-  const bridgeRoutes = [
+  // Root Bridge pillar routes remain accessible
+  const publicPillarRoutes = [
     'bridge',
     '#bridge',
     '#/bridge',
     'placements',
     '#placements',
-    '#/placements',
-    'bridge/quant',
-    '#bridge/quant'
+    '#/placements'
   ];
 
-  bridgeRoutes.forEach(route => {
+  publicPillarRoutes.forEach(route => {
     const isAccessible = isRoutePubliclyAccessible(route, overridesLive);
-    assert(isAccessible, `Route "${route}" is accessible for public visitors`);
+    assert(isAccessible, `Pillar route "${route}" is accessible for public visitors`);
   });
 
-  console.log('\n--- Phase 2: Verify Simulated Hiding Transition ---');
+  // Individual domain routes: public domains accessible, hidden domains blocked
+  assert(isRoutePubliclyAccessible('bridge/verbal', overridesLive), 'Public domain route "bridge/verbal" is accessible');
+  assert(isRoutePubliclyAccessible('bridge/coding', overridesLive), 'Public domain route "bridge/coding" is accessible');
+  assert(!isRoutePubliclyAccessible('bridge/quant', overridesLive), 'Hidden domain route "bridge/quant" is blocked for public visitors');
+  assert(!isRoutePubliclyAccessible('#bridge/quant', overridesLive), 'Hidden domain route "#bridge/quant" is blocked for public visitors');
+  assert(!isRoutePubliclyAccessible('bridge/logical', overridesLive), 'Hidden domain route "bridge/logical" is blocked for public visitors');
+  assert(!isRoutePubliclyAccessible('bridge/interview', overridesLive), 'Hidden domain route "bridge/interview" is blocked for public visitors');
+
+  console.log('\n--- Phase 2: Verify Simulated Full Hiding Transition ---');
   const overridesHidden = { ...overridesLive, 'pillar-bridge': false };
 
   assert(!isItemPubliclyAccessible('pillar-bridge', overridesHidden), 'The Bridge root pillar is blocked when override is false');
 
-  childDomains.forEach(childId => {
+  const allChildDomains = [...hiddenDomainsLive, ...publicDomainsLive];
+  allChildDomains.forEach(childId => {
     const isAccessible = isItemPubliclyAccessible(childId, overridesHidden);
-    assert(!isAccessible, `Child domain "${childId}" inherits hidden restriction when parent is hidden`);
+    assert(!isAccessible, `Child domain "${childId}" inherits hidden restriction when parent pillar is hidden`);
   });
 
-  bridgeRoutes.forEach(route => {
+  publicPillarRoutes.forEach(route => {
     const isAccessible = isRoutePubliclyAccessible(route, overridesHidden);
-    assert(!isAccessible, `Route "${route}" is blocked for public visitors when Bridge is hidden`);
+    assert(!isAccessible, `Route "${route}" is blocked for public visitors when Bridge pillar is hidden`);
   });
 
-  console.log('\n--- Phase 3: Unrelated Pillars Remain Accessible in All States ---');
+  console.log('\n--- Phase 3: Verify Simulated Full Restoration (All 7 Domains Public) ---');
+  const overridesAllPublic = { ...overridesLive, 'pillar-bridge': true };
+  allChildDomains.forEach(childId => {
+    overridesAllPublic[childId] = true;
+  });
+
+  allChildDomains.forEach(childId => {
+    const isAccessible = isItemPubliclyAccessible(childId, overridesAllPublic);
+    assert(isAccessible, `Child domain "${childId}" is accessible when restored to public`);
+  });
+  assert(isRoutePubliclyAccessible('bridge/quant', overridesAllPublic), 'Domain route "bridge/quant" is accessible when domain is restored to public');
+
+  console.log('\n--- Phase 4: Unrelated Pillars Remain Accessible in All States ---');
   assert(isItemPubliclyAccessible('pillar-workbench', overridesHidden), 'The Workbench remains publicly accessible');
   assert(isItemPubliclyAccessible('workbench-subject-dld', overridesHidden), 'Digital Logic Design subject remains publicly accessible');
   assert(isItemPubliclyAccessible('dld-unit-1', overridesHidden), 'DLD Unit 1 remains publicly accessible');

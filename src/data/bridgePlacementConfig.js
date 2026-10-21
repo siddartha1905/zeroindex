@@ -9,6 +9,7 @@
 export const bridgePlacementDomains = [
   {
     id: 'quantitative-aptitude',
+    registryId: 'bridge-domain-quant',
     title: 'Quantitative Aptitude & Numerical Reasoning',
     shortTitle: 'Quantitative Aptitude',
     category: 'Foundational Reasoning',
@@ -79,6 +80,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'logical-reasoning',
+    registryId: 'bridge-domain-logical',
     title: 'Logical & Analytical Reasoning',
     shortTitle: 'Logical Reasoning',
     category: 'Analytical Deduction',
@@ -144,6 +146,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'verbal-communication',
+    registryId: 'bridge-domain-verbal',
     title: 'Verbal Ability & Professional Communication',
     shortTitle: 'Verbal & Communication',
     category: 'Language & Articulation',
@@ -208,6 +211,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'coding-preparation',
+    registryId: 'bridge-domain-coding',
     title: 'Coding & Algorithmic Problem Solving',
     shortTitle: 'Coding Preparation',
     category: 'Technical Problem Solving',
@@ -278,6 +282,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'core-cs-knowledge',
+    registryId: 'bridge-domain-cs-core',
     title: 'Core Computer Science Fundamentals',
     shortTitle: 'Core CS Subjects',
     category: 'Academic Theory',
@@ -341,6 +346,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'resume-preparation',
+    registryId: 'bridge-domain-systems',
     title: 'Technical Resume Architecture & Engineering Portfolio',
     shortTitle: 'Resume Preparation',
     category: 'Career Presentation',
@@ -396,6 +402,7 @@ export const bridgePlacementDomains = [
   },
   {
     id: 'technical-hr-interviews',
+    registryId: 'bridge-domain-interview',
     title: 'Technical & HR Interview Mastery',
     shortTitle: 'Interview Mastery',
     category: 'Behavioral & Verbal',
@@ -455,3 +462,60 @@ export const bridgePlacementDomains = [
     }
   }
 ];
+
+/**
+ * Authoritative mapping from Bridge domain IDs to Content Registry IDs.
+ */
+export const BRIDGE_DOMAIN_REGISTRY_MAP = {
+  'quantitative-aptitude': 'bridge-domain-quant',
+  'logical-reasoning': 'bridge-domain-logical',
+  'verbal-communication': 'bridge-domain-verbal',
+  'coding-preparation': 'bridge-domain-coding',
+  'core-cs-knowledge': 'bridge-domain-cs-core',
+  'resume-preparation': 'bridge-domain-systems',
+  'technical-hr-interviews': 'bridge-domain-interview'
+};
+
+/**
+ * Route subpath aliases resolving to canonical domain IDs.
+ */
+export const BRIDGE_SUBPATH_TO_DOMAIN_ID = {
+  'quant': 'quantitative-aptitude',
+  'quantitative-aptitude': 'quantitative-aptitude',
+  'numerical-reasoning': 'quantitative-aptitude',
+  'logical': 'logical-reasoning',
+  'logical-reasoning': 'logical-reasoning',
+  'analytical-reasoning': 'logical-reasoning',
+  'verbal': 'verbal-communication',
+  'verbal-communication': 'verbal-communication',
+  'reading-comprehension': 'verbal-communication',
+  'coding': 'coding-preparation',
+  'coding-preparation': 'coding-preparation',
+  'cs-core': 'core-cs-knowledge',
+  'core-cs': 'core-cs-knowledge',
+  'core-cs-knowledge': 'core-cs-knowledge',
+  'systems': 'resume-preparation',
+  'resume': 'resume-preparation',
+  'resume-preparation': 'resume-preparation',
+  'interview': 'technical-hr-interviews',
+  'interviews': 'technical-hr-interviews',
+  'technical-hr-interviews': 'technical-hr-interviews'
+};
+
+/**
+ * Resolve a domain ID or URL slug to its canonical registry ID.
+ * @param {string} domainOrSlug
+ * @returns {string | null}
+ */
+export function getBridgeDomainRegistryId(domainOrSlug) {
+  if (!domainOrSlug) return null;
+  const normalized = domainOrSlug.toLowerCase().trim();
+  if (BRIDGE_DOMAIN_REGISTRY_MAP[normalized]) {
+    return BRIDGE_DOMAIN_REGISTRY_MAP[normalized];
+  }
+  const canonicalDomainId = BRIDGE_SUBPATH_TO_DOMAIN_ID[normalized];
+  if (canonicalDomainId && BRIDGE_DOMAIN_REGISTRY_MAP[canonicalDomainId]) {
+    return BRIDGE_DOMAIN_REGISTRY_MAP[canonicalDomainId];
+  }
+  return null;
+}

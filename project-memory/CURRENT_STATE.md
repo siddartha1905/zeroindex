@@ -66,12 +66,12 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Final Admin System Pre-Release verification complete on local branch `admin-control-system`. Central Content Registry tracking 70 items across 5 pillars, live Supabase Auth and PostgreSQL integration with AAL2 MFA enforcement, hierarchical inheritance and draft protection safeguards, admin dashboard with visibility controls and confidential draft inspection, production SQL migrations with RLS, setup guide, content confidentiality audit, and all automated verification tests passing with 100% accuracy.
+* **Current Stage**: Admin Publishing Control System merged to `main` (merge commit `e1a28c2`). Individual Bridge domain visibility fully resolved and verified. Dynamic 4-card public layout enforced (Verbal, Coding, Core CS, Resume) with 3 hidden domains (Quant, Logical, Interview) strictly inaccessible to anonymous visitors. Safe active domain selection defaults to first accessible domain, and clean empty-state fallback is implemented if all domains are hidden. Admin preview mode preserves full inspection for verified owner.
 * **Verified Evidence**:
+  - `node scripts/testBridgeVisibilityLifecycle.mjs`: 46/46 passed.
   - `node scripts/verifyAdminControlSystem.mjs`: 64/64 passed.
-  - `node scripts/testBridgeVisibilityLifecycle.mjs`: 36/36 passed.
-  - `npm run build`: built in 4.57s with zero errors.
-  - Live Supabase: The Bridge restored to Public (`is_public: true`), 7 child domains accessible, 26 unreviewed Atlas roadmaps inaccessible, all DLD Unit 1 and Unit 2 public sections accessible.
-  - Incremental SQL patch prepared in `supabase/migrations/20261021000002_fix_anon_content_policy.sql`.
-* **Immediate Next Action**: Provide the Pre-Release Verification Report and incremental SQL migration patch to faculty owner for review.
-* **Downstream Progression**: Maintain all work locally on `admin-control-system`. Do not push to GitHub or deploy to Vercel until explicit author approval is given.
+  - `npm run build`: built in 4.08s with zero errors.
+  - Live Supabase: The Bridge pillar is Public; 3 domains hidden, 4 domains public. Direct anonymous queries and routes strictly enforce individual domain restrictions.
+  - Atlas branches (`atlas-phase-a1-development`, `atlas-phase-a2-development`) remain untouched and preserved separately.
+* **Immediate Next Action**: Report individual Bridge domain visibility resolution to faculty owner and stage/commit updates.
+* **Downstream Progression**: Maintain all work cleanly on `main`. Push to GitHub and deploy to Vercel upon faculty authorization.

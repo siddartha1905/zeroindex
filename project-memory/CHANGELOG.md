@@ -2,6 +2,31 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-21: Individual Bridge Domain Visibility Enforcement and Safe Domain Selection
+
+- **Type**: bugfix / bridge-pillar / visibility-enforcement / admin-preview / zero-dash
+- **Summary**: Resolved individual Bridge domain visibility issue where hiding individual domains in Supabase still displayed them on the public Bridge page:
+  1. **Configuration & Registry Association**:
+     - Added `registryId` property to each of the 7 domains in `src/data/bridgePlacementConfig.js`.
+     - Exported `BRIDGE_DOMAIN_REGISTRY_MAP`, `BRIDGE_SUBPATH_TO_DOMAIN_ID`, and `getBridgeDomainRegistryId`.
+  2. **Component Filtering & Safe Default Active Domain**:
+     - Updated `src/components/BridgeLanding.jsx` to filter `bridgePlacementDomains` through `isItemPubliclyAccessible(dom.registryId, contentOverrides)`.
+     - Dynamically renders exactly the 4 publicly accessible domains (Verbal & Communication, Coding Preparation, Core CS Subjects, Resume Preparation) without layout gaps.
+     - Replaced hardcoded Quantitative Aptitude default with first accessible public domain (`verbal-communication`).
+     - Added dynamic synchronization effect resetting active domain if the active selection becomes hidden.
+     - Added clean empty-state fallback when all 7 domains are hidden while the Bridge pillar remains Public.
+  3. **Admin Preview Mode**:
+     - Enabled full inspection of all 7 domains when `isAdminPreview` is true, displaying distinct `[Public]` / `[Hidden]` badges and an amber preview banner.
+  4. **Subpath Route Protection**:
+     - Updated `isRoutePubliclyAccessible` in `src/data/centralContentRegistry.js` to recognize domain subpaths (e.g. `bridge/quant`, `bridge/verbal`) and enforce domain-level visibility.
+     - Passed `contentOverrides`, `isAdminPreview`, and `initialDomainId` from `src/App.jsx` to `BridgeLanding`.
+  5. **Verification**:
+     - Updated `scripts/testBridgeVisibilityLifecycle.mjs`: 46/46 passed.
+     - Executed `scripts/verifyAdminControlSystem.mjs`: 64/64 passed.
+     - Completed production build: `npm run build` in 4.08s (0 errors).
+     - Verified zero em-dashes and zero en-dashes across all files.
+- **Affected Files**: `src/data/bridgePlacementConfig.js`, `src/data/centralContentRegistry.js`, `src/components/BridgeLanding.jsx`, `src/App.jsx`, `scripts/testBridgeVisibilityLifecycle.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-21: Final Admin System Pre-Release Verification and Live Supabase Integration
 
 - **Type**: pre-release / admin-system / security / supabase / rls / mfa / zero-dash

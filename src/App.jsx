@@ -28,6 +28,7 @@ export function App() {
   const [workspaceSubId, setWorkspaceSubId] = useState('1.1');
   const [readoutSlug, setReadoutSlug] = useState(null);
   const [folioSlug, setFolioSlug] = useState(null);
+  const [bridgeDomainSlug, setBridgeDomainSlug] = useState(null);
 
   // Administrator authentication and content overrides state
   const [adminSession, setAdminSession] = useState({
@@ -79,6 +80,7 @@ export function App() {
         setCurrentSection('home');
         setReadoutSlug(null);
         setFolioSlug(null);
+        setBridgeDomainSlug(null);
       } else if (lowerHash === 'admin' || lowerHash === 'admin/dashboard' || lowerHash === 'admin-dashboard') {
         setCurrentSection('admin-dashboard');
       } else if (lowerHash === 'admin/login' || lowerHash === 'admin-login') {
@@ -89,6 +91,8 @@ export function App() {
         setCurrentSection('atlas');
       } else if (lowerHash === 'bridge' || lowerHash === 'placements' || lowerHash.startsWith('bridge/') || lowerHash.startsWith('placements/')) {
         setCurrentSection('bridge');
+        const parts = rawHash.split('/');
+        setBridgeDomainSlug(parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null);
       } else if (lowerHash.startsWith('readout')) {
         const parts = rawHash.split('/');
         setCurrentSection('readout');
@@ -443,12 +447,18 @@ export function App() {
                 }}
                 onNavigateWorkbench={() => navigateTo('workbench')}
                 onNavigateSection={handleGenericSectionRoute}
+                contentOverrides={contentOverrides}
+                isAdminPreview={true}
+                initialDomainId={bridgeDomainSlug}
               />
             ) : isItemPubliclyAccessible('pillar-bridge', contentOverrides) ? (
               <BridgeLanding 
                 onNavigateHome={() => navigateTo('home')}
                 onNavigateWorkbench={() => navigateTo('workbench')}
                 onNavigateSection={handleGenericSectionRoute}
+                contentOverrides={contentOverrides}
+                isAdminPreview={false}
+                initialDomainId={bridgeDomainSlug}
               />
             ) : (
               renderOfflinePillarNotice('The Bridge')

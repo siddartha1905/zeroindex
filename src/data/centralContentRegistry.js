@@ -953,6 +953,37 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     normalizedRoute = normalizedRoute.replace(/^roadmaps/, 'atlas');
   }
 
+  // Domain-specific subpath handling for The Bridge (Pillar 03)
+  if (normalizedRoute.startsWith('bridge/')) {
+    const bridgeSubpath = normalizedRoute.slice(7).split('/')[0];
+    const bridgeSubpathToRegistryId = {
+      'quant': 'bridge-domain-quant',
+      'quantitative-aptitude': 'bridge-domain-quant',
+      'numerical-reasoning': 'bridge-domain-quant',
+      'logical': 'bridge-domain-logical',
+      'logical-reasoning': 'bridge-domain-logical',
+      'analytical-reasoning': 'bridge-domain-logical',
+      'verbal': 'bridge-domain-verbal',
+      'verbal-communication': 'bridge-domain-verbal',
+      'reading-comprehension': 'bridge-domain-verbal',
+      'coding': 'bridge-domain-coding',
+      'coding-preparation': 'bridge-domain-coding',
+      'cs-core': 'bridge-domain-cs-core',
+      'core-cs': 'bridge-domain-cs-core',
+      'core-cs-knowledge': 'bridge-domain-cs-core',
+      'systems': 'bridge-domain-systems',
+      'resume': 'bridge-domain-systems',
+      'resume-preparation': 'bridge-domain-systems',
+      'interview': 'bridge-domain-interview',
+      'interviews': 'bridge-domain-interview',
+      'technical-hr-interviews': 'bridge-domain-interview'
+    };
+    const targetDomainId = bridgeSubpathToRegistryId[bridgeSubpath];
+    if (targetDomainId) {
+      return isItemPubliclyAccessible(targetDomainId, visibilityOverrides);
+    }
+  }
+
   // Find matching items by route
   const matches = centralContentRegistry.filter(item => {
     const itemRoute = item.route.toLowerCase();
