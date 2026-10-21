@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { X, BookOpen, Compass, Briefcase, Radio, FileText, Heart, ShieldCheck } from 'lucide-react';
+import { X, BookOpen, Compass, Briefcase, Radio, FileText, Heart, ShieldCheck, Lock } from 'lucide-react';
 import { ViitCrest } from './ViitCrest';
 import { ZeroIndexMark } from './ZeroIndexMark';
 
-export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin }) => {
+export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin, onOpenLogin }) => {
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (e) => {
@@ -112,7 +112,7 @@ export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin }) =>
         {/* Modal Footer */}
         <div className="pt-2 flex items-center justify-between">
           <div>
-            {isAdmin && (
+            {isAdmin ? (
               <button
                 type="button"
                 onClick={() => {
@@ -124,6 +124,23 @@ export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin }) =>
               >
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Admin Panel</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  if (onOpenLogin) {
+                    onOpenLogin();
+                  } else {
+                    window.location.hash = 'admin/login';
+                  }
+                }}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-[#F8F9F7] hover:bg-[#EAEFE9] text-[#637267] hover:text-[#285C49] text-xs font-medium transition-colors cursor-pointer border border-[#E2E6E0]"
+                id="about-admin-login-link"
+              >
+                <Lock className="w-3.5 h-3.5" />
+                <span>Admin Login</span>
               </button>
             )}
           </div>

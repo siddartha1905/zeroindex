@@ -170,12 +170,22 @@ export function App() {
   }, []);
 
   const navigateTo = (section) => {
-    setCurrentSection(section);
-    if (section === 'home') {
-      window.location.hash = '';
-    } else {
-      window.location.hash = section;
+    let targetSection = section;
+    let targetHash = section;
+
+    if (section === 'admin-dashboard' || section === 'admin/dashboard' || section === 'admin') {
+      targetSection = 'admin-dashboard';
+      targetHash = 'admin/dashboard';
+    } else if (section === 'admin-login' || section === 'admin/login') {
+      targetSection = 'admin-login';
+      targetHash = 'admin/login';
+    } else if (section === 'home') {
+      targetSection = 'home';
+      targetHash = '';
     }
+
+    setCurrentSection(targetSection);
+    window.location.hash = targetHash;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -696,7 +706,8 @@ export function App() {
           isOpen={isAboutModalOpen}
           onClose={() => setIsAboutModalOpen(false)}
           isAdmin={adminSession.isAuthenticated && adminSession.isOwner}
-          onOpenAdmin={() => navigateTo('admin-dashboard')}
+          onOpenAdmin={() => navigateTo('admin/dashboard')}
+          onOpenLogin={() => navigateTo('admin/login')}
         />
 
         <InstallModal 
