@@ -15,22 +15,27 @@
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env?.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
+const supabaseKey = import.meta.env?.VITE_SUPABASE_PUBLISHABLE_KEY || import.meta.env?.VITE_SUPABASE_ANON_KEY || '';
 
 /**
  * Determine whether valid live Supabase credentials are provided.
  * @returns {boolean}
  */
 export function isSupabaseConfigured() {
-  if (!supabaseUrl || !supabaseAnonKey) {
+  if (!supabaseUrl || !supabaseKey) {
     return false;
   }
   // Basic validation for well-formed HTTPS Supabase project URL
   if (!supabaseUrl.startsWith('https://') || !supabaseUrl.includes('supabase.co')) {
     return false;
   }
-  // Check for placeholder strings
-  if (supabaseUrl.includes('your-project') || supabaseAnonKey.includes('your-anon-key')) {
+  // Check for placeholder strings or insufficient key length
+  if (
+    supabaseUrl.includes('your-project') || 
+    supabaseKey.includes('your-anon-key') ||
+    supabaseKey.includes('your-publishable-key') ||
+    supabaseKey.length < 20
+  ) {
     return false;
   }
   return true;
@@ -43,7 +48,7 @@ export function isSupabaseConfigured() {
 export function getSupabaseConfigStatus() {
   const isConfigured = isSupabaseConfigured();
   const urlSet = Boolean(supabaseUrl && supabaseUrl.startsWith('https://'));
-  const keySet = Boolean(supabaseAnonKey && supabaseAnonKey.length > 20);
+  const keySet = Boolean(supabaseKey && supabaseKey.length >= 20);
   
   let maskedUrl = 'Unconfigured';
   if (supabaseUrl) {
@@ -68,7 +73,7 @@ export function getSupabaseConfigStatus() {
  * When unconfigured, a dummy fallback client is created with fallback storage to prevent runtime errors.
  */
 export const supabase = isSupabaseConfigured()
-  ? createClient(supabaseUrl, supabaseAnonKey, {
+  ? createClient(supabaseUrl, supabaseKey, {
       auth: {
         persistSession: true,
         autoRefreshToken: true,

@@ -167,7 +167,14 @@ export async function updateItemVisibility({ itemId, isPublic, adminSession }) {
   }
 
   // 1. Live Supabase Update
-  if (isSupabaseConfigured() && !adminSession.isSimulated) {
+  if (isSupabaseConfigured()) {
+    if (adminSession.isSimulated) {
+      return {
+        success: false,
+        error: 'Forbidden: Local simulation cannot perform publishing writes when a live Supabase project is connected.'
+      };
+    }
+
     try {
       const { error: updateError } = await supabase
         .from('content_registry')
