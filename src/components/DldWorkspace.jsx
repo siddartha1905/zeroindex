@@ -23,6 +23,11 @@ import { Unit2Solvers } from './Unit2Solvers';
 import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
 import { SyllabusView } from './SyllabusView';
+import { 
+  isItemPubliclyAccessible, 
+  getUnitRegistryId, 
+  getSectionRegistryId 
+} from '../data/centralContentRegistry';
 
 const normalizeWorkspaceTab = (tab) => {
   if (!tab) return 'units';
@@ -38,17 +43,54 @@ const normalizeWorkspaceTab = (tab) => {
 export const DldWorkspace = ({ 
   onBackToDldHome, 
   initialTab = 'units',
-  initialSubModuleId = '1.1' 
+  initialSubModuleId = '1.1',
+  contentOverrides = {},
+  isAdminPreview = false
 }) => {
+  const isUnitAccessible = (unitNum) => {
+    if (isAdminPreview) return true;
+    return isItemPubliclyAccessible(getUnitRegistryId(unitNum), contentOverrides);
+  };
+
+  const isSectionAccessible = (secId) => {
+    if (isAdminPreview) return true;
+    const unitNum = (secId || '').split('.')[0];
+    if (!isUnitAccessible(unitNum)) return false;
+    return isItemPubliclyAccessible(getSectionRegistryId(secId), contentOverrides);
+  };
+
   const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
-  const [activeSubModuleId, setActiveSubModuleId] = useState(initialSubModuleId || '1.1');
+  const [activeSubModuleId, setActiveSubModuleId] = useState(() => {
+    if (initialSubModuleId && isSectionAccessible(initialSubModuleId)) {
+      return initialSubModuleId;
+    }
+    return '1.1';
+  });
   const [activeUnit, setActiveUnit] = useState(() => {
-    const unitNum = parseInt((initialSubModuleId || '1.1').split('.')[0], 10);
-    return !isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 ? unitNum : 1;
+    const unitNum = parseInt((activeSubModuleId || '1.1').split('.')[0], 10);
+    return !isNaN(unitNum) && isUnitAccessible(unitNum) ? unitNum : 1;
   });
   const [solversUnit, setSolversUnit] = useState(1);
   const [initialSolverTab, setInitialSolverTab] = useState('simplifier');
   const [initialQuizTrack, setInitialQuizTrack] = useState('all');
+
+  const allTabs = [
+    { id: 'units', label: 'Units (1-5)', icon: Layers, registryId: 'workbench-subject-dld' },
+    { id: 'solvers', label: 'Interactive Solvers', icon: Calculator, registryId: 'workbench-tool-solvers' },
+    { id: 'practice', label: 'Practice Questions', icon: CheckCircle2, registryId: 'workbench-tool-practice' },
+    { id: 'syllabus', label: 'Subject Resources', icon: BookOpen, registryId: 'workbench-tool-resources' },
+  ];
+
+  const tabs = isAdminPreview 
+    ? allTabs 
+    : allTabs.filter(tab => tab.id === 'units' || isItemPubliclyAccessible(tab.registryId, contentOverrides));
+
+  // Fallback activeTab if current tab is hidden
+  useEffect(() => {
+    if (!tabs.some(t => t.id === activeTab)) {
+      setActiveTab(tabs[0]?.id || 'units');
+    }
+  }, [tabs, activeTab]);
 
   // Synchronize state when props update via browser navigation or hashchange
   useEffect(() => {
@@ -60,13 +102,36 @@ export const DldWorkspace = ({
 
   useEffect(() => {
     if (initialSubModuleId) {
-      setActiveSubModuleId(initialSubModuleId);
-      const unitNum = parseInt(initialSubModuleId.split('.')[0], 10);
-      if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5) {
-        setActiveUnit(unitNum);
+      if (isSectionAccessible(initialSubModuleId)) {
+        setActiveSubModuleId(initialSubModuleId);
+        const unitNum = parseInt(initialSubModuleId.split('.')[0], 10);
+        if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 && isUnitAccessible(unitNum)) {
+          setActiveUnit(unitNum);
+        }
+      } else {
+        // If requested section is hidden, gracefully fall back to 1.1
+        setActiveUnit(1);
+        setActiveSubModuleId('1.1');
       }
     }
-  }, [initialSubModuleId]);
+  }, [initialSubModuleId, contentOverrides, isAdminPreview]);
+
+  // Fallback when activeUnit or activeSubModule becomes hidden
+  useEffect(() => {
+    if (!isUnitAccessible(activeUnit)) {
+      setActiveUnit(1);
+      setActiveSubModuleId('1.1');
+    } else if (!isSectionAccessible(activeSubModuleId)) {
+      setActiveSubModuleId(`${activeUnit}.1`);
+    }
+  }, [activeUnit, activeSubModuleId, contentOverrides, isAdminPreview]);
+
+  // Reset solversUnit to 1 if Unit 2 is inaccessible
+  useEffect(() => {
+    if (!isUnitAccessible(2) && solversUnit === 2) {
+      setSolversUnit(1);
+    }
+  }, [contentOverrides, isAdminPreview, solversUnit]);
 
   const handleTabChange = (tabId) => {
     setActiveTab(tabId);
@@ -77,9 +142,10 @@ export const DldWorkspace = ({
   };
 
   const handleSubModuleChange = (subId) => {
+    if (!isSectionAccessible(subId)) return;
     setActiveSubModuleId(subId);
     const unitNum = parseInt(subId.split('.')[0], 10);
-    if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5) {
+    if (!isNaN(unitNum) && unitNum >= 1 && unitNum <= 5 && isUnitAccessible(unitNum)) {
       setActiveUnit(unitNum);
     }
     const newHash = `workspace/units/${subId}`;
@@ -94,7 +160,7 @@ export const DldWorkspace = ({
       return;
     }
     const { tab, unit, subId, trackId, solverTab } = target || {};
-    if (unit) {
+    if (unit && isUnitAccessible(unit)) {
       setActiveUnit(unit);
       if (tab === 'solvers') {
         setSolversUnit(unit);
@@ -106,7 +172,7 @@ export const DldWorkspace = ({
     if (trackId) {
       setInitialQuizTrack(trackId);
     }
-    if (subId) {
+    if (subId && isSectionAccessible(subId)) {
       handleSubModuleChange(subId);
     }
     if (tab) {
@@ -123,13 +189,6 @@ export const DldWorkspace = ({
   // Retrieve rich master content if available, else fallback
   const masterSection = dldUnit1Master.sections.find(s => s.id === activeSubModuleId);
   const fallbackSubModule = dldUnit1.subModules.find(m => m.id === activeSubModuleId) || dldUnit1.subModules[0];
-
-  const tabs = [
-    { id: 'units', label: 'Units (1-5)', icon: Layers },
-    { id: 'solvers', label: 'Interactive Solvers', icon: Calculator },
-    { id: 'practice', label: 'Practice Questions', icon: CheckCircle2 },
-    { id: 'syllabus', label: 'Subject Resources', icon: BookOpen },
-  ];
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1E293B] flex flex-col">
@@ -205,11 +264,14 @@ export const DldWorkspace = ({
                   {dldSyllabus.units.map((unit) => {
                     const isSelected = effectiveUnit === unit.unitNumber;
                     const isUnit1 = unit.unitNumber === 1;
+                    const isUnitAvail = isUnitAccessible(unit.unitNumber);
 
                     return (
                       <div key={unit.unitNumber} className="space-y-1">
                         <button
+                          disabled={!isUnitAvail}
                           onClick={() => {
+                            if (!isUnitAvail) return;
                             setActiveUnit(unit.unitNumber);
                             if (unit.unitNumber === 1 && !activeSubModuleId.startsWith('1.')) {
                               handleSubModuleChange('1.1');
@@ -218,85 +280,93 @@ export const DldWorkspace = ({
                             }
                           }}
                           className={`w-full flex items-center justify-between p-2.5 rounded-lg text-left text-xs transition-all ${
-                            isSelected 
-                              ? 'bg-[#2E6F40] text-white font-semibold shadow-sm' 
-                              : 'hover:bg-[#F2F7F4] text-[#1E293B]'
+                            !isUnitAvail
+                              ? 'bg-slate-50/50 text-slate-400 opacity-60 cursor-not-allowed'
+                              : isSelected 
+                                ? 'bg-[#2E6F40] text-white font-semibold shadow-sm' 
+                                : 'hover:bg-[#F2F7F4] text-[#1E293B]'
                           }`}
                         >
                           <div className="flex items-center gap-2 truncate">
-                            <span className={`font-mono text-[11px] ${isSelected ? 'text-white/80' : 'text-[#64748B]'}`}>
+                            <span className={`font-mono text-[11px] ${isSelected && isUnitAvail ? 'text-white/80' : 'text-[#64748B]'}`}>
                               {unit.roman}
                             </span>
                             <span className="truncate">{unit.title}</span>
                           </div>
                           <span className={`text-[9px] font-bold px-1.5 py-0.2 rounded-full uppercase ml-1 flex-shrink-0 ${
-                            isUnit1
-                              ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
-                              : unit.unitNumber === 2
+                            !isUnitAvail
+                              ? 'bg-slate-200 text-slate-600'
+                              : isUnit1
                                 ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
-                                : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
+                                : unit.unitNumber === 2
+                                  ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
+                                  : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {isUnit1 ? 'Available' : (unit.unitNumber === 2 ? 'Partially Available' : 'Planned')}
+                            {!isUnitAvail ? 'Unavailable' : isUnit1 ? 'Available' : (unit.unitNumber === 2 ? 'Partially Available' : 'Planned')}
                           </span>
                         </button>
 
                         {/* Unit 1 Nested Sub-Modules */}
-                        {isUnit1 && effectiveUnit === 1 && (
+                        {isUnit1 && effectiveUnit === 1 && isUnitAvail && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
-                            {dldUnit1.subModules.map((sub) => {
-                              const isSubActive = activeSubModuleId === sub.id;
-                              return (
-                                <button
-                                  key={sub.id}
-                                  onClick={() => handleSubModuleChange(sub.id)}
-                                  className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
-                                    isSubActive
-                                      ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
-                                      : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
-                                  }`}
-                                >
-                                  <span className="truncate">
-                                    <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
-                                    {sub.title}
-                                  </span>
-                                  {isSubActive && <ChevronRight className="w-3 h-3 flex-shrink-0 text-[#2E6F40]" />}
-                                </button>
-                              );
-                            })}
+                            {dldUnit1.subModules
+                              .filter(sub => isSectionAccessible(sub.id))
+                              .map((sub) => {
+                                const isSubActive = activeSubModuleId === sub.id;
+                                return (
+                                  <button
+                                    key={sub.id}
+                                    onClick={() => handleSubModuleChange(sub.id)}
+                                    className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
+                                      isSubActive
+                                        ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
+                                        : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
+                                    }`}
+                                  >
+                                    <span className="truncate">
+                                      <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
+                                      {sub.title}
+                                    </span>
+                                    {isSubActive && <ChevronRight className="w-3 h-3 flex-shrink-0 text-[#2E6F40]" />}
+                                  </button>
+                                );
+                              })}
                           </div>
                         )}
 
                         {/* Unit 2 Nested Sub-Modules */}
-                        {unit.unitNumber === 2 && effectiveUnit === 2 && (
+                        {unit.unitNumber === 2 && effectiveUnit === 2 && isUnitAvail && (
                           <div className="ml-3 pl-2.5 border-l-2 border-[#DCE7E1] space-y-1 py-1">
-                            {dldUnit2Master.sections.map((sub) => {
-                              const isSubActive = activeSubModuleId === sub.id;
-                              const isPlanned = sub.id === '2.6' || sub.id === '2.7';
-                              return (
-                                <button
-                                  key={sub.id}
-                                  onClick={() => handleSubModuleChange(sub.id)}
-                                  className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
-                                    isSubActive
-                                      ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
-                                      : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
-                                  }`}
-                                >
-                                  <span className="truncate flex items-center gap-1.5">
-                                    <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
-                                    <span className="truncate">{sub.title}</span>
-                                  </span>
-                                  <div className="flex items-center gap-1 flex-shrink-0">
-                                    {isPlanned && (
-                                      <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FEF3C7] text-[#92400E]">
-                                        Planned
-                                      </span>
-                                    )}
-                                    {isSubActive && <ChevronRight className="w-3 h-3 text-[#2E6F40]" />}
-                                  </div>
-                                </button>
-                              );
-                            })}
+                            {dldUnit2Master.sections
+                              .filter(sub => isSectionAccessible(sub.id))
+                              .map((sub) => {
+                                const isSubActive = activeSubModuleId === sub.id;
+                                const isPlanned = sub.id === '2.6' || sub.id === '2.7';
+                                return (
+                                  <button
+                                    key={sub.id}
+                                    onClick={() => handleSubModuleChange(sub.id)}
+                                    className={`w-full text-left px-2.5 py-1.5 rounded-md text-xs transition-colors flex items-center justify-between ${
+                                      isSubActive
+                                        ? 'bg-[#F2F7F4] text-[#2E6F40] font-bold border-l-2 border-[#2E6F40]'
+                                        : 'text-[#475569] hover:text-[#1E293B] hover:bg-white'
+                                    }`}
+                                  >
+                                    <span className="truncate flex items-center gap-1.5">
+                                      <span className="font-mono text-[10px] text-[#64748B] mr-1.5">{sub.number}</span>
+                                      <span className="truncate">{sub.title}</span>
+                                    </span>
+                                    <div className="flex items-center gap-1 flex-shrink-0">
+                                      {isPlanned && (
+                                        <span className="text-[9px] font-mono px-1.5 py-0.2 rounded-full bg-[#FEF3C7] text-[#92400E]">
+                                          Planned
+                                        </span>
+                                      )}
+                                      {isSubActive && <ChevronRight className="w-3 h-3 text-[#2E6F40]" />}
+                                    </div>
+                                  </button>
+                                );
+                              })}
                           </div>
                         )}
                       </div>
@@ -318,12 +388,46 @@ export const DldWorkspace = ({
 
             {/* Center / Right Column: Comprehensive Topic Notes (9 cols) */}
             <section className="lg:col-span-9 space-y-6">
-              {effectiveUnit === 1 ? (
+              {!isSectionAccessible(activeSubModuleId) ? (
+                <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
+                      {effectiveUnit === 2 && !isUnitAccessible(2) ? 'Unit II · Offline for Review' : `Section ${activeSubModuleId} · Offline for Review`}
+                    </span>
+                    <span className="text-xs text-[#64748B] font-mono">Curriculum Notice</span>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-bold text-[#1E293B] mt-1">
+                      {effectiveUnit === 2 && !isUnitAccessible(2) 
+                        ? 'Unit II: Gate-Level Minimization and Combinational Logic' 
+                        : `Section ${activeSubModuleId} is Under Editorial Review`}
+                    </h2>
+                    <p className="text-xs text-[#475569] mt-2 leading-relaxed">
+                      This curriculum unit or section has been taken offline by the administrator for review. Please proceed with available Unit I study modules.
+                    </p>
+                  </div>
+
+                  <div className="pt-2">
+                    <button
+                      onClick={() => {
+                        setActiveUnit(1);
+                        handleSubModuleChange('1.1');
+                      }}
+                      className="px-4 py-2 rounded-lg bg-[#2E6F40] text-white text-xs font-semibold hover:bg-[#255A34] transition-colors cursor-pointer"
+                    >
+                      Return to Unit I (Available)
+                    </button>
+                  </div>
+                </div>
+              ) : effectiveUnit === 1 ? (
                 masterSection ? (
                   /* Render deep master study guide for 1.1, 1.2, 1.3 */
                   <UnitWorkspace 
                     section={masterSection} 
                     onNavigate={handleContextNavigation}
+                    contentOverrides={contentOverrides}
+                    isAdminPreview={isAdminPreview}
                   />
                 ) : (
                   /* Modular study guide for remaining sections */
@@ -339,6 +443,8 @@ export const DldWorkspace = ({
                       ] : undefined
                     }} 
                     onNavigate={handleContextNavigation}
+                    contentOverrides={contentOverrides}
+                    isAdminPreview={isAdminPreview}
                   />
                 )
               ) : effectiveUnit === 2 ? (
@@ -469,19 +575,24 @@ export const DldWorkspace = ({
                   Unit I Solvers (Number Systems & Gates)
                 </button>
                 <button
-                  onClick={() => setSolversUnit(2)}
+                  disabled={!isUnitAccessible(2)}
+                  onClick={() => {
+                    if (isUnitAccessible(2)) setSolversUnit(2);
+                  }}
                   className={`px-3 py-1.5 rounded-xl text-xs font-bold font-mono transition-all ${
-                    solversUnit === 2
-                      ? 'bg-[#2E6F40] text-white shadow-xs'
-                      : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                    !isUnitAccessible(2)
+                      ? 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#94A3B8] opacity-60 cursor-not-allowed'
+                      : solversUnit === 2
+                        ? 'bg-[#2E6F40] text-white shadow-xs'
+                        : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
                   }`}
                 >
-                  Unit II Solvers (Boolean Algebra & K-Maps)
+                  {isUnitAccessible(2) ? 'Unit II Solvers (Boolean Algebra & K-Maps)' : 'Unit II Solvers (Under Review)'}
                 </button>
               </div>
             </div>
 
-            {solversUnit === 1 ? (
+            {solversUnit === 1 || !isUnitAccessible(2) ? (
               <InteractiveSolvers 
                 initialSolverTab={initialSolverTab} 
                 onNavigate={handleContextNavigation} 
@@ -498,6 +609,7 @@ export const DldWorkspace = ({
             defaultUnit={activeUnit} 
             initialTrack={initialQuizTrack}
             onNavigate={handleContextNavigation} 
+            isUnit2Accessible={isUnitAccessible(2)}
           />
         )}
 
@@ -506,6 +618,7 @@ export const DldWorkspace = ({
           <SyllabusView 
             onNavigate={handleContextNavigation} 
             initialUnit={activeUnit} 
+            isUnit2Accessible={isUnitAccessible(2)}
           />
         )}
 

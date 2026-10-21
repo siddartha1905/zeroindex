@@ -35,17 +35,28 @@ import { KMapCheatSheet } from './KMapCheatSheet';
  * Strictly zero em-dashes and zero en-dashes throughout.
  * Mandatory Unicode Sigma (\u03A3) and Pi (\u03A0).
  */
-export const SubjectResourcesView = ({ onNavigate, initialUnit = 1 }) => {
-  const [selectedUnit, setSelectedUnit] = useState(initialUnit === 2 ? 2 : 1);
+export const SubjectResourcesView = ({ 
+  onNavigate, 
+  initialUnit = 1,
+  isUnit2Accessible = true 
+}) => {
+  const [selectedUnit, setSelectedUnit] = useState(() => {
+    if (!isUnit2Accessible) return 1;
+    return initialUnit === 2 ? 2 : 1;
+  });
   const [activeCategory, setActiveCategory] = useState('all'); // 'all' | 'textbooks' | 'formulas' | 'channels' | 'websites' | 'calculators' | 'syllabus'
   const [calculatorCategory, setCalculatorCategory] = useState('all'); // 'all' | 'boolean' | 'kmap' | 'number'
   const [activeModalSheet, setActiveModalSheet] = useState(null); // null | 'boolean-laws' | 'kmap'
 
   useEffect(() => {
+    if (!isUnit2Accessible) {
+      setSelectedUnit(1);
+      return;
+    }
     if (initialUnit) {
       setSelectedUnit(initialUnit === 2 ? 2 : 1);
     }
-  }, [initialUnit]);
+  }, [initialUnit, isUnit2Accessible]);
 
   const { studyMaterials, formulaSheets, educationalChannels, referenceWebsites, onlineCalculators, unitsMetadata } = dldSubjectResourcesData;
   const currentUnitMeta = unitsMetadata.find(u => u.unitNumber === selectedUnit) || unitsMetadata[0];
@@ -146,18 +157,25 @@ export const SubjectResourcesView = ({ onNavigate, initialUnit = 1 }) => {
 
             {/* Unit 2 Button */}
             <button
-              onClick={() => setSelectedUnit(2)}
+              onClick={() => {
+                if (isUnit2Accessible) setSelectedUnit(2);
+              }}
+              disabled={!isUnit2Accessible}
               className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold font-mono transition-all ${
-                selectedUnit === 2
-                  ? 'bg-[#285C49] text-white shadow-xs'
-                  : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
+                !isUnit2Accessible
+                  ? 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#94A3B8] opacity-60 cursor-not-allowed'
+                  : selectedUnit === 2
+                    ? 'bg-[#285C49] text-white shadow-xs'
+                    : 'bg-[#FAF8F5] border border-[#DCE7E1] text-[#64748B] hover:text-[#1E293B]'
               }`}
             >
               <span>Unit II: Boolean Algebra &amp; Karnaugh Maps</span>
               <span className={`text-[10px] px-1.5 py-0.2 rounded font-semibold ${
-                selectedUnit === 2 ? 'bg-white/20 text-white' : 'bg-[#EBF3ED] text-[#285C49]'
+                !isUnit2Accessible
+                  ? 'bg-slate-200 text-slate-500'
+                  : selectedUnit === 2 ? 'bg-white/20 text-white' : 'bg-[#EBF3ED] text-[#285C49]'
               }`}>
-                Sec 2.1 to 2.5
+                {isUnit2Accessible ? 'Sec 2.1 to 2.5' : 'Under Review'}
               </span>
             </button>
 

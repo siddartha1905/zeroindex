@@ -1,6 +1,7 @@
 import React from 'react';
 import { Calculator, CheckCircle2, BookOpen, ArrowRight, Sparkles } from 'lucide-react';
 import { dldSubjectResourcesData } from '../data/dldSubjectResourcesData';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
 /**
  * ContextualLearningStrip
@@ -12,10 +13,23 @@ import { dldSubjectResourcesData } from '../data/dldSubjectResourcesData';
 export const ContextualLearningStrip = ({ 
   sectionId, 
   onNavigate,
-  className = "" 
+  className = "",
+  contentOverrides = {},
+  isAdminPreview = false
 }) => {
   const linkConfig = dldSubjectResourcesData.contextualLearningMap[sectionId];
   if (!linkConfig) return null;
+
+  const isSolversAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-solvers', contentOverrides);
+  const isPracticeAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-practice', contentOverrides);
+  const isResourcesAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-resources', contentOverrides);
+
+  const hasAnyAccessibleTarget = 
+    (linkConfig.solverTarget && isSolversAccessible) ||
+    (linkConfig.practiceTarget && isPracticeAccessible) ||
+    (linkConfig.resourceTarget && isResourcesAccessible);
+
+  if (!hasAnyAccessibleTarget) return null;
 
   const handleAction = (target) => {
     if (onNavigate && target) {
@@ -43,7 +57,7 @@ export const ContextualLearningStrip = ({
 
         {/* Right: Three Contextual Actions */}
         <div className="flex flex-wrap items-center gap-2">
-          {linkConfig.solverTarget && (
+          {linkConfig.solverTarget && isSolversAccessible && (
             <button
               onClick={() => handleAction(linkConfig.solverTarget)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] hover:border-[#285C49] text-xs font-semibold text-[#1E293B] hover:text-[#285C49] transition-all shadow-2xs"
@@ -54,7 +68,7 @@ export const ContextualLearningStrip = ({
             </button>
           )}
 
-          {linkConfig.practiceTarget && (
+          {linkConfig.practiceTarget && isPracticeAccessible && (
             <button
               onClick={() => handleAction(linkConfig.practiceTarget)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] hover:border-[#285C49] text-xs font-semibold text-[#1E293B] hover:text-[#285C49] transition-all shadow-2xs"
@@ -65,7 +79,7 @@ export const ContextualLearningStrip = ({
             </button>
           )}
 
-          {linkConfig.resourceTarget && (
+          {linkConfig.resourceTarget && isResourcesAccessible && (
             <button
               onClick={() => handleAction(linkConfig.resourceTarget)}
               className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#FAF8F5] hover:bg-[#F2F7F4] border border-[#DCE7E1] hover:border-[#285C49] text-xs font-semibold text-[#1E293B] hover:text-[#285C49] transition-all shadow-2xs"

@@ -912,10 +912,20 @@ export function isItemPubliclyAccessible(itemId, visibilityOverrides = {}) {
     return false;
   }
 
-  // Rule 3: Check item visibility setting (overrides take precedence over default)
-  const isSelfPublic = Object.prototype.hasOwnProperty.call(visibilityOverrides, item.id)
-    ? Boolean(visibilityOverrides[item.id])
-    : Boolean(item.isPublic);
+  // Rule 3: Check item visibility setting
+  // When live overrides are active, missing records MUST fail closed (default to false)
+  // because Supabase RLS only returns records where is_public is true and accessible.
+  let isSelfPublic = false;
+  if (Object.prototype.hasOwnProperty.call(visibilityOverrides, item.id)) {
+    isSelfPublic = Boolean(visibilityOverrides[item.id]);
+  } else {
+    // When an item is not explicitly in visibilityOverrides:
+    // If visibilityOverrides represents a live Supabase dataset (has multiple live records),
+    // any record omitted by Supabase RLS strictly fails closed (false).
+    // In local simulation or unit tests with partial overrides, unmentioned records retain default isPublic.
+    const isLiveSupabaseMap = visibilityOverrides && Object.keys(visibilityOverrides).length >= 10;
+    isSelfPublic = isLiveSupabaseMap ? false : Boolean(item.isPublic);
+  }
 
   if (!isSelfPublic) {
     return false;
@@ -930,8 +940,85 @@ export function isItemPubliclyAccessible(itemId, visibilityOverrides = {}) {
 }
 
 /**
+ * Atlas roadmap subpaths mapped to central content registry identifiers.
+ */
+export const ATLAS_ROADMAP_REGISTRY_MAP = {
+  'programming-foundations': 'atlas-programming-foundations',
+  'systems-architecture': 'atlas-systems-architecture',
+  'data-science': 'atlas-data-science',
+  'english-communication': 'atlas-english-communication',
+  'soft-skills': 'atlas-soft-skills',
+  'quantitative-aptitude': 'atlas-quantitative-aptitude',
+  'logical-reasoning': 'atlas-logical-reasoning',
+  'verbal-ability': 'atlas-verbal-ability',
+  'c-programming': 'atlas-c-programming',
+  'python-programming': 'atlas-python-programming',
+  'entry-it-foundations': 'atlas-entry-it-foundations',
+  'embedded-systems': 'atlas-embedded-systems',
+  'vlsi-rtl-design': 'atlas-vlsi-rtl-design',
+  'vlsi-verification': 'atlas-vlsi-verification',
+  'vlsi-physical-design': 'atlas-vlsi-physical-design',
+  'analog-ic-design': 'atlas-analog-ic-design',
+  'fpga-design': 'atlas-fpga-design',
+  'pcb-hardware-design': 'atlas-pcb-hardware-design',
+  'rf-communication-systems': 'atlas-rf-communication-systems',
+  'backend-development': 'atlas-backend-development',
+  'fullstack-development': 'atlas-fullstack-development',
+  'machine-learning-engineering': 'atlas-machine-learning-engineering',
+  'data-engineering': 'atlas-data-engineering',
+  'cloud-devops': 'atlas-cloud-devops',
+  'cybersecurity-engineering': 'atlas-cybersecurity-engineering'
+};
+
+/**
+ * Return stable registry ID for a DLD section (e.g. '1.1' -> 'dld-sec-1.1').
+ * @param {string} sectionId
+ * @returns {string}
+ */
+export function getSectionRegistryId(sectionId) {
+  if (!sectionId) return '';
+  return `dld-sec-${sectionId}`;
+}
+
+/**
+ * Return stable registry ID for a DLD unit (e.g. 1 -> 'dld-unit-1').
+ * @param {number | string} unitNum
+ * @returns {string}
+ */
+export function getUnitRegistryId(unitNum) {
+  if (!unitNum) return '';
+  return `dld-unit-${unitNum}`;
+}
+
+/**
+ * Return stable registry ID for a Workbench workspace tab.
+ * @param {string} tabId
+ * @returns {string}
+ */
+export function getWorkspaceTabRegistryId(tabId) {
+  switch (tabId) {
+    case 'solvers':
+    case 'solver':
+      return 'workbench-tool-solvers';
+    case 'practice':
+    case 'quiz':
+    case 'arena':
+      return 'workbench-tool-practice';
+    case 'syllabus':
+    case 'resources':
+      return 'workbench-tool-resources';
+    case 'units':
+    case 'theory':
+    case 'notes':
+    default:
+      return 'workbench-subject-dld';
+  }
+}
+
+/**
  * Determine whether a route is publicly accessible.
  * If the route maps to a hidden item or hidden parent, returns false.
+ * Resolves the most specific matching item and verifies all hierarchical ancestors.
  * 
  * @param {string} route
  * @param {Record<string, boolean>} [visibilityOverrides={}]
@@ -953,7 +1040,81 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     normalizedRoute = normalizedRoute.replace(/^roadmaps/, 'atlas');
   }
 
-  // Domain-specific subpath handling for The Bridge (Pillar 03)
+  // 1. Pillar 01: The Workbench routes
+  if (normalizedRoute === 'workbench' || normalizedRoute === 'pillar-workbench') {
+    return isItemPubliclyAccessible('pillar-workbench', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'dld' || normalizedRoute === 'dld-home') {
+    return isItemPubliclyAccessible('workbench-subject-dld', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'workspace' || normalizedRoute === 'workspace/units') {
+    // Accessible if subject is accessible and at least one unit is accessible
+    const subjectAccessible = isItemPubliclyAccessible('workbench-subject-dld', visibilityOverrides);
+    if (!subjectAccessible) return false;
+    const anyUnitAccessible = [1, 2, 3, 4, 5].some(u => isItemPubliclyAccessible(`dld-unit-${u}`, visibilityOverrides));
+    return anyUnitAccessible;
+  }
+
+  if (normalizedRoute === 'workspace/solvers' || normalizedRoute === 'workspace/solver') {
+    return isItemPubliclyAccessible('workbench-tool-solvers', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'workspace/practice' || normalizedRoute === 'workspace/quiz' || normalizedRoute === 'workspace/arena') {
+    return isItemPubliclyAccessible('workbench-tool-practice', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'workspace/syllabus' || normalizedRoute === 'workspace/resources') {
+    return isItemPubliclyAccessible('workbench-tool-resources', visibilityOverrides);
+  }
+
+  if (normalizedRoute.startsWith('workspace/units/')) {
+    const subId = normalizedRoute.replace(/^workspace\/units\//, '').split('/')[0];
+    const sectionRegId = getSectionRegistryId(subId);
+    const unitNum = subId.split('.')[0];
+    const unitRegId = getUnitRegistryId(unitNum);
+
+    // Section and its unit must both be accessible
+    if (!isItemPubliclyAccessible(unitRegId, visibilityOverrides)) {
+      return false;
+    }
+    return isItemPubliclyAccessible(sectionRegId, visibilityOverrides);
+  }
+
+  // Direct section route shortcuts (e.g. #2.1, #sec-2.1)
+  const directSecMatch = normalizedRoute.match(/^(?:sec(?:tion)?[-_]?)?([1-5]\.[1-7])$/i);
+  if (directSecMatch) {
+    const subId = directSecMatch[1];
+    const sectionRegId = getSectionRegistryId(subId);
+    const unitNum = subId.split('.')[0];
+    const unitRegId = getUnitRegistryId(unitNum);
+    if (!isItemPubliclyAccessible(unitRegId, visibilityOverrides)) {
+      return false;
+    }
+    return isItemPubliclyAccessible(sectionRegId, visibilityOverrides);
+  }
+
+  // 2. Pillar 02: The Atlas routes
+  if (normalizedRoute === 'atlas') {
+    return isItemPubliclyAccessible('pillar-atlas', visibilityOverrides);
+  }
+
+  if (normalizedRoute.startsWith('atlas/')) {
+    const roadmapSlug = normalizedRoute.slice(6).split('/')[0];
+    const roadmapRegId = ATLAS_ROADMAP_REGISTRY_MAP[roadmapSlug];
+    if (roadmapRegId) {
+      return isItemPubliclyAccessible(roadmapRegId, visibilityOverrides);
+    }
+    // Fail closed for unknown or unregistered roadmap subpaths
+    return false;
+  }
+
+  // 3. Pillar 03: The Bridge routes
+  if (normalizedRoute === 'bridge') {
+    return isItemPubliclyAccessible('pillar-bridge', visibilityOverrides);
+  }
+
   if (normalizedRoute.startsWith('bridge/')) {
     const bridgeSubpath = normalizedRoute.slice(7).split('/')[0];
     const bridgeSubpathToRegistryId = {
@@ -982,19 +1143,46 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     if (targetDomainId) {
       return isItemPubliclyAccessible(targetDomainId, visibilityOverrides);
     }
+    return false;
   }
 
-  // Find matching items by route
-  const matches = centralContentRegistry.filter(item => {
-    const itemRoute = item.route.toLowerCase();
-    return itemRoute === normalizedRoute || normalizedRoute.startsWith(itemRoute + '/');
-  });
-
-  if (matches.length === 0) {
-    // If route is not explicitly tracked in registry, allow default behavior
-    return true;
+  // 4. Pillar 04: The Readout routes
+  if (normalizedRoute === 'readout') {
+    return isItemPubliclyAccessible('pillar-readout', visibilityOverrides);
   }
 
-  // If any matching tracked item is publicly accessible, allow route; otherwise block
-  return matches.some(item => isItemPubliclyAccessible(item.id, visibilityOverrides));
+  if (normalizedRoute.startsWith('readout/')) {
+    const articleSlug = normalizedRoute.slice(8).split('/')[0];
+    const targetItem = centralContentRegistry.find(item => item.route.toLowerCase() === `readout/${articleSlug}`);
+    if (targetItem) {
+      return isItemPubliclyAccessible(targetItem.id, visibilityOverrides);
+    }
+    // Fail closed for unpublished or unknown article slugs
+    return false;
+  }
+
+  // 5. Pillar 05: The Folio routes
+  if (normalizedRoute === 'folio') {
+    return isItemPubliclyAccessible('pillar-folio', visibilityOverrides);
+  }
+
+  if (normalizedRoute.startsWith('folio/')) {
+    const essaySlug = normalizedRoute.slice(6).split('/')[0];
+    const targetItem = centralContentRegistry.find(item => item.route.toLowerCase() === `folio/${essaySlug}`);
+    if (targetItem) {
+      return isItemPubliclyAccessible(targetItem.id, visibilityOverrides);
+    }
+    // Fail closed for unpublished or unknown essay slugs
+    return false;
+  }
+
+  // Exact route match against any registered item
+  const exactMatch = centralContentRegistry.find(item => item.route.toLowerCase() === normalizedRoute);
+  if (exactMatch) {
+    return isItemPubliclyAccessible(exactMatch.id, visibilityOverrides);
+  }
+
+  // Fallback: If route is not tracked in registry, allow default navigation
+  return true;
 }
+

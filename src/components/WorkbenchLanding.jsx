@@ -14,12 +14,18 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { FromZeroToPossibilityIllustration } from './FromZeroToPossibilityIllustration';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
 export const WorkbenchLanding = ({ 
   onNavigateHome, 
   onSelectDld, 
-  onOpenWorkspaceTab 
+  onOpenWorkspaceTab,
+  contentOverrides = {},
+  isAdminPreview = false
 }) => {
+  const isSolversAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-solvers', contentOverrides);
+  const isPracticeAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-practice', contentOverrides);
+  const isUnit2Accessible = isAdminPreview || isItemPubliclyAccessible('dld-unit-2', contentOverrides);
   const subjects = [
     {
       id: 'dld',
@@ -172,7 +178,7 @@ export const WorkbenchLanding = ({
                 </div>
                 <span className="text-xs font-technical text-[#346C53] font-bold flex items-center gap-1.5">
                   <span className="w-2 h-2 rounded-full bg-[#346C53] animate-pulse" />
-                  Full Subject Available
+                  {isUnit2Accessible ? 'Units 1 & 2 Available' : 'Unit 1 Available'}
                 </span>
               </div>
 
@@ -204,21 +210,31 @@ export const WorkbenchLanding = ({
 
               {/* Action Buttons */}
               <div className="pt-4 border-t border-[#E6E8E1] flex flex-wrap items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-2 text-xs font-technical">
-                  <span className="text-[#5F6C64]">Quick Jump:</span>
-                  <button
-                    onClick={() => onOpenWorkspaceTab('solvers')}
-                    className="px-2.5 py-1 rounded-md bg-[#F0F1EB] hover:bg-[#E0EBDF] text-[#346C53] font-semibold border border-[#DDE2DA] transition-colors cursor-pointer"
-                  >
-                    ⚡ Solvers
-                  </button>
-                  <button
-                    onClick={() => onOpenWorkspaceTab('practice')}
-                    className="px-2.5 py-1 rounded-md bg-[#F0F1EB] hover:bg-[#E0EBDF] text-[#346C53] font-semibold border border-[#DDE2DA] transition-colors cursor-pointer"
-                  >
-                    🎯 110+ Quiz
-                  </button>
-                </div>
+                {(isSolversAccessible || isPracticeAccessible) ? (
+                  <div className="flex flex-wrap items-center gap-2 text-xs font-technical">
+                    <span className="text-[#5F6C64]">Quick Jump:</span>
+                    {isSolversAccessible && (
+                      <button
+                        onClick={() => onOpenWorkspaceTab('solvers')}
+                        className="px-2.5 py-1 rounded-md bg-[#F0F1EB] hover:bg-[#E0EBDF] text-[#346C53] font-semibold border border-[#DDE2DA] transition-colors cursor-pointer"
+                      >
+                        ⚡ Solvers
+                      </button>
+                    )}
+                    {isPracticeAccessible && (
+                      <button
+                        onClick={() => onOpenWorkspaceTab('practice')}
+                        className="px-2.5 py-1 rounded-md bg-[#F0F1EB] hover:bg-[#E0EBDF] text-[#346C53] font-semibold border border-[#DDE2DA] transition-colors cursor-pointer"
+                      >
+                        🎯 110+ Quiz
+                      </button>
+                    )}
+                  </div>
+                ) : (
+                  <div className="text-xs font-technical text-[#64748B]">
+                    Foundational Lecture Modules
+                  </div>
+                )}
 
                 <button
                   onClick={onSelectDld}

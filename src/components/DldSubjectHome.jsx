@@ -13,8 +13,14 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { dldSyllabus } from '../data/dldSyllabus';
+import { isItemPubliclyAccessible } from '../data/centralContentRegistry';
 
-export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
+export const DldSubjectHome = ({ 
+  onBackToPortal, 
+  onOpenWorkspaceTab,
+  contentOverrides = {},
+  isAdminPreview = false
+}) => {
   // Interactive Logic Schematic Circuit Inputs: A, B, C
   const [circuitInputs, setCircuitInputs] = useState({ a: 1, b: 0, c: 1 });
   const [isCoExpanded, setIsCoExpanded] = useState(false);
@@ -38,13 +44,20 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     setCircuitInputs({ a: 1, b: 0, c: 1 });
   };
 
-  const cards = [
+  const isUnit2Accessible = isAdminPreview || isItemPubliclyAccessible('dld-unit-2', contentOverrides);
+  const isSolversAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-solvers', contentOverrides);
+  const isPracticeAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-practice', contentOverrides);
+  const isResourcesAccessible = isAdminPreview || isItemPubliclyAccessible('workbench-tool-resources', contentOverrides);
+
+  const allCards = [
     {
       id: 'units',
       title: 'Course Units (1-5)',
-      description: 'Units I (Complete) and II (Sections 2.1 to 2.5) available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.',
+      description: isUnit2Accessible 
+        ? 'Units I (Complete) and II (Sections 2.1 to 2.5) available. Step-by-step derivations, worked textbook models, and cheat sheets. Additional units planned.'
+        : 'Unit I (Sections 1.1 to 1.7 Complete) available. Step-by-step derivations, worked textbook models, and cheat sheets. Unit II is undergoing curriculum review.',
       icon: Layers,
-      badge: 'Units 1 & 2 (Partial) Available',
+      badge: isUnit2Accessible ? 'Units 1 & 2 Available' : 'Unit 1 Available',
       badgeColor: 'bg-[#2E6F40]/10 text-[#2E6F40] border border-[#2E6F40]/20',
       iconColor: '#2E6F40',
       action: () => onOpenWorkspaceTab('units')
@@ -52,9 +65,11 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'solvers',
       title: 'Interactive Visual Solvers',
-      description: 'Ten visual solvers across Units I and II: base converters, complement subtractors, logic gates, Boolean simplifiers, and K-Map visualizers.',
+      description: isUnit2Accessible 
+        ? 'Ten visual solvers across Units I and II: base converters, complement subtractors, logic gates, Boolean simplifiers, and K-Map visualizers.'
+        : 'Visual solvers for Unit I: base converters, complement subtractors, and logic gate analyzers.',
       icon: Calculator,
-      badge: 'Units 1 & 2 Engines',
+      badge: isUnit2Accessible ? 'Units 1 & 2 Engines' : 'Unit 1 Solvers',
       badgeColor: 'bg-[#4F46E5]/10 text-[#4F46E5] border border-[#4F46E5]/20',
       iconColor: '#4F46E5',
       action: () => onOpenWorkspaceTab('solvers')
@@ -62,9 +77,11 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'practice',
       title: 'Practice Questions & Quizzes',
-      description: 'Interactive topic-wise and full-unit mock quizzes with hints, instant grading, and graphical solutions (250 questions across Units I and II).',
+      description: isUnit2Accessible
+        ? 'Interactive topic-wise and full-unit mock quizzes with hints, instant grading, and graphical solutions (250 questions across Units I and II).'
+        : 'Interactive topic-wise quizzes with hints, instant grading, and solutions (110 questions for Unit I).',
       icon: CheckCircle2,
-      badge: 'Units 1 & 2 Practice',
+      badge: isUnit2Accessible ? 'Units 1 & 2 Practice' : 'Unit 1 Practice',
       badgeColor: 'bg-[#D97706]/10 text-[#D97706] border border-[#D97706]/20',
       iconColor: '#D97706',
       action: () => onOpenWorkspaceTab('practice')
@@ -72,7 +89,7 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
     {
       id: 'syllabus',
       title: 'Subject Resources',
-      description: 'Curated textbooks, reference manuals, external calculators, video lecture portals, and official VR23 syllabus for Units I and II.',
+      description: 'Curated textbooks, reference manuals, external calculators, video lecture portals, and official VR23 syllabus for undergraduate study.',
       icon: BookOpen,
       badge: 'Notes, Syllabus & Books',
       badgeColor: 'bg-[#059669]/10 text-[#059669] border border-[#059669]/20',
@@ -80,6 +97,14 @@ export const DldSubjectHome = ({ onBackToPortal, onOpenWorkspaceTab }) => {
       action: () => onOpenWorkspaceTab('syllabus')
     }
   ];
+
+  const cards = allCards.filter(c => {
+    if (c.id === 'units') return true;
+    if (c.id === 'solvers') return isSolversAccessible;
+    if (c.id === 'practice') return isPracticeAccessible;
+    if (c.id === 'syllabus') return isResourcesAccessible;
+    return true;
+  });
 
   return (
     <div className="min-h-screen bg-[#FAF8F5] text-[#1E293B] flex flex-col justify-between py-6 px-4 sm:px-8 select-none">

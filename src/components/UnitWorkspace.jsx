@@ -1710,7 +1710,7 @@ const GraphicalDivisionLadder = ({
   );
 };
 
-export const UnitWorkspace = ({ section, onNavigate }) => {
+export const UnitWorkspace = ({ section, onNavigate, contentOverrides = {}, isAdminPreview = false }) => {
   const [revealedQuestions, setRevealedQuestions] = useState({});
   const [activeSubTab13, setActiveSubTab13] = useState("overview");
   const [activeConv13A, setActiveConv13A] = useState("Conversion 1");
@@ -5584,7 +5584,13 @@ export const UnitWorkspace = ({ section, onNavigate }) => {
 
         {/* Connected Learning Loop */}
         {section?.id && (
-          <ContextualLearningStrip sectionId={section.id} onNavigate={onNavigate} className="mt-8" />
+          <ContextualLearningStrip 
+            sectionId={section.id} 
+            onNavigate={onNavigate} 
+            className="mt-8" 
+            contentOverrides={contentOverrides}
+            isAdminPreview={isAdminPreview}
+          />
         )}
 
       </div>

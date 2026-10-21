@@ -7,8 +7,14 @@ import { SubjectResourcesView } from './SubjectResourcesView';
  * Seamlessly renders the comprehensive SubjectResourcesView reference center.
  * Strictly zero em-dashes and zero en-dashes.
  */
-export const SyllabusView = ({ onNavigate, initialUnit = 1 }) => {
-  return <SubjectResourcesView onNavigate={onNavigate} initialUnit={initialUnit} />;
+export const SyllabusView = ({ onNavigate, initialUnit = 1, isUnit2Accessible = true }) => {
+  return (
+    <SubjectResourcesView 
+      onNavigate={onNavigate} 
+      initialUnit={initialUnit} 
+      isUnit2Accessible={isUnit2Accessible} 
+    />
+  );
 };
 
 export default SyllabusView;

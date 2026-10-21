@@ -130,13 +130,21 @@ function generateQuestionPaper(allBank, trackId, mode, difficultyMix) {
   return shuffled.slice(0, Math.min(targetCount, shuffled.length));
 }
 
-export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all' }) => {
+export const PracticeArena = ({ 
+  onNavigate, 
+  defaultUnit = 1, 
+  initialTrack = 'all',
+  isUnit2Accessible = true 
+}) => {
   // Unit Partition: 1 | 2 | 3 | 4 | 5 | 'all'
-  const [activeQuizUnit, setActiveQuizUnit] = useState(defaultUnit || 1);
+  const [activeQuizUnit, setActiveQuizUnit] = useState(() => {
+    if (!isUnit2Accessible) return 1;
+    return defaultUnit || 1;
+  });
 
   // Dynamic quiz bank and tracks selection
-  const currentBank = activeQuizUnit === 2 ? unit2QuizBank : unit1QuizBank;
-  const currentTracks = activeQuizUnit === 2 ? unit2QuizTracks : quizTracks;
+  const currentBank = (activeQuizUnit === 2 && isUnit2Accessible) ? unit2QuizBank : unit1QuizBank;
+  const currentTracks = (activeQuizUnit === 2 && isUnit2Accessible) ? unit2QuizTracks : quizTracks;
 
   // State Machine: 'lobby' | 'active' | 'submitted'
   const [quizState, setQuizState] = useState('lobby');
@@ -148,8 +156,18 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
   const [selectedInputFormat, setSelectedInputFormat] = useState('hybrid'); // 'hybrid' | 'mcq' | 'direct'
 
   useEffect(() => {
-    if (defaultUnit) setActiveQuizUnit(defaultUnit);
-  }, [defaultUnit]);
+    if (!isUnit2Accessible && (activeQuizUnit === 2 || activeQuizUnit === 'all')) {
+      setActiveQuizUnit(1);
+      return;
+    }
+    if (defaultUnit) {
+      if (defaultUnit === 2 && !isUnit2Accessible) {
+        setActiveQuizUnit(1);
+      } else {
+        setActiveQuizUnit(defaultUnit);
+      }
+    }
+  }, [defaultUnit, isUnit2Accessible]);
 
   useEffect(() => {
     if (initialTrack) setSelectedTrack(initialTrack);
@@ -532,15 +550,17 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
       shortTitle: "Unit 1: Number Systems & Arithmetic",
       badge: "110 Qs Live",
       badgeColor: "bg-[#2E6F40] text-white",
-      description: "Conversions, Binary Arithmetic, Complements & Subtraction, Signed Numbers & Unit 1 Theory"
+      description: "Conversions, Binary Arithmetic, Complements & Subtraction, Signed Numbers & Unit 1 Theory",
+      disabled: false
     },
     {
       id: 2,
       title: "Unit 2 Quiz Arena",
       shortTitle: "Unit 2: Boolean & K-Maps",
-      badge: "125 Qs Live",
-      badgeColor: "bg-[#2E6F40] text-white",
-      description: "Boolean Algebra Axioms, 3/4-Var K-Maps, Canonical SOP/POS, Universal NAND/NOR"
+      badge: isUnit2Accessible ? "125 Qs Live" : "Under Review",
+      badgeColor: isUnit2Accessible ? "bg-[#2E6F40] text-white" : "bg-slate-100 text-slate-500",
+      description: "Boolean Algebra Axioms, 3/4-Var K-Maps, Canonical SOP/POS, Universal NAND/NOR",
+      disabled: !isUnit2Accessible
     },
     {
       id: 3,
@@ -548,7 +568,8 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
       shortTitle: "Unit 3: Combinational Logic",
       badge: "Upcoming",
       badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
-      description: "Adders, Subtractors, Look-Ahead Carry, Decoders, Encoders & Multiplexers"
+      description: "Adders, Subtractors, Look-Ahead Carry, Decoders, Encoders & Multiplexers",
+      disabled: true
     },
     {
       id: 4,
@@ -556,7 +577,8 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
       shortTitle: "Unit 4: Sequential Logic",
       badge: "Upcoming",
       badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
-      description: "Latches, Flip-Flops (SR, JK, D, T), Race-Around & State Transition Tables"
+      description: "Latches, Flip-Flops (SR, JK, D, T), Race-Around & State Transition Tables",
+      disabled: true
     },
     {
       id: 5,
@@ -564,15 +586,17 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
       shortTitle: "Unit 5: Registers & Counters",
       badge: "Upcoming",
       badgeColor: "bg-amber-100 text-amber-800 border border-amber-200",
-      description: "Shift Registers (SISO, SIPO, PISO, PIPO), Ripple & Synchronous Mod-N Counters"
+      description: "Shift Registers (SISO, SIPO, PISO, PIPO), Ripple & Synchronous Mod-N Counters",
+      disabled: true
     },
     {
       id: 'all',
       title: "All Units (1-5) Grand Mock Exam",
       shortTitle: "All Units (1-5) Grand Mock",
-      badge: "Sem Exam",
-      badgeColor: "bg-indigo-100 text-indigo-800 border border-indigo-200",
-      description: "Comprehensive end-of-semester exam practice across all 5 syllabus units"
+      badge: isUnit2Accessible ? "Sem Exam" : "Requires Unit 2",
+      badgeColor: isUnit2Accessible ? "bg-indigo-100 text-indigo-800 border border-indigo-200" : "bg-slate-100 text-slate-400 border border-slate-200",
+      description: "Comprehensive end-of-semester exam practice across all 5 syllabus units",
+      disabled: !isUnit2Accessible
     }
   ];
 
@@ -600,11 +624,16 @@ export const PracticeArena = ({ onNavigate, defaultUnit = 1, initialTrack = 'all
               return (
                 <button
                   key={u.id}
-                  onClick={() => setActiveQuizUnit(u.id)}
+                  disabled={u.disabled}
+                  onClick={() => {
+                    if (!u.disabled) setActiveQuizUnit(u.id);
+                  }}
                   className={`p-3 rounded-xl text-left transition-all flex flex-col justify-between ${
-                    isActive
-                      ? "bg-[#2E6F40] text-white shadow-md ring-2 ring-[#2E6F40]/30"
-                      : "bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200"
+                    u.disabled
+                      ? "bg-slate-50/50 text-slate-400 border border-slate-200/50 opacity-60 cursor-not-allowed"
+                      : isActive
+                        ? "bg-[#2E6F40] text-white shadow-md ring-2 ring-[#2E6F40]/30"
+                        : "bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200"
                   }`}
                 >
                   <div className="flex items-center justify-between w-full mb-1">

@@ -19,7 +19,7 @@ export const SiteFooter = ({
 
   const pillars = isRegistryLoaded
     ? allPillars.filter(pillar => isItemPubliclyAccessible('pillar-' + pillar.id, contentOverrides))
-    : allPillars.filter(pillar => pillar.id === 'workbench');
+    : [];
 
   return (
     <footer className="w-full bg-[#F5F2EB] border-t border-[#DDE2DA] mt-auto">

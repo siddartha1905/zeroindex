@@ -62,7 +62,7 @@ export const SiteHeader = ({
   // Only render pillars that are verified publicly visible
   const navigationItems = isRegistryLoaded
     ? allNavigationItems.filter(item => isItemPubliclyAccessible('pillar-' + item.id, contentOverrides))
-    : allNavigationItems.filter(item => item.id === 'workbench');
+    : [];
 
   return (
     <header 

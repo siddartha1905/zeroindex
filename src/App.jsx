@@ -18,7 +18,14 @@ import { AdminLogin } from './components/admin/AdminLogin';
 import { AdminDashboard } from './components/admin/AdminDashboard';
 import { getAdminSession } from './services/authService';
 import { fetchContentRegistry } from './services/contentRegistryService';
-import { isItemPubliclyAccessible, isRoutePubliclyAccessible } from './data/centralContentRegistry';
+import { 
+  isItemPubliclyAccessible, 
+  isRoutePubliclyAccessible,
+  getRegistryItemById,
+  getUnitRegistryId,
+  getSectionRegistryId,
+  getWorkspaceTabRegistryId
+} from './data/centralContentRegistry';
 
 export function App() {
   // Navigation Section State:
@@ -29,6 +36,7 @@ export function App() {
   const [readoutSlug, setReadoutSlug] = useState(null);
   const [folioSlug, setFolioSlug] = useState(null);
   const [bridgeDomainSlug, setBridgeDomainSlug] = useState(null);
+  const [atlasSlug, setAtlasSlug] = useState(null);
 
   // Administrator authentication and content overrides state
   const [adminSession, setAdminSession] = useState({
@@ -81,6 +89,7 @@ export function App() {
         setReadoutSlug(null);
         setFolioSlug(null);
         setBridgeDomainSlug(null);
+        setAtlasSlug(null);
       } else if (lowerHash === 'admin' || lowerHash === 'admin/dashboard' || lowerHash === 'admin-dashboard') {
         setCurrentSection('admin-dashboard');
       } else if (lowerHash === 'admin/login' || lowerHash === 'admin-login') {
@@ -89,6 +98,8 @@ export function App() {
         setCurrentSection('workbench');
       } else if (lowerHash === 'atlas' || lowerHash === 'roadmaps' || lowerHash.startsWith('atlas/') || lowerHash.startsWith('roadmaps/')) {
         setCurrentSection('atlas');
+        const parts = rawHash.split('/');
+        setAtlasSlug(parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null);
       } else if (lowerHash === 'bridge' || lowerHash === 'placements' || lowerHash.startsWith('bridge/') || lowerHash.startsWith('placements/')) {
         setCurrentSection('bridge');
         const parts = rawHash.split('/');
@@ -262,6 +273,38 @@ export function App() {
     </div>
   );
 
+  const renderOfflineContentNotice = (title, message = 'This curriculum content has been taken offline by the administrator for review.', fallbackRoute = 'workspace/units/1.1', fallbackLabel = 'Return to Available Course Content') => (
+    <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
+      <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-[#DDE2DA] shadow-xs space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-[#FFF9F2] text-[#956A43] flex items-center justify-center mx-auto">
+          <AlertCircle className="w-6 h-6" />
+        </div>
+        <div className="space-y-1">
+          <h2 className="font-editorial text-xl font-bold text-[#293B32]">
+            {title} is Temporarily Unavailable
+          </h2>
+          <p className="text-xs text-[#5F6C64] leading-relaxed">
+            {message}
+          </p>
+        </div>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 pt-2">
+          <button
+            onClick={() => handleGenericSectionRoute(fallbackRoute)}
+            className="px-5 py-2.5 rounded-xl bg-[#285C49] hover:bg-[#1E4738] text-white text-xs font-bold transition-colors cursor-pointer w-full sm:w-auto"
+          >
+            {fallbackLabel}
+          </button>
+          <button
+            onClick={() => navigateTo('home')}
+            className="px-5 py-2.5 rounded-xl bg-[#FAF8F5] hover:bg-[#EBE5F0] border border-[#DDE2DA] text-[#5F6C64] hover:text-[#25352D] text-xs font-bold transition-colors cursor-pointer w-full sm:w-auto"
+          >
+            Return to Home
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderLoadingNotice = () => (
     <div className="min-h-[70vh] flex items-center justify-center p-6 text-center">
       <div className="flex flex-col items-center gap-3">
@@ -399,12 +442,16 @@ export function App() {
                 }}
                 onSelectDld={goToDldHome}
                 onOpenWorkspaceTab={goToDldWorkspace}
+                contentOverrides={contentOverrides}
+                isAdminPreview={true}
               />
             ) : isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
               <WorkbenchLanding 
                 onNavigateHome={() => navigateTo('home')}
                 onSelectDld={goToDldHome}
                 onOpenWorkspaceTab={goToDldWorkspace}
+                contentOverrides={contentOverrides}
+                isAdminPreview={false}
               />
             ) : (
               renderOfflinePillarNotice('The Workbench')
@@ -423,12 +470,18 @@ export function App() {
                 }}
                 onNavigateWorkbench={() => navigateTo('workbench')}
                 onNavigateSection={handleGenericSectionRoute}
+                contentOverrides={contentOverrides}
+                isAdminPreview={true}
+                initialMapId={atlasSlug}
               />
             ) : isItemPubliclyAccessible('pillar-atlas', contentOverrides) ? (
               <AtlasLanding 
                 onNavigateHome={() => navigateTo('home')}
                 onNavigateWorkbench={() => navigateTo('workbench')}
                 onNavigateSection={handleGenericSectionRoute}
+                contentOverrides={contentOverrides}
+                isAdminPreview={false}
+                initialMapId={atlasSlug}
               />
             ) : (
               renderOfflinePillarNotice('The Atlas')
@@ -469,6 +522,8 @@ export function App() {
           {currentSection === 'readout' && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
+            ) : !isItemPubliclyAccessible('pillar-readout', contentOverrides) ? (
+              renderOfflinePillarNotice('The Readout')
             ) : (adminPreviewSection === 'readout' && adminSession.isAuthenticated && adminSession.isOwner) ? (
               <ReadoutLanding 
                 onNavigateHome={() => {
@@ -477,15 +532,24 @@ export function App() {
                 }}
                 activeSlug={readoutSlug}
                 onSelectArticle={handleSelectReadoutArticle}
+                contentOverrides={contentOverrides}
+                isAdminPreview={true}
               />
-            ) : isItemPubliclyAccessible('pillar-readout', contentOverrides) ? (
+            ) : (readoutSlug && !isRoutePubliclyAccessible(`readout/${readoutSlug}`, contentOverrides)) ? (
+              renderOfflineContentNotice(
+                'The Readout Article',
+                'This article has not been published or has been placed offline by the administrator.',
+                'readout',
+                'Return to The Readout Catalog'
+              )
+            ) : (
               <ReadoutLanding 
                 onNavigateHome={() => navigateTo('home')}
                 activeSlug={readoutSlug}
                 onSelectArticle={handleSelectReadoutArticle}
+                contentOverrides={contentOverrides}
+                isAdminPreview={false}
               />
-            ) : (
-              renderOfflinePillarNotice('The Readout')
             )
           )}
 
@@ -493,6 +557,8 @@ export function App() {
           {currentSection === 'folio' && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
+            ) : !isItemPubliclyAccessible('pillar-folio', contentOverrides) ? (
+              renderOfflinePillarNotice('The Folio')
             ) : (adminPreviewSection === 'folio' && adminSession.isAuthenticated && adminSession.isOwner) ? (
               <FolioLanding 
                 onNavigateHome={() => {
@@ -501,15 +567,24 @@ export function App() {
                 }}
                 activeSlug={folioSlug}
                 onSelectEssay={handleSelectFolioEssay}
+                contentOverrides={contentOverrides}
+                isAdminPreview={true}
               />
-            ) : isItemPubliclyAccessible('pillar-folio', contentOverrides) ? (
+            ) : (folioSlug && !isRoutePubliclyAccessible(`folio/${folioSlug}`, contentOverrides)) ? (
+              renderOfflineContentNotice(
+                'The Folio Essay',
+                'This essay has not been published or has been placed offline by the administrator.',
+                'folio',
+                'Return to The Folio Catalog'
+              )
+            ) : (
               <FolioLanding 
                 onNavigateHome={() => navigateTo('home')}
                 activeSlug={folioSlug}
                 onSelectEssay={handleSelectFolioEssay}
+                contentOverrides={contentOverrides}
+                isAdminPreview={false}
               />
-            ) : (
-              renderOfflinePillarNotice('The Folio')
             )
           )}
 
@@ -517,13 +592,17 @@ export function App() {
           {currentSection === 'dld-home' && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
-            ) : isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) && isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+            ) : !isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+              renderOfflinePillarNotice('The Workbench')
+            ) : !isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) && !(adminPreviewSection === 'dld' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+              renderOfflinePillarNotice('Digital Logic Design')
+            ) : (
               <DldSubjectHome 
                 onBackToPortal={() => navigateTo('workbench')}
                 onOpenWorkspaceTab={goToDldWorkspace}
+                contentOverrides={contentOverrides}
+                isAdminPreview={adminPreviewSection === 'dld' && adminSession.isAuthenticated && adminSession.isOwner}
               />
-            ) : (
-              renderOfflinePillarNotice('Digital Logic Design')
             )
           )}
 
@@ -531,15 +610,70 @@ export function App() {
           {currentSection === 'dld-workspace' && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
-            ) : isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) && isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
-              <DldWorkspace 
-                onBackToDldHome={goToDldHome}
-                initialTab={workspaceTab}
-                initialSubModuleId={workspaceSubId}
-              />
-            ) : (
-              renderOfflinePillarNotice('Digital Logic Design Workspace')
-            )
+            ) : !isItemPubliclyAccessible('pillar-workbench', contentOverrides) ? (
+              renderOfflinePillarNotice('The Workbench')
+            ) : !isItemPubliclyAccessible('workbench-subject-dld', contentOverrides) ? (
+              renderOfflinePillarNotice('Digital Logic Design')
+            ) : (() => {
+              const isAdminPreview = Boolean(
+                adminPreviewSection &&
+                adminSession.isAuthenticated &&
+                adminSession.isOwner
+              );
+
+              // Validate route-level accessibility for active tab and section
+              const activeRoute = workspaceTab === 'units'
+                ? `workspace/units/${workspaceSubId}`
+                : `workspace/${workspaceTab}`;
+
+              const isCurrentRouteAccessible = isAdminPreview || isRoutePubliclyAccessible(activeRoute, contentOverrides);
+
+              if (!isCurrentRouteAccessible) {
+                if (workspaceTab === 'units') {
+                  const unitNum = workspaceSubId ? workspaceSubId.split('.')[0] : '1';
+                  const unitItem = getRegistryItemById(getUnitRegistryId(unitNum));
+                  const sectionItem = getRegistryItemById(getSectionRegistryId(workspaceSubId));
+                  const title = sectionItem?.title || unitItem?.title || `Section ${workspaceSubId}`;
+                  return renderOfflineContentNotice(
+                    title,
+                    'This curriculum unit or section has been taken offline by the administrator for review.',
+                    'workspace/units/1.1',
+                    'Return to Unit I (Available)'
+                  );
+                } else if (workspaceTab === 'solvers') {
+                  return renderOfflineContentNotice(
+                    'Interactive Visual Solvers',
+                    'The visual computing solvers suite has been taken offline by the administrator for review.',
+                    'workspace/units/1.1',
+                    'Go to Available Course Units'
+                  );
+                } else if (workspaceTab === 'practice') {
+                  return renderOfflineContentNotice(
+                    'Practice Arena',
+                    'The self-assessment practice arena has been taken offline by the administrator for review.',
+                    'workspace/units/1.1',
+                    'Go to Available Course Units'
+                  );
+                } else if (workspaceTab === 'syllabus') {
+                  return renderOfflineContentNotice(
+                    'Subject Resources',
+                    'The subject resources and reference materials have been taken offline by the administrator for review.',
+                    'workspace/units/1.1',
+                    'Go to Available Course Units'
+                  );
+                }
+              }
+
+              return (
+                <DldWorkspace 
+                  onBackToDldHome={goToDldHome}
+                  initialTab={workspaceTab}
+                  initialSubModuleId={workspaceSubId}
+                  contentOverrides={contentOverrides}
+                  isAdminPreview={isAdminPreview}
+                />
+              );
+            })()
           )}
 
         </main>

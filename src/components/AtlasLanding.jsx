@@ -19,13 +19,36 @@ import {
   BrainCircuit
 } from 'lucide-react';
 import { atlasRoadmaps } from '../data/atlasRoadmapsConfig';
+import { 
+  isItemPubliclyAccessible, 
+  ATLAS_ROADMAP_REGISTRY_MAP 
+} from '../data/centralContentRegistry';
 
 export const AtlasLanding = ({ 
   onNavigateHome, 
   onNavigateWorkbench,
-  onNavigateSection 
+  onNavigateSection,
+  contentOverrides = {},
+  isAdminPreview = false,
+  initialMapId = null
 }) => {
-  const [selectedMapId, setSelectedMapId] = useState('programming-foundations');
+  const isMapAccessible = (map) => {
+    if (isAdminPreview) return true;
+    const regId = ATLAS_ROADMAP_REGISTRY_MAP[map.id];
+    if (!regId) return false;
+    return isItemPubliclyAccessible(regId, contentOverrides);
+  };
+
+  const accessibleRoadmaps = atlasRoadmaps.filter(isMapAccessible);
+
+  const [selectedMapId, setSelectedMapId] = useState(() => {
+    if (initialMapId) {
+      const match = atlasRoadmaps.find(m => m.id === initialMapId);
+      if (match && isMapAccessible(match)) return initialMapId;
+    }
+    return accessibleRoadmaps[0]?.id || 'programming-foundations';
+  });
+
   const [expandedStages, setExpandedStages] = useState({
     '01': true,
     '02': true,
@@ -36,7 +59,24 @@ export const AtlasLanding = ({
   });
   const [searchQuery, setSearchQuery] = useState('');
 
-  const currentMap = atlasRoadmaps.find(m => m.id === selectedMapId) || atlasRoadmaps[0];
+  // Fallback when active roadmap becomes hidden or initialMapId changes
+  useEffect(() => {
+    if (initialMapId) {
+      const match = atlasRoadmaps.find(m => m.id === initialMapId);
+      if (match && isMapAccessible(match)) {
+        setSelectedMapId(initialMapId);
+        return;
+      }
+    }
+    const current = atlasRoadmaps.find(m => m.id === selectedMapId);
+    if (!current || !isMapAccessible(current)) {
+      if (accessibleRoadmaps.length > 0) {
+        setSelectedMapId(accessibleRoadmaps[0].id);
+      }
+    }
+  }, [initialMapId, accessibleRoadmaps, contentOverrides, isAdminPreview]);
+
+  const currentMap = accessibleRoadmaps.find(m => m.id === selectedMapId) || accessibleRoadmaps[0] || atlasRoadmaps[0];
 
   const toggleStage = (stageNum) => {
     setExpandedStages(prev => ({
@@ -109,56 +149,102 @@ export const AtlasLanding = ({
           </p>
         </div>
 
-        {/* Cartographic Roadmap Selector Tabs */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
-          {atlasRoadmaps.map((map, idx) => {
-            const isSelected = selectedMapId === map.id;
-            return (
+        {/* Cartographic Roadmaps View or Clean Empty State */}
+        {accessibleRoadmaps.length === 0 && !isAdminPreview ? (
+          <div className="p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-center space-y-4 max-w-2xl mx-auto my-12">
+            <div className="w-12 h-12 rounded-2xl bg-[#E1EAF2] text-[#496D91] flex items-center justify-center mx-auto">
+              <Compass className="w-6 h-6" />
+            </div>
+            <div className="space-y-1">
+              <h2 className="font-editorial text-2xl font-bold text-[#25352D]">
+                Curriculum Roadmaps Under Editorial Review
+              </h2>
+              <p className="text-xs text-[#5F6C64] leading-relaxed max-w-md mx-auto">
+                The structured learning routes for The Atlas are being updated and verified against university syllabi. Please explore active course materials in The Workbench.
+              </p>
+            </div>
+            <div className="pt-2">
               <button
-                key={map.id}
-                onClick={() => {
-                  setSelectedMapId(map.id);
-                  const initialExp = {};
-                  map.stages.forEach((s, sIdx) => {
-                    initialExp[s.stageNumber] = sIdx < 2;
-                  });
-                  setExpandedStages(initialExp);
-                }}
-                className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
-                  isSelected
-                    ? 'bg-white border-[#496D91] shadow-soft ring-1 ring-[#496D91]'
-                    : 'bg-white/70 hover:bg-white border-[#DDE2DA] text-[#5F6C64]'
-                }`}
+                onClick={onNavigateWorkbench}
+                className="px-5 py-2.5 rounded-xl bg-[#245B4B] hover:bg-[#28755E] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
               >
-                <div>
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="font-technical text-xs font-bold" style={{ color: map.accent }}>
-                      Route 0{idx + 1}
-                    </span>
-                    <span className="text-[10px] font-technical px-2 py-0.5 rounded-full bg-[#F0F1EB] text-[#5F6C64]">
-                      {map.stages.length} Stages
-                    </span>
-                  </div>
-
-                  <h3 className="font-editorial text-base font-bold text-[#25352D] mb-1">
-                    {map.title}
-                  </h3>
-
-                  <p className="text-xs text-[#5F6C64] leading-relaxed line-clamp-2">
-                    {map.subtitle}
-                  </p>
-                </div>
-
-                <div className="pt-3 mt-3 border-t border-[#E6E8E1] flex items-center justify-between text-xs">
-                  <span className="font-technical text-[10px] text-[#69766D]">{map.status}</span>
-                  <span className="font-semibold text-xs" style={{ color: map.accent }}>
-                    {isSelected ? 'Active Route ●' : 'Inspect Route →'}
-                  </span>
-                </div>
+                Go to The Workbench
               </button>
-            );
-          })}
-        </div>
+            </div>
+          </div>
+        ) : (
+          <>
+            {isAdminPreview && (
+              <div className="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold uppercase tracking-wider font-technical">Admin Preview</span>
+                  <span>Inspecting all Atlas roadmap blueprints regardless of publication status.</span>
+                </div>
+              </div>
+            )}
+
+            {/* Cartographic Roadmap Selector Tabs */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-left">
+              {accessibleRoadmaps.map((map, idx) => {
+                const isSelected = selectedMapId === map.id;
+                const regId = ATLAS_ROADMAP_REGISTRY_MAP[map.id];
+                const isPublic = isItemPubliclyAccessible(regId, contentOverrides);
+
+                return (
+                  <button
+                    key={map.id}
+                    onClick={() => {
+                      setSelectedMapId(map.id);
+                      const initialExp = {};
+                      map.stages.forEach((s, sIdx) => {
+                        initialExp[s.stageNumber] = sIdx < 2;
+                      });
+                      setExpandedStages(initialExp);
+                    }}
+                    className={`p-5 rounded-2xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-white border-[#496D91] shadow-soft ring-1 ring-[#496D91]'
+                        : 'bg-white/70 hover:bg-white border-[#DDE2DA] text-[#5F6C64]'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="font-technical text-xs font-bold" style={{ color: map.accent }}>
+                          Route 0{idx + 1}
+                        </span>
+                        <div className="flex items-center gap-1">
+                          {isAdminPreview && (
+                            <span className={`text-[10px] font-technical px-2 py-0.5 rounded-full font-bold ${
+                              isPublic ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                            }`}>
+                              {isPublic ? 'Public' : 'Hidden'}
+                            </span>
+                          )}
+                          <span className="text-[10px] font-technical px-2 py-0.5 rounded-full bg-[#F0F1EB] text-[#5F6C64]">
+                            {map.stages.length} Stages
+                          </span>
+                        </div>
+                      </div>
+
+                      <h3 className="font-editorial text-base font-bold text-[#25352D] mb-1">
+                        {map.title}
+                      </h3>
+
+                      <p className="text-xs text-[#5F6C64] leading-relaxed line-clamp-2">
+                        {map.subtitle}
+                      </p>
+                    </div>
+
+                    <div className="pt-3 mt-3 border-t border-[#E6E8E1] flex items-center justify-between text-xs">
+                      <span className="font-technical text-[10px] text-[#69766D]">{map.status}</span>
+                      <span className="font-semibold text-xs" style={{ color: map.accent }}>
+                        {isSelected ? 'Active Route ●' : 'Inspect Route →'}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
 
         {/* Selected Roadmap Route Sheet */}
         <div className="bg-white rounded-3xl border border-[#DDE2DA] shadow-soft p-6 sm:p-10 space-y-8 text-left">
@@ -414,6 +500,8 @@ export const AtlasLanding = ({
           </div>
 
         </div>
+        </>
+        )}
 
       </div>
     </div>
