@@ -2,6 +2,34 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-22: Simplify Section 1.5 Formula Presentation and Codify Faculty-First Rule
+
+- **Type**: academic-content / faculty-first / complements-1.5 / zero-dash / natural-integration
+- **Summary**: Simplified Section 1.5 complement formula presentation to naturally integrate verified faculty formulas into existing definition cards, eliminating redundant panels, repetitive walkthroughs, and promotional labels:
+  1. **Permanent Faculty-First Academic Content Rule**:
+     - Codified in `.agents/rules/faculty_first_academic_content.md` and Convention 7 in `AGENTS.md`.
+     - Mandates that faculty classroom notes and formulas take presentation priority ($r^n - N - 1$ primary, $(r^n - 1) - N$ secondary) and are naturally integrated into existing lesson content rather than introduced as separate panels or promotional badges.
+  2. **Canonical Section 1.5 Formulas Displayed Naturally**:
+     - Radix complement: `r's complement = r^n - N` (for N != 0)
+     - Diminished radix complement: `(r - 1)'s complement = r^n - N - 1` (Primary displayed expression)
+     - Secondary textbook equivalent: `(r^n - 1) - N`
+     - Bidirectional relationship: `(r - 1)'s complement = r's complement - 1`, and `r's complement = (r - 1)'s complement + 1`
+     - Where: `r = radix or base`, `n = fixed number of digits (for N != 0)`, `N = given number`.
+     - Special representation for zero (N = 0) preserved in existing explanations.
+  3. **Removed Redundant Classroom Formula Panel**:
+     - Removed the standalone `FacultyClassroomFormulaCard` panel from Overview, Finding Complements, and Cheat Sheet in `Section15View.jsx`.
+     - Removed unused `FacultyClassroomFormulaCard` component from `Section15Components.jsx`.
+     - Replaced promotional labels (such as "Primary Classroom Formula", "Faculty Classroom Reference") with clean standard academic headings ("For an n-digit Integer", "Textbook Equivalent").
+  4. **Data and Resource Alignment**:
+     - Preserved corrected formulas in `src/data/dldSection15Data.js`, `src/data/dldSubjectResourcesData.js` (`u1-rev-15`), and `src/data/dldUnit1.js` without promotional phrasing.
+     - Preserved all verified complement solvers, step generators, and Practice Arena question banks.
+  5. **Verification and Production Deployment**:
+     - Mathematical audit (`verifySection15Math.mjs`): 100% passed with zero errors.
+     - Master SSR suite (`testMasterSSR.mjs`): All components including `Section15View` rendered cleanly.
+     - Zero-Dash audit: Strictly 0 em-dashes and 0 en-dashes across all modified files.
+     - Production build (`npm run build`): Built cleanly with 0 errors.
+- **Affected Files**: `AGENTS.md`, `.agents/rules/faculty_first_academic_content.md`, `src/components/Section15Components.jsx`, `src/components/Section15View.jsx`, `src/data/dldSection15Data.js`, `src/data/dldSubjectResourcesData.js`, `src/data/dldUnit1.js`, `scripts/testMasterSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-22: Fix DLD Section 1.4A Solution Reveal Crash and Audit All DLD Sections
 
 - **Type**: bugfix / dld-workbench / solution-reveal / interaction-testing / zero-dash

@@ -175,14 +175,23 @@ export const Section15View = ({ section = section15Data }) => {
                     <div className="text-xs font-bold text-[#1E293B]">General Mathematical Formula:</div>
                     <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-sm sm:text-base font-bold text-[#0F172A] shadow-2xs">
                       {fam.familyId === "diminished" ? (
-                        <span>C<sub>r-1</sub>(N) = (r<sup>n</sup> - r<sup>-m</sup>) - N</span>
+                        <div className="space-y-1">
+                          <div>C<sub>r-1</sub>(N) = r<sup>n</sup> - N - 1</div>
+                          <div className="text-[11px] text-[#64748B] font-normal">
+                            Textbook equivalent: (r<sup>n</sup> - 1) - N
+                          </div>
+                        </div>
                       ) : (
                         <span>C<sub>r</sub>(N) = r<sup>n</sup> - N</span>
                       )}
                     </div>
-                    {fam.relationFormula && (
+                    {fam.familyId === "diminished" ? (
+                      <div className="text-xs font-bold text-[#D97706] pt-0.5">
+                        Relationship: (r - 1)'s complement = r's complement - 1
+                      </div>
+                    ) : (
                       <div className="text-xs font-bold text-[#4F46E5] pt-0.5">
-                        Relation: C<sub>r</sub>(N) = [(r - 1)'s Complement] + 1 (at LSB)
+                        Relationship: r's complement = (r - 1)'s complement + 1 (at LSB)
                       </div>
                     )}
                     <div className="text-[10px] text-[#64748B]">{fam.parameters}</div>
@@ -276,6 +285,14 @@ export const Section15View = ({ section = section15Data }) => {
                       <div className="space-y-1">
                         <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-digit Integer:</span>
                         <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          9's Complement = 10<sup>n</sup> - N - 1
+                        </div>
+                      </div>
+
+                      {/* Secondary Textbook Equivalent */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">Textbook Equivalent:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
                           9's Complement = (10<sup>n</sup> - 1) - N
                         </div>
                       </div>
@@ -291,7 +308,7 @@ export const Section15View = ({ section = section15Data }) => {
                       {/* Formula Example */}
                       <div className="p-2.5 rounded-lg bg-[#FFFBEB] border border-[#FDE68A] text-[#92400E] text-xs">
                         <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
-                        <span>For N = 37 (n = 2): (10<sup>2</sup> - 1) - 37 = 99 - 37 = <strong className="font-black text-[#B45309]">62</strong></span>
+                        <span>For N = 37 (n = 2): 10<sup>2</sup> - 37 - 1 = 100 - 37 - 1 = <strong className="font-black text-[#B45309]">62</strong> (Textbook check: (10<sup>2</sup> - 1) - 37 = 99 - 37 = <strong className="font-black text-[#B45309]">62</strong>)</span>
                       </div>
                     </div>
 
@@ -506,6 +523,14 @@ export const Section15View = ({ section = section15Data }) => {
                       <div className="space-y-1">
                         <span className="text-[10px] uppercase font-bold text-[#64748B] block">For an n-bit Integer:</span>
                         <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-sm sm:text-base font-bold shadow-2xs">
+                          1's Complement = 2<sup>n</sup> - N - 1
+                        </div>
+                      </div>
+
+                      {/* Secondary Textbook Equivalent */}
+                      <div className="space-y-1">
+                        <span className="text-[10px] uppercase font-bold text-[#64748B] block">Textbook Equivalent:</span>
+                        <div className="p-2.5 rounded-lg bg-white border border-[#DCE7E1] text-[#0F172A] font-mono text-xs sm:text-sm font-semibold shadow-2xs">
                           1's Complement = (2<sup>n</sup> - 1) - N
                         </div>
                       </div>
@@ -521,7 +546,7 @@ export const Section15View = ({ section = section15Data }) => {
                       {/* Formula Example */}
                       <div className="p-2.5 rounded-lg bg-[#DCFCE7] border border-[#86EFAC] text-[#14532D] text-xs">
                         <strong className="block text-[11px] mb-0.5">Formula Example:</strong>
-                        <span>For N = (1010)<sub>2</sub> (n = 4, where 2<sup>4</sup> - 1 = 15<sub>10</sub> = 1111<sub>2</sub>): 1111<sub>2</sub> - 1010<sub>2</sub> = <strong className="font-black text-[#15803D]">(0101)<sub>2</sub></strong></span>
+                        <span>For N = (1010)<sub>2</sub> (n = 4, where 2<sup>4</sup> = 16): 2<sup>4</sup> - 10 - 1 = 16 - 10 - 1 = 5<sub>10</sub> = <strong className="font-black text-[#15803D]">(0101)<sub>2</sub></strong> (Textbook check: 1111<sub>2</sub> - 1010<sub>2</sub> = <strong className="font-black text-[#15803D]">(0101)<sub>2</sub></strong>)</span>
                       </div>
                     </div>
 

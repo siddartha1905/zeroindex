@@ -66,12 +66,11 @@ The codebase has undergone automated execution and verification:
 
 ## 3. Current Development Stage and Next Actions
 
-* **Current Stage**: Admin Publishing Control System merged to `main` (merge commit `e1a28c2`). Individual Bridge domain visibility fully resolved and verified. Dynamic 4-card public layout enforced (Verbal, Coding, Core CS, Resume) with 3 hidden domains (Quant, Logical, Interview) strictly inaccessible to anonymous visitors. Safe active domain selection defaults to first accessible domain, and clean empty-state fallback is implemented if all domains are hidden. Admin preview mode preserves full inspection for verified owner.
+* **Current Stage**: Section 1.5 formula presentation simplified to natural integration. Removed redundant standalone classroom panel and promotional labels. Diminished radix formula r^n - N - 1 preserved as primary expression with (r^n - 1) - N as secondary textbook equivalent. Codified natural integration requirement in AGENTS.md and .agents/rules/faculty_first_academic_content.md. Authorized by faculty author for Git commit, GitHub push, and Vercel production deployment.
 * **Verified Evidence**:
-  - `node scripts/testBridgeVisibilityLifecycle.mjs`: 46/46 passed.
-  - `node scripts/verifyAdminControlSystem.mjs`: 64/64 passed.
-  - `npm run build`: built in 4.08s with zero errors.
-  - Live Supabase: The Bridge pillar is Public; 3 domains hidden, 4 domains public. Direct anonymous queries and routes strictly enforce individual domain restrictions.
-  - Atlas branches (`atlas-phase-a1-development`, `atlas-phase-a2-development`) remain untouched and preserved separately.
-* **Immediate Next Action**: Report individual Bridge domain visibility resolution to faculty owner and stage/commit updates.
-* **Downstream Progression**: Maintain all work cleanly on `main`. Push to GitHub and deploy to Vercel upon faculty authorization.
+  - `node scripts/verifySection15Math.mjs`: All Section 1.5 mathematical audit checks passed with zero errors.
+  - `node scripts/testMasterSSR.mjs`: All master portal components including `Section15View` rendered cleanly.
+  - Zero-Dash audit: Strictly 0 em-dashes and 0 en-dashes across all code, content, and documentation.
+  - `npm run build`: built cleanly with zero errors.
+* **Immediate Next Action**: Commit on `main`, push to GitHub, and confirm Vercel deployment succeeds.
+* **Downstream Progression**: Maintain all work cleanly on `main`. Zero unauthorized production modifications.

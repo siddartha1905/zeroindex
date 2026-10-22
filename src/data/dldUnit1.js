@@ -127,12 +127,12 @@ export const dldUnit1 = {
         {
           type: "r's Complement",
           formula: "r^n - N (for N ≠ 0)",
-          explanation: "In binary: 2's complement = 1's complement + 1. In decimal: 10's complement = 9's complement + 1."
+          explanation: "In binary: 2's complement = 1's complement + 1. In decimal: 10's complement = 9's complement + 1. Relationship: r's complement = (r-1)'s complement + 1."
         },
         {
           type: "(r-1)'s Complement",
-          formula: "(r^n - 1) - N",
-          explanation: "In binary: 1's complement (invert all bits: 0->1, 1->0). In decimal: 9's complement (subtract each digit from 9)."
+          formula: "r^n - N - 1 (or (r^n - 1) - N)",
+          explanation: "In binary: 1's complement (invert all bits: 0->1, 1->0). In decimal: 9's complement (subtract each digit from 9). Relationship: (r-1)'s complement = r's complement - 1."
         }
       ],
       subtractionRules: [

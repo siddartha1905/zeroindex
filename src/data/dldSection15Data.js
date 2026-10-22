@@ -102,7 +102,9 @@ export const section15Data = {
         familyId: "diminished",
         name: "Diminished Radix Complement [(r - 1)'s Complement]",
         baseFormula: "C_{r-1}(N) = (r^n - r^{-m}) - N",
-        integerFormula: "C_{r-1}(N) = (r^n - 1) - N   [for pure n-digit integers]",
+        integerFormula: "C_{r-1}(N) = r^n - N - 1   [for pure n-digit integers]",
+        textbookFormula: "C_{r-1}(N) = (r^n - 1) - N   [textbook equivalent]",
+        relationshipFormula: "(r - 1)'s complement = r's complement - 1",
         parameters: "where r = radix/base, n = number of integer digits, m = number of fractional digits",
         explanation: "Obtained by subtracting every individual digit of N from the maximum digit value (r - 1) allowed in that number base.",
         members: [
@@ -122,7 +124,7 @@ export const section15Data = {
         familyId: "radix",
         name: "Radix Complement [r's Complement]",
         baseFormula: "C_r(N) = r^n - N",
-        relationFormula: "C_r(N) = [(r - 1)'s Complement of N] + 1  (at the LSB position)",
+        relationFormula: "r's complement = (r - 1)'s complement + 1  (at the LSB position)",
         parameters: "where r = radix/base, n = number of integer digits in N",
         explanation: "Always equal to the diminished radix complement plus 1 added to the least significant position (LSB).",
         members: [
@@ -154,9 +156,10 @@ export const section15Data = {
       threeStages: {
         stage1: {
           title: "Stage 1: Formal Mathematical Definition & Formula",
-          ninesFormulaInteger: "9's Complement = (10^n - 1) - N",
+          ninesFormulaInteger: "9's Complement = 10^n - N - 1",
+          ninesFormulaTextbook: "9's Complement = (10^n - 1) - N",
           ninesFormulaGeneral: "9's Complement = (10^n - 10^-m) - N",
-          ninesExample: "For N = 37 (n = 2): (10^2 - 1) - 37 = 99 - 37 = 62",
+          ninesExample: "For N = 37 (n = 2): 10^2 - 37 - 1 = 100 - 37 - 1 = 62 (Textbook: (10^2 - 1) - 37 = 99 - 37 = 62)",
           tensFormulaInteger: "10's Complement = 10^n - N = (9's Complement) + 1",
           tensFormulaGeneral: "10's Complement = 10^n - N = (9's Complement) + 10^-m",
           tensExample: "For N = 37 (n = 2): 10^2 - 37 = 100 - 37 = 63 (or 62 + 1 = 63)",
@@ -389,12 +392,13 @@ export const section15Data = {
       threeStages: {
         stage1: {
           title: "Stage 1: Formal Mathematical Definition & Formula",
-          onesFormulaInteger: "1's Complement = (2^n - 1) - N",
+          onesFormulaInteger: "1's Complement = 2^n - N - 1",
+          onesFormulaTextbook: "1's Complement = (2^n - 1) - N",
           onesFormulaGeneral: "1's Complement = (2^n - 2^-m) - N",
-          onesExample: "For N = (1010)₂ (n = 4, where 2⁴ - 1 = 15₁₀ = 1111₂): 1111₂ - 1010₂ = (0101)₂",
+          onesExample: "For N = (1010)₂ (n = 4, where 2⁴ = 16): 2⁴ - 10 - 1 = 16 - 10 - 1 = 5₁₀ = (0101)₂ (Textbook: (2⁴ - 1) - 10 = 15 - 10 = (0101)₂)",
           twosFormulaInteger: "2's Complement = 2^n - N = (1's Complement) + 1 (at LSB)",
           twosFormulaGeneral: "2's Complement = 2^n - N = (1's Complement) + 2^-m",
-          twosExample: "For N = (1010)₂ (n = 4): 0101₂ + 1 = (0110)₂",
+          twosExample: "For N = (1010)₂ (n = 4): 2⁴ - 10 = 16 - 10 = 6₁₀ = (0110)₂ (or 0101₂ + 1 = (0110)₂)",
           variables: [
             { symbol: "r", meaning: "Base / Radix (2 for Binary)" },
             { symbol: "n", meaning: "Number of Integer Bits (left of binary point)" },
@@ -1505,14 +1509,14 @@ export const section15Data = {
       {
         complementFamily: "Diminished Radix [(r - 1)'s Complement]",
         types: "1's Complement (Base 2) & 9's Complement (Base 10)",
-        howToFind: "Subtract each digit from (r - 1). For binary: invert every bit (0 <-> 1). For decimal: subtract each digit from 9.",
+        howToFind: "Formula: r^n - N - 1 (or (r^n - 1) - N). Subtract each digit from (r - 1). For binary: invert every bit (0 <-> 1). For decimal: subtract each digit from 9.",
         whenCarryOne: "End-Around Carry: Add the carry (+1) to the least significant position (LSB) of the raw sum.",
         whenCarryZero: "No Carry: Result is NEGATIVE (-). Take the (r - 1)'s complement of the sum and prefix a minus sign."
       },
       {
         complementFamily: "Radix [r's Complement]",
         types: "2's Complement (Base 2) & 10's Complement (Base 10)",
-        howToFind: "[(r - 1)'s Complement] + 1 at LSB. Or use exam scanning shortcuts (Keep up to first 1, flip rest / 9-9-9-10).",
+        howToFind: "Formula: r^n - N = [(r - 1)'s Complement] + 1 at LSB. Or use exam scanning shortcuts (Keep up to first 1, flip rest / 9-9-9-10).",
         whenCarryOne: "Discard Carry: An extra carry is produced out of the MSB. Simply discard it! Remaining digits are the final positive answer.",
         whenCarryZero: "No Carry: Result is NEGATIVE (-). Take the r's complement of the sum and prefix a minus sign."
       }

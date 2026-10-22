@@ -232,14 +232,15 @@ export const dldSubjectResourcesData = {
         title: "Section 1.5: Complements & Complement Subtraction",
         topic: "1's Complement & 2's Complement",
         bullets: [
-          "For base r and n digits: Radix complement is r^n - N; Diminished radix complement is (r^n - 1) - N.",
+          "For base r and n digits: Radix complement is r^n - N; Diminished radix complement is r^n - N - 1 (textbook equivalent: (r^n - 1) - N).",
+          "Relationship: (r - 1)'s complement = r's complement - 1, and r's complement = (r - 1)'s complement + 1.",
           "In binary: 1's complement is obtained by bitwise inversion (change 0 to 1 and 1 to 0).",
           "2's complement equals (1's complement + 1); fast shortcut: leave trailing zeros and first 1 unchanged, invert all bits to the left.",
           "Subtraction M - N via 2's complement: Add M + (2's comp of N). If end-carry occurs, discard it (result is positive). If no end-carry, result is negative -(2's comp of sum)."
         ],
         keyRules: [
-          { rule: "1's Complement", detail: "Bitwise NOT: (2^n - 1) - N" },
-          { rule: "2's Complement", detail: "1's complement + 1: 2^n - N" },
+          { rule: "1's Complement", detail: "2^n - N - 1 (textbook equivalent: (2^n - 1) - N)" },
+          { rule: "2's Complement", detail: "2^n - N = 1's complement + 1" },
           { rule: "End-Around Carry (1's comp)", detail: "End carry = 1 implies positive, add 1 to LSB; End carry = 0 implies negative result in 1's comp" },
           { rule: "Discard Carry (2's comp)", detail: "End carry = 1 implies positive, discard carry; End carry = 0 implies negative result in 2's comp" }
         ]

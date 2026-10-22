@@ -41,7 +41,12 @@ async function runMasterSSR() {
     const htmlUnit1 = ReactDOMServer.renderToString(React.createElement(UnitWorkspace, { section: dldUnit1Master.sections[0] }));
     console.log(`[PASS] UnitWorkspace (Unit 1, section 1.1) rendered successfully (${htmlUnit1.length} bytes).`);
 
-    // 5. Section 1.7 View
+    // 5. Section 1.5 View
+    const { Section15View } = await vite.ssrLoadModule('/src/components/Section15View.jsx');
+    const htmlSec15 = ReactDOMServer.renderToString(React.createElement(Section15View));
+    console.log(`[PASS] Section15View rendered successfully (${htmlSec15.length} bytes).`);
+
+    // 6. Section 1.7 View
     const { Section17View } = await vite.ssrLoadModule('/src/components/Section17View.jsx');
     const htmlSec17 = ReactDOMServer.renderToString(React.createElement(Section17View));
     console.log(`[PASS] Section17View rendered successfully (${htmlSec17.length} bytes).`);

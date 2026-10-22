@@ -317,6 +317,24 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:** `testBridgeVisibilityLifecycle.mjs` passed 46/46 checks; `verifyAdminControlSystem.mjs` passed 64/64 checks; clean Vite build in 4.08s (0 errors); Zero-Dash audit passed.
 - **Verification / Follow-up Requirements:** Maintain changes on `main`. Push to GitHub and deploy to Vercel upon user authorization.
 
+## D-039 | 2026-10-22 | Permanent Faculty-First Academic Content Rule and Section 1.5 Complement Formula Correction
+
+- **Decision:**
+  1. Established the permanent Faculty-First Academic Content Rule in `.agents/rules/faculty_first_academic_content.md` and added Rule 7 to `AGENTS.md`. Clarified permanent convention: When faculty-supplied classroom notes or formulas are provided, verify their technical correctness and integrate them naturally into the appropriate existing lesson content. Do not introduce separate Faculty Method panels, badges, new tabs, or repetitive explanations.
+  2. Integrated verified complement formulas naturally inside the existing Section 1.5 definition and formula cards:
+     - Radix complement: r's complement = r^n - N (for N != 0)
+     - Diminished radix complement: (r - 1)'s complement = r^n - N - 1 (Primary displayed expression)
+     - Secondary textbook equivalent: (r^n - 1) - N
+     - Relationship: (r - 1)'s complement = r's complement - 1, and r's complement = (r - 1)'s complement + 1
+     - Special representation for zero (N = 0) preserved in existing explanations.
+  3. Removed the redundant standalone `FacultyClassroomFormulaCard` panel from Overview, Finding Complements, and Cheat Sheet, eliminating duplicate walkthroughs, parameter lists, and promotional UI labels.
+  4. Updated `dldSection15Data.js`, `Section15View.jsx`, `dldSubjectResourcesData.js` (`u1-rev-15`), and `dldUnit1.js` to ensure clean, standard academic presentation without altering verified solvers, algorithms, or Practice Arena question banks.
+  5. Verified zero em-dashes and zero en-dashes across all modified files, passed `verifySection15Math.mjs`, passed `testMasterSSR.mjs`, and compiled production bundle cleanly. Authorized for Git commit, GitHub push, and Vercel production deployment.
+- **Rationale / Alternatives Considered:** The initial integration created an oversized, repetitive classroom panel with promotional badges ("Faculty Classroom Reference") that clashed with the clean, natural textbook editorial aesthetic of ZeroIndex. Natural integration into existing cards preserves the faculty author's exact mathematical arrangement while keeping the visual layout compact and balanced.
+- **Affected Files and Components:** `AGENTS.md`, `.agents/rules/faculty_first_academic_content.md`, `src/components/Section15Components.jsx`, `src/components/Section15View.jsx`, `src/data/dldSection15Data.js`, `src/data/dldSubjectResourcesData.js`, `src/data/dldUnit1.js`, `scripts/testMasterSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+- **Approval Evidence:** `verifySection15Math.mjs` passed with zero errors, `testMasterSSR.mjs` passed SSR rendering, `npm run build` completed cleanly, zero em-dashes and zero en-dashes verified. Faculty author authorized production deployment.
+- **Verification / Follow-up Requirements:** Commit on `main`, push to GitHub, and confirm Vercel deployment succeeds.
+
 ---
 
 ## Decision Record Template
