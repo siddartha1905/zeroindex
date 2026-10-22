@@ -2,6 +2,27 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-22: Resolve Atlas Pillar Blank Page Crash and Add Universal Route Error Boundary
+
+- **Type**: bugfix / atlas-pillar / error-boundary / ssr-testing / zero-dash
+- **Summary**: Diagnosed and resolved the production issue where opening Pillar 2 (The Atlas) resulted in an empty page:
+  1. **React Hook Import Resolution**:
+     - Fixed `src/components/AtlasLanding.jsx` where `useEffect` was invoked at line 63 to manage active roadmap fallbacks without being imported from `react` on line 1.
+     - In production builds, this triggered `ReferenceError: useEffect is not defined`, unmounting the React DOM and leaving a blank white screen.
+     - Updated import to `import React, { useState, useEffect } from 'react';`.
+  2. **Application Route Error Boundary**:
+     - Implemented `RouteErrorBoundary` in `src/App.jsx` wrapping `<main>` route transitions.
+     - Prevents any uncaught runtime error in individual views from collapsing the application into an unrecoverable blank page; displays a styled fallback card with a button to return home.
+  3. **Automated SSR & Test Coverage**:
+     - Enhanced `scripts/testMasterSSR.mjs` to include SSR rendering tests for both `AtlasLanding` (Pillar 2, 26,094 bytes) and `BridgeLanding` (Pillar 3, 23,398 bytes).
+     - Confirmed all 64 admin tests, SSR tests, and universal visibility tests pass cleanly with 0 errors.
+  4. **Database Authority & Unpublished State Verification**:
+     - Preserved live Supabase database authority; zero SQL migrations run or staged.
+     - Confirmed that with unpublished Atlas roadmaps, the Atlas pillar opens cleanly with its authentic "Curriculum Roadmaps Under Editorial Review" empty state without white screens.
+  5. **Zero-Dash Compliance**:
+     - Verified strictly zero em-dashes and zero en-dashes across all modified files.
+- **Affected Files**: `src/components/AtlasLanding.jsx`, `src/App.jsx`, `scripts/testMasterSSR.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-21: Individual Bridge Domain Visibility Enforcement and Safe Domain Selection
 
 - **Type**: bugfix / bridge-pillar / visibility-enforcement / admin-preview / zero-dash

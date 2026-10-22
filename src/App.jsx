@@ -27,6 +27,59 @@ import {
   getWorkspaceTabRegistryId
 } from './data/centralContentRegistry';
 
+class RouteErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('RouteErrorBoundary caught an error:', error, errorInfo);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.section !== this.props.section && this.state.hasError) {
+      this.setState({ hasError: false, error: null });
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="max-w-2xl mx-auto my-16 p-8 bg-white border border-[#DDE2DA] rounded-3xl shadow-soft text-center space-y-4">
+          <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center mx-auto text-xl font-bold font-mono">
+            !
+          </div>
+          <div className="space-y-1">
+            <h2 className="font-editorial text-2xl font-bold text-[#25352D]">
+              This section encountered an unexpected display issue
+            </h2>
+            <p className="text-xs text-[#5F6C64] leading-relaxed max-w-md mx-auto">
+              A temporary issue occurred while rendering this view. You can return to the ZeroIndex homepage or explore another section.
+            </p>
+          </div>
+          <div className="pt-2">
+            <button
+              onClick={() => {
+                this.setState({ hasError: false, error: null });
+                if (this.props.onReset) this.props.onReset();
+              }}
+              className="px-5 py-2.5 rounded-xl bg-[#245B4B] hover:bg-[#28755E] text-white text-xs font-bold transition-all shadow-xs cursor-pointer"
+            >
+              Return to Homepage
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 export function App() {
   // Navigation Section State:
   // 'home' | 'workbench' | 'atlas' | 'bridge' | 'readout' | 'folio' | 'dld-home' | 'dld-workspace' | 'admin-dashboard' | 'admin-login'
@@ -386,6 +439,7 @@ export function App() {
             PRIMARY VIEW ROUTER
         ===================================================================== */}
         <main id="main-content" tabIndex="-1" className="flex-1 outline-none">
+          <RouteErrorBoundary section={currentSection} onReset={() => navigateTo('home')}>
           
           {/* Admin Login Route */}
           {currentSection === 'admin-login' && (
@@ -686,6 +740,7 @@ export function App() {
             })()
           )}
 
+          </RouteErrorBoundary>
         </main>
 
         {/* Render SiteFooter on all top-level public pages */}

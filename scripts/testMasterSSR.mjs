@@ -51,6 +51,37 @@ async function runMasterSSR() {
     const htmlPortal = ReactDOMServer.renderToString(React.createElement(DldWorkspace));
     console.log(`[PASS] DldWorkspace master portal rendered successfully (${htmlPortal.length} bytes).`);
 
+    // 7. AtlasLanding (Pillar 2)
+    const { AtlasLanding } = await vite.ssrLoadModule('/src/components/AtlasLanding.jsx');
+    const htmlAtlas = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
+      onNavigateHome: () => {},
+      onNavigateWorkbench: () => {},
+      onNavigateSection: () => {},
+      contentOverrides: {},
+      isAdminPreview: false
+    }));
+    console.log(`[PASS] AtlasLanding (Pillar 2) rendered successfully (${htmlAtlas.length} bytes).`);
+
+    const htmlAtlasEmpty = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
+      onNavigateHome: () => {},
+      onNavigateWorkbench: () => {},
+      onNavigateSection: () => {},
+      contentOverrides: { 'atlas-programming-foundations': false },
+      isAdminPreview: false
+    }));
+    console.log(`[PASS] AtlasLanding (Pillar 2, editorial review state) rendered successfully (${htmlAtlasEmpty.length} bytes).`);
+
+    // 8. BridgeLanding (Pillar 3)
+    const { BridgeLanding } = await vite.ssrLoadModule('/src/components/BridgeLanding.jsx');
+    const htmlBridge = ReactDOMServer.renderToString(React.createElement(BridgeLanding, {
+      onNavigateHome: () => {},
+      onNavigateWorkbench: () => {},
+      onNavigateSection: () => {},
+      contentOverrides: {},
+      isAdminPreview: false
+    }));
+    console.log(`[PASS] BridgeLanding (Pillar 3) rendered successfully (${htmlBridge.length} bytes).`);
+
     console.log('\nALL ZEROINDEX CORE COMPONENTS RENDERED CLEANLY VIA SSR WITH ZERO RUNTIME EXCEPTIONS!\n');
     await vite.close();
   } catch (err) {
