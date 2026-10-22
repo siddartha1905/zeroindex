@@ -351,8 +351,8 @@ export const centralContentRegistry = [
     contentType: 'roadmap',
     title: 'Core Computer Science and Programming Foundations',
     route: 'atlas/programming-foundations',
-    editorialStatus: 'published',
-    isPublic: true,
+    editorialStatus: 'planned',
+    isPublic: false,
     description: 'From mental execution models to systems awareness and algorithmic intuition.'
   },
   {
@@ -462,8 +462,8 @@ export const centralContentRegistry = [
     contentType: 'roadmap',
     title: 'Computer Systems and Architecture Pathway',
     route: 'atlas/systems-architecture',
-    editorialStatus: 'published',
-    isPublic: true,
+    editorialStatus: 'planned',
+    isPublic: false,
     description: 'From silicon gates and instruction set architectures to virtual memory and kernels.'
   },
   {
@@ -573,8 +573,8 @@ export const centralContentRegistry = [
     contentType: 'roadmap',
     title: 'Data Science and Machine Learning Foundations',
     route: 'atlas/data-science',
-    editorialStatus: 'published',
-    isPublic: true,
+    editorialStatus: 'planned',
+    isPublic: false,
     description: 'Matrix decompositions, gradient calculus, statistical learning, and neural representations.'
   },
   {

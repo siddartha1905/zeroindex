@@ -53,23 +53,23 @@ async function runMasterSSR() {
 
     // 7. AtlasLanding (Pillar 2)
     const { AtlasLanding } = await vite.ssrLoadModule('/src/components/AtlasLanding.jsx');
-    const htmlAtlas = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
+    const htmlAtlasPublic = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
       onNavigateHome: () => {},
       onNavigateWorkbench: () => {},
       onNavigateSection: () => {},
       contentOverrides: {},
       isAdminPreview: false
     }));
-    console.log(`[PASS] AtlasLanding (Pillar 2) rendered successfully (${htmlAtlas.length} bytes).`);
+    console.log(`[PASS] AtlasLanding (Pillar 2, public review state) rendered successfully (${htmlAtlasPublic.length} bytes).`);
 
-    const htmlAtlasEmpty = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
+    const htmlAtlasAdmin = ReactDOMServer.renderToString(React.createElement(AtlasLanding, {
       onNavigateHome: () => {},
       onNavigateWorkbench: () => {},
       onNavigateSection: () => {},
-      contentOverrides: { 'atlas-programming-foundations': false },
-      isAdminPreview: false
+      contentOverrides: {},
+      isAdminPreview: true
     }));
-    console.log(`[PASS] AtlasLanding (Pillar 2, editorial review state) rendered successfully (${htmlAtlasEmpty.length} bytes).`);
+    console.log(`[PASS] AtlasLanding (Pillar 2, admin preview state) rendered successfully (${htmlAtlasAdmin.length} bytes).`);
 
     // 8. BridgeLanding (Pillar 3)
     const { BridgeLanding } = await vite.ssrLoadModule('/src/components/BridgeLanding.jsx');

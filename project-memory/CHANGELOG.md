@@ -2,6 +2,16 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-22: Align Static Atlas Roadmap Metadata with Database Publication Authority
+
+- **Type**: metadata / central-content-registry / atlas-pillar / zero-dash
+- **Summary**: Aligned static Atlas registry entries in `src/data/centralContentRegistry.js` with the live Supabase database state:
+  1. Updated `atlas-programming-foundations`, `atlas-systems-architecture`, and `atlas-data-science` from `published`/`isPublic: true` to `editorialStatus: 'planned'` and `isPublic: false`.
+  2. Verified that exactly 0 Atlas roadmaps default to public, ensuring unpublished roadmaps remain hidden even in offline fallback modes where Supabase is unconfigured.
+  3. Preserved live Supabase database authority; zero SQL migrations run or staged.
+  4. Updated `scripts/testMasterSSR.mjs` to test both the public review empty state and the admin preview state.
+- **Affected Files**: `src/data/centralContentRegistry.js`, `scripts/testMasterSSR.mjs`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-22: Resolve Atlas Pillar Blank Page Crash and Add Universal Route Error Boundary
 
 - **Type**: bugfix / atlas-pillar / error-boundary / ssr-testing / zero-dash
