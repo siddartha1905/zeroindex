@@ -24,13 +24,14 @@ import {
   SubtractionWhyCarryCard,
   StandardClassroomMethodGrid
 } from './Section15Components';
+import { section15Data } from '../data/dldSection15Data.js';
 
 /**
  * Section 1.5: Complements (1's, 2's, 9's & 10's Complements)
  * Full 6-Tab View
  * Strict formatting: ZERO em-dashes and ZERO en-dashes.
  */
-export const Section15View = ({ section }) => {
+export const Section15View = ({ section = section15Data }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [subTab15A, setSubTab15A] = useState("decimal");
   const [subTab15B, setSubTab15B] = useState("9s");
@@ -45,7 +46,8 @@ export const Section15View = ({ section }) => {
     }));
   };
 
-  const mixedQuestions = section.mixedExamChallenge || [];
+  const currentSection = section || section15Data;
+  const mixedQuestions = currentSection?.mixedExamChallenge || [];
   const filteredMixedQuestions = mixedQuestions.filter(q => {
     if (activeMixedFilter === "all") return true;
     return q.difficulty.toLowerCase() === activeMixedFilter.toLowerCase();

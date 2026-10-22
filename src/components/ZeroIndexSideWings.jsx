@@ -18,6 +18,7 @@ import {
   BrainCircuit,
   Calculator,
   Compass
+} from 'lucide-react';
 import { dldResourceConfig } from '../data/dldResourceConfig';
 import { dldSyllabus } from '../data/dldSyllabus';
 

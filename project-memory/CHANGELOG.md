@@ -2,6 +2,39 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-22: Fix DLD Section 1.4A Solution Reveal Crash and Audit All DLD Sections
+
+- **Type**: bugfix / dld-workbench / solution-reveal / interaction-testing / zero-dash
+- **Summary**: Diagnosed and completely resolved the runtime crash occurring when clicking "Reveal Step-by-Step Solution" in The Workbench -> Digital Logic Design -> Unit I -> Section 1.4A:
+  1. **Root Cause Identification**:
+     - Investigated `src/components/UnitWorkspace.jsx` where toggle button rendered `{isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}` across 5 practice sets.
+     - While `Eye` was imported from `lucide-react`, `EyeOff` was missing from the import list on line 35.
+     - In the default hidden state (`isRevealed = false`), the component rendered `<Eye />` cleanly without error.
+     - Clicking "Reveal Step-by-Step Solution" set `isRevealed = true`, triggering `ReferenceError: EyeOff is not defined` and causing the `RouteErrorBoundary` to catch the error.
+  2. **Comprehensive Codebase Audit**:
+     - Audited all DLD Unit I sections (1.1 to 1.7) and Unit II sections (2.1 to 2.5), shared interactive components, Practice Arena, and Solvers.
+     - Identified that `EyeOff` was correctly imported in `Section15View.jsx`, `Section16View.jsx`, and `Section17View.jsx`, but was missing exclusively in `UnitWorkspace.jsx`.
+     - Added `EyeOff` to imports in `src/components/UnitWorkspace.jsx`.
+     - Made `BitAlignedArithmeticGrid` column headers and result row dynamic using `multiOperands[0]?.bits?.length` and `result`, replacing hardcoded `(110001)₂ = 49₁₀`.
+     - Corrected carry value for column b4 in Question `p14a-2` in `src/data/dldSection14Data.js` from `carryToNext: "1"` to `"0"`.
+     - Fixed syntax error in `src/components/ZeroIndexSideWings.jsx` by properly closing the `lucide-react` import statement.
+     - Made `Section15View.jsx` and `Section16View.jsx` resilient against undefined `section` prop by providing authentic default fallbacks.
+  3. **Automated Regression Testing**:
+     - Created `scripts/testDldSolutionReveals.mjs` verifying:
+       - Hidden render state for all 6 Section 1.4A questions.
+       - Click interaction to revealed state and presence of detailed step-by-step mathematical working.
+       - Repeated clicking (second click toggles back to hidden; third click re-reveals cleanly).
+       - Question switching without stale or corrupted state across questions.
+       - Verification of final mathematical answers.
+       - Verification of Section 1.4B, 1.4C, 1.5, 1.6, 1.7, 2.1, 2.2, 2.3, 2.4, 2.5, Solvers, and Practice Arena.
+     - Confirmed all 140 assertions passed cleanly with 0 failures.
+  4. **Build and Academic Integrity**:
+     - Executed `npm run build`: 3,455 modules transformed, production bundle built in 4.64s with 0 errors.
+     - Executed `verifyUnit1Modernization.mjs` (117/117 passed) and `verifyUnit2Full.mjs` (953/953 passed).
+     - Verified strictly zero em-dashes and zero en-dashes across all modified files.
+- **Affected Files**: `src/components/UnitWorkspace.jsx`, `src/components/Section15View.jsx`, `src/components/Section16View.jsx`, `src/components/ZeroIndexSideWings.jsx`, `src/data/dldSection14Data.js`, `scripts/testDldSolutionReveals.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
+
 ## 2026-10-22: Align Static Atlas Roadmap Metadata with Database Publication Authority
 
 - **Type**: metadata / central-content-registry / atlas-pillar / zero-dash

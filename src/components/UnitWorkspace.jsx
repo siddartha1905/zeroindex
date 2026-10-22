@@ -33,6 +33,7 @@ import {
   ArrowLeft,
   AlertCircle,
   Eye,
+  EyeOff,
 } from 'lucide-react';
 import { Section15View } from './Section15View';
 import { Section16View } from './Section16View';
@@ -1161,10 +1162,14 @@ const BitAlignedArithmeticGrid = ({
               <thead>
                 <tr className="bg-white border-b border-[#DCE7E1]">
                   <th className="py-2 px-3 text-left text-[#64748B]">Operand</th>
-                  <th className="py-2 px-3 text-[#1E293B]">b₃ (Weight 8)</th>
-                  <th className="py-2 px-3 text-[#1E293B]">b₂ (Weight 4)</th>
-                  <th className="py-2 px-3 text-[#1E293B]">b₁ (Weight 2)</th>
-                  <th className="py-2 px-3 text-[#1E293B]">b₀ (Weight 1)</th>
+                  {multiOperands[0]?.bits?.map((_, bIdx) => {
+                    const bitWeight = multiOperands[0].bits.length - 1 - bIdx;
+                    return (
+                      <th key={bIdx} className="py-2 px-3 text-[#1E293B]">
+                        b{bitWeight} (Weight {Math.pow(2, bitWeight)})
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody className="divide-y divide-[#F2F7F4] bg-white">
@@ -1176,12 +1181,14 @@ const BitAlignedArithmeticGrid = ({
                     ))}
                   </tr>
                 ))}
-                <tr className="bg-[#FAF8F5] font-bold border-t-2 border-[#1E293B]">
-                  <td className="py-2.5 px-3 text-left text-[#15803D]">Result</td>
-                  <td colSpan={4} className="py-2.5 px-3 text-center text-sm text-[#15803D] font-black tracking-widest">
-                    (110001)₂ = 49₁₀
-                  </td>
-                </tr>
+                {result && (
+                  <tr className="bg-[#FAF8F5] font-bold border-t-2 border-[#1E293B]">
+                    <td className="py-2.5 px-3 text-left text-[#15803D]">Result</td>
+                    <td colSpan={multiOperands[0]?.bits?.length || 4} className="py-2.5 px-3 text-center text-sm text-[#15803D] font-black tracking-widest">
+                      {result}
+                    </td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>

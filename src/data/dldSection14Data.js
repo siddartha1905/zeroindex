@@ -277,7 +277,7 @@ export const section14Data = {
           { col: "b₁", count1s: "3 + 1 = 4", decSum: "4", binSum: "100", sumBit: "0", carryToNext: "0", carryToNext2: "1" },
           { col: "b₂", count1s: "2 + 0 = 2", decSum: "2", binSum: "10", sumBit: "0", carryToNext: "1", carryToNext2: "0" },
           { col: "b₃", count1s: "2 + 1 + 1 = 4", decSum: "4", binSum: "100", sumBit: "0", carryToNext: "0", carryToNext2: "1" },
-          { col: "b₄", count1s: "0 + 0 = 0", decSum: "0", binSum: "0", sumBit: "0", carryToNext: "1", carryToNext2: "0" },
+          { col: "b₄", count1s: "0 + 0 = 0", decSum: "0", binSum: "0", sumBit: "0", carryToNext: "0", carryToNext2: "0" },
           { col: "b₅", count1s: "0 + 1 = 1", decSum: "1", binSum: "1", sumBit: "1", carryToNext: "0", carryToNext2: "0" }
         ],
         solution: "Column b₀: 0 + 1 + 1 = 2₁₀ = (10)₂ -> Sum 0, Carry 1.\nColumn b₁: 1 + 1 + 1 + 1 (carry) = 4₁₀ = (100)₂ -> Sum 0, Carry 0 to b₂, Carry 1 to b₃!\nColumn b₂: 1 + 0 + 1 + 0 = 2₁₀ = (10)₂ -> Sum 0, Carry 1.\nColumn b₃: 1 + 1 + 0 + 1 (from b₂) + 1 (from b₁) = 4₁₀ = (100)₂ -> Sum 0, Carry 0 to b₄, Carry 1 to b₅.\nResult: (100000)₂ = (32)₁₀.\nCheck: 14 + 11 + 7 = 32."

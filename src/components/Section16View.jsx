@@ -30,13 +30,14 @@ import {
   FourBitMasterTable,
   ClassroomFlowchart3StepsSigned 
 } from './Section16Components';
+import { section16Data } from '../data/dldSection16Data.js';
 
 /**
  * Section 1.6: Signed Binary Numbers (Representation of Positive and Negative Numbers)
  * Full 6-Tab View
  * Strict formatting: ZERO em-dashes (\u2014) and ZERO en-dashes (\u2013).
  */
-export const Section16View = ({ section }) => {
+export const Section16View = ({ section = section16Data }) => {
   const [activeTab, setActiveTab] = useState("overview");
   const [subTab16A, setSubTab16A] = useState("twos");
   const [activeMixedFilter, setActiveMixedFilter] = useState("all");
@@ -49,7 +50,8 @@ export const Section16View = ({ section }) => {
     }));
   };
 
-  const mixedQuestions = section.mixedPracticeQuestions || [];
+  const currentSection = section || section16Data;
+  const mixedQuestions = currentSection?.mixedPracticeQuestions || [];
   const filteredMixedQuestions = mixedQuestions.filter(q => {
     if (activeMixedFilter === "all") return true;
     return q.difficulty.toLowerCase() === activeMixedFilter.toLowerCase();
