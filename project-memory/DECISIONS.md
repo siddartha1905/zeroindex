@@ -4,11 +4,11 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
-## D-001 | 2026-10-19 | Five Permanent Architectural Pillars
+## D-001 | 2026-10-19 | Five Permanent Architectural Pillars (Superseded by D-040)
 
-- **Decision**: The Workbench, The Atlas, The Bridge, The Readout, and The Folio are distinct, permanent top-level destinations.
-- **Rationale**: Academic curriculum courses, visual skill roadmaps, placement preparation, faculty monographs, and intellectual essays serve different student needs and modes of study.
-- **Consequences**: Preserve these five pillar labels, URLs, and navigation targets across all future refactors.
+- **Decision**: The Workbench, The Atlas, The Bridge, The Readout, and The Folio were designated as five permanent top-level destinations. (Superseded on 2026-10-27 by D-040 to consolidate into three sustainable pillars: The Workbench, The Atlas, and The Journal).
+- **Rationale**: Original five-pillar architecture served diverse content types but created maintenance fragmentation and split career/roadmap and essay/monograph content across separate destinations.
+- **Consequences**: Former Bridge is absorbed into The Atlas; Readout and Folio are unified into The Journal. Historical URLs are preserved via hash aliasing.
 
 ---
 
@@ -334,6 +334,102 @@ Record important architectural, design, and academic decisions with their date, 
 - **Affected Files and Components:** `AGENTS.md`, `.agents/rules/faculty_first_academic_content.md`, `src/components/Section15Components.jsx`, `src/components/Section15View.jsx`, `src/data/dldSection15Data.js`, `src/data/dldSubjectResourcesData.js`, `src/data/dldUnit1.js`, `scripts/testMasterSSR.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
 - **Approval Evidence:** `verifySection15Math.mjs` passed with zero errors, `testMasterSSR.mjs` passed SSR rendering, `npm run build` completed cleanly, zero em-dashes and zero en-dashes verified. Faculty author authorized production deployment.
 - **Verification / Follow-up Requirements:** Commit on `main`, push to GitHub, and confirm Vercel deployment succeeds.
+
+## D-040 | 2026-10-27 | Three-Pillar Public Ecosystem Architecture Consolidation
+
+- **Decision:** Approved the sustainable consolidation of ZeroIndex from five public pillars to three: (1) The Workbench (academic lessons, foundational concepts, interactive solvers, practice arena), (2) The Atlas (curriculum roadmaps combined with former Bridge 7-domain placement preparation guide), and (3) The Journal (technical systems dispatches combined with former Folio pedagogical essays). Legacy URLs (#bridge, #readout, #folio) are preserved via hash aliasing.
+- **Rationale / Alternatives Considered:** The initial five-pillar arrangement divided related roadmap/placement and essay/monograph content, creating navigational overhead for students and excessive maintenance requirements for a single-faculty author. Three focused pillars balance academic depth with sustainable editorial maintenance.
+- **Affected Files and Components:** `src/App.jsx`, `src/components/SiteHeader.jsx`, `src/components/SiteFooter.jsx`, `src/components/MainHome.jsx`, `src/components/KnowledgeTreeIllustration.jsx`, `src/data/centralContentRegistry.js`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/ROADMAP.md`.
+- **Approval Evidence:** Faculty author approved three-pillar architectural direction on 2026-10-27.
+- **Verification / Follow-up Requirements:** Implement public consolidation in Phase 3 after securing private Project Desk foundation. Maintain legacy hash routing aliases.
+
+---
+
+## D-041 | 2026-10-27 | Simplified Three-Stage Roadmap Architecture: Start -> Try -> Next
+
+- **Decision:** Standardized all curriculum and skills learning paths within The Atlas into a clear three-stage instructional progression: Start (prerequisites and fundamental syntax), Try (hands-on mini-projects and terminal challenges), and Next (advanced systems concepts, capstones, and interview readiness).
+- **Rationale / Alternatives Considered:** Complex multi-tiered competency matrices overwhelmed undergraduate learners. The Start -> Try -> Next structure aligns with the WHY-FIRST pedagogical philosophy and provides clear milestones for student self-evaluation.
+- **Affected Files and Components:** `src/data/atlasRoadmapsConfig.js`, `src/components/AtlasLanding.jsx`, `project-memory/DECISIONS.md`.
+- **Approval Evidence:** Faculty author approved the Start -> Try -> Next roadmap progression model.
+- **Verification / Follow-up Requirements:** Apply to upcoming roadmap authoring sprints in The Atlas.
+
+---
+
+## D-042 | 2026-10-27 | Sustainable Single-Faculty Content Development Cadence
+
+- **Decision:** Codified a flexible, quality-gated delivery cadence for ZeroIndex content development in place of rigid calendar-based milestones. Sections 2.6 and 2.7 of DLD Unit 2 and future Units 3 to 5 are scheduled and released based on classroom validation, mathematical verification, automated test passage, and faculty author review.
+- **Rationale / Alternatives Considered:** Rushed calendar deadlines risk academic inaccuracies and UI regressions. Quality gating ensures ZeroIndex maintains institutional credibility and pedagogical excellence.
+- **Affected Files and Components:** `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/CURRENT_STATE.md`.
+- **Approval Evidence:** Faculty author authorized flexible content delivery governance on 2026-10-27.
+- **Verification / Follow-up Requirements:** Maintain active development on designated feature branches; publish only upon full test passage and owner approval.
+
+---
+
+## D-043 | 2026-10-27 | Private Project Desk Secure Foundation: Schema, RLS, and Services
+
+- **Decision:** (1) Designed and authored owner-only PostgreSQL database migration `supabase/migrations/20261028000001_project_desk_foundation.sql` establishing `public.project_desk_items` and `public.project_desk_meta` tables; (2) Enforced strict security: revoked all public/anonymous permissions, granted SELECT strictly to verified owners via `public.is_admin()`, and required Authenticator Assurance Level 2 (AAL2) via `public.is_admin_aal2()` for all INSERT, UPDATE, and DELETE operations; (3) Built `src/services/projectDeskService.js` for CRUD operations, metadata management, and sanitized in-memory snapshot exports without local-storage duplication of private notes; (4) Authored curated initial seed inventory in `src/data/projectDeskSeedData.js` preserving active and superseded decisions; (5) Maintained strict zero em-dash and zero en-dash compliance across all code, schema comments, and documentation.
+- **Rationale / Alternatives Considered:** Keeps private faculty planning, teaching notes, and unpublished decisions strictly isolated from client-side bundles and anonymous database queries, without introducing complex external workflow frameworks or weakening existing publishing controls.
+- **Affected Files and Components:** `supabase/migrations/20261028000001_project_desk_foundation.sql`, `src/services/projectDeskService.js`, `src/data/projectDeskSeedData.js`, `scripts/verifyProjectDeskFoundation.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/ROADMAP.md`.
+- **Approval Evidence:** Verified with automated test script `scripts/verifyProjectDeskFoundation.mjs`; clean build; strict zero-dash audit passed.
+- **Verification / Follow-up Requirements:** Migration prepared locally; await faculty authorization before executing in the Supabase SQL Editor.
+
+---
+
+## D-044 | 2026-10-27 | Private Project Desk Minimal Admin Interface
+
+- **Decision:** Built the private Project Desk interface inside the existing Admin Dashboard behind a compact workspace switcher (`[Publishing Controls] | [Project Desk]`). Implemented three core areas: (1) Idea Inbox with quick entry, three-pillar/general categorization, teaching note classification, parking, and promotion to the development plan; (2) Development Desk organized into NOW, NEXT, and LATER columns, single primary active task convention, completion note prompt, and collapsible completed archive; (3) Project Memory section presenting the three-pillar vision, approved requirements, decision register (active vs superseded), and academic conventions. Implemented inline-editable "Continue Where I Left Off" status bar. Code-split the admin interface in `src/App.jsx` using `React.lazy` to keep admin chunks separate from public bundles.
+- **Rationale / Alternatives Considered:** Provides a lightweight, distraction-free planning desk directly inside the existing admin tool without introducing third-party Kanban libraries, cloud tracking services, or artificial deadlines.
+- **Affected Files and Components:** `src/components/admin/ProjectDeskView.jsx`, `src/components/admin/AdminDashboard.jsx`, `src/App.jsx`, `scripts/verifyProjectDeskPhase2UI.mjs`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`.
+- **Approval Evidence:** Verified locally with 21/21 SSR and UI test checks in `scripts/verifyProjectDeskPhase2UI.mjs`; clean build.
+- **Verification / Follow-up Requirements:** Verify mobile and desktop responsive views; harden data isolation.
+
+---
+
+## D-045 | 2026-10-27 | Project Desk Phase 2.5 Security Hardening and Migration Readiness
+
+- **Decision:** (1) Hardened private data isolation by clarifying `projectDeskSeedData.js` as public reference decisions and non-sensitive sample fixtures only, ensuring genuine confidential faculty notes and student observations are created strictly through the authenticated UI and stored in Supabase under RLS; (2) Eliminated silent in-memory fallbacks on production database errors, ensuring that database authorization or schema errors fail closed with descriptive error banners; (3) Added `checkProjectDeskStorageStatus()` and a prominent amber warning banner when the database migration is pending; (4) Added idempotent `seedInitialBaselineItems()` to populate empty cloud databases without creating duplicates; (5) Enforced `DEFAULT auth.uid()` in `supabase/migrations/20261028000001_project_desk_foundation.sql` on `created_by` and `updated_by`; (6) Hardened snapshot export with an explicit allowlist, credential key purging from metadata, and explicit disclaimers regarding free-form text; (7) Verified that public client bundle contains zero project desk schema or fixture text.
+- **Rationale / Alternatives Considered:** Code splitting does not establish an authorization boundary because static JavaScript chunks can be fetched without credentials. Genuine private notes must live in the database under RLS, and the UI must never deceive the user into believing in-memory changes were persisted to cloud storage.
+- **Affected Files and Components:** `supabase/migrations/20261028000001_project_desk_foundation.sql`, `src/services/projectDeskService.js`, `src/data/projectDeskSeedData.js`, `src/components/admin/ProjectDeskView.jsx`, `scripts/verifyProjectDeskPhase25Hardening.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/ROADMAP.md`.
+- **Approval Evidence:** Verified with 37/37 assertions in `scripts/verifyProjectDeskPhase25Hardening.mjs`; full build inspection passed; 50/50 and 21/21 regression tests passed.
+- **Verification / Follow-up Requirements:** Migration script ready for faculty review and execution via the Supabase Dashboard SQL Editor.
+
+## D-046 | 2026-10-27 | Project Desk Phase 2.6: Live Supabase Post-Migration Verification and Cloud Persistence Activation
+
+- **Decision:** Verified live Supabase database readiness following faculty execution of migration `20261028000001_project_desk_foundation.sql`. Confirmed tables `public.project_desk_items` and `public.project_desk_meta` exist in the PostgREST schema cache. Verified fail-closed Row Level Security (RLS) enforcement: anonymous client requests attempting SELECT, INSERT, UPDATE, or DELETE on private desk tables are rejected with permission denied. Verified public content isolation: anonymous queries on `content_registry` remain functional with 5 public curriculum rows returned. Enhanced `projectDeskService.js` to recognize PostgREST code `PGRST205` and Postgres code `42P01` for accurate storage status reporting. Updated baseline seed records to record Phase 1, Phase 2, and Phase 2.5 as completed, with Phase 2.6 reflecting active verification.
+- **Rationale / Alternatives Considered:** Proves real database readiness and authorization boundaries against the live Supabase instance without using privileged service role keys or synthetic mocks.
+- **Affected Files and Components:** `src/services/projectDeskService.js`, `src/data/projectDeskSeedData.js`, `scripts/verifyLiveSupabasePostMigration.mjs`, `scripts/verifyProjectDeskPhase25Hardening.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/ROADMAP.md`.
+- **Approval Evidence:** Verified with 13/13 assertions in `scripts/verifyLiveSupabasePostMigration.mjs`; 37/37 in `scripts/verifyProjectDeskPhase25Hardening.mjs`; 21/21 in `scripts/verifyProjectDeskPhase2UI.mjs`; 50/50 in `scripts/verifyProjectDeskFoundation.mjs`; clean production build in 4.13s.
+- **Verification / Follow-up Requirements:** Present live verification results for faculty review before proceeding to Phase 3 (Public Three-Pillar Website Consolidation).
+
+---
+
+## D-047 | 2026-10-27 | Project Desk Idea Inbox Field Normalization and Cloud Persistence Fix
+
+- **Decision:** Diagnosed and corrected Idea Inbox cloud saving issue: (1) Added normalizeDeskItem function in src/services/projectDeskService.js to map UI classifications (content_idea, teaching_note, improvement, tech_task) to valid database schema constraints (workbench, atlas, journal, general, teaching_note for category, and idea, task, note, decision for item_type), preserving original classification in metadata.classification and tags; (2) Corrected AdminLogin.jsx to clear stale simulation credentials and persist authentic Supabase JWT sessions on owner login; (3) Hardened ProjectDeskView.jsx to update React state directly with the returned database row and gracefully refresh upon successful save.
+- **Rationale / Alternatives Considered:** The PostgreSQL schema strictly checked category IN ('workbench', 'atlas', 'journal', 'general', 'teaching_note') and item_type IN ('idea', 'task', 'note', 'decision'). The UI form passed content_idea as category, which triggered constraint violation project_desk_items_category_check. Normalizing fields before database insertion ensures schema compliance while preserving high-level UI classification.
+- **Affected Files and Components:** src/services/projectDeskService.js, src/components/admin/ProjectDeskView.jsx, src/components/admin/AdminLogin.jsx, scripts/verifyIdeaInboxFix.mjs.
+- **Approval Evidence:** Faculty author manually confirmed that new ideas save cleanly and persist across browser refreshes; automated suite scripts/verifyIdeaInboxFix.mjs passed 29/29 assertions.
+- **Verification / Follow-up Requirements:** Ready for production release and end-of-day GitHub push.
+
+---
+
+## D-048 | 2026-10-27 | Three-Pillar Website Redesign: Consolidation into Workbench, Atlas, and Journal
+
+- **Decision:** Consolidated ZeroIndex public presentation from five pillars into three: (1) The Workbench (academic curriculum, interactive solvers, practice arena, resources); (2) The Atlas (combines Learning Paths [START -> TRY -> NEXT framework] and Career Preparation [7 placement preparation domains formerly in The Bridge]); (3) The Journal (combines Technical Insights [formerly The Readout] and Personal Reflections [formerly The Folio]); (4) Preserved all existing content, code, routes, and database records without deletion; (5) Implemented backward compatibility for legacy URLs (#bridge, #bridge/:domain, #readout, #readout/:slug, #folio, #folio/:slug); (6) Refreshed SiteHeader, SiteFooter, AboutModal, MainHome, and Knowledge Tree (3 principal branches with logic schematics, waypoint path, and signal wave); (7) Enforced fail-closed route visibility to prevent public visitors from bypassing publication flags to access draft roadmaps.
+- **Rationale / Alternatives Considered:** Five separate pillars created content fragmentation and required disproportionate maintenance. Three unified pillars provide a clearer, more sustainable structure for engineering students while preserving full curricular and placement assets.
+- **Affected Files and Components:** src/App.jsx, src/components/SiteHeader.jsx, src/components/SiteFooter.jsx, src/components/MainHome.jsx, src/components/KnowledgeTreeIllustration.jsx, src/components/AboutModal.jsx, src/components/AtlasLanding.jsx, src/components/JournalLanding.jsx, src/data/centralContentRegistry.js, scripts/verifyThreePillarRedesign.mjs.
+- **Approval Evidence:** Verified locally with 41/41 assertions in scripts/verifyThreePillarRedesign.mjs; clean production build in 4.21s; zero dash violations.
+- **Verification / Follow-up Requirements:** Preserve existing Atlas A1/A2 and DLD branches unmerged; release to main branch.
+
+---
+
+## D-049 | 2026-10-28 | End-of-Day Complete GitHub Release and Vercel Deployment Governance
+
+- **Decision:** Released all approved local development work (Project Desk Foundation, Admin UI, Security Hardening, Supabase Persistence Activation, Idea Inbox Persistence Fix, and Three-Pillar Redesign) directly to GitHub main branch. Authorized automatic Vercel production deployment triggered by GitHub push.
+- **Rationale / Alternatives Considered:** Consolidates all verified milestones into a single stable commit on main without creating fragmented release tags or intermediate branches, preserving complete project history.
+- **Affected Files and Components:** Complete working tree, project-memory/ documentation register, and GitHub release pipeline.
+- **Approval Evidence:** Explicit faculty authorization on 2026-10-28; full regression test passage across all suites (141/141 checks); clean production build.
+- **Verification / Follow-up Requirements:** Verify GitHub push and Vercel edge deployment status.
 
 ---
 

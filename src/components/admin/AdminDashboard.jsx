@@ -38,6 +38,7 @@ import { MfaEnrollModal } from './MfaEnrollModal';
 import { AuditLogModal } from './AuditLogModal';
 import { SecureDraftPreviewModal } from './SecureDraftPreviewModal';
 import { SupabaseSetupModal } from './SupabaseSetupModal';
+import { ProjectDeskView } from './ProjectDeskView';
 
 export const AdminDashboard = ({ 
   adminSession, 
@@ -50,6 +51,9 @@ export const AdminDashboard = ({
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState(null);
   const [notification, setNotification] = useState({ type: '', message: '' });
+  
+  // Primary Workspace Mode: 'publishing' | 'project-desk'
+  const [workspaceMode, setWorkspaceMode] = useState('publishing');
   
   // Search & Filter state
   const [selectedPillar, setSelectedPillar] = useState('all');
@@ -552,7 +556,45 @@ export const AdminDashboard = ({
           </div>
         )}
 
-        {/* Overview Stats Strip */}
+        {/* Workspace Mode Switcher: Publishing Controls vs Project Desk */}
+        <div className="flex items-center justify-start border-b border-[#DDE2DA] pb-4">
+          <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#F0F1EB]">
+            <button
+              type="button"
+              onClick={() => setWorkspaceMode('publishing')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                workspaceMode === 'publishing'
+                  ? 'bg-white text-[#285C49] shadow-xs'
+                  : 'text-[#5F6C64] hover:text-[#25352D]'
+              }`}
+            >
+              <Layers className="w-4 h-4" />
+              <span>Publishing Controls</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setWorkspaceMode('project-desk')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                workspaceMode === 'project-desk'
+                  ? 'bg-white text-[#285C49] shadow-xs'
+                  : 'text-[#5F6C64] hover:text-[#25352D]'
+              }`}
+            >
+              <FileText className="w-4 h-4" />
+              <span>Project Desk</span>
+              <span className="px-1.5 py-0.2 rounded-full bg-[#E0EBDF] text-[10px] text-[#285C49]">
+                Private
+              </span>
+            </button>
+          </div>
+        </div>
+
+        {workspaceMode === 'project-desk' ? (
+          <ProjectDeskView adminSession={adminSession} />
+        ) : (
+          <>
+            {/* Overview Stats Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="p-4 rounded-2xl bg-white border border-[#DDE2DA] shadow-xs space-y-1">
             <span className="text-[11px] font-technical uppercase tracking-wider text-[#85928A]">
@@ -710,6 +752,9 @@ export const AdminDashboard = ({
             roots.map(root => renderTreeItem(root, 0))
           )}
         </div>
+
+          </>
+        )}
 
       </main>
 

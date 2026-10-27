@@ -14,7 +14,7 @@ import {
 } from 'lucide-react';
 import { ZeroIndexMark } from '../ZeroIndexMark';
 import { loginAdmin, verifyMfaCode } from '../../services/authService';
-import { getSupabaseConfigStatus } from '../../services/supabaseClient';
+import { supabase, isSupabaseConfigured, getSupabaseConfigStatus } from '../../services/supabaseClient';
 import { SupabaseSetupModal } from './SupabaseSetupModal';
 
 export const AdminLogin = ({ onLoginSuccess, onNavigateHome }) => {
@@ -28,6 +28,34 @@ export const AdminLogin = ({ onLoginSuccess, onNavigateHome }) => {
   const [isSetupModalOpen, setIsSetupModalOpen] = useState(false);
 
   const configStatus = getSupabaseConfigStatus();
+
+  // If owner already has an active AAL1 session, prompt for MFA directly
+  useEffect(() => {
+    async function checkExistingAal1Session() {
+      if (isSupabaseConfigured()) {
+        try {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            const { data: mfaData } = await supabase.auth.mfa.getAuthenticatorAssuranceLevel();
+            const { data: factorsData } = await supabase.auth.mfa.listFactors();
+            const verifiedTotp = factorsData?.totp?.find(f => f.status === 'verified');
+            if (verifiedTotp && mfaData?.currentLevel === 'aal1') {
+              const { data: challengeData, error: challengeError } = await supabase.auth.mfa.challenge({
+                factorId: verifiedTotp.id
+              });
+              if (!challengeError && challengeData) {
+                setMfaDetails({ factorId: verifiedTotp.id, challengeId: challengeData.id });
+                setStep('mfa');
+              }
+            }
+          }
+        } catch {
+          // Session check error ignored
+        }
+      }
+    }
+    checkExistingAal1Session();
+  }, []);
 
   const handleCredentialsSubmit = async (e) => {
     e.preventDefault();

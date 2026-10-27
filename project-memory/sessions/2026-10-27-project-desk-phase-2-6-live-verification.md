@@ -1,0 +1,42 @@
+# ZeroIndex Session: 2026-10-27 - Project Desk Phase 2.6 Live Supabase Verification
+
+- **Starting Branch and Commit:** `main` (commit 2d69f06)
+- **Goal and Scope:** Perform post-migration live database verification for Project Desk following faculty execution of migration 20261028000001_project_desk_foundation.sql in Supabase. Prove database readiness, fail-closed RLS security, public content isolation, idempotent initialization, and full regression test passing.
+- **Relevant Sources of Truth:**
+  - `supabase/migrations/20261028000001_project_desk_foundation.sql`
+  - `src/services/projectDeskService.js`
+  - `src/data/projectDeskSeedData.js`
+  - `src/components/admin/ProjectDeskView.jsx`
+  - `scripts/verifyLiveSupabasePostMigration.mjs`
+  - `project-memory/DECISIONS.md` (Decision D-046)
+- **Decisions Made and Approved:**
+  - D-046: Live Post-Migration Verification and Cloud Persistence Activation.
+  - Recognized PostgREST schema cache error code PGRST205 alongside Postgres 42P01 in isTableMissingError.
+  - Recorded Phase 1, Phase 2, and Phase 2.5 as completed, and Phase 2.6 as verified.
+- **Changed Files:**
+  - `src/services/projectDeskService.js`
+  - `src/data/projectDeskSeedData.js`
+  - `scripts/verifyLiveSupabasePostMigration.mjs`
+  - `scripts/verifyProjectDeskPhase25Hardening.mjs`
+  - `project-memory/DECISIONS.md`
+  - `project-memory/ROADMAP.md`
+  - `project-memory/CURRENT_STATE.md`
+  - `project-memory/CHANGELOG.md`
+  - `project-memory/TECHNICAL_SNAPSHOT.md`
+- **Actual Progress (Done / Partial / Blocked):** Done. Tables exist in live PostgREST schema cache. Anonymous access to private tables is strictly denied by RLS. Public content access to content_registry is intact.
+- **Tests Executed and Exact Results:**
+  - `node scripts/verifyLiveSupabasePostMigration.mjs`: 13/13 passed.
+  - `node scripts/verifyProjectDeskPhase25Hardening.mjs`: 37/37 passed.
+  - `node scripts/verifyProjectDeskPhase2UI.mjs`: 21/21 passed.
+  - `node scripts/verifyProjectDeskFoundation.mjs`: 50/50 passed.
+  - `npm run build`: Built successfully in 4.13s with zero errors; admin chunk cleanly isolated.
+  - Zero-dash audit: 0 em-dashes and 0 en-dashes across all modified files.
+- **Identified Risks / Unverified Items:**
+  - Authenticated AAL2 cloud persistence CRUD in the live browser requires the owner session with MFA completion via the admin login interface (http://localhost:3000/#admin-dashboard).
+  - Browser subagent automation was restricted by container network sandbox preventing Playwright driver download.
+- **Next Action:** Present complete live verification report for faculty review before initiating Phase 3 (Public Three-Pillar Website Consolidation).
+- **Commit / Preview / Release Links (If Verified):**
+  - Localhost: `http://localhost:3000/`
+  - Production: `https://zeroindex-sigma.vercel.app/`
+- **Reusable Prompt or Lesson Learned:**
+  - When querying Supabase REST endpoints before or after migrations, PostgREST returns error code PGRST205 with message 'Could not find the table ... in the schema cache', whereas direct PostgreSQL drivers return code 42P01. Service error classifiers must check both formats to avoid misinterpreting missing tables as generic errors.

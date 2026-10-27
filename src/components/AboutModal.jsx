@@ -62,31 +62,23 @@ export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin, onOp
           </p>
         </div>
 
-        {/* Five Destinations Overview */}
+        {/* Three Destinations Overview */}
         <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#DDE2DA] space-y-3">
           <h4 className="font-technical text-xs font-bold uppercase tracking-wider text-[#25352D]">
-            The Five Pillars
+            The Three Pillars
           </h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-xs text-[#5F6C64]">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-[#5F6C64]">
             <div className="flex items-start gap-2">
               <span className="font-technical font-bold text-[#346C53]">01</span>
-              <span><strong className="text-[#25352D]">The Workbench:</strong> Classroom subjects, visual solvers, and quiz arenas.</span>
+              <span><strong className="text-[#25352D]">The Workbench:</strong> Academic lessons, visual computing solvers, and interactive practice.</span>
             </div>
             <div className="flex items-start gap-2">
               <span className="font-technical font-bold text-[#496D91]">02</span>
-              <span><strong className="text-[#25352D]">The Atlas:</strong> Structured roadmap guides for self-directed technical learning.</span>
+              <span><strong className="text-[#25352D]">The Atlas:</strong> Learning pathways, engineering skills, and career preparation.</span>
             </div>
             <div className="flex items-start gap-2">
-              <span className="font-technical font-bold text-[#956A43]">03</span>
-              <span><strong className="text-[#25352D]">The Bridge:</strong> Core interview patterns and engineering placement practice.</span>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="font-technical font-bold text-[#765C90]">04</span>
-              <span><strong className="text-[#25352D]">The Readout:</strong> Technical field notes on computing, AI, and systems science.</span>
-            </div>
-            <div className="flex items-start gap-2 sm:col-span-2">
-              <span className="font-technical font-bold text-[#935F5D]">05</span>
-              <span><strong className="text-[#25352D]">The Folio:</strong> Personal essays on pedagogy, teaching craft, and deep focus.</span>
+              <span className="font-technical font-bold text-[#765C90]">03</span>
+              <span><strong className="text-[#25352D]">The Journal:</strong> Technical developments, computing insights, and personal reflections.</span>
             </div>
           </div>
         </div>

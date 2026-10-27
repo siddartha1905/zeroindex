@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **90**
-- Verification script names discovered: **15**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **94**
+- Verification script names discovered: **21**
 
 ## Selected declared dependencies
 
@@ -28,7 +28,12 @@
 
 - `scripts/verifyAdminControlSystem.mjs`
 - `scripts/verifyDldResources.mjs`
+- `scripts/verifyIdeaInboxFix.mjs`
 - `scripts/verifyInteractiveSolvers.mjs`
+- `scripts/verifyLiveSupabasePostMigration.mjs`
+- `scripts/verifyProjectDeskFoundation.mjs`
+- `scripts/verifyProjectDeskPhase25Hardening.mjs`
+- `scripts/verifyProjectDeskPhase2UI.mjs`
 - `scripts/verifySection15Math.mjs`
 - `scripts/verifySection17.mjs`
 - `scripts/verifySection21Math.mjs`
@@ -36,6 +41,7 @@
 - `scripts/verifySection23Math.mjs`
 - `scripts/verifySection24Math.mjs`
 - `scripts/verifySection25Math.mjs`
+- `scripts/verifyThreePillarRedesign.mjs`
 - `scripts/verifyUnit1Math.mjs`
 - `scripts/verifyUnit1Modernization.mjs`
 - `scripts/verifyUnit2Full.mjs`
@@ -59,6 +65,7 @@
 - `src/components/FromZeroToPossibilityIllustration.jsx`
 - `src/components/InstallModal.jsx`
 - `src/components/InteractiveSolvers.jsx`
+- `src/components/JournalLanding.jsx`
 - `src/components/KMapCheatSheet.jsx`
 - `src/components/KnowledgeTreeIllustration.jsx`
 - `src/components/MainHome.jsx`
@@ -95,6 +102,7 @@
 - `src/components/admin/AdminLogin.jsx`
 - `src/components/admin/AuditLogModal.jsx`
 - `src/components/admin/MfaEnrollModal.jsx`
+- `src/components/admin/ProjectDeskView.jsx`
 - `src/components/admin/SecureDraftPreviewModal.jsx`
 - `src/components/admin/SupabaseSetupModal.jsx`
 - `src/data/atlasRoadmapsConfig.js`
@@ -122,6 +130,7 @@
 - `src/data/dldVideoConfig.js`
 - `src/data/folioEssaysConfig.js`
 - `src/data/portalConfig.js`
+- `src/data/projectDeskSeedData.js`
 - `src/data/readoutArticlesConfig.js`
 - `src/data/unit1.js`
 - `src/data/unit1QuizBank.js`
@@ -130,6 +139,7 @@
 - `src/main.jsx`
 - `src/services/authService.js`
 - `src/services/contentRegistryService.js`
+- `src/services/projectDeskService.js`
 - `src/services/supabaseClient.js`
 - `src/theme/pastelTheme.js`
 - `src/utils/booleanEngine.js`

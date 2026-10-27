@@ -52,16 +52,35 @@ export const SiteHeader = ({
   });
 
   const allNavigationItems = [
-    { id: 'workbench', label: 'The Workbench', number: '01', color: '#285C49' },
-    { id: 'atlas', label: 'The Atlas', number: '02', color: '#496D91' },
-    { id: 'bridge', label: 'The Bridge', number: '03', color: '#C38A63' },
-    { id: 'readout', label: 'The Readout', number: '04', color: '#765C90' },
-    { id: 'folio', label: 'The Folio', number: '05', color: '#935F5D' },
+    { 
+      id: 'workbench', 
+      label: 'The Workbench', 
+      number: '01', 
+      color: '#285C49',
+      isVisible: () => isItemPubliclyAccessible('pillar-workbench', contentOverrides),
+      matchesSection: (sec) => sec === 'workbench'
+    },
+    { 
+      id: 'atlas', 
+      label: 'The Atlas', 
+      number: '02', 
+      color: '#496D91',
+      isVisible: () => isItemPubliclyAccessible('pillar-atlas', contentOverrides) || isItemPubliclyAccessible('pillar-bridge', contentOverrides),
+      matchesSection: (sec) => sec === 'atlas' || sec === 'bridge'
+    },
+    { 
+      id: 'journal', 
+      label: 'The Journal', 
+      number: '03', 
+      color: '#765C90',
+      isVisible: () => isItemPubliclyAccessible('pillar-readout', contentOverrides) || isItemPubliclyAccessible('pillar-folio', contentOverrides),
+      matchesSection: (sec) => sec === 'journal' || sec === 'readout' || sec === 'folio'
+    },
   ];
 
   // Only render pillars that are verified publicly visible
   const navigationItems = isRegistryLoaded
-    ? allNavigationItems.filter(item => isItemPubliclyAccessible('pillar-' + item.id, contentOverrides))
+    ? allNavigationItems.filter(item => item.isVisible())
     : [];
 
   return (
@@ -89,10 +108,10 @@ export const SiteHeader = ({
           </button>
         </div>
 
-        {/* Center: Desktop Navigation Bar for the 5 Pillars */}
+        {/* Center: Desktop Navigation Bar for the 3 Pillars */}
         <nav className="hidden lg:flex items-center gap-1">
           {navigationItems.map((item) => {
-            const isActive = currentSection === item.id;
+            const isActive = item.matchesSection(currentSection);
             return (
               <button
                 key={item.id}
@@ -166,7 +185,7 @@ export const SiteHeader = ({
               Primary Destinations
             </div>
             {navigationItems.map((item) => {
-              const isActive = currentSection === item.id;
+              const isActive = item.matchesSection(currentSection);
               return (
                 <button
                   key={item.id}

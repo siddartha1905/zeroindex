@@ -10,15 +10,31 @@ export const SiteFooter = ({
   isRegistryLoaded = true
 }) => {
   const allPillars = [
-    { id: 'workbench', name: 'The Workbench', number: '01', color: '#285C49' },
-    { id: 'atlas', name: 'The Atlas', number: '02', color: '#496D91' },
-    { id: 'bridge', name: 'The Bridge', number: '03', color: '#C38A63' },
-    { id: 'readout', name: 'The Readout', number: '04', color: '#765C90' },
-    { id: 'folio', name: 'The Folio', number: '05', color: '#935F5D' },
+    { 
+      id: 'workbench', 
+      name: 'The Workbench', 
+      number: '01', 
+      color: '#285C49',
+      isVisible: () => isItemPubliclyAccessible('pillar-workbench', contentOverrides)
+    },
+    { 
+      id: 'atlas', 
+      name: 'The Atlas', 
+      number: '02', 
+      color: '#496D91',
+      isVisible: () => isItemPubliclyAccessible('pillar-atlas', contentOverrides) || isItemPubliclyAccessible('pillar-bridge', contentOverrides)
+    },
+    { 
+      id: 'journal', 
+      name: 'The Journal', 
+      number: '03', 
+      color: '#765C90',
+      isVisible: () => isItemPubliclyAccessible('pillar-readout', contentOverrides) || isItemPubliclyAccessible('pillar-folio', contentOverrides)
+    },
   ];
 
   const pillars = isRegistryLoaded
-    ? allPillars.filter(pillar => isItemPubliclyAccessible('pillar-' + pillar.id, contentOverrides))
+    ? allPillars.filter(pillar => pillar.isVisible())
     : [];
 
   return (

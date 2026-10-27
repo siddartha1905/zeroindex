@@ -1095,9 +1095,57 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     return isItemPubliclyAccessible(sectionRegId, visibilityOverrides);
   }
 
-  // 2. Pillar 02: The Atlas routes
+  // 2. Pillar 02: The Atlas routes (combines Learning Paths and Career Prep)
   if (normalizedRoute === 'atlas') {
+    return isItemPubliclyAccessible('pillar-atlas', visibilityOverrides) || isItemPubliclyAccessible('pillar-bridge', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'atlas/learning-paths') {
     return isItemPubliclyAccessible('pillar-atlas', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'atlas/career-prep') {
+    return isItemPubliclyAccessible('pillar-bridge', visibilityOverrides);
+  }
+
+  if (normalizedRoute.startsWith('atlas/career-prep/')) {
+    const bridgeSubpath = normalizedRoute.slice(18).split('/')[0];
+    const bridgeSubpathToRegistryId = {
+      'quant': 'bridge-domain-quant',
+      'quantitative-aptitude': 'bridge-domain-quant',
+      'numerical-reasoning': 'bridge-domain-quant',
+      'logical': 'bridge-domain-logical',
+      'logical-reasoning': 'bridge-domain-logical',
+      'analytical-reasoning': 'bridge-domain-logical',
+      'verbal': 'bridge-domain-verbal',
+      'verbal-communication': 'bridge-domain-verbal',
+      'reading-comprehension': 'bridge-domain-verbal',
+      'coding': 'bridge-domain-coding',
+      'coding-preparation': 'bridge-domain-coding',
+      'cs-core': 'bridge-domain-cs-core',
+      'core-cs': 'bridge-domain-cs-core',
+      'core-cs-knowledge': 'bridge-domain-cs-core',
+      'systems': 'bridge-domain-systems',
+      'resume': 'bridge-domain-systems',
+      'resume-preparation': 'bridge-domain-systems',
+      'interview': 'bridge-domain-interview',
+      'interviews': 'bridge-domain-interview',
+      'technical-hr-interviews': 'bridge-domain-interview'
+    };
+    const targetDomainId = bridgeSubpathToRegistryId[bridgeSubpath];
+    if (targetDomainId) {
+      return isItemPubliclyAccessible(targetDomainId, visibilityOverrides);
+    }
+    return false;
+  }
+
+  if (normalizedRoute.startsWith('atlas/learning-paths/')) {
+    const roadmapSlug = normalizedRoute.slice(21).split('/')[0];
+    const roadmapRegId = ATLAS_ROADMAP_REGISTRY_MAP[roadmapSlug];
+    if (roadmapRegId) {
+      return isItemPubliclyAccessible(roadmapRegId, visibilityOverrides);
+    }
+    return false;
   }
 
   if (normalizedRoute.startsWith('atlas/')) {
@@ -1110,7 +1158,7 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     return false;
   }
 
-  // 3. Pillar 03: The Bridge routes
+  // 3. Legacy Pillar 03: The Bridge routes (backward compatibility)
   if (normalizedRoute === 'bridge') {
     return isItemPubliclyAccessible('pillar-bridge', visibilityOverrides);
   }
@@ -1146,7 +1194,38 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     return false;
   }
 
-  // 4. Pillar 04: The Readout routes
+  // 4. Pillar 03: The Journal routes (combines Insights and Reflections)
+  if (normalizedRoute === 'journal') {
+    return isItemPubliclyAccessible('pillar-readout', visibilityOverrides) || isItemPubliclyAccessible('pillar-folio', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'journal/insights') {
+    return isItemPubliclyAccessible('pillar-readout', visibilityOverrides);
+  }
+
+  if (normalizedRoute === 'journal/reflections') {
+    return isItemPubliclyAccessible('pillar-folio', visibilityOverrides);
+  }
+
+  if (normalizedRoute.startsWith('journal/insights/')) {
+    const articleSlug = normalizedRoute.slice(17).split('/')[0];
+    const targetItem = centralContentRegistry.find(item => item.route.toLowerCase() === `readout/${articleSlug}`);
+    if (targetItem) {
+      return isItemPubliclyAccessible(targetItem.id, visibilityOverrides);
+    }
+    return false;
+  }
+
+  if (normalizedRoute.startsWith('journal/reflections/')) {
+    const essaySlug = normalizedRoute.slice(20).split('/')[0];
+    const targetItem = centralContentRegistry.find(item => item.route.toLowerCase() === `folio/${essaySlug}`);
+    if (targetItem) {
+      return isItemPubliclyAccessible(targetItem.id, visibilityOverrides);
+    }
+    return false;
+  }
+
+  // Legacy Pillar 04: The Readout routes (backward compatibility)
   if (normalizedRoute === 'readout') {
     return isItemPubliclyAccessible('pillar-readout', visibilityOverrides);
   }
@@ -1161,7 +1240,7 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     return false;
   }
 
-  // 5. Pillar 05: The Folio routes
+  // Legacy Pillar 05: The Folio routes (backward compatibility)
   if (normalizedRoute === 'folio') {
     return isItemPubliclyAccessible('pillar-folio', visibilityOverrides);
   }

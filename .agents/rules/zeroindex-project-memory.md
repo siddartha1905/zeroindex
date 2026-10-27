@@ -1,21 +1,59 @@
 ---
-description: Maintain factual, version-controlled ZeroIndex project memory alongside code changes
+description: Prioritize core development over repetitive documentation, batching project-memory updates to explicit checkpoints
 ---
 
-# ZeroIndex Project Memory Maintenance
+# ZeroIndex Fast Development and Batched Documentation Policy
 
-Before implementation, read `AGENTS.md` and `project-memory/INDEX.md`. Preserve other existing workspace rules, including the local preview link rule (`always_provide_preview_link.md`).
+## 1. During Individual Development Tasks
+Focus primarily on:
+- Implementing the requested functionality.
+- Modifying the necessary application source files.
+- Correcting relevant errors.
+- Performing focused verification.
+- Confirming that existing functionality remains intact.
 
-For every important development task, follow this exact sequence:
-1. Check the existing Project Memory status before changing code.
-2. Identify the relevant existing functionality.
-3. Make the approved changes.
-4. Run appropriate tests.
-5. Update the documentation to record actual results.
-6. Record important decisions and outstanding work.
-7. Save a session note for significant development milestones.
-8. Generate the technical snapshot when the project structure changes (`node scripts/generateProjectSnapshot.mjs`).
-9. Report the files changed and verification performed.
-10. Request approval before pushing to GitHub or deploying to Vercel.
+Do NOT automatically update the following files after every minor task:
+- project-memory/DECISIONS.md
+- project-memory/ROADMAP.md
+- project-memory/CURRENT_STATE.md
+- project-memory/CHANGELOG.md
+- project-memory/TECHNICAL_SNAPSHOT.md
+- project-memory/sessions/*
 
-Do not silently mark work complete, invent percentages, make false publication claims, or modify files solely to create the appearance of progress. Update records before asking for commit/push approval; never push without permission.
+Do not repeatedly regenerate technical snapshots or run documentation synchronization scripts during intermediate coding tasks.
+Exception: Update essential specifications, migrations, security documentation or files required for correct implementation when the task genuinely depends on them.
+
+## 2. Lightweight Reporting
+At the end of each individual task, provide only:
+1. Changes completed.
+2. Files modified.
+3. Relevant test results.
+4. Issues remaining.
+5. Recommended next action.
+
+Present the report in one easy-to-copy Markdown code block.
+
+## 3. Consolidated Project-Memory Updates
+Only when the faculty owner explicitly requests a development checkpoint, project-memory synchronization, or end-of-day closure:
+- Review accumulated local changes.
+- Update DECISIONS.md with genuinely new or superseded decisions.
+- Update ROADMAP.md with actual progress.
+- Update CURRENT_STATE.md to reflect the latest verified implementation.
+- Add meaningful CHANGELOG entries.
+- Regenerate TECHNICAL_SNAPSHOT.md once if required.
+- Create one consolidated session summary only if useful.
+
+## 4. Local-First Workflow
+Continue all development on the local ZeroIndex workspace.
+Do not commit, push, merge, or deploy during intermediate tasks.
+Run focused tests during development. Reserve broad regression testing for the final release checkpoint.
+
+## 5. End-of-Day Release
+Only after explicit approval:
+1. Review accumulated code changes.
+2. Synchronize necessary project documentation once.
+3. Run final regression and production-build checks.
+4. Create one consolidated Git commit, or the minimum logically necessary commits.
+5. Push safely to the existing GitHub repository.
+6. Verify the corresponding Vercel production deployment.
+

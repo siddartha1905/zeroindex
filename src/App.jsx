@@ -7,15 +7,15 @@ import { SiteFooter } from './components/SiteFooter';
 import { MainHome } from './components/MainHome';
 import { WorkbenchLanding } from './components/WorkbenchLanding';
 import { AtlasLanding } from './components/AtlasLanding';
-import { BridgeLanding } from './components/BridgeLanding';
-import { ReadoutLanding } from './components/ReadoutLanding';
-import { FolioLanding } from './components/FolioLanding';
+import { JournalLanding } from './components/JournalLanding';
 import { DldSubjectHome } from './components/DldSubjectHome';
 import { DldWorkspace } from './components/DldWorkspace';
 import { AboutModal } from './components/AboutModal';
 import { InstallModal } from './components/InstallModal';
-import { AdminLogin } from './components/admin/AdminLogin';
-import { AdminDashboard } from './components/admin/AdminDashboard';
+
+// Code-split admin workspace to ensure private desk code and seed data are never downloaded by public visitors
+const AdminLogin = React.lazy(() => import('./components/admin/AdminLogin').then(m => ({ default: m.AdminLogin })));
+const AdminDashboard = React.lazy(() => import('./components/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 import { getAdminSession } from './services/authService';
 import { fetchContentRegistry } from './services/contentRegistryService';
 import { 
@@ -90,6 +90,9 @@ export function App() {
   const [folioSlug, setFolioSlug] = useState(null);
   const [bridgeDomainSlug, setBridgeDomainSlug] = useState(null);
   const [atlasSlug, setAtlasSlug] = useState(null);
+  const [atlasTab, setAtlasTab] = useState('learning-paths');
+  const [journalCategory, setJournalCategory] = useState('insights');
+  const [journalSlug, setJournalSlug] = useState(null);
 
   // Administrator authentication and content overrides state
   const [adminSession, setAdminSession] = useState({
@@ -143,28 +146,68 @@ export function App() {
         setFolioSlug(null);
         setBridgeDomainSlug(null);
         setAtlasSlug(null);
+        setAtlasTab('learning-paths');
+        setJournalCategory('insights');
+        setJournalSlug(null);
       } else if (lowerHash === 'admin' || lowerHash === 'admin/dashboard' || lowerHash === 'admin-dashboard') {
         setCurrentSection('admin-dashboard');
       } else if (lowerHash === 'admin/login' || lowerHash === 'admin-login') {
         setCurrentSection('admin-login');
       } else if (lowerHash === 'workbench' || lowerHash.startsWith('workbench/')) {
         setCurrentSection('workbench');
+      } else if (lowerHash === 'journal' || lowerHash.startsWith('journal/')) {
+        setCurrentSection('journal');
+        const parts = rawHash.split('/');
+        const sub = parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : 'insights';
+        if (sub === 'reflections' || sub === 'folio') {
+          setJournalCategory('reflections');
+          const slug = parts[2] ? decodeURIComponent(parts[2]) : null;
+          setJournalSlug(slug);
+          setFolioSlug(slug);
+        } else {
+          setJournalCategory('insights');
+          const slug = parts[2] ? decodeURIComponent(parts[2]) : null;
+          setJournalSlug(slug);
+          setReadoutSlug(slug);
+        }
+      } else if (lowerHash.startsWith('readout')) {
+        const parts = rawHash.split('/');
+        setCurrentSection('journal');
+        setJournalCategory('insights');
+        const slug = parts[1] ? decodeURIComponent(parts[1]) : null;
+        setJournalSlug(slug);
+        setReadoutSlug(slug);
+      } else if (lowerHash.startsWith('folio')) {
+        const parts = rawHash.split('/');
+        setCurrentSection('journal');
+        setJournalCategory('reflections');
+        const slug = parts[1] ? decodeURIComponent(parts[1]) : null;
+        setJournalSlug(slug);
+        setFolioSlug(slug);
       } else if (lowerHash === 'atlas' || lowerHash === 'roadmaps' || lowerHash.startsWith('atlas/') || lowerHash.startsWith('roadmaps/')) {
         setCurrentSection('atlas');
         const parts = rawHash.split('/');
-        setAtlasSlug(parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null);
+        const sub = parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null;
+        if (sub === 'career-prep' || sub === 'bridge' || sub === 'placements') {
+          setAtlasTab('career-prep');
+          const domain = parts[2] ? decodeURIComponent(parts[2]).toLowerCase() : null;
+          setAtlasSlug(domain);
+          setBridgeDomainSlug(domain);
+        } else if (sub === 'learning-paths') {
+          setAtlasTab('learning-paths');
+          const roadmap = parts[2] ? decodeURIComponent(parts[2]).toLowerCase() : null;
+          setAtlasSlug(roadmap);
+        } else {
+          setAtlasTab('learning-paths');
+          setAtlasSlug(sub);
+        }
       } else if (lowerHash === 'bridge' || lowerHash === 'placements' || lowerHash.startsWith('bridge/') || lowerHash.startsWith('placements/')) {
-        setCurrentSection('bridge');
+        setCurrentSection('atlas');
+        setAtlasTab('career-prep');
         const parts = rawHash.split('/');
-        setBridgeDomainSlug(parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null);
-      } else if (lowerHash.startsWith('readout')) {
-        const parts = rawHash.split('/');
-        setCurrentSection('readout');
-        setReadoutSlug(parts[1] ? decodeURIComponent(parts[1]) : null);
-      } else if (lowerHash.startsWith('folio')) {
-        const parts = rawHash.split('/');
-        setCurrentSection('folio');
-        setFolioSlug(parts[1] ? decodeURIComponent(parts[1]) : null);
+        const domain = parts[1] ? decodeURIComponent(parts[1]).toLowerCase() : null;
+        setAtlasSlug(domain);
+        setBridgeDomainSlug(domain);
       } else if (lowerHash === 'dld' || lowerHash === 'dld-home') {
         setCurrentSection('dld-home');
       } else if (lowerHash.startsWith('dld/') || lowerHash.startsWith('dld-u') || lowerHash.startsWith('unit') || /^(?:sec(?:tion)?[-_]?)?([1-5]\.[1-7])$/i.test(lowerHash)) {
@@ -235,6 +278,24 @@ export function App() {
     } else if (section === 'home') {
       targetSection = 'home';
       targetHash = '';
+    } else if (section === 'bridge') {
+      targetSection = 'atlas';
+      targetHash = 'atlas/career-prep';
+      setAtlasTab('career-prep');
+    } else if (section === 'readout') {
+      targetSection = 'journal';
+      targetHash = 'journal/insights';
+      setJournalCategory('insights');
+    } else if (section === 'folio') {
+      targetSection = 'journal';
+      targetHash = 'journal/reflections';
+      setJournalCategory('reflections');
+    } else if (section === 'atlas') {
+      targetSection = 'atlas';
+      targetHash = 'atlas';
+    } else if (section === 'journal') {
+      targetSection = 'journal';
+      targetHash = 'journal';
     }
 
     setCurrentSection(targetSection);
@@ -275,20 +336,24 @@ export function App() {
 
   const handleSelectReadoutArticle = (slug) => {
     setReadoutSlug(slug);
+    setJournalSlug(slug);
+    setJournalCategory('insights');
     if (slug) {
-      window.location.hash = `readout/${slug}`;
+      window.location.hash = `journal/insights/${slug}`;
     } else {
-      window.location.hash = 'readout';
+      window.location.hash = 'journal/insights';
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSelectFolioEssay = (slug) => {
     setFolioSlug(slug);
+    setJournalSlug(slug);
+    setJournalCategory('reflections');
     if (slug) {
-      window.location.hash = `folio/${slug}`;
+      window.location.hash = `journal/reflections/${slug}`;
     } else {
-      window.location.hash = 'folio';
+      window.location.hash = 'journal/reflections';
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -299,9 +364,18 @@ export function App() {
       const parts = route.split('/');
       goToDldWorkspace(parts[1] || 'units', parts[2] || null);
     } else if (route === 'bridge') {
-      navigateTo('bridge');
+      setAtlasTab('career-prep');
+      navigateTo('atlas');
+    } else if (route === 'readout') {
+      setJournalCategory('insights');
+      navigateTo('journal');
+    } else if (route === 'folio') {
+      setJournalCategory('reflections');
+      navigateTo('journal');
     } else if (route === 'atlas') {
       navigateTo('atlas');
+    } else if (route === 'journal') {
+      navigateTo('journal');
     } else if (route === 'dld') {
       goToDldHome();
     } else {
@@ -443,36 +517,7 @@ export function App() {
           
           {/* Admin Login Route */}
           {currentSection === 'admin-login' && (
-            <AdminLogin 
-              onLoginSuccess={() => {
-                refreshAdminState();
-                navigateTo('admin-dashboard');
-              }}
-              onNavigateHome={() => navigateTo('home')}
-            />
-          )}
-
-          {/* Admin Dashboard Route */}
-          {currentSection === 'admin-dashboard' && (
-            adminSession.isAuthenticated && adminSession.isOwner ? (
-              <AdminDashboard 
-                adminSession={adminSession}
-                onLogout={() => {
-                  setAdminPreviewSection(null);
-                  refreshAdminState();
-                  navigateTo('home');
-                }}
-                onNavigatePublicRoute={handleGenericSectionRoute}
-                onPreviewRoute={(route) => {
-                  setAdminPreviewSection(route);
-                  navigateTo(route);
-                }}
-                onNavigateHome={() => {
-                  setAdminPreviewSection(null);
-                  navigateTo('home');
-                }}
-              />
-            ) : (
+            <React.Suspense fallback={<div className="py-24 text-center text-xs text-[#5F6C64]">Loading Owner Workspace...</div>}>
               <AdminLogin 
                 onLoginSuccess={() => {
                   refreshAdminState();
@@ -480,7 +525,40 @@ export function App() {
                 }}
                 onNavigateHome={() => navigateTo('home')}
               />
-            )
+            </React.Suspense>
+          )}
+
+          {/* Admin Dashboard Route */}
+          {currentSection === 'admin-dashboard' && (
+            <React.Suspense fallback={<div className="py-24 text-center text-xs text-[#5F6C64]">Loading Owner Workspace...</div>}>
+              {adminSession.isAuthenticated && adminSession.isOwner ? (
+                <AdminDashboard 
+                  adminSession={adminSession}
+                  onLogout={() => {
+                    setAdminPreviewSection(null);
+                    refreshAdminState();
+                    navigateTo('home');
+                  }}
+                  onNavigatePublicRoute={handleGenericSectionRoute}
+                  onPreviewRoute={(route) => {
+                    setAdminPreviewSection(route);
+                    navigateTo(route);
+                  }}
+                  onNavigateHome={() => {
+                    setAdminPreviewSection(null);
+                    navigateTo('home');
+                  }}
+                />
+              ) : (
+                <AdminLogin 
+                  onLoginSuccess={() => {
+                    refreshAdminState();
+                    navigateTo('admin-dashboard');
+                  }}
+                  onNavigateHome={() => navigateTo('home')}
+                />
+              )}
+            </React.Suspense>
           )}
 
           {/* 00. Homepage (Clean Editorial Front Door) */}
@@ -523,10 +601,10 @@ export function App() {
           )}
 
           {/* 02. Pillar 2: The Atlas */}
-          {currentSection === 'atlas' && (
+          {(currentSection === 'atlas' || currentSection === 'bridge') && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
-            ) : (adminPreviewSection === 'atlas' && adminSession.isAuthenticated && adminSession.isOwner) ? (
+            ) : (adminPreviewSection === 'atlas' || adminPreviewSection === 'bridge') && adminSession.isAuthenticated && adminSession.isOwner ? (
               <AtlasLanding 
                 onNavigateHome={() => {
                   setAdminPreviewSection(null);
@@ -536,118 +614,82 @@ export function App() {
                 onNavigateSection={handleGenericSectionRoute}
                 contentOverrides={contentOverrides}
                 isAdminPreview={true}
+                initialTab={atlasTab}
+                initialSubId={atlasSlug || bridgeDomainSlug}
+                initialDomainId={bridgeDomainSlug}
                 initialMapId={atlasSlug}
               />
-            ) : isItemPubliclyAccessible('pillar-atlas', contentOverrides) ? (
-              <AtlasLanding 
-                onNavigateHome={() => navigateTo('home')}
-                onNavigateWorkbench={() => navigateTo('workbench')}
-                onNavigateSection={handleGenericSectionRoute}
-                contentOverrides={contentOverrides}
-                isAdminPreview={false}
-                initialMapId={atlasSlug}
-              />
-            ) : (
+            ) : (!isItemPubliclyAccessible('pillar-atlas', contentOverrides) && !isItemPubliclyAccessible('pillar-bridge', contentOverrides)) ? (
               renderOfflinePillarNotice('The Atlas')
-            )
-          )}
-
-          {/* 03. Pillar 3: The Bridge */}
-          {currentSection === 'bridge' && (
-            !isRegistryLoaded ? (
-              renderLoadingNotice()
-            ) : (adminPreviewSection === 'bridge' && adminSession.isAuthenticated && adminSession.isOwner) ? (
-              <BridgeLanding 
-                onNavigateHome={() => {
-                  setAdminPreviewSection(null);
-                  navigateTo('home');
-                }}
-                onNavigateWorkbench={() => navigateTo('workbench')}
-                onNavigateSection={handleGenericSectionRoute}
-                contentOverrides={contentOverrides}
-                isAdminPreview={true}
-                initialDomainId={bridgeDomainSlug}
-              />
-            ) : isItemPubliclyAccessible('pillar-bridge', contentOverrides) ? (
-              <BridgeLanding 
+            ) : (atlasTab === 'career-prep' && bridgeDomainSlug && !isRoutePubliclyAccessible(`atlas/career-prep/${bridgeDomainSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`bridge/${bridgeDomainSlug}`, contentOverrides)) ? (
+              renderOfflineContentNotice(
+                'The Career Preparation Track',
+                'This placement preparation track has not been published or has been placed offline by the administrator.',
+                'atlas/career-prep',
+                'Return to Career Preparation'
+              )
+            ) : (atlasTab === 'learning-paths' && atlasSlug && !isRoutePubliclyAccessible(`atlas/${atlasSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`atlas/learning-paths/${atlasSlug}`, contentOverrides)) ? (
+              renderOfflineContentNotice(
+                'The Atlas Learning Path',
+                'This learning roadmap has not been published or has been placed offline by the administrator.',
+                'atlas/learning-paths',
+                'Return to The Atlas'
+              )
+            ) : (
+              <AtlasLanding 
                 onNavigateHome={() => navigateTo('home')}
                 onNavigateWorkbench={() => navigateTo('workbench')}
                 onNavigateSection={handleGenericSectionRoute}
                 contentOverrides={contentOverrides}
                 isAdminPreview={false}
+                initialTab={atlasTab}
+                initialSubId={atlasSlug || bridgeDomainSlug}
                 initialDomainId={bridgeDomainSlug}
+                initialMapId={atlasSlug}
               />
-            ) : (
-              renderOfflinePillarNotice('The Bridge')
             )
           )}
 
-          {/* 04. Pillar 4: The Readout */}
-          {currentSection === 'readout' && (
+          {/* 03. Pillar 3: The Journal */}
+          {(currentSection === 'journal' || currentSection === 'readout' || currentSection === 'folio') && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
-            ) : !isItemPubliclyAccessible('pillar-readout', contentOverrides) ? (
-              renderOfflinePillarNotice('The Readout')
-            ) : (adminPreviewSection === 'readout' && adminSession.isAuthenticated && adminSession.isOwner) ? (
-              <ReadoutLanding 
+            ) : (adminPreviewSection === 'journal' || adminPreviewSection === 'readout' || adminPreviewSection === 'folio') && adminSession.isAuthenticated && adminSession.isOwner ? (
+              <JournalLanding 
                 onNavigateHome={() => {
                   setAdminPreviewSection(null);
                   navigateTo('home');
                 }}
-                activeSlug={readoutSlug}
-                onSelectArticle={handleSelectReadoutArticle}
+                onNavigateWorkbench={() => navigateTo('workbench')}
                 contentOverrides={contentOverrides}
                 isAdminPreview={true}
+                initialCategory={journalCategory}
+                initialSlug={journalSlug}
               />
-            ) : (readoutSlug && !isRoutePubliclyAccessible(`readout/${readoutSlug}`, contentOverrides)) ? (
+            ) : (!isItemPubliclyAccessible('pillar-readout', contentOverrides) && !isItemPubliclyAccessible('pillar-folio', contentOverrides)) ? (
+              renderOfflinePillarNotice('The Journal')
+            ) : (journalSlug && journalCategory === 'insights' && !isRoutePubliclyAccessible(`journal/insights/${journalSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`readout/${journalSlug}`, contentOverrides)) ? (
               renderOfflineContentNotice(
-                'The Readout Article',
+                'The Journal Article',
                 'This article has not been published or has been placed offline by the administrator.',
-                'readout',
-                'Return to The Readout Catalog'
+                'journal/insights',
+                'Return to The Journal'
               )
-            ) : (
-              <ReadoutLanding 
-                onNavigateHome={() => navigateTo('home')}
-                activeSlug={readoutSlug}
-                onSelectArticle={handleSelectReadoutArticle}
-                contentOverrides={contentOverrides}
-                isAdminPreview={false}
-              />
-            )
-          )}
-
-          {/* 05. Pillar 5: The Folio */}
-          {currentSection === 'folio' && (
-            !isRegistryLoaded ? (
-              renderLoadingNotice()
-            ) : !isItemPubliclyAccessible('pillar-folio', contentOverrides) ? (
-              renderOfflinePillarNotice('The Folio')
-            ) : (adminPreviewSection === 'folio' && adminSession.isAuthenticated && adminSession.isOwner) ? (
-              <FolioLanding 
-                onNavigateHome={() => {
-                  setAdminPreviewSection(null);
-                  navigateTo('home');
-                }}
-                activeSlug={folioSlug}
-                onSelectEssay={handleSelectFolioEssay}
-                contentOverrides={contentOverrides}
-                isAdminPreview={true}
-              />
-            ) : (folioSlug && !isRoutePubliclyAccessible(`folio/${folioSlug}`, contentOverrides)) ? (
+            ) : (journalSlug && journalCategory === 'reflections' && !isRoutePubliclyAccessible(`journal/reflections/${journalSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`folio/${journalSlug}`, contentOverrides)) ? (
               renderOfflineContentNotice(
-                'The Folio Essay',
-                'This essay has not been published or has been placed offline by the administrator.',
-                'folio',
-                'Return to The Folio Catalog'
+                'The Journal Reflection',
+                'This reflection has not been published or has been placed offline by the administrator.',
+                'journal/reflections',
+                'Return to The Journal'
               )
             ) : (
-              <FolioLanding 
+              <JournalLanding 
                 onNavigateHome={() => navigateTo('home')}
-                activeSlug={folioSlug}
-                onSelectEssay={handleSelectFolioEssay}
+                onNavigateWorkbench={() => navigateTo('workbench')}
                 contentOverrides={contentOverrides}
                 isAdminPreview={false}
+                initialCategory={journalCategory}
+                initialSlug={journalSlug}
               />
             )
           )}

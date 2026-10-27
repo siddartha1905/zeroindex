@@ -2,6 +2,53 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-28: Integrate Project Desk and Three-Pillar Website Redesign
+
+- **Type**: architecture / three-pillar-redesign / project-desk / idea-inbox-fix / cloud-persistence / end-of-day-release
+- **Summary**: Completed end-of-day release integrating the verified private Project Desk and the public three-pillar website consolidation:
+  1. **Public Three-Pillar Architecture (Phases 3 and 3.1)**:
+     - Consolidated five public destinations into three sustainable pillars: The Workbench (academic curriculum and interactive solvers), The Atlas (learning paths and career preparation), and The Journal (technical insights and personal reflections).
+     - Unified The Atlas: integrates the approved START -> TRY -> NEXT learning path principle card and the 7 campus placement preparation domains (formerly in The Bridge) with checklist tracking, formulas, and progress metrics.
+     - Unified The Journal: integrates Technical Insights (formerly The Readout) and Personal Reflections (formerly The Folio) with reading view, citation metadata, and tasteful editorial review states.
+     - Backward-Compatible Routing: preserved legacy anchors (#bridge, #bridge/:domain, #readout, #readout/:slug, #folio, #folio/:slug) and supported nested content routes.
+     - Fail-Closed Publication Controls: enforced route accessibility checks ensuring draft/unmerged Atlas roadmaps cannot be bypassed via direct URL navigation.
+     - Visual & Navigational Identity: updated SiteHeader, SiteFooter, AboutModal, MainHome (balanced 3-column responsive grid), and Knowledge Tree (3 principal branches with logic schematics, waypoint path, and signal wave).
+  2. **Idea Inbox Supabase Persistence Fix**:
+     - Corrected field mapping in `src/services/projectDeskService.js` via `normalizeDeskItem` to map UI classifications to PostgreSQL schema constraints while preserving classification in metadata.
+     - Cleared stale simulated credentials in `AdminLogin.jsx` to ensure authentic Supabase JWT sessions.
+     - Confirmed verified cloud persistence of private ideas across browser refreshes.
+  3. **Preserved Existing Features**:
+     - The Workbench: DLD Unit 1 (sections 1.1 to 1.7) and Unit 2 (sections 2.1 to 2.5), 10 solvers, 250 practice questions, and reference resources remain 100% functional.
+     - Admin Dashboard: Publishing Controls, Project Desk (Idea Inbox, Development Desk, Decisions & Vision, Project Memory), owner authorization, and AAL2 MFA remain intact.
+     - Atlas A1/A2 and DLD development branches remain preserved and unmerged.
+  4. **Automated Verification & Build**:
+     - `verifyThreePillarRedesign.mjs`: 41/41 passed.
+     - `verifyIdeaInboxFix.mjs`: 29/29 passed.
+     - `verifyProjectDeskPhase2UI.mjs`: 21/21 passed.
+     - `verifyProjectDeskFoundation.mjs`: 50/50 passed.
+     - Total: 141/141 automated assertions passed (0 failures).
+     - `npm run build`: Production bundle built cleanly in 4.21s with zero errors.
+     - Zero-Dash Standard: Strictly 0 em-dashes and 0 en-dashes across all code and documentation.
+- **Affected Files**: `src/App.jsx`, `src/components/SiteHeader.jsx`, `src/components/SiteFooter.jsx`, `src/components/MainHome.jsx`, `src/components/KnowledgeTreeIllustration.jsx`, `src/components/AboutModal.jsx`, `src/components/AtlasLanding.jsx`, `src/components/JournalLanding.jsx`, `src/components/admin/ProjectDeskView.jsx`, `src/components/admin/AdminLogin.jsx`, `src/services/projectDeskService.js`, `src/data/centralContentRegistry.js`, `scripts/verifyThreePillarRedesign.mjs`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/CURRENT_STATE.md`, `project-memory/TECHNICAL_SNAPSHOT.md`, `project-memory/CHANGELOG.md`.
+
+## 2026-10-27: Project Desk Phase 2.6 Live Supabase Verification and Cloud Activation
+
+- **Type**: admin-tooling / project-desk / supabase-activation / rls-verification / security
+- **Summary**: Following execution of migration `20261028000001_project_desk_foundation.sql` by the faculty author in the Supabase SQL Editor, verified live database readiness and fail-closed security:
+  1. **Database Readiness**: Verified tables `public.project_desk_items` and `public.project_desk_meta` exist in PostgREST schema cache on `ruuomptmkabvdmiutxtj.supabase.co`.
+  2. **Fail-Closed RLS Enforcement**: Confirmed that anonymous client queries attempting SELECT, INSERT, UPDATE, or DELETE on private desk tables are strictly rejected with HTTP 401/403 permission denied (13/13 assertions passed).
+  3. **Public Content Isolation**: Proved anonymous access to `public.content_registry` remains fully functional (5 rows returned).
+  4. **PostgREST Schema Cache Handling**: Enhanced `src/services/projectDeskService.js` to recognize PostgREST code `PGRST205` alongside PostgreSQL code `42P01`.
+  5. **Baseline Plan Update**: Updated `src/data/projectDeskSeedData.js` to record Phase 1, Phase 2, and Phase 2.5 as completed, and Phase 2.6 as verified.
+  6. **Comprehensive Automated Verification**:
+     - `verifyLiveSupabasePostMigration.mjs`: 13/13 passed.
+     - `verifyProjectDeskPhase25Hardening.mjs`: 37/37 passed.
+     - `verifyProjectDeskPhase2UI.mjs`: 21/21 passed.
+     - `verifyProjectDeskFoundation.mjs`: 50/50 passed.
+     - `npm run build`: Production bundle built cleanly with zero errors in 4.13s.
+     - Zero-Dash compliance: 0 em-dashes and 0 en-dashes across all files.
+- **Affected Files**: `src/services/projectDeskService.js`, `src/data/projectDeskSeedData.js`, `scripts/verifyLiveSupabasePostMigration.mjs`, `scripts/verifyProjectDeskPhase25Hardening.mjs`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-22: Simplify Section 1.5 Formula Presentation and Codify Faculty-First Rule
 
 - **Type**: academic-content / faculty-first / complements-1.5 / zero-dash / natural-integration

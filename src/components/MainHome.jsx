@@ -19,13 +19,12 @@ export const MainHome = ({
   isRegistryLoaded = true
 }) => {
   const pillarsRef = useRef(null);
-  const isBridgeVisible = isRegistryLoaded && isItemPubliclyAccessible('pillar-bridge', contentOverrides);
 
   const scrollToPillars = () => {
     pillarsRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const pillars = [
+  const allPillars = [
     {
       id: 'workbench',
       number: '01',
@@ -38,60 +37,41 @@ export const MainHome = ({
       actionLabel: 'Enter The Workbench',
       icon: BookOpen,
       borderColor: 'hover:border-[#285C49]',
+      isVisible: () => isItemPubliclyAccessible('pillar-workbench', contentOverrides)
     },
     {
       id: 'atlas',
       number: '02',
       name: 'The Atlas',
-      category: 'Structured Pathways',
+      category: 'Pathways & Preparation',
       accent: '#496D91',
       softAccent: '#E1EAF2',
-      tag: 'Engineering Roadmaps',
-      description: 'Learning roadmaps that help you understand what to study, in what order, and where to begin.',
+      tag: 'Learning Paths & Career Prep',
+      description: 'Learning roadmaps and career preparation to help you understand where to start, what to build, and how to prepare.',
       actionLabel: 'Explore The Atlas',
       icon: Compass,
       borderColor: 'hover:border-[#496D91]',
+      isVisible: () => isItemPubliclyAccessible('pillar-atlas', contentOverrides) || isItemPubliclyAccessible('pillar-bridge', contentOverrides)
     },
     {
-      id: 'bridge',
+      id: 'journal',
       number: '03',
-      name: 'The Bridge',
-      category: 'Professional Readiness',
-      accent: '#C38A63',
-      softAccent: '#F5EBE1',
-      tag: 'Interview & Aptitude Practice',
-      description: 'Preparation for placements, interviews and the move from study into professional work.',
-      actionLabel: 'Cross The Bridge',
-      icon: Briefcase,
-      borderColor: 'hover:border-[#C38A63]',
-    },
-    {
-      id: 'readout',
-      number: '04',
-      name: 'The Readout',
-      category: 'Technical Publication',
+      name: 'The Journal',
+      category: 'Ideas & Reflections',
       accent: '#765C90',
       softAccent: '#EBE5F0',
-      tag: 'Computing & Science Notes',
-      description: 'Developments in technology and science, explained with clarity and curiosity.',
-      actionLabel: 'Open The Readout',
+      tag: 'Technical Notes & Writing',
+      description: 'Technical developments, computing observations, and personal essays on teaching and engineering craft.',
+      actionLabel: 'Read The Journal',
       icon: Radio,
       borderColor: 'hover:border-[#765C90]',
-    },
-    {
-      id: 'folio',
-      number: '05',
-      name: 'The Folio',
-      category: 'Personal Essays',
-      accent: '#935F5D',
-      softAccent: '#F3E6E3',
-      tag: 'Writing & Reflection',
-      description: 'Essays, reflections and personal observations I want to put into words.',
-      actionLabel: 'Read The Folio',
-      icon: FileText,
-      borderColor: 'hover:border-[#935F5D]',
+      isVisible: () => isItemPubliclyAccessible('pillar-readout', contentOverrides) || isItemPubliclyAccessible('pillar-folio', contentOverrides)
     },
   ];
+
+  const pillars = isRegistryLoaded
+    ? allPillars.filter(p => p.isVisible())
+    : [];
 
   return (
     <div className="space-y-16 sm:space-y-24 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
@@ -113,7 +93,7 @@ export const MainHome = ({
               
               <div className="space-y-3 pt-1">
                 <p className="text-base sm:text-lg text-[#293B32] leading-relaxed max-w-xl font-normal">
-                  ZeroIndex is where I bring together academic learning, structured roadmaps, career preparation, technology observations and personal writing.
+                  ZeroIndex is where I bring together academic learning, structured pathways, career preparation, technical insights and personal reflection.
                 </p>
 
                 <p className="text-sm sm:text-base text-[#5F6C64] leading-relaxed max-w-xl font-normal">
@@ -154,7 +134,7 @@ export const MainHome = ({
       </section>
 
       {/* =========================================================================
-          SECTION 2: FIVE PILLARS INTRODUCTION ("Inside ZeroIndex")
+          SECTION 2: THREE PILLARS INTRODUCTION ("Inside ZeroIndex")
       ========================================================================= */}
       <section ref={pillarsRef} id="pillars" className="max-w-7xl mx-auto space-y-8 scroll-mt-24">
         
@@ -173,212 +153,57 @@ export const MainHome = ({
           </span>
         </div>
 
-        {/* 5 Pillar Cards: Desktop arrangement: 
-            If Bridge is visible:
-              First row: Workbench, Atlas, Bridge (each lg:col-span-2)
-            If Bridge is hidden:
-              First row: Workbench, Atlas (each lg:col-span-3, equal-width balanced cards)
-            Second row: Readout, Folio (each lg:col-span-3, equal-width balanced cards)
-        */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 text-left">
-          
-          {/* Card 01: The Workbench */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onNavigate('workbench')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNavigate('workbench');
-              }
-            }}
-            className={`p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#285C49] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 ${isBridgeVisible ? 'lg:col-span-2' : 'lg:col-span-3'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49]`}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#DDEADD] text-[#285C49]">
-                  01
-                </span>
-                <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                  {pillars[0].category}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#285C49] transition-colors">
-                  {pillars[0].name}
-                </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                  {pillars[0].description}
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#285C49]">
-              <span>{pillars[0].actionLabel}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
-          {/* Card 02: The Atlas */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onNavigate('atlas')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNavigate('atlas');
-              }
-            }}
-            className={`p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#496D91] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 ${isBridgeVisible ? 'lg:col-span-2' : 'lg:col-span-3'} focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#496D91]`}
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91]">
-                  02
-                </span>
-                <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                  {pillars[1].category}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#496D91] transition-colors">
-                  {pillars[1].name}
-                </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                  {pillars[1].description}
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#496D91]">
-              <span>{pillars[1].actionLabel}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
-          {/* Card 03: The Bridge */}
-          {isBridgeVisible && (
+        {/* 3 Balanced Pillar Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-6 text-left">
+          {pillars.map((pillar) => (
             <div
+              key={pillar.id}
               role="button"
               tabIndex={0}
-              onClick={() => onNavigate('bridge')}
+              onClick={() => onNavigate(pillar.id)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                   e.preventDefault();
-                  onNavigate('bridge');
+                  onNavigate(pillar.id);
                 }
               }}
-              className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#C38A63] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-2 lg:col-span-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C38A63]"
+              className={`p-6 sm:p-7 rounded-3xl bg-white border border-[#DDE2DA] ${pillar.borderColor} shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49]`}
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
-                  <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F5EBE1] text-[#C38A63]">
-                    03
+                  <span 
+                    className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full"
+                    style={{ backgroundColor: pillar.softAccent, color: pillar.accent }}
+                  >
+                    {pillar.number}
                   </span>
                   <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                    {pillars[2].category}
+                    {pillar.category}
                   </span>
                 </div>
 
                 <div>
-                  <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#C38A63] transition-colors">
-                    {pillars[2].name}
+                  <h3 
+                    className="font-editorial text-2xl font-bold text-[#293B32] transition-colors"
+                    style={{ color: undefined }}
+                  >
+                    {pillar.name}
                   </h3>
                   <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                    {pillars[2].description}
+                    {pillar.description}
                   </p>
                 </div>
               </div>
 
-              <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#C38A63]">
-                <span>{pillars[2].actionLabel}</span>
+              <div 
+                className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold"
+                style={{ color: pillar.accent }}
+              >
+                <span>{pillar.actionLabel}</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
             </div>
-          )}
-
-          {/* Card 04: The Readout (Balanced Row 2 - spans 3 cols on lg) */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onNavigate('readout')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNavigate('readout');
-              }
-            }}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#765C90] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#765C90]"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#EBE5F0] text-[#765C90]">
-                  04
-                </span>
-                <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                  {pillars[3].category}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#765C90] transition-colors">
-                  {pillars[3].name}
-                </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                  {pillars[3].description}
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#765C90]">
-              <span>{pillars[3].actionLabel}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
-          {/* Card 05: The Folio (Balanced Row 2 - spans 3 cols on lg) */}
-          <div
-            role="button"
-            tabIndex={0}
-            onClick={() => onNavigate('folio')}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onNavigate('folio');
-              }
-            }}
-            className="p-7 rounded-3xl bg-white border border-[#DDE2DA] hover:border-[#935F5D] shadow-soft hover:shadow-lift transition-all cursor-pointer flex flex-col justify-between space-y-6 group col-span-1 md:col-span-1 lg:col-span-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#935F5D]"
-          >
-            <div className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="font-technical text-xs font-bold px-2.5 py-0.5 rounded-full bg-[#F3E6E3] text-[#935F5D]">
-                  05
-                </span>
-                <span className="font-technical text-[10px] uppercase tracking-wider text-[#5F6C64]">
-                  {pillars[4].category}
-                </span>
-              </div>
-
-              <div>
-                <h3 className="font-editorial text-2xl font-bold text-[#293B32] group-hover:text-[#935F5D] transition-colors">
-                  {pillars[4].name}
-                </h3>
-                <p className="text-sm text-[#5F6C64] leading-relaxed mt-2 font-normal">
-                  {pillars[4].description}
-                </p>
-              </div>
-            </div>
-
-            <div className="pt-4 border-t border-[#E6E8E1] flex items-center justify-between text-xs font-technical font-semibold text-[#935F5D]">
-              <span>{pillars[4].actionLabel}</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </div>
-          </div>
-
+          ))}
         </div>
 
       </section>

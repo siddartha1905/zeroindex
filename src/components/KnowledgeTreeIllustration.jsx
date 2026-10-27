@@ -9,9 +9,17 @@ export const KnowledgeTreeIllustration = ({
   const [hoveredBranch, setHoveredBranch] = useState(null);
 
   const isBranchAccessible = (branchId) => {
-    return isItemPubliclyAccessible('pillar-' + branchId, contentOverrides);
+    if (branchId === 'workbench') {
+      return isItemPubliclyAccessible('pillar-workbench', contentOverrides);
+    }
+    if (branchId === 'atlas') {
+      return isItemPubliclyAccessible('pillar-atlas', contentOverrides) || isItemPubliclyAccessible('pillar-bridge', contentOverrides);
+    }
+    if (branchId === 'journal') {
+      return isItemPubliclyAccessible('pillar-readout', contentOverrides) || isItemPubliclyAccessible('pillar-folio', contentOverrides);
+    }
+    return false;
   };
-  const isBridgePublic = isBranchAccessible('bridge');
 
   const branches = [
     {
@@ -20,7 +28,7 @@ export const KnowledgeTreeIllustration = ({
       number: '01',
       color: '#285C49',
       softColor: '#DDEADD',
-      label: 'Core Academics',
+      label: 'Learn and Understand',
     },
     {
       id: 'atlas',
@@ -28,31 +36,15 @@ export const KnowledgeTreeIllustration = ({
       number: '02',
       color: '#496D91',
       softColor: '#E1EAF2',
-      label: 'Skill Roadmaps',
+      label: 'Direction and Skills',
     },
     {
-      id: 'bridge',
-      name: 'The Bridge',
+      id: 'journal',
+      name: 'The Journal',
       number: '03',
-      color: '#C38A63',
-      softColor: '#F5EBE1',
-      label: 'Career Prep',
-    },
-    {
-      id: 'readout',
-      name: 'The Readout',
-      number: '04',
       color: '#765C90',
       softColor: '#EBE5F0',
-      label: 'Tech & Science',
-    },
-    {
-      id: 'folio',
-      name: 'The Folio',
-      number: '05',
-      color: '#935F5D',
-      softColor: '#F2E5E1',
-      label: 'Essays & Notes',
+      label: 'Ideas, Insights and Reflections',
     },
   ];
 
@@ -82,7 +74,7 @@ export const KnowledgeTreeIllustration = ({
         viewBox="0 0 540 400" 
         className="w-full h-auto"
         role="img"
-        aria-label="Schematic technical diagram showing five learning pathways originating from index zero"
+        aria-label="Schematic technical diagram showing three learning pathways originating from index zero"
       >
         <defs>
           {/* Subtle Grid Pattern for drawing canvas */}
@@ -99,12 +91,12 @@ export const KnowledgeTreeIllustration = ({
         <circle cx="270" cy="340" r="28" fill="none" stroke="#DDE2DA" strokeWidth="1.2" />
 
         {/* -------------------------------------------------------------
-            BRANCH 1: THE WORKBENCH (Left-up to x:85, y:120)
+            BRANCH 1: THE WORKBENCH (Left branch toward x:95, y:125)
         ------------------------------------------------------------- */}
         <g 
           tabIndex={0}
           role="button"
-          aria-label="The Workbench: Core Academics"
+          aria-label="The Workbench: Learn and Understand"
           className="cursor-pointer transition-all duration-150 focus:outline-none"
           onMouseEnter={() => setHoveredBranch('workbench')}
           onMouseLeave={() => setHoveredBranch(null)}
@@ -115,17 +107,17 @@ export const KnowledgeTreeIllustration = ({
         >
           {/* Branch Path */}
           <path 
-            d="M 260 325 C 220 280, 140 220, 85 130" 
+            d="M 260 325 C 220 280, 150 210, 95 125" 
             fill="none" 
             stroke={currentHover === 'workbench' ? '#285C49' : '#69766D'} 
             strokeWidth={currentHover === 'workbench' ? '2.8' : '1.6'}
             strokeLinecap="round"
           />
           {/* Sub-twigs */}
-          <path d="M 175 250 C 145 235, 120 220, 110 190" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
+          <path d="M 175 245 C 145 230, 120 215, 110 185" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
           
-          {/* Terminal Motif: Open schematic notebook & logic gate */}
-          <g transform="translate(50, 65)">
+          {/* Terminal Motif: Open schematic notebook and logic gate */}
+          <g transform="translate(60, 60)">
             <rect 
               x="0" y="0" width="70" height="52" rx="6" 
               fill={currentHover === 'workbench' ? '#DDEADD' : '#FFFFFF'} 
@@ -143,12 +135,12 @@ export const KnowledgeTreeIllustration = ({
         </g>
 
         {/* -------------------------------------------------------------
-            BRANCH 2: THE ATLAS (Mid-left up to x:175, y:65)
+            BRANCH 2: THE ATLAS (Center branch toward x:270, y:75)
         ------------------------------------------------------------- */}
         <g 
           tabIndex={0}
           role="button"
-          aria-label="The Atlas: Skill Roadmaps"
+          aria-label="The Atlas: Find Your Direction and Build Skills"
           className="cursor-pointer transition-all duration-150 focus:outline-none"
           onMouseEnter={() => setHoveredBranch('atlas')}
           onMouseLeave={() => setHoveredBranch(null)}
@@ -157,160 +149,82 @@ export const KnowledgeTreeIllustration = ({
           onKeyDown={(e) => handleKeyDown(e, 'atlas')}
           onClick={() => onSelectBranch && onSelectBranch('atlas')}
         >
-          {/* Branch Path */}
+          {/* Main Trunk and Branch Path */}
           <path 
-            d="M 264 322 C 240 260, 200 170, 175 75" 
+            d="M 270 320 L 270 75" 
             fill="none" 
             stroke={currentHover === 'atlas' ? '#496D91' : '#69766D'} 
-            strokeWidth={currentHover === 'atlas' ? '2.8' : '1.6'}
+            strokeWidth={currentHover === 'atlas' ? '3' : '1.8'}
             strokeLinecap="round"
           />
-          {/* Waypoint dots */}
-          <circle cx="215" cy="190" r="2.5" fill="#496D91" />
-          <circle cx="190" cy="120" r="2.5" fill="#496D91" />
+          {/* Sub-twig Left: Learning Paths (START -> TRY -> NEXT) */}
+          <path d="M 270 230 C 240 210, 210 190, 195 160" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
+          <circle cx="225" cy="195" r="2.5" fill="#496D91" />
+          <circle cx="195" cy="160" r="2.5" fill="#496D91" />
 
-          {/* Terminal Motif: Cartographic folded route & directional marker */}
-          <g transform="translate(140, 15)">
+          {/* Sub-twig Right: Career Preparation (Bridge) */}
+          <path d="M 270 210 C 300 195, 330 180, 345 155" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
+          <line x1="285" y1="202" x2="315" y2="185" stroke="#496D91" strokeWidth="0.9" strokeDasharray="2 2" />
+
+          {/* Terminal Motif: Directional Waypoint with Bridge Truss */}
+          <g transform="translate(235, 15)">
             <rect 
               x="0" y="0" width="70" height="52" rx="6" 
               fill={currentHover === 'atlas' ? '#E1EAF2' : '#FFFFFF'} 
               stroke={currentHover === 'atlas' ? '#496D91' : '#DDE2DA'} 
               strokeWidth={currentHover === 'atlas' ? '2' : '1.5'}
             />
-            {/* Route waypoints */}
-            <path d="M 16 32 L 28 20 L 42 28 L 54 16" fill="none" stroke="#496D91" strokeWidth="1.5" strokeDasharray="3 2" />
-            <circle cx="16" cy="32" r="2.5" fill="#496D91" />
-            <circle cx="28" cy="20" r="2" fill="#496D91" />
-            <circle cx="42" cy="28" r="2" fill="#496D91" />
-            <circle cx="54" cy="16" r="3" fill="#496D91" />
+            {/* Structural bridge arch and waypoints */}
+            <line x1="14" y1="34" x2="56" y2="34" stroke="#496D91" strokeWidth="1.4" />
+            <path d="M 18 34 L 28 20 L 42 20 L 52 34" fill="none" stroke="#496D91" strokeWidth="1.3" />
+            <circle cx="28" cy="20" r="2.2" fill="#496D91" />
+            <circle cx="42" cy="20" r="2.2" fill="#496D91" />
+            <line x1="35" y1="20" x2="35" y2="34" stroke="#496D91" strokeWidth="1" strokeDasharray="2 1" />
             <text x="35" y="47" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fontWeight="bold" fill="#293B32">02 ATLAS</text>
           </g>
         </g>
 
         {/* -------------------------------------------------------------
-            BRANCH 3: THE BRIDGE (Center vertical up to x:270, y:55)
-        ------------------------------------------------------------- */}
-        <g 
-          tabIndex={isBridgePublic ? 0 : -1}
-          role={isBridgePublic ? "button" : "presentation"}
-          aria-label={isBridgePublic ? "The Bridge: Career Prep" : "The Bridge: Temporarily Offline"}
-          aria-disabled={!isBridgePublic}
-          className={isBridgePublic ? "cursor-pointer transition-all duration-150 focus:outline-none" : "opacity-25 cursor-not-allowed pointer-events-none"}
-          onMouseEnter={() => isBridgePublic && setHoveredBranch('bridge')}
-          onMouseLeave={() => setHoveredBranch(null)}
-          onFocus={() => isBridgePublic && setHoveredBranch('bridge')}
-          onBlur={() => setHoveredBranch(null)}
-          onKeyDown={(e) => isBridgePublic && handleKeyDown(e, 'bridge')}
-          onClick={() => isBridgePublic && onSelectBranch && onSelectBranch('bridge')}
-        >
-          {/* Main Trunk & Branch */}
-          <path 
-            d="M 270 320 L 270 65" 
-            fill="none" 
-            stroke={currentHover === 'bridge' ? '#C38A63' : '#69766D'} 
-            strokeWidth={currentHover === 'bridge' ? '3' : '1.8'}
-            strokeLinecap="round"
-          />
-
-          {/* Terminal Motif: Structural truss bridge silhouette */}
-          <g transform="translate(235, 8)">
-            <rect 
-              x="0" y="0" width="70" height="52" rx="6" 
-              fill={currentHover === 'bridge' ? '#F5EBE1' : '#FFFFFF'} 
-              stroke={currentHover === 'bridge' ? '#C38A63' : '#DDE2DA'} 
-              strokeWidth={currentHover === 'bridge' ? '2' : '1.5'}
-            />
-            {/* Truss bridge illustration */}
-            <line x1="12" y1="34" x2="58" y2="34" stroke="#C38A63" strokeWidth="1.5" />
-            <path d="M 16 34 L 28 20 L 42 20 L 54 34" fill="none" stroke="#C38A63" strokeWidth="1.4" />
-            <line x1="28" y1="20" x2="28" y2="34" stroke="#C38A63" strokeWidth="1" />
-            <line x1="42" y1="20" x2="42" y2="34" stroke="#C38A63" strokeWidth="1" />
-            <line x1="28" y1="34" x2="42" y2="20" stroke="#C38A63" strokeWidth="0.8" />
-            <text x="35" y="47" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fontWeight="bold" fill="#293B32">03 BRIDGE</text>
-          </g>
-        </g>
-
-        {/* -------------------------------------------------------------
-            BRANCH 4: THE READOUT (Mid-right up to x:365, y:65)
+            BRANCH 3: THE JOURNAL (Right branch toward x:445, y:125)
         ------------------------------------------------------------- */}
         <g 
           tabIndex={0}
           role="button"
-          aria-label="The Readout: Tech & Science"
+          aria-label="The Journal: Ideas, Insights and Reflections"
           className="cursor-pointer transition-all duration-150 focus:outline-none"
-          onMouseEnter={() => setHoveredBranch('readout')}
+          onMouseEnter={() => setHoveredBranch('journal')}
           onMouseLeave={() => setHoveredBranch(null)}
-          onFocus={() => setHoveredBranch('readout')}
+          onFocus={() => setHoveredBranch('journal')}
           onBlur={() => setHoveredBranch(null)}
-          onKeyDown={(e) => handleKeyDown(e, 'readout')}
-          onClick={() => onSelectBranch && onSelectBranch('readout')}
+          onKeyDown={(e) => handleKeyDown(e, 'journal')}
+          onClick={() => onSelectBranch && onSelectBranch('journal')}
         >
           {/* Branch Path */}
           <path 
-            d="M 276 322 C 300 260, 340 170, 365 75" 
+            d="M 280 325 C 320 280, 390 210, 445 125" 
             fill="none" 
-            stroke={currentHover === 'readout' ? '#765C90' : '#69766D'} 
-            strokeWidth={currentHover === 'readout' ? '2.8' : '1.6'}
+            stroke={currentHover === 'journal' ? '#765C90' : '#69766D'} 
+            strokeWidth={currentHover === 'journal' ? '2.8' : '1.6'}
             strokeLinecap="round"
           />
-          <circle cx="325" cy="190" r="2.5" fill="#765C90" />
-          <circle cx="350" cy="120" r="2.5" fill="#765C90" />
+          {/* Sub-twigs: Insights (waveform) and Reflections (editorial) */}
+          <path d="M 365 245 C 395 230, 420 215, 430 185" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
+          <path d="M 390 225 Q 400 215, 410 225 T 425 220" fill="none" stroke="#765C90" strokeWidth="0.9" />
 
-          {/* Terminal Motif: Oscilloscope wave & measurement crosshair */}
-          <g transform="translate(330, 15)">
+          {/* Terminal Motif: Editorial script and technical waveform */}
+          <g transform="translate(410, 60)">
             <rect 
               x="0" y="0" width="70" height="52" rx="6" 
-              fill={currentHover === 'readout' ? '#EBE5F0' : '#FFFFFF'} 
-              stroke={currentHover === 'readout' ? '#765C90' : '#DDE2DA'} 
-              strokeWidth={currentHover === 'readout' ? '2' : '1.5'}
+              fill={currentHover === 'journal' ? '#EBE5F0' : '#FFFFFF'} 
+              stroke={currentHover === 'journal' ? '#765C90' : '#DDE2DA'} 
+              strokeWidth={currentHover === 'journal' ? '2' : '1.5'}
             />
-            {/* Oscilloscope sine wave */}
-            <path d="M 12 26 Q 22 14, 30 26 T 48 26 T 58 26" fill="none" stroke="#765C90" strokeWidth="1.4" />
-            <line x1="35" y1="16" x2="35" y2="36" stroke="#DDE2DA" strokeWidth="0.8" strokeDasharray="2 1" />
-            <text x="35" y="47" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fontWeight="bold" fill="#293B32">04 READOUT</text>
-          </g>
-        </g>
-
-        {/* -------------------------------------------------------------
-            BRANCH 5: THE FOLIO (Far-right up to x:455, y:120)
-        ------------------------------------------------------------- */}
-        <g 
-          tabIndex={0}
-          role="button"
-          aria-label="The Folio: Essays & Notes"
-          className="cursor-pointer transition-all duration-150 focus:outline-none"
-          onMouseEnter={() => setHoveredBranch('folio')}
-          onMouseLeave={() => setHoveredBranch(null)}
-          onFocus={() => setHoveredBranch('folio')}
-          onBlur={() => setHoveredBranch(null)}
-          onKeyDown={(e) => handleKeyDown(e, 'folio')}
-          onClick={() => onSelectBranch && onSelectBranch('folio')}
-        >
-          {/* Branch Path */}
-          <path 
-            d="M 280 325 C 320 280, 400 220, 455 130" 
-            fill="none" 
-            stroke={currentHover === 'folio' ? '#935F5D' : '#69766D'} 
-            strokeWidth={currentHover === 'folio' ? '2.8' : '1.6'}
-            strokeLinecap="round"
-          />
-          <path d="M 365 250 C 395 235, 420 220, 430 190" fill="none" stroke="#DDE2DA" strokeWidth="1" strokeLinecap="round" />
-
-          {/* Terminal Motif: Open literary sheet & fountain pen annotation */}
-          <g transform="translate(420, 65)">
-            <rect 
-              x="0" y="0" width="70" height="52" rx="6" 
-              fill={currentHover === 'folio' ? '#F2E5E1' : '#FFFFFF'} 
-              stroke={currentHover === 'folio' ? '#935F5D' : '#DDE2DA'} 
-              strokeWidth={currentHover === 'folio' ? '2' : '1.5'}
-            />
-            {/* Typeset editorial lines */}
-            <line x1="16" y1="18" x2="54" y2="18" stroke="#935F5D" strokeWidth="1.2" />
-            <line x1="16" y1="24" x2="48" y2="24" stroke="#935F5D" strokeWidth="1.2" />
-            <line x1="16" y1="30" x2="52" y2="30" stroke="#935F5D" strokeWidth="1.2" />
-            {/* Pen tip angle */}
-            <path d="M 52 28 L 56 32 L 53 34 Z" fill="#935F5D" />
-            <text x="35" y="47" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fontWeight="bold" fill="#293B32">05 FOLIO</text>
+            {/* Waveform and typeset lines */}
+            <path d="M 14 20 Q 22 13, 28 20 T 40 20" fill="none" stroke="#765C90" strokeWidth="1.2" />
+            <line x1="16" y1="28" x2="54" y2="28" stroke="#765C90" strokeWidth="1.1" />
+            <line x1="16" y1="34" x2="46" y2="34" stroke="#765C90" strokeWidth="1.1" />
+            <path d="M 50 32 L 54 36 L 51 38 Z" fill="#765C90" />
+            <text x="35" y="47" textAnchor="middle" fontFamily="'IBM Plex Mono', monospace" fontSize="8" fontWeight="bold" fill="#293B32">03 JOURNAL</text>
           </g>
         </g>
 
