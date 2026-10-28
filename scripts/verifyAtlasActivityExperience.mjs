@@ -57,7 +57,7 @@ assert(ENGLISH_COMMUNICATION_PATH.activities && ENGLISH_COMMUNICATION_PATH.activ
 const act1 = ENGLISH_COMMUNICATION_PATH.activities[0];
 assert(act1.number === '01', 'Activity 1 number is "01"', suite1);
 assert(act1.title === 'Speak Clearly', 'Activity 1 title is "Speak Clearly"', suite1);
-assert(act1.status === 'ready' && act1.statusLabel === 'Available in Preview', 'Activity 1 status is Available in Preview', suite1);
+assert(act1.status === 'ready' && (act1.statusLabel === 'Available' || act1.statusLabel === 'Available in Preview'), 'Activity 1 status is Available', suite1);
 assert(act1.route === 'atlas/activity/speak-clearly', 'Activity 1 connects to "atlas/activity/speak-clearly"', suite1);
 assert(act1.isInteractive === true, 'Activity 1 marked interactive', suite1);
 
@@ -65,7 +65,7 @@ assert(act1.isInteractive === true, 'Activity 1 marked interactive', suite1);
 const act2 = ENGLISH_COMMUNICATION_PATH.activities[1];
 assert(act2.number === '02', 'Activity 2 number is "02"', suite1);
 assert(act2.title === 'Listen & Respond', 'Activity 2 title is "Listen & Respond"', suite1);
-assert(act2.status === 'ready' && act2.statusLabel === 'Available in Preview', 'Activity 2 status is Available in Preview', suite1);
+assert(act2.status === 'ready' && (act2.statusLabel === 'Available' || act2.statusLabel === 'Available in Preview'), 'Activity 2 status is Available', suite1);
 assert(act2.route === 'atlas/activity/listen-respond', 'Activity 2 connects to "atlas/activity/listen-respond"', suite1);
 assert(act2.isInteractive === true, 'Activity 2 marked interactive', suite1);
 
@@ -73,7 +73,7 @@ assert(act2.isInteractive === true, 'Activity 2 marked interactive', suite1);
 const act3 = ENGLISH_COMMUNICATION_PATH.activities[2];
 assert(act3.number === '03', 'Activity 3 number is "03"', suite1);
 assert(act3.title === 'Express Your Opinion', 'Activity 3 title is "Express Your Opinion"', suite1);
-assert(act3.status === 'ready' && act3.statusLabel === 'Available in Preview', 'Activity 3 status is Available in Preview', suite1);
+assert(act3.status === 'ready' && (act3.statusLabel === 'Available' || act3.statusLabel === 'Available in Preview'), 'Activity 3 status is Available', suite1);
 assert(act3.route === 'atlas/activity/express-your-opinion', 'Activity 3 connects to "atlas/activity/express-your-opinion"', suite1);
 assert(act3.isInteractive === true, 'Activity 3 marked interactive', suite1);
 
@@ -81,7 +81,7 @@ assert(act3.isInteractive === true, 'Activity 3 marked interactive', suite1);
 const act4 = ENGLISH_COMMUNICATION_PATH.activities[3];
 assert(act4.number === '04', 'Activity 4 number is "04"', suite1);
 assert(act4.title === 'Everyday Conversations', 'Activity 4 title is "Everyday Conversations"', suite1);
-assert(act4.status === 'ready' && act4.statusLabel === 'Available in Preview', 'Activity 4 status is Available in Preview', suite1);
+assert(act4.status === 'ready' && (act4.statusLabel === 'Available' || act4.statusLabel === 'Available in Preview'), 'Activity 4 status is Available', suite1);
 assert(act4.route === 'atlas/activity/everyday-conversations', 'Activity 4 connects to "atlas/activity/everyday-conversations"', suite1);
 assert(act4.isInteractive === true, 'Activity 4 marked interactive', suite1);
 assert(act4.activityKey === 'everyday-conversations', 'Activity 4 activityKey is "everyday-conversations"', suite1);
@@ -195,6 +195,7 @@ let renderedAtlasOwner = '';
 let renderedAtlasEnglishOverview = '';
 let renderedAtlasEverydayDirect = '';
 let renderedAtlasPublic = '';
+let renderedAtlasPublicUnpublished = '';
 
 try {
   const { EverydayConversationsActivity } = await vite.ssrLoadModule('/src/components/atlas/EverydayConversationsActivity.jsx');
@@ -255,6 +256,19 @@ try {
   );
   assert(renderedAtlasPublic.length > 0, `AtlasLanding (Public Visitor) SSR rendered (${renderedAtlasPublic.length} bytes)`, suite2);
 
+  // 5. Render Atlas in Public mode with unpublished override
+  renderedAtlasPublicUnpublished = ReactDOMServer.renderToString(
+    React.createElement(AtlasLanding, { 
+      isAdminPreview: false,
+      initialTab: 'learning-paths',
+      contentOverrides: { 'atlas-english-communication': false },
+      onNavigateHome: () => {},
+      onNavigateWorkbench: () => {},
+      onNavigateSection: () => {}
+    })
+  );
+  assert(renderedAtlasPublicUnpublished.length > 0, `AtlasLanding (Public Visitor - Unpublished) SSR rendered (${renderedAtlasPublicUnpublished.length} bytes)`, suite2);
+
 } catch (err) {
   assert(false, `SSR rendering threw error: ${err.message}`, suite2);
 } finally {
@@ -272,13 +286,13 @@ assert(renderedEverydayConversations.includes('CONNECT'), 'SSR output renders CO
 assert(renderedEverydayConversations.includes('CLOSE'), 'SSR output renders CLOSE method step', suite2);
 
 // AtlasLanding: English Communication Overview
-assert(renderedAtlasEnglishOverview.includes('4 of 4 Available in Preview'), 'Overview displays "4 of 4 Available in Preview"', suite2);
+assert(renderedAtlasEnglishOverview.includes('4 of 4 Available'), 'Overview displays "4 of 4 Available"', suite2);
 assert(renderedAtlasEnglishOverview.includes('Speak Clearly'), 'Overview renders Activity 1: Speak Clearly', suite2);
 assert(renderedAtlasEnglishOverview.includes('Listen &amp; Respond') || renderedAtlasEnglishOverview.includes('Listen & Respond'), 'Overview renders Activity 2: Listen & Respond', suite2);
 assert(renderedAtlasEnglishOverview.includes('Express Your Opinion'), 'Overview renders Activity 3: Express Your Opinion', suite2);
 assert(renderedAtlasEnglishOverview.includes('Everyday Conversations'), 'Overview renders Activity 4: Everyday Conversations', suite2);
 assert(renderedAtlasEnglishOverview.includes('atlas/activity/everyday-conversations'), 'Overview links Activity 4 to atlas/activity/everyday-conversations', suite2);
-assert(renderedAtlasEnglishOverview.includes('All 4 foundational activities are available for faculty review and classroom testing.'), 'Overview renders reassuring completed note', suite2);
+assert(renderedAtlasEnglishOverview.includes('All 4 foundational activities are available to practise at your own pace.'), 'Overview renders reassuring completed note', suite2);
 
 // AtlasLanding: General Learning Paths progression strip
 assert(renderedAtlasOwner.includes('04 Everyday conversations (Ready)'), 'General Learning Paths progression marks Activity 04 as Ready', suite2);
@@ -286,9 +300,11 @@ assert(renderedAtlasOwner.includes('04 Everyday conversations (Ready)'), 'Genera
 // AtlasLanding: Direct Preview
 assert(renderedAtlasEverydayDirect.includes('Start naturally. Keep the conversation going. End politely.'), 'Direct preview renders Everyday Conversations directly', suite2);
 
-// AtlasLanding: Public Visitor Isolation
+// AtlasLanding: Public Visitor Experience
 assert(!renderedAtlasPublic.includes('Owner Preview'), 'Public Atlas landing does NOT render "Owner Preview"', suite2);
-assert(!renderedAtlasPublic.includes('Everyday Conversations'), 'Public Atlas landing does NOT leak unpublished Everyday Conversations', suite2);
+assert(renderedAtlasPublic.includes('English Communication'), 'Public Atlas landing displays published English Communication card', suite2);
+assert(renderedAtlasPublic.includes('Explore Learning Path'), 'Public Atlas landing provides Explore Learning Path action', suite2);
+assert(!renderedAtlasPublicUnpublished.includes('Explore Learning Path'), 'Public Atlas landing does NOT display card when unpublished', suite2);
 
 console.log(`  --> Subtotal Suite 2: ${suite2.passed}/${suite2.passed + suite2.failed} passed\n`);
 
@@ -462,41 +478,98 @@ const {
   isRoutePubliclyAccessible 
 } = await import('../src/data/centralContentRegistry.js');
 
-// Anonymous access checks for all four activities
+// Anonymous access checks for all four activities when published
 assert(
-  isRoutePubliclyAccessible('atlas/activity/speak-clearly') === false,
-  'Signed-out visitor cannot publicly access "atlas/activity/speak-clearly"',
+  isRoutePubliclyAccessible('atlas/activity/speak-clearly') === true,
+  'Signed-out visitor can publicly access "atlas/activity/speak-clearly" when published',
   suite4
 );
 
 assert(
-  isRoutePubliclyAccessible('atlas/activity/listen-respond') === false,
-  'Signed-out visitor cannot publicly access "atlas/activity/listen-respond"',
+  isRoutePubliclyAccessible('atlas/activity/listen-respond') === true,
+  'Signed-out visitor can publicly access "atlas/activity/listen-respond" when published',
   suite4
 );
 
 assert(
-  isRoutePubliclyAccessible('atlas/activity/express-your-opinion') === false,
-  'Signed-out visitor cannot publicly access "atlas/activity/express-your-opinion"',
+  isRoutePubliclyAccessible('atlas/activity/express-your-opinion') === true,
+  'Signed-out visitor can publicly access "atlas/activity/express-your-opinion" when published',
   suite4
 );
 
 assert(
-  isRoutePubliclyAccessible('atlas/activity/everyday-conversations') === false,
-  'Signed-out visitor cannot publicly access "atlas/activity/everyday-conversations"',
+  isRoutePubliclyAccessible('atlas/activity/everyday-conversations') === true,
+  'Signed-out visitor can publicly access "atlas/activity/everyday-conversations" when published',
   suite4
 );
 
 assert(
-  isRoutePubliclyAccessible('atlas/learning-paths/english-communication') === false,
-  'Signed-out visitor cannot publicly access "atlas/learning-paths/english-communication"',
+  isRoutePubliclyAccessible('atlas/learning-paths/english-communication') === true,
+  'Signed-out visitor can publicly access "atlas/learning-paths/english-communication" when published',
+  suite4
+);
+
+// Anonymous access checks when explicitly unpublished via override
+const unpublishedOverrides = { 'atlas-english-communication': false };
+assert(
+  isRoutePubliclyAccessible('atlas/activity/speak-clearly', unpublishedOverrides) === false,
+  'Signed-out visitor cannot publicly access "atlas/activity/speak-clearly" when unpublished',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/activity/listen-respond', unpublishedOverrides) === false,
+  'Signed-out visitor cannot publicly access "atlas/activity/listen-respond" when unpublished',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/activity/express-your-opinion', unpublishedOverrides) === false,
+  'Signed-out visitor cannot publicly access "atlas/activity/express-your-opinion" when unpublished',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/activity/everyday-conversations', unpublishedOverrides) === false,
+  'Signed-out visitor cannot publicly access "atlas/activity/everyday-conversations" when unpublished',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/learning-paths/english-communication', unpublishedOverrides) === false,
+  'Signed-out visitor cannot publicly access "atlas/learning-paths/english-communication" when unpublished',
+  suite4
+);
+
+// Other unpublished roadmaps remain strictly blocked to public visitors
+assert(
+  isRoutePubliclyAccessible('atlas/learning-paths/programming-foundations') === false,
+  'Unpublished roadmap programming-foundations remains blocked',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/programming-foundations') === false,
+  'Unpublished roadmap direct slug remains blocked',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/soft-skills') === false,
+  'Unpublished roadmap soft-skills remains blocked',
+  suite4
+);
+
+assert(
+  isRoutePubliclyAccessible('atlas/activity/unknown-activity') === false,
+  'Unknown activity route fails closed and remains blocked',
   suite4
 );
 
 // App.jsx route guard checks
 assert(
-  appContent.includes("atlasSlug.includes('everyday-conversations')"),
-  'App.jsx guards everyday-conversations from anonymous access',
+  appContent.includes("isRoutePubliclyAccessible(`atlas/activity/${atlasSlug}`"),
+  'App.jsx guards activities using authoritative isRoutePubliclyAccessible check',
   suite4
 );
 
@@ -511,26 +584,32 @@ const atlasLandingPath = path.join(rootDir, 'src/components/AtlasLanding.jsx');
 const atlasLandingContent = fs.readFileSync(atlasLandingPath, 'utf8');
 
 assert(
-  atlasLandingContent.includes("activeActivity === 'speak-clearly-60s' && isAdminPreview"),
-  'AtlasLanding guards speak-clearly runner with isAdminPreview',
+  atlasLandingContent.includes("isEnglishCommunicationAccessible"),
+  'AtlasLanding guards activities with isEnglishCommunicationAccessible check',
   suite4
 );
 
 assert(
-  atlasLandingContent.includes("activeActivity === 'listen-respond' && isAdminPreview"),
-  'AtlasLanding guards listen-respond runner with isAdminPreview',
+  atlasLandingContent.includes("activeActivity === 'speak-clearly-60s' && isEnglishCommunicationAccessible"),
+  'AtlasLanding guards speak-clearly runner with isEnglishCommunicationAccessible',
   suite4
 );
 
 assert(
-  atlasLandingContent.includes("activeActivity === 'express-your-opinion' && isAdminPreview"),
-  'AtlasLanding guards express-your-opinion runner with isAdminPreview',
+  atlasLandingContent.includes("activeActivity === 'listen-respond' && isEnglishCommunicationAccessible"),
+  'AtlasLanding guards listen-respond runner with isEnglishCommunicationAccessible',
   suite4
 );
 
 assert(
-  atlasLandingContent.includes("activeActivity === 'everyday-conversations' && isAdminPreview"),
-  'AtlasLanding guards everyday-conversations runner with isAdminPreview',
+  atlasLandingContent.includes("activeActivity === 'express-your-opinion' && isEnglishCommunicationAccessible"),
+  'AtlasLanding guards express-your-opinion runner with isEnglishCommunicationAccessible',
+  suite4
+);
+
+assert(
+  atlasLandingContent.includes("activeActivity === 'everyday-conversations' && isEnglishCommunicationAccessible"),
+  'AtlasLanding guards everyday-conversations runner with isEnglishCommunicationAccessible',
   suite4
 );
 

@@ -90,7 +90,7 @@ export async function fetchContentRegistry() {
             return {
               ...item,
               isPublic: Boolean(dbRow.is_public),
-              editorialStatus: dbRow.editorial_status || item.editorialStatus,
+              editorialStatus: item.editorialStatus === 'published' ? 'published' : (dbRow.editorial_status || item.editorialStatus),
               updatedAt: dbRow.updated_at
             };
           }
@@ -210,6 +210,9 @@ export async function updateItemVisibility({ itemId, isPublic, adminSession }) {
         is_public: isPublic,
         updated_at: new Date().toISOString()
       };
+      if (item.editorialStatus === 'published') {
+        updatePayload.editorial_status = 'published';
+      }
       if (adminSession.userId && typeof adminSession.userId === 'string' && adminSession.userId.length > 20) {
         updatePayload.updated_by = adminSession.userId;
       }

@@ -29,7 +29,7 @@ export const ENGLISH_COMMUNICATION_PATH = {
       title: 'Speak Clearly',
       objective: 'Organise thoughts and express one idea confidently in 60 seconds.',
       status: 'ready',
-      statusLabel: 'Available in Preview',
+      statusLabel: 'Available',
       isInteractive: true,
       route: 'atlas/activity/speak-clearly'
     },
@@ -40,7 +40,7 @@ export const ENGLISH_COMMUNICATION_PATH = {
       title: 'Listen & Respond',
       objective: 'Understand a question and give a clear, relevant response.',
       status: 'ready',
-      statusLabel: 'Available in Preview',
+      statusLabel: 'Available',
       isInteractive: true,
       route: 'atlas/activity/listen-respond'
     },
@@ -51,7 +51,7 @@ export const ENGLISH_COMMUNICATION_PATH = {
       title: 'Express Your Opinion',
       objective: 'Share a viewpoint supported by simple reasons and examples.',
       status: 'ready',
-      statusLabel: 'Available in Preview',
+      statusLabel: 'Available',
       isInteractive: true,
       route: 'atlas/activity/express-your-opinion'
     },
@@ -62,7 +62,7 @@ export const ENGLISH_COMMUNICATION_PATH = {
       title: 'Everyday Conversations',
       objective: 'Start, continue and conclude natural conversations appropriately.',
       status: 'ready',
-      statusLabel: 'Available in Preview',
+      statusLabel: 'Available',
       isInteractive: true,
       route: 'atlas/activity/everyday-conversations'
     }

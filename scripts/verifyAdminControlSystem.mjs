@@ -82,16 +82,19 @@ async function runSuite() {
   assert(isItemPubliclyAccessible('dld-unit-1') === true, 'DLD Unit I is publicly accessible by default');
   assert(isItemPubliclyAccessible('dld-sec-1.1') === true, 'DLD Section 1.1 is publicly accessible by default');
 
-  // Draft items are NEVER publicly accessible even if isPublic is forced
+  // Published items are publicly accessible by default
+  assert(isItemPubliclyAccessible('atlas-english-communication') === true, 'Published English Communication roadmap is publicly accessible');
+
+  // Draft and planned items are NEVER publicly accessible even if isPublic is forced
   assert(isItemPubliclyAccessible('readout-article-relays-to-tensors') === false, 'Readout draft is strictly inaccessible to public');
   assert(isItemPubliclyAccessible('folio-essay-teaching-from-index-zero') === false, 'Folio draft is strictly inaccessible to public');
-  assert(isItemPubliclyAccessible('atlas-english-communication') === false, 'In-review English roadmap is strictly inaccessible to public');
+  assert(isItemPubliclyAccessible('atlas-soft-skills') === false, 'Planned Atlas roadmap is strictly inaccessible to public');
   assert(isItemPubliclyAccessible('dld-sec-2.6') === false, 'Planned DLD Section 2.6 is strictly inaccessible to public');
 
   // Test forcing isPublic on draft via overrides: must still return false
-  const forcedDraftOverrides = { 'readout-article-relays-to-tensors': true, 'atlas-english-communication': true };
+  const forcedDraftOverrides = { 'readout-article-relays-to-tensors': true, 'atlas-soft-skills': true };
   assert(isItemPubliclyAccessible('readout-article-relays-to-tensors', forcedDraftOverrides) === false, 'Draft remains strictly hidden even if override isPublic = true');
-  assert(isItemPubliclyAccessible('atlas-english-communication', forcedDraftOverrides) === false, 'In-review roadmap remains strictly hidden even if override isPublic = true');
+  assert(isItemPubliclyAccessible('atlas-soft-skills', forcedDraftOverrides) === false, 'Unpublished roadmap remains strictly hidden even if override isPublic = true');
 
   // Hierarchical Inheritance: Hiding a pillar hides all descendants
   const hideWorkbenchOverrides = { 'pillar-workbench': false };

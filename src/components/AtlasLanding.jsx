@@ -54,6 +54,7 @@ export const AtlasLanding = ({
 }) => {
   const isAtlasAccessible = isAdminPreview || isItemPubliclyAccessible('pillar-atlas', contentOverrides);
   const isBridgeAccessible = isAdminPreview || isItemPubliclyAccessible('pillar-bridge', contentOverrides);
+  const isEnglishCommunicationAccessible = isAdminPreview || isItemPubliclyAccessible('atlas-english-communication', contentOverrides);
 
   // Determine initial active primary tab: 'learning-paths' | 'career-prep'
   const [activeTab, setActiveTab] = useState(() => {
@@ -68,16 +69,16 @@ export const AtlasLanding = ({
 
   // English Communication Learning Path Overview State
   const [selectedLearningPath, setSelectedLearningPath] = useState(() => {
-    if (isAdminPreview && (initialMapId === 'english-communication' || initialSubId === 'english-communication')) {
+    if (isEnglishCommunicationAccessible && (initialMapId === 'english-communication' || initialSubId === 'english-communication')) {
       return 'english-communication';
     }
     return null;
   });
 
   // Practical Learning Activity State (e.g., Speak Clearly 60-Second Challenge)
-  // Unpublished activity: accessible only through an authenticated owner preview
+  // Accessible to authenticated owner or to everyone when published
   const [activeActivity, setActiveActivity] = useState(() => {
-    if (isAdminPreview) {
+    if (isEnglishCommunicationAccessible) {
       if (initialMapId === 'speak-clearly' || initialMapId === 'speak-clearly-60s' || initialSubId === 'speak-clearly' || initialSubId === 'speak-clearly-60s') {
         return 'speak-clearly-60s';
       }
@@ -179,7 +180,7 @@ export const AtlasLanding = ({
     if (initialMapId) {
       setSelectedMapId(initialMapId);
     }
-    if (isAdminPreview) {
+    if (isEnglishCommunicationAccessible) {
       if (initialSubId === 'speak-clearly' || initialSubId === 'speak-clearly-60s' || initialMapId === 'speak-clearly' || initialMapId === 'speak-clearly-60s') {
         setActiveActivity('speak-clearly-60s');
         setActiveTab('learning-paths');
@@ -206,7 +207,7 @@ export const AtlasLanding = ({
       setActiveActivity(null);
       setSelectedLearningPath(null);
     }
-  }, [initialTab, initialDomainId, initialMapId, initialSubId, isAdminPreview]);
+  }, [initialTab, initialDomainId, initialMapId, initialSubId, isAdminPreview, isEnglishCommunicationAccessible]);
 
   const toggleStage = (stageNum) => {
     setExpandedStages(prev => ({
@@ -271,8 +272,8 @@ export const AtlasLanding = ({
   const totalCount = currentDomain ? currentDomain.checklist.length : 0;
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
-  // Render Full Activity Runner when active in owner preview
-  if (activeActivity === 'speak-clearly-60s' && isAdminPreview) {
+  // Render Full Activity Runner when active and accessible
+  if (activeActivity === 'speak-clearly-60s' && isEnglishCommunicationAccessible) {
     return (
       <SpeakClearlyActivity 
         onBack={() => {
@@ -284,7 +285,7 @@ export const AtlasLanding = ({
     );
   }
 
-  if (activeActivity === 'listen-respond' && isAdminPreview) {
+  if (activeActivity === 'listen-respond' && isEnglishCommunicationAccessible) {
     return (
       <ListenRespondActivity 
         onBack={() => {
@@ -296,7 +297,7 @@ export const AtlasLanding = ({
     );
   }
 
-  if (activeActivity === 'express-your-opinion' && isAdminPreview) {
+  if (activeActivity === 'express-your-opinion' && isEnglishCommunicationAccessible) {
     return (
       <ExpressYourOpinionActivity 
         onBack={() => {
@@ -308,7 +309,7 @@ export const AtlasLanding = ({
     );
   }
 
-  if (activeActivity === 'everyday-conversations' && isAdminPreview) {
+  if (activeActivity === 'everyday-conversations' && isEnglishCommunicationAccessible) {
     return (
       <EverydayConversationsActivity 
         onBack={() => {
@@ -488,7 +489,7 @@ export const AtlasLanding = ({
             </div>
 
             {/* If English Communication learning path is selected: render overview */}
-            {selectedLearningPath === 'english-communication' && isAdminPreview ? (
+            {selectedLearningPath === 'english-communication' && isEnglishCommunicationAccessible ? (
               <div className="space-y-6 animate-in fade-in duration-150">
                 {/* Back button */}
                 <div className="flex items-center justify-between pb-1 border-b border-[#DDE2DA]">
@@ -503,9 +504,11 @@ export const AtlasLanding = ({
                     <span>Back to Learning Paths</span>
                   </button>
                   <div className="flex items-center gap-2">
-                    <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
-                      Owner Preview
-                    </span>
+                    {isAdminPreview && (
+                      <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
+                        Owner Preview
+                      </span>
+                    )}
                     <span className="font-technical text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91]">
                       Foundation Sequence
                     </span>
@@ -565,7 +568,7 @@ export const AtlasLanding = ({
                 <div className="space-y-4 text-left">
                   <div className="flex items-center justify-between text-xs font-technical text-[#5F6C64] px-1">
                     <span className="font-bold uppercase tracking-wider text-[#25352D]">Learning Activities</span>
-                    <span>4 of 4 Available in Preview</span>
+                    <span>4 of 4 Available</span>
                   </div>
 
                   <div className="grid grid-cols-1 gap-4">
@@ -639,13 +642,13 @@ export const AtlasLanding = ({
 
                   {/* Reassuring editorial footer note */}
                   <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DDE2DA] text-xs text-[#5F6C64] flex items-center justify-between">
-                    <span>All 4 foundational activities are available for faculty review and classroom testing.</span>
-                    <span className="font-technical text-[11px] text-[#717E76] shrink-0 ml-3">Local Preview Only</span>
+                    <span>All 4 foundational activities are available to practise at your own pace.</span>
+                    <span className="font-technical text-[11px] text-[#496D91] font-semibold shrink-0 ml-3">Free & Open</span>
                   </div>
                 </div>
               </div>
             ) : (
-              isAdminPreview && (
+              isEnglishCommunicationAccessible && (
                 <div 
                   onClick={() => {
                     setSelectedLearningPath('english-communication');
@@ -655,9 +658,11 @@ export const AtlasLanding = ({
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
-                        Owner Preview
-                      </span>
+                      {isAdminPreview && (
+                        <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
+                          Owner Preview
+                        </span>
+                      )}
                       <span className="font-technical text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91] uppercase tracking-wider">
                         Learning Path
                       </span>
@@ -673,15 +678,15 @@ export const AtlasLanding = ({
 
                   <div className="space-y-1">
                     <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#496D91] transition-colors">
-                      {ENGLISH_COMMUNICATION_PATH.title}
+                      English Communication
                     </h3>
                     <p className="font-editorial italic text-sm sm:text-base text-[#496D91] font-medium">
-                      "{ENGLISH_COMMUNICATION_PATH.subtitle}"
+                      "Practical communication skills for everyday situations."
                     </p>
                   </div>
 
                   <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-2xl">
-                    {ENGLISH_COMMUNICATION_PATH.targetAudience} Designed to help learners organise thoughts, practise speaking and express ideas confidently across everyday situations.
+                    Four guided activities to help you organise thoughts, practise speaking clearly, listen carefully, express your opinions and participate in everyday conversations.
                   </p>
 
                   <div className="pt-2 border-t border-[#E6E8E1] flex flex-wrap items-center gap-1.5 text-xs text-[#5F6C64]">
@@ -791,11 +796,11 @@ export const AtlasLanding = ({
                 </div>
                 <div className="space-y-2">
                   <h2 className="font-editorial text-2xl font-bold text-[#25352D]">
-                    {isAdminPreview ? 'Other Learning Paths Under Editorial Review' : 'Learning Paths Under Editorial Review'}
+                    {isEnglishCommunicationAccessible ? 'Other Learning Paths Under Editorial Review' : 'Learning Paths Under Editorial Review'}
                   </h2>
                   <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-md mx-auto">
-                    {isAdminPreview
-                      ? 'Engineering learning roadmaps built on the START -> TRY -> NEXT framework are currently in progress and undergoing faculty review. The English Communication learning path above is active for owner preview.'
+                    {isEnglishCommunicationAccessible
+                      ? 'Engineering learning roadmaps built on the START -> TRY -> NEXT framework are currently in progress and undergoing faculty review. Explore English Communication above, foundational subject units on The Workbench, or placement preparation tracks below.'
                       : 'Engineering learning roadmaps built on the START -> TRY -> NEXT framework are currently undergoing faculty review. Explore foundational subject units on The Workbench or placement preparation tracks below.'}
                   </p>
                 </div>

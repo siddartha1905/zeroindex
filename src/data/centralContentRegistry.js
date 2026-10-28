@@ -362,8 +362,8 @@ export const centralContentRegistry = [
     contentType: 'roadmap',
     title: 'English Communication',
     route: 'atlas/english-communication',
-    editorialStatus: 'in_review',
-    isPublic: false,
+    editorialStatus: 'published',
+    isPublic: true,
     description: 'Practical communication skills for everyday situations.'
   },
   {
@@ -1150,7 +1150,16 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
 
   if (normalizedRoute.startsWith('atlas/activity/') || normalizedRoute.startsWith('atlas/preview/') || normalizedRoute.startsWith('atlas/practice/')) {
     const actSlug = normalizedRoute.split('/')[2];
-    if (actSlug && (actSlug.includes('speak-clearly') || actSlug.includes('listen-respond') || actSlug.includes('express-your-opinion') || actSlug.includes('express-opinion') || actSlug.includes('everyday-conversations') || actSlug.includes('everyday-conversation'))) {
+    const validActivities = [
+      'speak-clearly',
+      'speak-clearly-60s',
+      'listen-respond',
+      'express-your-opinion',
+      'express-opinion',
+      'everyday-conversations',
+      'everyday-conversation'
+    ];
+    if (actSlug && validActivities.includes(actSlug)) {
       return isItemPubliclyAccessible('atlas-english-communication', visibilityOverrides);
     }
     return false;

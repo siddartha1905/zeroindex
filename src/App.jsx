@@ -632,10 +632,18 @@ export function App() {
                 'atlas/career-prep',
                 'Return to Career Preparation'
               )
-            ) : (atlasTab === 'learning-paths' && atlasSlug && (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation') || (!isRoutePubliclyAccessible(`atlas/${atlasSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`atlas/learning-paths/${atlasSlug}`, contentOverrides)))) ? (
+            ) : (atlasTab === 'learning-paths' && atlasSlug && (() => {
+              const isActivity = ['speak-clearly', 'speak-clearly-60s', 'listen-respond', 'express-your-opinion', 'express-opinion', 'everyday-conversations', 'everyday-conversation'].includes(atlasSlug);
+              if (isActivity) {
+                return !isRoutePubliclyAccessible(`atlas/activity/${atlasSlug}`, contentOverrides);
+              }
+              return !isRoutePubliclyAccessible(`atlas/${atlasSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`atlas/learning-paths/${atlasSlug}`, contentOverrides);
+            })()) ? (
               renderOfflineContentNotice(
-                (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation')) ? 'The Atlas Learning Activity' : 'The Atlas Learning Path',
-                (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation'))
+                ['speak-clearly', 'speak-clearly-60s', 'listen-respond', 'express-your-opinion', 'express-opinion', 'everyday-conversations', 'everyday-conversation'].includes(atlasSlug)
+                  ? 'The Atlas Learning Activity'
+                  : 'The Atlas Learning Path',
+                ['speak-clearly', 'speak-clearly-60s', 'listen-respond', 'express-your-opinion', 'express-opinion', 'everyday-conversations', 'everyday-conversation'].includes(atlasSlug)
                   ? 'This learning activity is currently under faculty review and has not yet been published.'
                   : 'This learning roadmap has not been published or has been placed offline by the administrator.',
                 'atlas/learning-paths',
