@@ -1,4 +1,10 @@
 {
+  "git": {
+    "deploymentEnabled": {
+      "main": true,
+      "development/*": false
+    }
+  },
   "headers": [
     {
       "source": "/sw.js",

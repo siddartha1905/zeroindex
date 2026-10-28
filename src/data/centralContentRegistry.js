@@ -361,7 +361,7 @@ export const centralContentRegistry = [
     pillar: 'atlas',
     contentType: 'roadmap',
     title: 'English Communication',
-    route: 'atlas/english-communication',
+    route: 'atlas/learning-paths/english-communication',
     editorialStatus: 'published',
     isPublic: true,
     description: 'Practical communication skills for everyday situations.'

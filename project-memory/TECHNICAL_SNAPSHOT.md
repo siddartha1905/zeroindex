@@ -5,7 +5,7 @@
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
 - Source files (.js/.jsx/.ts/.tsx/.css/.json): **100**
-- Verification script names discovered: **22**
+- Verification script names discovered: **23**
 
 ## Selected declared dependencies
 
@@ -27,6 +27,7 @@
 ## Existing verification scripts (not executed here)
 
 - `scripts/verifyAdminControlSystem.mjs`
+- `scripts/verifyAdminDashboardModernisation.mjs`
 - `scripts/verifyAtlasActivityExperience.mjs`
 - `scripts/verifyDldResources.mjs`
 - `scripts/verifyIdeaInboxFix.mjs`
