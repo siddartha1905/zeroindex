@@ -144,6 +144,13 @@ assert(
 );
 
 assert(
+  atlasContent.includes("Know where to begin") &&
+  atlasContent.includes("Practise something useful") &&
+  atlasContent.includes("Discover what to learn afterward"),
+  'AtlasLanding provides compact, natural START -> TRY -> NEXT principle explanations'
+);
+
+assert(
   atlasContent.includes("Learning Paths") &&
   atlasContent.includes("Career Preparation"),
   'AtlasLanding provides tabs for Learning Paths and Career Preparation'
@@ -165,15 +172,20 @@ assert(fs.existsSync(journalPath), 'JournalLanding.jsx exists');
 const journalContent = fs.readFileSync(journalPath, 'utf8');
 
 assert(
-  journalContent.includes("Technical Insights") &&
-  journalContent.includes("Personal Reflections"),
-  'JournalLanding provides categories for Technical Insights and Personal Reflections'
+  journalContent.includes("Insights") &&
+  journalContent.includes("Reflections"),
+  'JournalLanding provides categories for Insights and Reflections'
 );
 
 assert(
-  journalContent.includes("Editorial Review") &&
-  journalContent.includes("Technical Insights Under Editorial Review"),
-  'JournalLanding features an editorial review state when no published entries exist'
+  journalContent.includes("Nothing published here yet") &&
+  journalContent.includes("New insights and reflections will appear whenever there is something meaningful to share"),
+  'JournalLanding features an elegant empty state when no published entries exist'
+);
+
+assert(
+  journalContent.includes("A space for ideas worth exploring, lessons worth remembering, and thoughts worth sharing"),
+  'JournalLanding introduces the approved Journal mission quote'
 );
 
 // ---------------------------------------------------------

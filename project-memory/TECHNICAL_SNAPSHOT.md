@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **94**
-- Verification script names discovered: **21**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **100**
+- Verification script names discovered: **22**
 
 ## Selected declared dependencies
 
@@ -27,6 +27,7 @@
 ## Existing verification scripts (not executed here)
 
 - `scripts/verifyAdminControlSystem.mjs`
+- `scripts/verifyAtlasActivityExperience.mjs`
 - `scripts/verifyDldResources.mjs`
 - `scripts/verifyIdeaInboxFix.mjs`
 - `scripts/verifyInteractiveSolvers.mjs`
@@ -105,6 +106,12 @@
 - `src/components/admin/ProjectDeskView.jsx`
 - `src/components/admin/SecureDraftPreviewModal.jsx`
 - `src/components/admin/SupabaseSetupModal.jsx`
+- `src/components/atlas/EverydayConversationsActivity.jsx`
+- `src/components/atlas/ExpressYourOpinionActivity.jsx`
+- `src/components/atlas/LearningNudge.jsx`
+- `src/components/atlas/ListenRespondActivity.jsx`
+- `src/components/atlas/SpeakClearlyActivity.jsx`
+- `src/data/atlasActivitiesData.js`
 - `src/data/atlasRoadmapsConfig.js`
 - `src/data/bridgePlacementConfig.js`
 - `src/data/centralContentRegistry.js`

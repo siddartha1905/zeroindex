@@ -36,8 +36,8 @@ for (const relPath of filesToAudit) {
   lines.forEach((line, i) => {
     // Ignore top documentation comment line mentioning the rule
     if (i < 8 && line.includes("Strictly zero em-dashes")) return;
-    if (line.includes("\u2014") || line.includes("—")) foundEm++;
-    if (line.includes("\u2013") || line.includes("–")) foundEn++;
+    if (line.includes("\u2014")) foundEm++;
+    if (line.includes("\u2013")) foundEn++;
   });
 
   assert(foundEm === 0, `${relPath}: Zero em-dashes found (count = ${foundEm})`);

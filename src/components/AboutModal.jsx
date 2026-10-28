@@ -78,7 +78,7 @@ export const AboutModal = ({ isOpen, onClose, isAdmin = false, onOpenAdmin, onOp
             </div>
             <div className="flex items-start gap-2">
               <span className="font-technical font-bold text-[#765C90]">03</span>
-              <span><strong className="text-[#25352D]">The Journal:</strong> Technical developments, computing insights, and personal reflections.</span>
+              <span><strong className="text-[#25352D]">The Journal:</strong> Ideas worth exploring, lessons worth remembering, and thoughts worth sharing.</span>
             </div>
           </div>
         </div>

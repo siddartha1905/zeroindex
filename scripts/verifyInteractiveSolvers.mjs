@@ -28,8 +28,8 @@ let foundEn = 0;
 lines.forEach((line, i) => {
   // Ignore header comment mentioning the rule
   if (i < 10 && line.includes("Strictly zero em-dashes")) return;
-  if (line.includes("\u2014") || line.includes("—")) foundEm++;
-  if (line.includes("\u2013") || line.includes("–")) foundEn++;
+  if (line.includes("\u2014")) foundEm++;
+  if (line.includes("\u2013")) foundEn++;
 });
 
 assert(foundEm === 0, `InteractiveSolvers.jsx: Zero em-dashes found (count = ${foundEm})`);

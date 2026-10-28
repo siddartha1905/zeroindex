@@ -2,6 +2,34 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-28: Complete English Communication Learning Path and Refine Atlas UI
+
+- **Type**: atlas-activities / english-communication / learning-nudge-layout / faculty-approved / owner-preview-release
+- **Summary**: Completed the English Communication learning path with four faculty-approved practical activities, natural conversational language, British English standard, and a refined horizontal LearningNudge layout:
+  1. **Four Implemented Activities**:
+     - Activity 01 (Speak Clearly): 3-step articulation framework, pronunciation clarity, pausing rhythm, sentence stress, worked comparisons, and natural speech prompts.
+     - Activity 02 (Listen & Respond): Active listening, core message extraction, clarification questions, and thoughtful response generation ("Listen to understand, not just to reply").
+     - Activity 03 (Express Your Opinion): Opinion structuring, persuasive reasons, respectful disagreement, topic explorations, and perspective sharing.
+     - Activity 04 (Everyday Conversations): 3-step conversation architecture (OPEN, CONNECT, CLOSE), guided and custom dialogue turns with relatable personas (Rohan, Karthik, Priya), and reflection checklists.
+  2. **Refined LearningNudge Flashcards & Centered Layout**:
+     - Relocated the two `LearningNudge` reminder flashcards from the former 4-column sticky sidebar into a balanced, compact horizontal 2-column row (`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4`) directly below the START / TRY / NEXT navigation tabs.
+     - Removed the old 12-column side-column layout (`xl:grid-cols-12`, `xl:col-span-8`, `xl:col-span-4`).
+     - Centered the main lesson content (`max-w-5xl mx-auto`) providing full comfortable width for dialogue exchanges, side-by-side comparison tables, and interactive practice controls.
+     - Mobile and tablet responsiveness: smooth responsive wrapping on tablet and natural vertical stacking on mobile viewports.
+  3. **Educational Content Locked & Unpublished Isolation**:
+     - All approved pedagogical content, dialogues, worked examples, and reflection checklists strictly preserved.
+     - British English spelling standard strictly enforced throughout (`practise`, `organise`, `favourite`, `apologise`, `recognise`).
+     - Strict publication gating maintained on Supabase and local routing: English Communication path and activities remain UNPUBLISHED and accessible exclusively through authenticated Owner Preview.
+  4. **Automated Verification & Build**:
+     - `verifyAtlasActivityExperience.mjs`: 255/255 passed across 7 comprehensive test suites.
+     - `verifyThreePillarRedesign.mjs`: 43/43 passed.
+     - `verifyAdminControlSystem.mjs`: 64/64 passed.
+     - `verifyIdeaInboxFix.mjs` & Project Desk suites: 137/137 passed.
+     - Total: 498/498 automated assertions passed (0 failures).
+     - `npm run build`: Production bundle built cleanly in 4.14s with zero errors.
+     - Zero-Dash Standard: Strictly 0 em-dashes and 0 en-dashes across all source files.
+- **Affected Files**: `src/components/atlas/SpeakClearlyActivity.jsx`, `src/components/atlas/ListenRespondActivity.jsx`, `src/components/atlas/ExpressYourOpinionActivity.jsx`, `src/components/atlas/EverydayConversationsActivity.jsx`, `src/components/atlas/LearningNudge.jsx`, `src/data/atlasActivitiesData.js`, `src/components/AtlasLanding.jsx`, `scripts/verifyAtlasActivityExperience.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-28: Integrate Project Desk and Three-Pillar Website Redesign
 
 - **Type**: architecture / three-pillar-redesign / project-desk / idea-inbox-fix / cloud-persistence / end-of-day-release

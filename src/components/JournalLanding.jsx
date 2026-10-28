@@ -88,7 +88,7 @@ export const JournalLanding = ({
 
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-4xl mx-auto space-y-10">
+      <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Breadcrumb Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#DDE2DA]">
@@ -124,7 +124,7 @@ export const JournalLanding = ({
           </nav>
 
           <span className="font-technical text-[11px] text-[#5F6C64]">
-            Technical Insights and Personal Reflections
+            Ideas, Insights and Reflections
           </span>
         </div>
 
@@ -140,7 +140,7 @@ export const JournalLanding = ({
               The Journal
             </h1>
             <p className="font-editorial italic text-lg sm:text-xl text-[#5F6C64] max-w-2xl leading-relaxed">
-              "Developments in technology and computing, examined alongside personal essays on teaching and engineering craft."
+              "A space for ideas worth exploring, lessons worth remembering, and thoughts worth sharing."
             </p>
 
             {/* Category Segmented Switcher */}
@@ -158,7 +158,7 @@ export const JournalLanding = ({
                   }`}
                 >
                   <Radio className="w-3.5 h-3.5" />
-                  <span>Technical Insights</span>
+                  <span>Insights</span>
                 </button>
               )}
 
@@ -175,7 +175,7 @@ export const JournalLanding = ({
                   }`}
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Personal Reflections</span>
+                  <span>Reflections</span>
                 </button>
               )}
             </div>
@@ -364,19 +364,17 @@ export const JournalLanding = ({
               ))}
             </div>
           ) : (
-            /* Tasteful, short editorial-review state */
-            <div className="p-8 sm:p-12 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-center space-y-5 max-w-xl mx-auto">
-              <div className="w-14 h-14 rounded-2xl bg-[#EBE5F0] text-[#765C90] flex items-center justify-center mx-auto">
-                <BookOpen className="w-7 h-7" />
+            /* Tasteful, short, elegant empty state */
+            <div className="p-8 sm:p-10 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-center space-y-4 max-w-lg mx-auto">
+              <div className="w-12 h-12 rounded-2xl bg-[#EBE5F0] text-[#765C90] flex items-center justify-center mx-auto">
+                <BookOpen className="w-6 h-6" />
               </div>
               <div className="space-y-2">
                 <h2 className="font-editorial text-2xl font-bold text-[#293B32]">
-                  {activeCategory === 'insights' ? 'Technical Insights Under Editorial Review' : 'Personal Reflections Under Editorial Review'}
+                  Nothing published here yet
                 </h2>
                 <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-md mx-auto">
-                  {activeCategory === 'insights'
-                    ? 'Technical publications and system observations are currently undergoing faculty review. New dispatches will be published as curriculum milestones are reached.'
-                    : 'Personal reflections on pedagogy, teaching craft, and engineering perspectives are currently undergoing author review.'}
+                  New insights and reflections will appear whenever there is something meaningful to share.
                 </p>
               </div>
               <div className="pt-2 flex flex-wrap items-center justify-center gap-3">

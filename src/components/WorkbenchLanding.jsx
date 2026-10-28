@@ -104,7 +104,7 @@ export const WorkbenchLanding = ({
 
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Breadcrumb Navigation & Top Action */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#DDE2DA]">
@@ -126,7 +126,7 @@ export const WorkbenchLanding = ({
         </div>
 
         {/* Section Header */}
-        <div className="space-y-3 text-left">
+        <div className="space-y-2.5 text-left">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E0EBDF] border border-[#346C53]/30 text-xs font-technical font-bold text-[#346C53]">
             <span>PILLAR 01</span>
             <span>·</span>

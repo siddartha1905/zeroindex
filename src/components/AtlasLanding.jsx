@@ -35,6 +35,11 @@ import {
   isItemPubliclyAccessible, 
   ATLAS_ROADMAP_REGISTRY_MAP 
 } from '../data/centralContentRegistry';
+import { SpeakClearlyActivity } from './atlas/SpeakClearlyActivity';
+import { ListenRespondActivity } from './atlas/ListenRespondActivity';
+import { ExpressYourOpinionActivity } from './atlas/ExpressYourOpinionActivity';
+import { EverydayConversationsActivity } from './atlas/EverydayConversationsActivity';
+import { ENGLISH_COMMUNICATION_PATH } from '../data/atlasActivitiesData';
 
 export const AtlasLanding = ({ 
   onNavigateHome, 
@@ -61,11 +66,39 @@ export const AtlasLanding = ({
     return 'learning-paths';
   });
 
+  // English Communication Learning Path Overview State
+  const [selectedLearningPath, setSelectedLearningPath] = useState(() => {
+    if (isAdminPreview && (initialMapId === 'english-communication' || initialSubId === 'english-communication')) {
+      return 'english-communication';
+    }
+    return null;
+  });
+
+  // Practical Learning Activity State (e.g., Speak Clearly 60-Second Challenge)
+  // Unpublished activity: accessible only through an authenticated owner preview
+  const [activeActivity, setActiveActivity] = useState(() => {
+    if (isAdminPreview) {
+      if (initialMapId === 'speak-clearly' || initialMapId === 'speak-clearly-60s' || initialSubId === 'speak-clearly' || initialSubId === 'speak-clearly-60s') {
+        return 'speak-clearly-60s';
+      }
+      if (initialMapId === 'listen-respond' || initialSubId === 'listen-respond') {
+        return 'listen-respond';
+      }
+      if (initialMapId === 'express-your-opinion' || initialSubId === 'express-your-opinion' || initialMapId === 'express-opinion' || initialSubId === 'express-opinion') {
+        return 'express-your-opinion';
+      }
+      if (initialMapId === 'everyday-conversations' || initialSubId === 'everyday-conversations' || initialMapId === 'everyday-conversation' || initialSubId === 'everyday-conversation') {
+        return 'everyday-conversations';
+      }
+    }
+    return null;
+  });
+
   // ---------------------------------------------------------------------------
   // TAB 1: LEARNING PATHS (ROADMAPS) STATE & LOGIC
   // ---------------------------------------------------------------------------
   const isMapAccessible = (map) => {
-    if (isAdminPreview) return true;
+    if (isAdminPreview && (initialMapId === map.id || initialSubId === map.id)) return true;
     const regId = ATLAS_ROADMAP_REGISTRY_MAP[map.id];
     if (!regId) return false;
     return isItemPubliclyAccessible(regId, contentOverrides);
@@ -146,7 +179,34 @@ export const AtlasLanding = ({
     if (initialMapId) {
       setSelectedMapId(initialMapId);
     }
-  }, [initialTab, initialDomainId, initialMapId]);
+    if (isAdminPreview) {
+      if (initialSubId === 'speak-clearly' || initialSubId === 'speak-clearly-60s' || initialMapId === 'speak-clearly' || initialMapId === 'speak-clearly-60s') {
+        setActiveActivity('speak-clearly-60s');
+        setActiveTab('learning-paths');
+      } else if (initialSubId === 'listen-respond' || initialMapId === 'listen-respond') {
+        setActiveActivity('listen-respond');
+        setActiveTab('learning-paths');
+      } else if (initialSubId === 'express-your-opinion' || initialMapId === 'express-your-opinion' || initialSubId === 'express-opinion' || initialMapId === 'express-opinion') {
+        setActiveActivity('express-your-opinion');
+        setActiveTab('learning-paths');
+      } else if (initialSubId === 'everyday-conversations' || initialMapId === 'everyday-conversations' || initialSubId === 'everyday-conversation' || initialMapId === 'everyday-conversation') {
+        setActiveActivity('everyday-conversations');
+        setActiveTab('learning-paths');
+      } else {
+        setActiveActivity(null);
+      }
+
+      if (initialSubId === 'english-communication' || initialMapId === 'english-communication') {
+        setSelectedLearningPath('english-communication');
+        setActiveTab('learning-paths');
+      } else if (!initialSubId && !initialMapId) {
+        setSelectedLearningPath(null);
+      }
+    } else {
+      setActiveActivity(null);
+      setSelectedLearningPath(null);
+    }
+  }, [initialTab, initialDomainId, initialMapId, initialSubId, isAdminPreview]);
 
   const toggleStage = (stageNum) => {
     setExpandedStages(prev => ({
@@ -211,13 +271,62 @@ export const AtlasLanding = ({
   const totalCount = currentDomain ? currentDomain.checklist.length : 0;
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
+  // Render Full Activity Runner when active in owner preview
+  if (activeActivity === 'speak-clearly-60s' && isAdminPreview) {
+    return (
+      <SpeakClearlyActivity 
+        onBack={() => {
+          setActiveActivity(null);
+          setSelectedLearningPath('english-communication');
+          window.location.hash = 'atlas/learning-paths/english-communication';
+        }}
+      />
+    );
+  }
+
+  if (activeActivity === 'listen-respond' && isAdminPreview) {
+    return (
+      <ListenRespondActivity 
+        onBack={() => {
+          setActiveActivity(null);
+          setSelectedLearningPath('english-communication');
+          window.location.hash = 'atlas/learning-paths/english-communication';
+        }}
+      />
+    );
+  }
+
+  if (activeActivity === 'express-your-opinion' && isAdminPreview) {
+    return (
+      <ExpressYourOpinionActivity 
+        onBack={() => {
+          setActiveActivity(null);
+          setSelectedLearningPath('english-communication');
+          window.location.hash = 'atlas/learning-paths/english-communication';
+        }}
+      />
+    );
+  }
+
+  if (activeActivity === 'everyday-conversations' && isAdminPreview) {
+    return (
+      <EverydayConversationsActivity 
+        onBack={() => {
+          setActiveActivity(null);
+          setSelectedLearningPath('english-communication');
+          window.location.hash = 'atlas/learning-paths/english-communication';
+        }}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#F7F5EF] text-[#25352D] py-8 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-7xl mx-auto space-y-6 sm:space-y-8">
         
         {/* Breadcrumb Navigation */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#DDE2DA]">
-          <nav className="flex items-center gap-2 text-xs font-technical text-[#5F6C64]">
+          <nav className="flex items-center gap-2 text-xs font-technical text-[#5F6C64] flex-wrap">
             <button 
               onClick={onNavigateHome}
               className="hover:text-[#245B4B] transition-colors cursor-pointer flex items-center gap-1 font-semibold"
@@ -229,6 +338,7 @@ export const AtlasLanding = ({
             <button 
               onClick={() => {
                 setActiveTab('learning-paths');
+                setSelectedLearningPath(null);
                 window.location.hash = 'atlas';
               }}
               className="text-[#496D91] font-bold hover:underline cursor-pointer"
@@ -236,10 +346,28 @@ export const AtlasLanding = ({
               02 The Atlas
             </button>
             <span className="text-[#DDE2DA]">/</span>
-            <span className="text-[#5F6C64] font-medium">
-              {activeTab === 'learning-paths' ? 'Learning Paths' : 'Career Preparation'}
-            </span>
-            {activeTab === 'learning-paths' && currentMap && (
+            {selectedLearningPath ? (
+              <>
+                <button
+                  onClick={() => {
+                    setSelectedLearningPath(null);
+                    window.location.hash = 'atlas/learning-paths';
+                  }}
+                  className="text-[#496D91] font-bold hover:underline cursor-pointer"
+                >
+                  Learning Paths
+                </button>
+                <span className="text-[#DDE2DA]">/</span>
+                <span className="text-[#25352D] font-bold">
+                  English Communication
+                </span>
+              </>
+            ) : (
+              <span className="text-[#5F6C64] font-medium">
+                {activeTab === 'learning-paths' ? 'Learning Paths' : 'Career Preparation'}
+              </span>
+            )}
+            {activeTab === 'learning-paths' && !selectedLearningPath && (initialMapId || (initialSubId && initialSubId !== 'learning-paths')) && accessibleRoadmaps.length > 0 && currentMap && (
               <>
                 <span className="text-[#DDE2DA]">/</span>
                 <span className="text-[#25352D] font-bold truncate max-w-[200px]">
@@ -247,7 +375,7 @@ export const AtlasLanding = ({
                 </span>
               </>
             )}
-            {activeTab === 'career-prep' && currentDomain && (
+            {activeTab === 'career-prep' && (initialDomainId || (initialSubId && initialSubId !== 'career-prep')) && currentDomain && (
               <>
                 <span className="text-[#DDE2DA]">/</span>
                 <span className="text-[#25352D] font-bold truncate max-w-[200px]">
@@ -282,6 +410,7 @@ export const AtlasLanding = ({
               <button
                 onClick={() => {
                   setActiveTab('learning-paths');
+                  setSelectedLearningPath(null);
                   window.location.hash = 'atlas/learning-paths';
                 }}
                 className={`px-4 py-2.5 rounded-xl text-xs font-technical font-bold transition-all flex items-center gap-2 cursor-pointer ${
@@ -299,6 +428,7 @@ export const AtlasLanding = ({
               <button
                 onClick={() => {
                   setActiveTab('career-prep');
+                  setSelectedLearningPath(null);
                   window.location.hash = 'atlas/career-prep';
                 }}
                 className={`px-4 py-2.5 rounded-xl text-xs font-technical font-bold transition-all flex items-center gap-2 cursor-pointer ${
@@ -318,56 +448,255 @@ export const AtlasLanding = ({
             ENTRY POINT A: LEARNING PATHS (ROADMAPS)
         ===================================================================== */}
         {activeTab === 'learning-paths' && (
-          <div className="space-y-8 animate-in fade-in duration-150">
+          <div className="space-y-6 sm:space-y-8 animate-in fade-in duration-150">
             
-            {/* Approved Learning Path Principle Card: START -> TRY -> NEXT */}
-            <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#DDE2DA] shadow-soft text-left space-y-4">
-              <div className="flex items-center gap-2 pb-2 border-b border-[#E6E8E1]">
-                <Target className="w-4 h-4 text-[#496D91]" />
-                <span className="font-technical text-xs font-bold uppercase tracking-wider text-[#496D91]">
-                  Learning Path Principle · START → TRY → NEXT
-                </span>
+            {/* Compact Learning Path Principle: START · TRY · NEXT */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DDE2DA] shadow-xs text-left space-y-3">
+              <div className="flex items-center gap-2 font-technical text-xs font-bold uppercase tracking-wider text-[#496D91]">
+                <Target className="w-3.5 h-3.5 text-[#496D91]" />
+                <span>Learning Path Principle: START · TRY · NEXT</span>
               </div>
 
-              <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-3xl">
-                Every technical topic on ZeroIndex is structured through three progressive learning movements to prevent premature abstractions and build genuine intuition:
-              </p>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2">
-                <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#E6E8E1] space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-technical text-xs font-bold px-2 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91]">01</span>
-                    <h3 className="font-editorial text-base font-bold text-[#25352D]">START</h3>
-                  </div>
-                  <p className="font-technical text-[11px] text-[#496D91] font-semibold">Prerequisites and Substrate</p>
-                  <p className="text-xs text-[#5F6C64] leading-relaxed">
-                    Begin with physical and numeric representations: bits, radix conversion, logic gates, and execution models before memorizing syntax.
-                  </p>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-3 rounded-xl bg-[#F7F5EF] border border-[#E6E8E1] flex items-start gap-2.5">
+                  <span className="font-technical text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#E1EAF2] text-[#496D91] shrink-0">
+                    START
+                  </span>
+                  <span className="text-xs text-[#25352D] font-medium leading-relaxed">
+                    Know where to begin.
+                  </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#E6E8E1] space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-technical text-xs font-bold px-2 py-0.5 rounded-full bg-[#DDEADD] text-[#285C49]">02</span>
-                    <h3 className="font-editorial text-base font-bold text-[#25352D]">TRY</h3>
-                  </div>
-                  <p className="font-technical text-[11px] text-[#285C49] font-semibold">Hands-on Verification</p>
-                  <p className="text-xs text-[#5F6C64] leading-relaxed">
-                    Verify understanding through interactive solvers, trace tables, truth tables, and self-assessment quizzes on The Workbench.
-                  </p>
+                <div className="p-3 rounded-xl bg-[#F7F5EF] border border-[#E6E8E1] flex items-start gap-2.5">
+                  <span className="font-technical text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#DDEADD] text-[#285C49] shrink-0">
+                    TRY
+                  </span>
+                  <span className="text-xs text-[#25352D] font-medium leading-relaxed">
+                    Practise something useful.
+                  </span>
                 </div>
 
-                <div className="p-4 rounded-2xl bg-[#F7F5EF] border border-[#E6E8E1] space-y-1.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-technical text-xs font-bold px-2 py-0.5 rounded-full bg-[#F5EBE1] text-[#956A43]">03</span>
-                    <h3 className="font-editorial text-base font-bold text-[#25352D]">NEXT</h3>
-                  </div>
-                  <p className="font-technical text-[11px] text-[#956A43] font-semibold">Systems Architecture</p>
-                  <p className="text-xs text-[#5F6C64] leading-relaxed">
-                    Advance into systems programming, algorithmic complexity, distributed systems, and industry-ready career preparation.
-                  </p>
+                <div className="p-3 rounded-xl bg-[#F7F5EF] border border-[#E6E8E1] flex items-start gap-2.5">
+                  <span className="font-technical text-[11px] font-bold px-2 py-0.5 rounded-md bg-[#F5EBE1] text-[#956A43] shrink-0">
+                    NEXT
+                  </span>
+                  <span className="text-xs text-[#25352D] font-medium leading-relaxed">
+                    Discover what to learn afterward.
+                  </span>
                 </div>
               </div>
             </div>
+
+            {/* If English Communication learning path is selected: render overview */}
+            {selectedLearningPath === 'english-communication' && isAdminPreview ? (
+              <div className="space-y-6 animate-in fade-in duration-150">
+                {/* Back button */}
+                <div className="flex items-center justify-between pb-1 border-b border-[#DDE2DA]">
+                  <button
+                    onClick={() => {
+                      setSelectedLearningPath(null);
+                      window.location.hash = 'atlas/learning-paths';
+                    }}
+                    className="inline-flex items-center gap-2 text-xs font-technical font-semibold text-[#496D91] hover:text-[#3B5B7D] transition-colors cursor-pointer group"
+                  >
+                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+                    <span>Back to Learning Paths</span>
+                  </button>
+                  <div className="flex items-center gap-2">
+                    <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
+                      Owner Preview
+                    </span>
+                    <span className="font-technical text-[11px] font-bold px-2 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91]">
+                      Foundation Sequence
+                    </span>
+                  </div>
+                </div>
+
+                {/* English Communication Overview Header Card */}
+                <div className="p-6 sm:p-8 rounded-3xl bg-white border border-[#496D91]/30 shadow-soft text-left space-y-5">
+                  <div className="space-y-2">
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#E1EAF2] border border-[#496D91]/30 text-xs font-technical font-bold text-[#496D91]">
+                      <Compass className="w-3.5 h-3.5" />
+                      <span>ATLAS LEARNING PATH</span>
+                    </div>
+                    <h1 className="font-editorial text-3xl sm:text-4xl font-bold tracking-tight text-[#25352D]">
+                      {ENGLISH_COMMUNICATION_PATH.title}
+                    </h1>
+                    <p className="font-editorial italic text-base sm:text-lg text-[#496D91] font-medium">
+                      "{ENGLISH_COMMUNICATION_PATH.subtitle}"
+                    </p>
+                    <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-3xl">
+                      {ENGLISH_COMMUNICATION_PATH.targetAudience} Focuses on clarity of thought, confidence, and natural everyday expression.
+                    </p>
+                  </div>
+
+                  {/* Natural Progression Strip */}
+                  <div className="pt-3 border-t border-[#E6E8E1] space-y-2">
+                    <span className="font-technical font-bold text-[#25352D] uppercase tracking-wider text-[11px] block">
+                      Natural progression:
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-4 gap-2">
+                      {ENGLISH_COMMUNICATION_PATH.progressionSteps.map((step) => (
+                        <div 
+                          key={step.stepNumber} 
+                          className={`p-3 rounded-xl border text-left ${
+                            step.stepNumber === '01'
+                              ? 'bg-[#E1EAF2] border-[#496D91]/30'
+                              : 'bg-[#FAF8F5] border-[#E6E8E1]'
+                          }`}
+                        >
+                          <span className={`font-technical text-[10px] font-bold block uppercase ${
+                            step.stepNumber === '01' ? 'text-[#496D91]' : 'text-[#717E76]'
+                          }`}>
+                            Step {step.stepNumber}
+                          </span>
+                          <span className={`text-xs font-semibold ${
+                            step.stepNumber === '01' ? 'text-[#25352D]' : 'text-[#5F6C64]'
+                          }`}>
+                            {step.title}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Sequence of 4 Activity Cards */}
+                <div className="space-y-4 text-left">
+                  <div className="flex items-center justify-between text-xs font-technical text-[#5F6C64] px-1">
+                    <span className="font-bold uppercase tracking-wider text-[#25352D]">Learning Activities</span>
+                    <span>4 of 4 Available in Preview</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-4">
+                    {ENGLISH_COMMUNICATION_PATH.activities.map((act) => {
+                      const isReady = act.status === 'ready';
+
+                      return (
+                        <div
+                          key={act.id}
+                          className={`p-5 sm:p-6 rounded-2xl border transition-all text-left ${
+                            isReady
+                              ? 'bg-white border-[#496D91]/40 shadow-soft'
+                              : 'bg-[#FBF8F2] border-[#DDE2DA]'
+                          }`}
+                        >
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                            <div className="space-y-1.5 max-w-2xl">
+                              <div className="flex items-center gap-2">
+                                <span className={`font-technical text-xs font-bold px-2 py-0.5 rounded-md ${
+                                  isReady
+                                    ? 'bg-[#E1EAF2] text-[#496D91]'
+                                    : 'bg-[#FAF8F5] border border-[#DDE2DA] text-[#717E76]'
+                                }`}>
+                                  Activity {act.number}
+                                </span>
+                                <span className={`font-technical text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                                  isReady
+                                    ? 'bg-[#DDEADD] text-[#285C49]'
+                                    : 'bg-[#FAF8F5] border border-[#DDE2DA] text-[#717E76]'
+                                }`}>
+                                  {act.statusLabel}
+                                </span>
+                              </div>
+
+                              <h3 className={`font-editorial text-xl font-bold ${
+                                isReady ? 'text-[#25352D]' : 'text-[#5F6C64]'
+                              }`}>
+                                {act.title}
+                              </h3>
+
+                              <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed">
+                                {act.objective}
+                              </p>
+                            </div>
+
+                            <div className="shrink-0 self-start sm:self-center">
+                              {isReady ? (
+                                <button
+                                  onClick={() => {
+                                    setActiveActivity(act.activityKey);
+                                    window.location.hash = act.route;
+                                  }}
+                                  data-route={act.route}
+                                  className="px-4 py-2.5 rounded-xl bg-[#496D91] hover:bg-[#3B5B7D] text-white text-xs font-bold transition-all shadow-xs cursor-pointer inline-flex items-center gap-1.5"
+                                >
+                                  <span>Open Activity</span>
+                                  <ArrowRight className="w-3.5 h-3.5" />
+                                </button>
+                              ) : (
+                                <span className="font-technical text-[11px] font-semibold text-[#717E76] px-3 py-1.5 rounded-lg bg-[#FAF8F5] border border-[#DDE2DA] inline-flex items-center gap-1.5 select-none">
+                                  <Clock className="w-3 h-3 text-[#717E76]" />
+                                  <span>Planned</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Reassuring editorial footer note */}
+                  <div className="p-4 rounded-xl bg-[#FAF8F5] border border-[#DDE2DA] text-xs text-[#5F6C64] flex items-center justify-between">
+                    <span>All 4 foundational activities are available for faculty review and classroom testing.</span>
+                    <span className="font-technical text-[11px] text-[#717E76] shrink-0 ml-3">Local Preview Only</span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              isAdminPreview && (
+                <div 
+                  onClick={() => {
+                    setSelectedLearningPath('english-communication');
+                    window.location.hash = 'atlas/learning-paths/english-communication';
+                  }}
+                  className="p-6 sm:p-7 rounded-3xl bg-white border border-[#496D91]/40 shadow-soft hover:shadow-md transition-all cursor-pointer text-left space-y-4 group"
+                >
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-technical text-[11px] font-semibold px-2.5 py-0.5 rounded-md bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
+                        Owner Preview
+                      </span>
+                      <span className="font-technical text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#E1EAF2] text-[#496D91] uppercase tracking-wider">
+                        Learning Path
+                      </span>
+                      <span className="font-technical text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#FAF8F5] border border-[#DDE2DA] text-[#5F6C64]">
+                        4 Activities
+                      </span>
+                    </div>
+                    <span className="text-xs font-technical font-semibold text-[#496D91] group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-1 self-start sm:self-auto">
+                      <span>Explore Learning Path</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <h3 className="font-editorial text-2xl font-bold text-[#25352D] group-hover:text-[#496D91] transition-colors">
+                      {ENGLISH_COMMUNICATION_PATH.title}
+                    </h3>
+                    <p className="font-editorial italic text-sm sm:text-base text-[#496D91] font-medium">
+                      "{ENGLISH_COMMUNICATION_PATH.subtitle}"
+                    </p>
+                  </div>
+
+                  <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-2xl">
+                    {ENGLISH_COMMUNICATION_PATH.targetAudience} Designed to help learners organise thoughts, practise speaking and express ideas confidently across everyday situations.
+                  </p>
+
+                  <div className="pt-2 border-t border-[#E6E8E1] flex flex-wrap items-center gap-1.5 text-xs text-[#5F6C64]">
+                    <span className="font-technical text-[10px] uppercase font-bold text-[#25352D] mr-1">Progression:</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#E1EAF2] text-[#496D91] font-medium text-[11px]">01 Speak clearly (Ready)</span>
+                    <span className="text-[#A5B3A9]">{'->'}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#E1EAF2] text-[#496D91] font-medium text-[11px]">02 Listen & Respond (Ready)</span>
+                    <span className="text-[#A5B3A9]">{'->'}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#E1EAF2] text-[#496D91] font-medium text-[11px]">03 Express opinions (Ready)</span>
+                    <span className="text-[#A5B3A9]">{'->'}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-[#E1EAF2] text-[#496D91] font-medium text-[11px]">04 Everyday conversations (Ready)</span>
+                  </div>
+                </div>
+              )
+            )}
 
             {/* Roadmaps Catalog or Editorial Review Notice */}
             {accessibleRoadmaps.length > 0 ? (
@@ -462,10 +791,12 @@ export const AtlasLanding = ({
                 </div>
                 <div className="space-y-2">
                   <h2 className="font-editorial text-2xl font-bold text-[#25352D]">
-                    Learning Paths Under Editorial Review
+                    {isAdminPreview ? 'Other Learning Paths Under Editorial Review' : 'Learning Paths Under Editorial Review'}
                   </h2>
                   <p className="text-xs sm:text-sm text-[#5F6C64] leading-relaxed max-w-md mx-auto">
-                    Engineering learning roadmaps built on the START → TRY → NEXT framework are currently undergoing faculty review. Explore foundational subject units on The Workbench or placement preparation tracks below.
+                    {isAdminPreview
+                      ? 'Engineering learning roadmaps built on the START -> TRY -> NEXT framework are currently in progress and undergoing faculty review. The English Communication learning path above is active for owner preview.'
+                      : 'Engineering learning roadmaps built on the START -> TRY -> NEXT framework are currently undergoing faculty review. Explore foundational subject units on The Workbench or placement preparation tracks below.'}
                   </p>
                 </div>
                 <div className="pt-2 flex flex-wrap items-center justify-center gap-3">

@@ -197,6 +197,10 @@ export function App() {
           setAtlasTab('learning-paths');
           const roadmap = parts[2] ? decodeURIComponent(parts[2]).toLowerCase() : null;
           setAtlasSlug(roadmap);
+        } else if (sub === 'activity' || sub === 'preview' || sub === 'practice') {
+          setAtlasTab('learning-paths');
+          const act = parts[2] ? decodeURIComponent(parts[2]).toLowerCase() : 'speak-clearly';
+          setAtlasSlug(act);
         } else {
           setAtlasTab('learning-paths');
           setAtlasSlug(sub);
@@ -604,7 +608,7 @@ export function App() {
           {(currentSection === 'atlas' || currentSection === 'bridge') && (
             !isRegistryLoaded ? (
               renderLoadingNotice()
-            ) : (adminPreviewSection === 'atlas' || adminPreviewSection === 'bridge') && adminSession.isAuthenticated && adminSession.isOwner ? (
+            ) : (adminSession.isAuthenticated && adminSession.isOwner) ? (
               <AtlasLanding 
                 onNavigateHome={() => {
                   setAdminPreviewSection(null);
@@ -628,10 +632,12 @@ export function App() {
                 'atlas/career-prep',
                 'Return to Career Preparation'
               )
-            ) : (atlasTab === 'learning-paths' && atlasSlug && !isRoutePubliclyAccessible(`atlas/${atlasSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`atlas/learning-paths/${atlasSlug}`, contentOverrides)) ? (
+            ) : (atlasTab === 'learning-paths' && atlasSlug && (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation') || (!isRoutePubliclyAccessible(`atlas/${atlasSlug}`, contentOverrides) && !isRoutePubliclyAccessible(`atlas/learning-paths/${atlasSlug}`, contentOverrides)))) ? (
               renderOfflineContentNotice(
-                'The Atlas Learning Path',
-                'This learning roadmap has not been published or has been placed offline by the administrator.',
+                (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation')) ? 'The Atlas Learning Activity' : 'The Atlas Learning Path',
+                (atlasSlug.includes('speak-clearly') || atlasSlug.includes('listen-respond') || atlasSlug.includes('express-your-opinion') || atlasSlug.includes('express-opinion') || atlasSlug.includes('everyday-conversations') || atlasSlug.includes('everyday-conversation'))
+                  ? 'This learning activity is currently under faculty review and has not yet been published.'
+                  : 'This learning roadmap has not been published or has been placed offline by the administrator.',
                 'atlas/learning-paths',
                 'Return to The Atlas'
               )

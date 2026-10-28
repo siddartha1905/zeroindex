@@ -431,6 +431,24 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:** Explicit faculty authorization on 2026-10-28; full regression test passage across all suites (141/141 checks); clean production build.
 - **Verification / Follow-up Requirements:** Verify GitHub push and Vercel edge deployment status.
 
+## D-050 | 2026-10-28 | English Communication Learning Path Completion and Owner Preview Isolation
+
+- **Decision:** Completed the entire English Communication learning path consisting of 4 practical, beginner-friendly activities (01 Speak Clearly, 02 Listen & Respond, 03 Express Your Opinion, 04 Everyday Conversations) structured with START -> TRY -> NEXT pedagogical framework. Locked all approved educational content (worked examples, natural spoken dialogues, interactive questions, timers, audio playback, reflection checklists, and British English vocabulary). Enforced strict publication gating: the path and its 4 activities remain UNPUBLISHED and accessible exclusively via authenticated Owner Preview. Public visitors receive an editorial review notice.
+- **Rationale / Alternatives Considered:** Classroom notes and pedagogical guidance emphasized practical spoken confidence and natural conversational flow without academic engineering jargon. Keeping content unpublished until the faculty author explicitly decides on public release protects editorial integrity while enabling thorough real-world inspection in Owner Preview.
+- **Affected Files and Components:** `src/data/atlasActivitiesData.js`, `src/components/AtlasLanding.jsx`, `src/components/atlas/SpeakClearlyActivity.jsx`, `src/components/atlas/ListenRespondActivity.jsx`, `src/components/atlas/ExpressYourOpinionActivity.jsx`, `src/components/atlas/EverydayConversationsActivity.jsx`, `src/components/atlas/LearningNudge.jsx`, `src/App.jsx`, `src/data/centralContentRegistry.js`.
+- **Approval Evidence:** Faculty author personally reviewed and approved all 4 activities after Phase 4I; automated test suite `scripts/verifyAtlasActivityExperience.mjs` passed 255/255 assertions.
+- **Verification / Follow-up Requirements:** Maintain unpublished flag in Supabase and central content registry until future public release authorization.
+
+---
+
+## D-051 | 2026-10-28 | Horizontal LearningNudge Placement and Centered Educational Layout
+
+- **Decision:** Relocated the two `LearningNudge` reminder flashcards across all four English Communication activities from a 4-column sticky right sidebar into a balanced, compact horizontal 2-column row (`grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4`) positioned directly below the START / TRY / NEXT navigation tabs and directly above the main exercise content. Removed the old 12-column side-column layout (`xl:grid-cols-12`, `xl:col-span-8`, `xl:col-span-4`). Centered the main container within `max-w-5xl mx-auto`.
+- **Rationale / Alternatives Considered:** The previous 4-column sticky sidebar compressed horizontal space, making main educational panels, comparison tables, and dialogues appear narrow and left-aligned. Relocating reminders into a compact horizontal row below the tabs allows the main learning content to occupy comfortable width, provides balanced visual hierarchy, avoids distractions during multi-turn exercises, and stacks cleanly on mobile viewports.
+- **Affected Files and Components:** `src/components/atlas/LearningNudge.jsx`, `src/components/atlas/SpeakClearlyActivity.jsx`, `src/components/atlas/ListenRespondActivity.jsx`, `src/components/atlas/ExpressYourOpinionActivity.jsx`, `src/components/atlas/EverydayConversationsActivity.jsx`, `scripts/verifyAtlasActivityExperience.mjs`.
+- **Approval Evidence:** Verified with 255/255 assertions in `scripts/verifyAtlasActivityExperience.mjs`; clean build with zero warnings or errors.
+- **Verification / Follow-up Requirements:** Release in consolidated GitHub commit to `main` with automatic Vercel deployment.
+
 ---
 
 ## Decision Record Template

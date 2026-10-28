@@ -360,11 +360,11 @@ export const centralContentRegistry = [
     parentId: 'atlas-div-foundations',
     pillar: 'atlas',
     contentType: 'roadmap',
-    title: 'English Communication Development',
+    title: 'English Communication',
     route: 'atlas/english-communication',
     editorialStatus: 'in_review',
     isPublic: false,
-    description: 'Faculty-led spoken clarity, sentence grammar, technical reading, and workplace discourse.'
+    description: 'Practical communication skills for everyday situations.'
   },
   {
     id: 'atlas-soft-skills',
@@ -1144,6 +1144,14 @@ export function isRoutePubliclyAccessible(route, visibilityOverrides = {}) {
     const roadmapRegId = ATLAS_ROADMAP_REGISTRY_MAP[roadmapSlug];
     if (roadmapRegId) {
       return isItemPubliclyAccessible(roadmapRegId, visibilityOverrides);
+    }
+    return false;
+  }
+
+  if (normalizedRoute.startsWith('atlas/activity/') || normalizedRoute.startsWith('atlas/preview/') || normalizedRoute.startsWith('atlas/practice/')) {
+    const actSlug = normalizedRoute.split('/')[2];
+    if (actSlug && (actSlug.includes('speak-clearly') || actSlug.includes('listen-respond') || actSlug.includes('express-your-opinion') || actSlug.includes('express-opinion') || actSlug.includes('everyday-conversations') || actSlug.includes('everyday-conversation'))) {
+      return isItemPubliclyAccessible('atlas-english-communication', visibilityOverrides);
     }
     return false;
   }
