@@ -451,6 +451,16 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-052 | 2026-10-28 | Phase 5A: Public Launch of English Communication for Everyone
+
+- **Decision:** Officially published the English Communication learning path (`atlas-english-communication`) and all four approved activities (01 Speak Clearly, 02 Listen & Respond, 03 Express Your Opinion, 04 Everyday Conversations) to the general public. Made all activities and learning path routes accessible without login, registration, email, password, or Owner Preview mode. Refactored activity route checks to distinguish public access to published paths from authenticated owner preview of unpublished drafts. Refactored route security with an explicit whitelist of exact activity slugs (`speak-clearly`, `listen-respond`, `express-your-opinion`, `everyday-conversations`), failing closed for any unrecognized slugs. Updated public catalog card and learning path overview to remove preview wording and display 'Available'. Retained strict unpublished protection for all sibling Atlas roadmaps (e.g. Programming Foundations, Soft Skills). Released changes to GitHub `main` (commit `b60d959`) with automatic Vercel deployment verified.
+- **Rationale / Alternatives Considered:** Faculty author reviewed and approved all four Version 1 activities. Making this path publicly available allows students and self-learners to practise foundational English communication immediately and without barrier, while preserving independent publication controls and confidentiality for all other unpublished curriculum drafts.
+- **Affected Files and Components:** `src/App.jsx`, `src/components/AtlasLanding.jsx`, `src/data/centralContentRegistry.js`, `src/data/atlasActivitiesData.js`, `src/services/contentRegistryService.js`, `scripts/verifyAtlasActivityExperience.mjs`, `scripts/verifyAdminControlSystem.mjs`.
+- **Approval Evidence:** Explicit faculty owner authorization in Phase 5A; 268/268 assertions in `verifyAtlasActivityExperience.mjs`; 65/65 assertions in `verifyAdminControlSystem.mjs`; 43/43 in `verifyThreePillarRedesign.mjs`; clean production build in 4.24s; zero dash violations.
+- **Verification / Follow-up Requirements:** Faculty owner activates live Supabase publication flag for `atlas-english-communication` in Supabase SQL Editor / Admin Dashboard. Proceed to DLD Unit 2, Sections 2.6 and 2.7.
+
+---
+
 ## Decision Record Template
 
 ```markdown

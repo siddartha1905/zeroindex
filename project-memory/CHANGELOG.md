@@ -2,6 +2,40 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-28: Phase 5A: Public Launch of English Communication for Everyone
+
+- **Type**: atlas-activities / english-communication / public-launch / production-release / vercel-deployment
+- **Summary**: Officially published the complete English Communication learning path and all four activities to the public, making practical communication learning accessible to all visitors without sign-in:
+  1. **Public Learning Paths Catalog**:
+     - English Communication card is prominently discoverable under The Atlas -> Learning Paths (`#atlas/learning-paths`).
+     - Displayed title: "English Communication", subtitle: "Practical communication skills for everyday situations.", description: "Four guided activities to help you organise thoughts, practise speaking clearly, listen carefully, express your opinions and participate in everyday conversations.", action: "Explore Learning Path" leading to `#atlas/learning-paths/english-communication`.
+     - Removed "Owner Preview" badge for public visitors; badge rendered strictly when authenticated in admin preview.
+     - Preserved all other draft Atlas roadmaps (Programming Foundations, Soft Skills, Quantitative Aptitude) strictly hidden under polite editorial review notice.
+  2. **Public Accessibility for All Four Activities**:
+     - All four activities open without authentication, student accounts, email, password, or registration:
+       - Activity 01: Speak Clearly (`#atlas/activity/speak-clearly`)
+       - Activity 02: Listen & Respond (`#atlas/activity/listen-respond`)
+       - Activity 03: Express Your Opinion (`#atlas/activity/express-your-opinion`)
+       - Activity 04: Everyday Conversations (`#atlas/activity/everyday-conversations`)
+     - Updated status labels from "Available in Preview" to "Available".
+     - Preserved owner preview and admin dashboard accessibility.
+  3. **Route Security & Strict Whitelist Safeguards**:
+     - Refactored `App.jsx` and `AtlasLanding.jsx` activity routing to use authoritative `isRoutePubliclyAccessible` check based on `atlas-english-communication` publication status.
+     - Replaced fragile substring matching in `centralContentRegistry.js` with an explicit whitelist of recognized activity slugs (`speak-clearly`, `listen-respond`, `express-your-opinion`, `everyday-conversations`), ensuring unknown activity slugs fail closed.
+     - Maintained fail-closed protection for all sibling roadmaps and private admin routes.
+  4. **Preserved Educational Content (Locked Version 1)**:
+     - 100% preservation of all approved educational content: 60-second timer, audio playback, model answers, natural dialogues, reflection checklists, horizontal LearningNudge layout, and British English vocabulary.
+     - Zero data collection, zero microphone recordings, zero audio uploads, zero student database requirements.
+  5. **Automated Verification, GitHub Release & Vercel Deployment**:
+     - `verifyAtlasActivityExperience.mjs`: 268/268 assertions passed (0 failures).
+     - `verifyAdminControlSystem.mjs`: 65/65 assertions passed (0 failures).
+     - `verifyThreePillarRedesign.mjs`: 43/43 assertions passed (0 failures).
+     - Production Build: Built cleanly in 4.24s with zero errors.
+     - Git Release: Committed and pushed to `main` (commit `b60d959`).
+     - Vercel Deployment: Verified live on `https://zeroindex-sigma.vercel.app/` serving commit `b60d959` (`assets/index-B_RxMujm.js`).
+     - Zero-Dash Standard: Strictly 0 em-dashes and 0 en-dashes across all modified files.
+- **Affected Files**: `src/App.jsx`, `src/components/AtlasLanding.jsx`, `src/data/centralContentRegistry.js`, `src/data/atlasActivitiesData.js`, `src/services/contentRegistryService.js`, `scripts/verifyAtlasActivityExperience.mjs`, `scripts/verifyAdminControlSystem.mjs`, `project-memory/CURRENT_STATE.md`, `project-memory/DECISIONS.md`, `project-memory/ROADMAP.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-28: Complete English Communication Learning Path and Refine Atlas UI
 
 - **Type**: atlas-activities / english-communication / learning-nudge-layout / faculty-approved / owner-preview-release
