@@ -13,6 +13,7 @@ export const dldSyllabus = {
   branch: "B.Tech (Data Science / Computer Science & Engineering)",
   ltpc: "L-T-P-C: 3-0-0-3",
   credits: 3,
+  syllabusPdfUrl: null,
   overview: "This course introduces logic design and the basic building blocks used in digital systems, in particular digital computers. It starts with a discussion of combinational logic: logic gates, minimization techniques, arithmetic circuits, and modern logic devices such as field programmable logic. It also deals with sequential circuits: flip-flops, synthesis of sequential circuits, and case studies, including counters and registers.",
   objectives: [
     "To solve typical number base conversions",
@@ -54,14 +55,14 @@ export const dldSyllabus = {
       status: "Active",
       hours: "9 Lectures",
       courseOutcome: "CO1",
-      summary: "Digital Systems and Digital Computers, Analog and Digital Systems, Decimal, Binary, Octal and Hexadecimal Number Systems, Number System Conversions, Binary Arithmetic Addition and Subtraction, Complements 1's, 2's, 9's and 10's Complements, Signed Binary Numbers, Representation of Positive and Negative Numbers, Logic Gates.",
+      summary: "Digital Systems and Digital Computers, Analog and Digital Systems, Decimal, Binary, Octal and Hexadecimal Number Systems, Number System Conversions, Binary Arithmetic - Addition and Subtraction, Complements - 1's, 2's, 9's and 10's Complements, Signed Binary Numbers, Representation of Positive and Negative Numbers, Logic Gates.",
       topics: [
         "Digital Systems and Digital Computers",
         "Analog and Digital Systems",
         "Decimal, Binary, Octal and Hexadecimal Number Systems",
         "Number System Conversions",
-        "Binary Arithmetic Addition and Subtraction",
-        "Complements 1's, 2's, 9's and 10's Complements",
+        "Binary Arithmetic - Addition and Subtraction",
+        "Complements - 1's, 2's, 9's and 10's Complements",
         "Signed Binary Numbers",
         "Representation of Positive and Negative Numbers",
         "Logic Gates"
@@ -168,7 +169,7 @@ export const dldSyllabus = {
       authors: "M.Morris Mano, Michael D Ciletti",
       publisher: "PEA",
       driveLink: null,
-      statusText: "Material link will be added soon.",
+      statusText: "Link not yet added",
       description: "Primary prescribed textbook covering Boolean algebra, gate-level minimization, combinational logic design, synchronous sequential circuits, registers, and counters."
     },
     {
@@ -179,7 +180,7 @@ export const dldSyllabus = {
       authors: "Roth",
       publisher: "Cengage",
       driveLink: null,
-      statusText: "Material link will be added soon.",
+      statusText: "Link not yet added",
       description: "Rigorous treatment of digital systems, state machines, timing diagrams, flip-flop conversions, and sequential circuit synthesis."
     }
   ],
@@ -191,7 +192,7 @@ export const dldSyllabus = {
       authors: "M.Morris Mano",
       publisher: "PEA",
       driveLink: null,
-      statusText: "Material link will be added soon."
+      statusText: "Link not yet added"
     },
     {
       id: "rb2",
@@ -200,7 +201,7 @@ export const dldSyllabus = {
       authors: "Leach, Malvino, Saha",
       publisher: "TMH",
       driveLink: null,
-      statusText: "Material link will be added soon."
+      statusText: "Link not yet added"
     },
     {
       id: "rb3",
@@ -209,7 +210,7 @@ export const dldSyllabus = {
       authors: "R.P. Jain",
       publisher: "TMH",
       driveLink: null,
-      statusText: "Material link will be added soon."
+      statusText: "Link not yet added"
     }
   ]
 };

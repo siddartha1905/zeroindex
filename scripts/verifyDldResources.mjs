@@ -45,25 +45,22 @@ assert(unitsMetadata[0].unitNumber === 1 && unitsMetadata[0].badge === 'Complete
 assert(unitsMetadata[1].unitNumber === 2 && unitsMetadata[1].badge === 'Completed & Verified', 'Unit II is marked Completed & Verified');
 assert(unitsMetadata[2].badge === 'Planned Curriculum', 'Unit III is marked Planned Curriculum');
 
-// Prescribed Textbooks (Morris Mano, Roth, Malvino)
-assert(Array.isArray(studyMaterials.textbooks) && studyMaterials.textbooks.length === 3, 'Prescribed textbooks list contains exactly 3 approved books');
+// Prescribed Textbooks (Morris Mano, Roth - matching official syllabus)
+assert(Array.isArray(studyMaterials.textbooks) && studyMaterials.textbooks.length === 2, 'Prescribed textbooks list contains exactly 2 approved books');
 const manoBook = studyMaterials.textbooks.find(b => b.id === 'tb-mano');
-assert(manoBook && manoBook.authors.includes('Morris Mano') && manoBook.edition === '5th Edition', 'M. Morris Mano 5th Edition is accurately documented');
-assert(manoBook.driveLink === null && manoBook.statusText.includes('soon'), 'Preserves honest Drive status without fabricated URLs for Mano');
+assert(manoBook && manoBook.authors.includes('Morris Mano') && manoBook.edition === '5/e', 'M. Morris Mano 5/e is accurately documented');
+assert(manoBook.driveLink === null && manoBook.statusText.includes('Link not yet added'), 'Preserves honest Drive status without fabricated URLs for Mano');
 
 const rothBook = studyMaterials.textbooks.find(b => b.id === 'tb-roth');
-assert(rothBook && rothBook.authors.includes('Charles H. Roth') && rothBook.edition === '5th Edition', 'Charles H. Roth 5th Edition is accurately documented');
+assert(rothBook && rothBook.authors.includes('Roth') && rothBook.edition === '5/e', 'Roth 5/e is accurately documented');
 
-const malvinoBook = studyMaterials.textbooks.find(b => b.id === 'tb-malvino');
-assert(malvinoBook && malvinoBook.authors.includes('Malvino') && malvinoBook.edition === '8th Edition', 'Leach, Malvino & Saha 8th Edition is accurately documented');
-
-// Reference Books (Kohavi, Floyd, Jain)
+// Reference Books (Mano, Leach/Malvino/Saha, Jain - matching official syllabus)
 assert(Array.isArray(studyMaterials.referenceBooks) && studyMaterials.referenceBooks.length === 3, 'Supplementary reference books list contains exactly 3 approved books');
-const kohaviRef = studyMaterials.referenceBooks.find(b => b.id === 'rb-kohavi');
-assert(kohaviRef && kohaviRef.authors.includes('Kohavi'), 'Kohavi & Jha reference book is accurately recorded');
+const manoRef = studyMaterials.referenceBooks.find(b => b.id === 'rb-mano');
+assert(manoRef && manoRef.authors.includes('Morris Mano'), 'Morris Mano reference book is accurately recorded');
 
-const floydRef = studyMaterials.referenceBooks.find(b => b.id === 'rb-floyd');
-assert(floydRef && floydRef.authors.includes('Floyd'), 'Floyd reference book is accurately recorded');
+const malvinoRef = studyMaterials.referenceBooks.find(b => b.id === 'rb-malvino');
+assert(malvinoRef && malvinoRef.authors.includes('Malvino'), 'Leach, Malvino & Saha reference book is accurately recorded');
 
 const jainRef = studyMaterials.referenceBooks.find(b => b.id === 'rb-jain');
 assert(jainRef && jainRef.authors.includes('Jain'), 'R.P. Jain reference book is accurately recorded');

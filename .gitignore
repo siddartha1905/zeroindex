@@ -36,3 +36,8 @@ unpublished-archive/
 # Python cache
 __pycache__/
 *.pyc
+
+# Temporary scratch directories and classroom packages
+scratch/
+DLD_Unit_II_Editable_Package.zip
+DLD_Unit_II_Notes.pdf

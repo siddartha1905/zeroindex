@@ -79,78 +79,604 @@ export const dldSubjectResourcesData = {
         id: "tb-mano",
         number: 1,
         title: "Digital Design",
-        edition: "5th Edition",
+        edition: "5/e",
         authors: "M. Morris Mano, Michael D. Ciletti",
-        publisher: "Pearson Education",
-        year: "2013",
-        isbn: "978-0132774208",
+        publisher: "PEA",
         unitsCovered: [1, 2, 3, 4, 5],
-        description: "Primary prescribed text for undergraduate digital engineering. Chapters 1 and 2 directly establish the axiomatic Boolean theorems, standard forms, and Karnaugh map minimization methods used in ZeroIndex.",
-        libraryCallNumber: "VIIT-LIB-EC-0421",
+        description: "Primary prescribed text for undergraduate digital engineering covering switching theory, Boolean algebra, combinational circuits, and sequential logic.",
         driveLink: null,
-        statusText: "Material link will be added soon."
+        statusText: "Link not yet added"
       },
       {
         id: "tb-roth",
         number: 2,
         title: "Fundamentals of Logic Design",
-        edition: "5th Edition",
-        authors: "Charles H. Roth Jr.",
-        publisher: "Cengage Learning",
-        year: "2004",
-        isbn: "978-0534378042",
-        unitsCovered: [1, 2, 3, 4],
+        edition: "5/e",
+        authors: "Roth",
+        publisher: "Cengage",
+        unitsCovered: [1, 2, 3, 4, 5],
         description: "Comprehensive coverage of switching theory, algebraic proofs, multi-level gate networks, and state machine reduction techniques.",
-        libraryCallNumber: "VIIT-LIB-EC-0518",
         driveLink: null,
-        statusText: "Material link will be added soon."
-      },
-      {
-        id: "tb-malvino",
-        number: 3,
-        title: "Digital Principles and Applications",
-        edition: "8th Edition",
-        authors: "Donald P. Leach, Albert Paul Malvino, Goutam Saha",
-        publisher: "McGraw Hill Education",
-        year: "2014",
-        isbn: "978-9339203405",
-        unitsCovered: [1, 2, 3],
-        description: "Practical engineering perspective emphasizing binary number arithmetic, logic family characteristics, and digital troubleshooting.",
-        libraryCallNumber: "VIIT-LIB-EC-0633",
-        driveLink: null,
-        statusText: "Material link will be added soon."
+        statusText: "Link not yet added"
       }
     ],
     referenceBooks: [
       {
-        id: "rb-kohavi",
+        id: "rb-mano",
         number: 1,
-        title: "Switching and Finite Automata Theory",
-        authors: "Zvi Kohavi, Niraj K. Jha",
-        publisher: "Cambridge University Press",
-        edition: "3rd Edition",
-        unitsCovered: [2, 4],
-        description: "Rigorous theoretical treatment of combinational switching networks, decomposition, and finite-state machine minimization."
+        title: "Digital Logic and Computer Design",
+        authors: "M. Morris Mano",
+        publisher: "PEA",
+        unitsCovered: [1, 2, 3, 4, 5],
+        description: "Foundational reference for digital computer building blocks, registers, and timing.",
+        driveLink: null,
+        statusText: "Link not yet added"
       },
       {
-        id: "rb-floyd",
+        id: "rb-malvino",
         number: 2,
-        title: "Digital Fundamentals",
-        authors: "Thomas L. Floyd",
-        publisher: "Pearson Education",
-        edition: "11th Edition",
+        title: "Digital Logic Design",
+        authors: "Leach, Malvino, Saha",
+        publisher: "TMH",
         unitsCovered: [1, 2, 3],
-        description: "Visual textbook featuring full-color timing diagrams, logic gate test circuits, and hands-on laboratory exercises."
+        description: "Practical engineering perspective covering number systems, arithmetic circuits, and logic families.",
+        driveLink: null,
+        statusText: "Link not yet added"
       },
       {
         id: "rb-jain",
         number: 3,
         title: "Modern Digital Electronics",
         authors: "R. P. Jain",
-        publisher: "Tata McGraw-Hill",
-        edition: "4th Edition",
+        publisher: "TMH",
         unitsCovered: [1, 2, 3, 4],
-        description: "Popular Indian university reference with extensive worked numerical problems on binary codes, K-Maps, and arithmetic units."
+        description: "Comprehensive university reference with extensive worked numerical problems on binary codes, K-Maps, and arithmetic units.",
+        driveLink: null,
+        statusText: "Link not yet added"
+      }
+    ],
+
+    // UNIT-WISE FACULTY STUDY MATERIALS (TWO CATEGORIES PER UNIT: PDF & PPT)
+    facultyStudyMaterials: [
+      {
+        unitNumber: 1,
+        roman: "Unit I",
+        title: "Number Systems and Digital Fundamentals",
+        notice: "Lecture notes and slide presentations will be linked upon faculty release.",
+        pdfMaterials: [
+          {
+            id: "dld-u1-pdf-notes",
+            title: "PDF 1: Unit I Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 1,
+            description: "Comprehensive lecture notes for Unit I covering radix conversions, binary arithmetic, and complements.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u1-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 1,
+            description: "Supplementary tutorial sheets and complement arithmetic practice problems.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ],
+        pptMaterials: [
+          {
+            id: "dld-u1-ppt-presentation-1",
+            title: "PPT 1: Unit I Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 1,
+            description: "Curriculum slide deck covering number systems and digital logic foundations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u1-ppt-presentation-2",
+            title: "PPT 2: Unit I Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 1,
+            description: "Classroom presentation slides covering signed binary numbers and complement arithmetic.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ],
+        resources: [
+          {
+            id: "dld-u1-pdf-notes",
+            title: "PDF 1: Unit I Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 1,
+            description: "Comprehensive lecture notes for Unit I covering radix conversions, binary arithmetic, and complements.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u1-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 1,
+            description: "Supplementary tutorial sheets and complement arithmetic practice problems.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u1-ppt-presentation-1",
+            title: "PPT 1: Unit I Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 1,
+            description: "Curriculum slide deck covering number systems and digital logic foundations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u1-ppt-presentation-2",
+            title: "PPT 2: Unit I Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 1,
+            description: "Classroom presentation slides covering signed binary numbers and complement arithmetic.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ]
+      },
+      {
+        unitNumber: 2,
+        roman: "Unit II",
+        title: "Boolean Algebra and Karnaugh Maps",
+        notice: "Lecture notes and slide presentations will be linked upon faculty release.",
+        pdfMaterials: [
+          {
+            id: "dld-u2-pdf-notes",
+            title: "PDF 1: Unit II Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 2,
+            description: "Comprehensive lecture notes for Unit II covering Boolean postulates, canonical expansions, and K-Maps.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u2-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 2,
+            description: "Supplementary K-Map grouping practice sheets and NAND/NOR gate realisations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ],
+        pptMaterials: [
+          {
+            id: "dld-u2-ppt-presentation-1",
+            title: "PPT 1: Unit II Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 2,
+            description: "Classroom presentation slides for Boolean algebra, canonical forms, and postulates.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u2-ppt-presentation-2",
+            title: "PPT 2: Unit II Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 2,
+            description: "Presentation slides for Karnaugh map optimization, don't-care conditions, and universal gate implementations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ],
+        resources: [
+          {
+            id: "dld-u2-pdf-notes",
+            title: "PDF 1: Unit II Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 2,
+            description: "Comprehensive lecture notes for Unit II covering Boolean postulates, canonical expansions, and K-Maps.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u2-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 2,
+            description: "Supplementary K-Map grouping practice sheets and NAND/NOR gate realisations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u2-ppt-presentation-1",
+            title: "PPT 1: Unit II Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 2,
+            description: "Classroom presentation slides for Boolean algebra, canonical forms, and postulates.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u2-ppt-presentation-2",
+            title: "PPT 2: Unit II Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 2,
+            description: "Presentation slides for Karnaugh map optimization, don't-care conditions, and universal gate implementations.",
+            url: null,
+            status: "pending",
+            statusText: "Link not yet added"
+          }
+        ]
+      },
+      {
+        unitNumber: 3,
+        roman: "Unit III",
+        title: "Combinational Logic",
+        notice: "Curriculum materials in preparation for future academic terms.",
+        pdfMaterials: [
+          {
+            id: "dld-u3-pdf-notes",
+            title: "PDF 1: Unit III Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 3,
+            description: "Comprehensive lecture notes for combinational logic design procedures, adders, subtractors, and converters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u3-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 3,
+            description: "Supplementary design problems for MSI encoders, decoders, and multiplexers.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        pptMaterials: [
+          {
+            id: "dld-u3-ppt-presentation-1",
+            title: "PPT 1: Unit III Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 3,
+            description: "Curriculum slides covering combinational analysis, arithmetic circuits, and BCD adders.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u3-ppt-presentation-2",
+            title: "PPT 2: Unit III Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 3,
+            description: "Presentation slides covering decoders, encoders, multiplexers, demultiplexers, and code converters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        resources: [
+          {
+            id: "dld-u3-pdf-notes",
+            title: "PDF 1: Unit III Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 3,
+            description: "Comprehensive lecture notes for combinational logic design procedures, adders, subtractors, and converters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u3-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 3,
+            description: "Supplementary design problems for MSI encoders, decoders, and multiplexers.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u3-ppt-presentation-1",
+            title: "PPT 1: Unit III Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 3,
+            description: "Curriculum slides covering combinational analysis, arithmetic circuits, and BCD adders.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u3-ppt-presentation-2",
+            title: "PPT 2: Unit III Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 3,
+            description: "Presentation slides covering decoders, encoders, multiplexers, demultiplexers, and code converters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ]
+      },
+      {
+        unitNumber: 4,
+        roman: "Unit IV",
+        title: "Sequential Logic",
+        notice: "Curriculum materials in preparation for future academic terms.",
+        pdfMaterials: [
+          {
+            id: "dld-u4-pdf-notes",
+            title: "PDF 1: Unit IV Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 4,
+            description: "Comprehensive lecture notes for sequential circuits, latches, flip-flops, and characteristic tables.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u4-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 4,
+            description: "Supplementary practice sheets for flip-flop conversions and excitation tables.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        pptMaterials: [
+          {
+            id: "dld-u4-ppt-presentation-1",
+            title: "PPT 1: Unit IV Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 4,
+            description: "Classroom presentation slides covering storage elements, latches, and clocking mechanisms.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u4-ppt-presentation-2",
+            title: "PPT 2: Unit IV Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 4,
+            description: "Presentation slides for RS, JK, D, T flip-flops, race-around conditions, and master-slave JK flip-flops.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        resources: [
+          {
+            id: "dld-u4-pdf-notes",
+            title: "PDF 1: Unit IV Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 4,
+            description: "Comprehensive lecture notes for sequential circuits, latches, flip-flops, and characteristic tables.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u4-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 4,
+            description: "Supplementary practice sheets for flip-flop conversions and excitation tables.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u4-ppt-presentation-1",
+            title: "PPT 1: Unit IV Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 4,
+            description: "Classroom presentation slides covering storage elements, latches, and clocking mechanisms.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u4-ppt-presentation-2",
+            title: "PPT 2: Unit IV Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 4,
+            description: "Presentation slides for RS, JK, D, T flip-flops, race-around conditions, and master-slave JK flip-flops.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ]
+      },
+      {
+        unitNumber: 5,
+        roman: "Unit V",
+        title: "Registers and Counters",
+        notice: "Curriculum materials in preparation for future academic terms.",
+        pdfMaterials: [
+          {
+            id: "dld-u5-pdf-notes",
+            title: "PDF 1: Unit V Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 5,
+            description: "Comprehensive lecture notes for registers, shift registers, ripple counters, and synchronous counters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u5-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 5,
+            description: "Supplementary worksheets for Modulo-N counter state diagrams and sequential timing.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        pptMaterials: [
+          {
+            id: "dld-u5-ppt-presentation-1",
+            title: "PPT 1: Unit V Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 5,
+            description: "Curriculum slide deck for serial and parallel data transfer, SISO, SIPO, PISO, and PIPO shift registers.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u5-ppt-presentation-2",
+            title: "PPT 2: Unit V Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 5,
+            description: "Presentation slides for ring counters, Johnson counters, and synchronous modulo-N counters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ],
+        resources: [
+          {
+            id: "dld-u5-pdf-notes",
+            title: "PDF 1: Unit V Notes",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 5,
+            description: "Comprehensive lecture notes for registers, shift registers, ripple counters, and synchronous counters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u5-pdf-additional",
+            title: "PDF 2: Additional PDF",
+            resourceType: "PDF",
+            type: "PDF",
+            category: "PDF Materials",
+            unit: 5,
+            description: "Supplementary worksheets for Modulo-N counter state diagrams and sequential timing.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u5-ppt-presentation-1",
+            title: "PPT 1: Unit V Presentation 1",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 5,
+            description: "Curriculum slide deck for serial and parallel data transfer, SISO, SIPO, PISO, and PIPO shift registers.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          },
+          {
+            id: "dld-u5-ppt-presentation-2",
+            title: "PPT 2: Unit V Presentation 2",
+            resourceType: "PPT",
+            type: "PPT",
+            category: "PPT Materials",
+            unit: 5,
+            description: "Presentation slides for ring counters, Johnson counters, and synchronous modulo-N counters.",
+            url: null,
+            status: "planned",
+            statusText: "Link not yet added"
+          }
+        ]
       }
     ]
   },
@@ -395,6 +921,7 @@ export const dldSubjectResourcesData = {
       name: "Neso Academy",
       specialty: "Digital Electronics, Number Systems, Boolean Algebra & K-Maps",
       relevantUnits: ["Unit I", "Unit II"],
+      url: "https://www.youtube.com/@nesoacademy",
       reason: "Classroom-paced, highly structured lectures with comprehensive whiteboard derivations. Excellent for beginners building foundation in binary arithmetic, De Morgan proofs, and multi-variable Karnaugh mapping.",
       topicsCovered: [
         "Binary, Octal, Hex Conversions",
@@ -410,6 +937,7 @@ export const dldSubjectResourcesData = {
       name: "ALL ABOUT ELECTRONICS",
       specialty: "Digital Circuit Principles, Logic Gates & Timing Animations",
       relevantUnits: ["Unit I", "Unit II"],
+      url: "https://www.youtube.com/@allaboutelectronics",
       reason: "Outstanding visual animations showing timing diagrams, gate propagation, and step-by-step consensus theorem proofs. Clear audio and engineering rigor make complex reductions easy to follow.",
       topicsCovered: [
         "Logic Gates & Universal NAND/NOR",
@@ -425,6 +953,7 @@ export const dldSubjectResourcesData = {
       name: "Gate Smashers",
       specialty: "University & Competitive Examination Problem Solving",
       relevantUnits: ["Unit I", "Unit II"],
+      url: "https://www.youtube.com/@GateSmashers",
       reason: "High-energy problem-oriented explanations focused on exam questions, shortcut tricks, and common student traps. Highly recommended for quick pre-exam review and speed technique acquisition.",
       topicsCovered: [
         "Complement Representation Ranges",
@@ -440,6 +969,7 @@ export const dldSubjectResourcesData = {
       name: "Ben Eater",
       specialty: "Hardware-Level Digital Circuits & Breadboard Computer Architecture",
       relevantUnits: ["Unit I"],
+      url: "https://www.youtube.com/@BenEater",
       reason: "Builds functional 8-bit computers on breadboards using discrete 7400-series TTL chips. Invaluable for students wanting to understand how binary numbers, adders, and registers physically execute on hardware.",
       topicsCovered: [
         "How Logic Gates Work in Physical Silicon",
@@ -647,7 +1177,7 @@ export const dldFormulaSheets = dldSubjectResourcesData.formulaSheets;
 export const dldCuratedChannels = dldSubjectResourcesData.educationalChannels;
 export const dldReferenceWebsites = dldSubjectResourcesData.referenceWebsites;
 export const dldExternalCalculators = dldSubjectResourcesData.onlineCalculators.calculators;
-export const dldCalculatorNotice = dldSubjectResourcesData.onlineCalculators.notice;
+export const dldFacultyStudyMaterials = dldSubjectResourcesData.studyMaterials.facultyStudyMaterials;
 export const contextualLearningMap = dldSubjectResourcesData.contextualLearningMap;
 
 export default dldSubjectResourcesData;

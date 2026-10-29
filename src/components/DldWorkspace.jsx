@@ -19,6 +19,8 @@ import { Section22View } from './Section22View';
 import { Section23View } from './Section23View';
 import { Section24View } from './Section24View';
 import { Section25View } from './Section25View';
+import { Section26View } from './Section26View';
+import { Section27View } from './Section27View';
 import { Unit2Solvers } from './Unit2Solvers';
 import { InteractiveSolvers } from './InteractiveSolvers';
 import { PracticeArena } from './PracticeArena';
@@ -45,15 +47,31 @@ export const DldWorkspace = ({
   initialTab = 'units',
   initialSubModuleId = '1.1',
   contentOverrides = {},
-  isAdminPreview = false
+  isAdminPreview = false,
+  isLocalFacultyReview = false
 }) => {
+  const isLocalDev = Boolean(
+    import.meta.env.DEV && (
+      isLocalFacultyReview || (
+        typeof window !== 'undefined' &&
+        (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+      )
+    )
+  );
+
+  const isDevPreviewSection = (secId) => {
+    return isLocalDev && (secId === '2.6' || secId === '2.7');
+  };
+
   const isUnitAccessible = (unitNum) => {
     if (isAdminPreview) return true;
+    if (unitNum === 2 && isLocalDev) return true;
     return isItemPubliclyAccessible(getUnitRegistryId(unitNum), contentOverrides);
   };
 
   const isSectionAccessible = (secId) => {
     if (isAdminPreview) return true;
+    if (isDevPreviewSection(secId)) return true;
     const unitNum = (secId || '').split('.')[0];
     if (!isUnitAccessible(unitNum)) return false;
     return isItemPubliclyAccessible(getSectionRegistryId(secId), contentOverrides);
@@ -61,7 +79,7 @@ export const DldWorkspace = ({
 
   const [activeTab, setActiveTab] = useState(() => normalizeWorkspaceTab(initialTab));
   const [activeSubModuleId, setActiveSubModuleId] = useState(() => {
-    if (initialSubModuleId && isSectionAccessible(initialSubModuleId)) {
+    if (initialSubModuleId && (isSectionAccessible(initialSubModuleId) || isDevPreviewSection(initialSubModuleId))) {
       return initialSubModuleId;
     }
     return '1.1';
@@ -114,7 +132,7 @@ export const DldWorkspace = ({
         setActiveSubModuleId('1.1');
       }
     }
-  }, [initialSubModuleId, contentOverrides, isAdminPreview]);
+  }, [initialSubModuleId, contentOverrides, isAdminPreview, isLocalFacultyReview]);
 
   // Fallback when activeUnit or activeSubModule becomes hidden
   useEffect(() => {
@@ -124,7 +142,7 @@ export const DldWorkspace = ({
     } else if (!isSectionAccessible(activeSubModuleId)) {
       setActiveSubModuleId(`${activeUnit}.1`);
     }
-  }, [activeUnit, activeSubModuleId, contentOverrides, isAdminPreview]);
+  }, [activeUnit, activeSubModuleId, contentOverrides, isAdminPreview, isLocalFacultyReview]);
 
   // Reset solversUnit to 1 if Unit 2 is inaccessible
   useEffect(() => {
@@ -388,6 +406,50 @@ export const DldWorkspace = ({
 
             {/* Center / Right Column: Comprehensive Topic Notes (9 cols) */}
             <section className="lg:col-span-9 space-y-6">
+              {/* Development-Only Local Faculty Review Navigation */}
+              {isLocalDev && (
+                <div className="p-3.5 rounded-2xl bg-[#FAF8F5] border border-[#DCE7E1] shadow-2xs flex flex-wrap items-center justify-between gap-3 text-xs">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#FEF3C7] text-[#92400E] border border-[#FDE68A]">
+                      LOCAL DRAFT PREVIEW: NOT PUBLIC
+                    </span>
+                    <span className="font-semibold text-[#1E293B]">
+                      DLD Unit II Faculty Preview:
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveUnit(2);
+                        handleSubModuleChange('2.6');
+                      }}
+                      className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all border cursor-pointer ${
+                        activeSubModuleId === '2.6'
+                          ? 'bg-[#2E6F40] text-white border-[#2E6F40] shadow-xs'
+                          : 'bg-white text-[#475569] border-[#DCE7E1] hover:bg-slate-50'
+                      }`}
+                    >
+                      Section 2.6
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setActiveUnit(2);
+                        handleSubModuleChange('2.7');
+                      }}
+                      className={`px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all border cursor-pointer ${
+                        activeSubModuleId === '2.7'
+                          ? 'bg-[#2E6F40] text-white border-[#2E6F40] shadow-xs'
+                          : 'bg-white text-[#475569] border-[#DCE7E1] hover:bg-slate-50'
+                      }`}
+                    >
+                      Section 2.7
+                    </button>
+                  </div>
+                </div>
+              )}
+
               {!isSectionAccessible(activeSubModuleId) ? (
                 <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
                   <div className="flex items-center justify-between">
@@ -458,49 +520,96 @@ export const DldWorkspace = ({
                   <Section24View section={dldUnit2Master.sections[3]} onNavigate={handleContextNavigation} />
                 ) : activeSubModuleId === '2.5' ? (
                   <Section25View section={dldUnit2Master.sections[4]} onNavigate={handleContextNavigation} />
-                ) : activeSubModuleId === '2.6' || activeSubModuleId === '2.7' ? (
-                  /* Section 2.6 / 2.7 Planned Notice */
-                  <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
-                        Section {activeSubModuleId} · Planned / In Development
-                      </span>
-                      <span className="text-xs text-[#64748B] font-mono">Unit II</span>
-                    </div>
+                ) : activeSubModuleId === '2.6' ? (
+                  isAdminPreview || isSectionAccessible('2.6') ? (
+                    <Section26View section={dldUnit2Master.sections[5]} onNavigate={handleContextNavigation} />
+                  ) : (
+                    /* Section 2.6 Planned Notice for unauthenticated public */
+                    <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
+                          Section 2.6 · Planned / In Development
+                        </span>
+                        <span className="text-xs text-[#64748B] font-mono">Unit II</span>
+                      </div>
 
-                    <div>
-                      <h2 className="text-2xl font-bold text-[#1E293B] mt-1">
-                        {activeSubModuleId === '2.6' 
-                          ? '2.6 Gate-Level Minimization and NAND/NOR Implementation' 
-                          : '2.7 Exclusive-OR Functions and Implementation Using NAND/NOR Gates'}
-                      </h2>
-                      <p className="text-xs text-[#475569] mt-2 leading-relaxed">
-                        This section is currently in active curriculum development and is scheduled for a future release. 
-                        Sections 2.1 through 2.5 of Unit II are fully available for study and practice.
-                      </p>
-                    </div>
+                      <div>
+                        <h2 className="text-2xl font-bold text-[#1E293B] mt-1">
+                          2.6 Don't-Care Conditions and 5-Variable K-Maps
+                        </h2>
+                        <p className="text-xs text-[#475569] mt-2 leading-relaxed">
+                          This section is currently in active curriculum development and is scheduled for a future release. 
+                          Sections 2.1 through 2.5 of Unit II are fully available for study and practice.
+                        </p>
+                      </div>
 
-                    <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
-                      <h4 className="text-xs font-bold text-[#2E6F40]">Available Unit II Topics</h4>
-                      <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed">
-                        You can study Boolean Algebra Fundamentals (2.1), Simplification of Expressions (2.2), Minterms and Maxterms (2.3), SOP/POS Conversions (2.4), and Karnaugh Maps with Don't-Care Minimization (2.5).
-                      </p>
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        <button
-                          onClick={() => handleSubModuleChange('2.1')}
-                          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2E6F40] text-white hover:bg-[#255A34] transition-colors"
-                        >
-                          Return to Section 2.1
-                        </button>
-                        <button
-                          onClick={() => handleSubModuleChange('2.5')}
-                          className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-[#DCE7E1] text-[#2E6F40] hover:bg-[#F2F7F4] transition-colors"
-                        >
-                          Go to Section 2.5 (K-Maps)
-                        </button>
+                      <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
+                        <h4 className="text-xs font-bold text-[#2E6F40]">Available Unit II Topics</h4>
+                        <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed">
+                          You can study Boolean Algebra Fundamentals (2.1), Simplification of Expressions (2.2), Minterms and Maxterms (2.3), SOP/POS Conversions (2.4), and Karnaugh Maps with Don't-Care Minimization (2.5).
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <button
+                            onClick={() => handleSubModuleChange('2.1')}
+                            className="px-2.5 py-1 rounded-md bg-white border border-[#DCE7E1] hover:bg-[#FAF8F5] text-[11px] font-semibold text-[#1E293B]"
+                          >
+                            2.1 Fundamentals
+                          </button>
+                          <button
+                            onClick={() => handleSubModuleChange('2.5')}
+                            className="px-2.5 py-1 rounded-md bg-white border border-[#DCE7E1] hover:bg-[#FAF8F5] text-[11px] font-semibold text-[#1E293B]"
+                          >
+                            2.5 Karnaugh Maps
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )
+                ) : activeSubModuleId === '2.7' ? (
+                  isAdminPreview || isSectionAccessible('2.7') ? (
+                    <Section27View section={dldUnit2Master.sections[6]} onNavigate={handleContextNavigation} />
+                  ) : (
+                    /* Section 2.7 Planned Notice */
+                    <div className="p-8 rounded-2xl bg-white border border-[#DCE7E1] shadow-soft space-y-6 text-left">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold uppercase text-[#D97706] bg-[#FEF3C7] px-2.5 py-1 rounded-full">
+                          Section 2.7 · Planned / In Development
+                        </span>
+                        <span className="text-xs text-[#64748B] font-mono">Unit II</span>
+                      </div>
+
+                      <div>
+                        <h2 className="text-2xl font-bold text-[#1E293B] mt-1">
+                          2.7 NAND and NOR Multi-Level Synthesis
+                        </h2>
+                        <p className="text-xs text-[#475569] mt-2 leading-relaxed">
+                          This section is currently in active curriculum development and is scheduled for a future release. 
+                          Sections 2.1 through 2.5 of Unit II are fully available for study and practice.
+                        </p>
+                      </div>
+
+                      <div className="p-4 rounded-xl bg-[#F2F7F4] border border-[#DCE7E1]">
+                        <h4 className="text-xs font-bold text-[#2E6F40]">Available Unit II Topics</h4>
+                        <p className="text-xs text-[#64748B] mt-0.5 leading-relaxed">
+                          You can study Boolean Algebra Fundamentals (2.1), Simplification of Expressions (2.2), Minterms and Maxterms (2.3), SOP/POS Conversions (2.4), and Karnaugh Maps with Don't-Care Minimization (2.5).
+                        </p>
+                        <div className="mt-3 flex flex-wrap gap-2">
+                          <button
+                            onClick={() => handleSubModuleChange('2.1')}
+                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-[#2E6F40] text-white hover:bg-[#255A34] transition-colors"
+                          >
+                            Return to Section 2.1
+                          </button>
+                          <button
+                            onClick={() => handleSubModuleChange('2.5')}
+                            className="px-3 py-1.5 text-xs font-semibold rounded-lg bg-white border border-[#DCE7E1] text-[#2E6F40] hover:bg-[#F2F7F4] transition-colors"
+                          >
+                            Go to Section 2.5 (K-Maps)
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )
                 ) : (
                   <Section21View section={dldUnit2Master.sections[0]} onNavigate={handleContextNavigation} />
                 )

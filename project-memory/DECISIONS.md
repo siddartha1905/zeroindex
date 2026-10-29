@@ -461,6 +461,46 @@ Record important architectural, design, and academic decisions with their date, 
 
 ---
 
+## D-053 | 2026-10-28 | Phase 5B.11/5B.11A: DLD Subject Resources Redesign, Official Syllabus Integration and Simplified Two-Category Units
+
+- **Decision:** Redesigned the Digital Logic Design (DLD) Subject Resources page (`SubjectResourcesView.jsx`) into a clean 5-tab academic library: 1. Curriculum & Syllabus, 2. Textbooks & Study Materials, 3. Educational Channels, 4. Reference Websites, 5. Online Calculators. Sourced official course metadata directly from the BoS document `DLD Syllabus(3).pdf`: Course Code 1005261102, Digital Logic Design, I Year - I Semester, L-T-P-C 3-0-0-3, 3 credits, 3 Course Educational Objectives, 5 Course Outcomes (CO1 to CO5), and detailed Unit I to V syllabus breakdowns. Replaced the speculative CO-PO matrix placeholder with verified syllabus text. In Division A, updated the bibliography to exactly 2 prescribed textbooks (Mano & Ciletti 5/e, Roth 5/e) and 3 reference books (Mano, Leach/Malvino/Saha, Jain). In Division B, simplified unit study materials into exactly TWO visible category cards per unit: PDF Materials and PPT Materials, each initially configured with two document slots without imposing an artificial maximum. Preserved zero em-dashes and zero en-dashes throughout all files.
+- **Rationale / Alternatives Considered:** Eliminated duplicated solver and practice links that belong in other Workbench spaces, providing an authoritative institutional curriculum portal strictly aligned with the department blueprint.
+- **Affected Files and Components:** `src/data/dldSyllabus.js`, `src/data/dldSubjectResourcesData.js`, `src/components/SubjectResourcesView.jsx`, `scripts/verifyPhase5B11Resources.mjs`.
+- **Approval Evidence:** Verified with 184/184 checks passed in `scripts/verifyPhase5B11Resources.mjs` and 237/237 checks in `scripts/verifyDldResources.mjs`.
+- **Verification / Follow-up Requirements:** Enable faculty owner to manage document URLs and publication toggles dynamically via Admin Resource Manager.
+
+---
+
+## D-054 | 2026-10-28 | Phase 5B.11B: Admin Resource Manager, Supabase RLS Storage Architecture, and Dynamic Student Synchronization
+
+- **Decision:** Implemented a new "Resource Manager" section inside the ZeroIndex Admin Dashboard (`AdminDashboard.jsx`, `ResourceManagerView.jsx`) with dedicated controls for: Official Syllabus PDF, Prescribed Textbooks (2), Reference Textbooks (3), Unit-wise Study Materials (Units I-V with PDF Materials & PPT Materials, dynamic N file creation, title/URL editing, delete confirmation), and External Learning Resources (Channels, Websites, Calculators). Engineered persistent backend service `resourceManagerService.js` and database migration `supabase/migrations/20261028000002_subject_resources_manager.sql` creating table `public.subject_resources` with strict Row Level Security (RLS): public reads expose ONLY published items with valid HTTP/HTTPS URLs, completely blocking unpublished URLs from leaking. Full CRUD restricted to verified owner administrators via `public.is_admin()`. Built graceful runtime fallback to session cache so unmigrated database states or offline modes never produce blank screens or broken routes. Connected student-facing `SubjectResourcesView.jsx` to load published resources dynamically on mount, displaying "Open PDF/PPT/Resource" when published and compact neutral "Materials will be added soon" when unpublished. Tested end-to-end with 10/10 test suite (`scripts/verifyResourceManager.mjs`).
+- **Rationale / Alternatives Considered:** Links-only architecture empowers non-technical faculty to upload files to Google Drive, paste sharing URLs, and manage publication independently without code edits or risky OAuth integrations.
+- **Affected Files and Components:** `src/components/admin/AdminDashboard.jsx`, `src/components/admin/ResourceManagerView.jsx`, `src/components/SubjectResourcesView.jsx`, `src/services/resourceManagerService.js`, `supabase/migrations/20261028000002_subject_resources_manager.sql`, `scripts/verifyResourceManager.mjs`.
+- **Approval Evidence:** 10/10 passed in `verifyResourceManager.mjs`; 184/184 passed in `verifyPhase5B11Resources.mjs`; 237/237 passed in `verifyDldResources.mjs`; 139/139 passed in `verifyDldSection27.mjs`; clean production build in 5.46s; zero dashes verified.
+- **Verification / Follow-up Requirements:** Stop for faculty approval before committing, pushing to GitHub, or deploying to Vercel.
+
+---
+
+## D-055 | 2026-10-28 | Phase 5B.11C: Final Supabase Project Verification, Misleading Fallback Elimination and Controlled Release Gate
+
+- **Decision:** Confirmed Supabase project `ruuomptmkabvdmiutxtj` as the authentic ZeroIndex database project (verified with 35 content_registry entries). Inspected `supabase/migrations/20261028000002_subject_resources_manager.sql` and confirmed it is additive, creates `public.subject_resources`, enables RLS, enforces `public.is_admin()` for mutations, and prevents leaking unpublished URLs to public consumers. Completely removed misleading session-storage fallback in production by updating `resourceManagerService.js` and `ResourceManagerView.jsx`: when the database is unmigrated, write actions (Save, Publish Toggle, Add Document, Delete) are disabled and a prominent warning banner is displayed with exact SQL. Student curriculum syllabus, Course Outcomes, and static bibliography remain 100% accessible. Prepared live test runner `scripts/verifyLiveSupabaseResources.mjs`. In accordance with release instructions, stopped before pushing to GitHub main or deploying to Vercel pending manual SQL migration execution by the faculty account owner.
+- **Rationale / Alternatives Considered:** Prevented silent data loss and false success reports by ensuring temporary in-memory session changes are never presented as permanent cloud storage writes. Stopped at release gate to guarantee that only genuine, verified databases receive production deployments.
+- **Affected Files and Components:** `src/services/resourceManagerService.js`, `src/components/admin/ResourceManagerView.jsx`, `scripts/verifyLiveSupabaseResources.mjs`, `scripts/verifyResourceManager.mjs`, `.gitignore`, `project-memory/CURRENT_STATE.md`, `project-memory/DECISIONS.md`.
+- **Approval Evidence:** Production build passes in 4.61s; `verifyLiveSupabaseResources.mjs` executes cleanly; `verifyResourceManager.mjs` passes 10/10; `verifyPhase5B11Resources.mjs` passes 184/184; `verifyDldResources.mjs` passes 237/237; `verifyDldSection27.mjs` passes 139/139; strictly 0 em-dashes and 0 en-dashes across all files.
+- **Verification / Follow-up Requirements:** Faculty owner executes `supabase/migrations/20261028000002_subject_resources_manager.sql` in Supabase project `ruuomptmkabvdmiutxtj`, confirms live cloud persistence with `node scripts/verifyLiveSupabaseResources.mjs`, and authorizes the controlled main merge and Vercel release.
+
+---
+
+## D-056 | 2026-10-29 | Phase 5B.11D: Live Supabase Migration Verification, Fail-Closed Security Audit and Release Staging
+
+- **Decision:** (1) Verified that faculty owner manually executed migration `20261028000002_subject_resources_manager.sql` in Supabase project `ruuomptmkabvdmiutxtj`; (2) Confirmed table `public.subject_resources` is registered in the live PostgREST schema cache with storage status `mode: cloud_ready` and `isLiveDb: true`, completely resolving error `PGRST205`; (3) Verified fail-closed Row Level Security (RLS): anonymous reads for unpublished rows return 0 items; unauthorized INSERT/UPDATE attempts are rejected with `new row violates row-level security policy for table "subject_resources"`; (4) Confirmed public read fetches 11 published items with valid URLs; (5) Refined `.gitignore` to replace broad `*.zip` and `*.pdf` rules with explicit exclusions for `DLD_Unit_II_Editable_Package.zip` and `DLD_Unit_II_Notes.pdf`; (6) Verified production build completes in 4.54s with zero errors; (7) Confirmed Sections 2.6 and 2.7 remain unpublished in production (`isPublic: false`, `editorialStatus: 'planned'`, polite offline notice); (8) Preserved strict Zero-Dash Standard across all files.
+- **Rationale / Alternatives Considered:** Thoroughly proves genuine cloud database readiness and RLS authorization before staging code into GitHub main and deploying to Vercel, preventing premature or broken production releases.
+- **Affected Files and Components:** `scripts/verifyLiveSupabaseResources.mjs`, `src/services/resourceManagerService.js`, `.gitignore`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+- **Approval Evidence:** `verifyLiveSupabaseResources.mjs` passed (mode: cloud_ready, isLiveDb: true, PGRST205 resolved); `verifyResourceManager.mjs` passed 10/10; `verifyPhase5B11Resources.mjs` passed 184/184; `verifyDldResources.mjs` passed 237/237; `verifyDldSection27.mjs` passed 139/139; `verifyAdminDashboardModernisation.mjs` passed 65/65; `verifyAdminControlSystem.mjs` passed 65/65; `npm run build` succeeded in 4.54s with 0 errors; zero em-dashes and zero en-dashes confirmed.
+- **Verification / Follow-up Requirements:** Present full verification audit report to faculty owner for final approval before GitHub main merge and Vercel release.
+
+---
+
 ## Decision Record Template
 
 ```markdown
@@ -472,6 +512,7 @@ Record important architectural, design, and academic decisions with their date, 
 - **Approval Evidence:**
 - **Verification / Follow-up Requirements:**
 ```
+
 
 
 

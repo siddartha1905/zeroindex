@@ -2,6 +2,99 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-29: Phase 5B.11D: Resume Final Release After Successful Supabase Migration
+
+- **Type**: supabase-verification / live-persistence / security-hardening / release-audit / build-verification
+- **Summary**: Resumed final release following confirmed faculty owner execution of migration `20261028000002_subject_resources_manager.sql` in Supabase project `ruuomptmkabvdmiutxtj`:
+  1. **Live Database Availability**:
+     - Verified target project `ruuomptmkabvdmiutxtj` (`https://ruuomptmkabvdmiutxtj.supabase.co`).
+     - PostgREST schema cache registered `public.subject_resources`; `PGRST205` error completely eliminated.
+     - `checkResourceStorageStatus()` reports `mode: cloud_ready`, `isLiveDb: true`.
+     - Admin Resource Manager warning banner dismissed in UI; write actions enabled.
+  2. **RLS Authorization and Storage Privacy Verification**:
+     - Anonymous `SELECT` queries retrieve exactly 11 published educational resources with valid URLs.
+     - Anonymous queries for unpublished resources (`is_published = false`) return 0 rows (`data: []`), proving unpublished document links are 100% isolated at the PostgreSQL RLS level.
+     - Anonymous `INSERT` and `UPDATE` attempts are rejected with `new row violates row-level security policy for table "subject_resources"`, proving fail-closed security against unauthorized writes.
+  3. **Repository Hygiene & `.gitignore` Refinement**:
+     - Replaced broad `*.zip` and `*.pdf` rules with explicit exclusions for temporary packages (`DLD_Unit_II_Editable_Package.zip`, `DLD_Unit_II_Notes.pdf`), preventing accidental exclusion of future project assets.
+     - Confirmed zero credentials, tokens, or unnecessary scratch files are tracked.
+  4. **Regression Verification and Production Build**:
+     - `verifyLiveSupabaseResources.mjs`: PASSED with live DB confirmation and RLS proofs.
+     - `verifyPhase5B11Resources.mjs`: 184/184 PASSED.
+     - `verifyDldResources.mjs`: 237/237 PASSED.
+     - `verifyResourceManager.mjs`: 10/10 PASSED.
+     - `verifyDldSection25.mjs`: 10/10 PASSED.
+     - `verifyDldSection26.mjs`: 12/12 PASSED.
+     - `verifyDldSection27.mjs`: 139/139 PASSED.
+     - `verifyResponsiveTabs.mjs`: 49/49 PASSED.
+     - `verifyAdminDashboardModernisation.mjs`: 65/65 PASSED.
+     - `verifyAdminControlSystem.mjs`: 65/65 PASSED.
+     - Production Build: `npm run build` completed cleanly in 4.54s with zero errors.
+     - Confirmed DLD Sections 2.6 and 2.7 remain unpublished in production (`isPublic: false`, `editorialStatus: 'planned'`).
+     - Zero-Dash Standard: 0 em-dashes and 0 en-dashes across all files.
+- **Affected Files**: `scripts/verifyLiveSupabaseResources.mjs`, `src/services/resourceManagerService.js`, `.gitignore`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
+## 2026-10-28: Phase 5B.11C: Final Supabase Project Verification, Misleading Fallback Elimination and Controlled Release Gate
+
+- **Type**: supabase-verification / security-hardening / resource-manager / release-gate / production-verification
+- **Summary**: Verified Supabase database project configuration, eliminated misleading fallback behavior in Admin Resource Manager, and enforced release gate checkpoints:
+  1. **Supabase Project Verification**:
+     - Confirmed `ruuomptmkabvdmiutxtj` (`https://ruuomptmkabvdmiutxtj.supabase.co`) is the authentic ZeroIndex database project (verified with 35 content_registry entries).
+     - Confirmed `subject_resources` table is unmigrated in Supabase schema cache (`PGRST205`).
+     - Reviewed migration `supabase/migrations/20261028000002_subject_resources_manager.sql`: confirmed purely additive, creates `public.subject_resources`, enables RLS, enforces `public.is_admin()` for mutations, and prevents leaking unpublished URLs to public consumers.
+  2. **Misleading Fallback Elimination**:
+     - Updated `resourceManagerService.js`: `saveResource`, `toggleResourcePublication`, and `deleteResource` return explicit errors with `unmigrated: true` instead of falsely reporting permanent success via session cache.
+     - Updated `ResourceManagerView.jsx`: renders a prominent storage unavailable warning banner with exact SQL and target project `ruuomptmkabvdmiutxtj`. Disables write buttons (Save URL, Publish Toggle, + Add PDF/PPT, Delete) when database storage is unavailable.
+     - Ensured student-facing syllabus, curriculum breakdown, and static bibliography remain 100% accessible during unmigrated state.
+  3. **Verification and Automated Test Suites**:
+     - Added `scripts/verifyLiveSupabaseResources.mjs` to test authentic Supabase database connectivity and RLS permissions.
+     - `verifyResourceManager.mjs`: 10/10 passed.
+     - `verifyPhase5B11Resources.mjs`: 184/184 passed.
+     - `verifyDldResources.mjs`: 237/237 passed.
+     - `verifyDldSection27.mjs`: 139/139 passed.
+     - Production Build: `npm run build` succeeded cleanly in 4.61s with 0 errors.
+     - Zero-Dash Compliance: Strictly 0 em-dashes and 0 en-dashes across all files.
+  4. **Release Gate Enforcement**:
+     - In strict accordance with release instructions, agent stopped before merging to main or deploying to Vercel pending manual SQL migration execution by the faculty account owner in the Supabase Dashboard SQL Editor.
+- **Affected Files**: `src/services/resourceManagerService.js`, `src/components/admin/ResourceManagerView.jsx`, `scripts/verifyLiveSupabaseResources.mjs`, `scripts/verifyResourceManager.mjs`, `.gitignore`, `project-memory/CURRENT_STATE.md`, `project-memory/DECISIONS.md`, `project-memory/CHANGELOG.md`, `project-memory/TECHNICAL_SNAPSHOT.md`.
+
+## 2026-10-28: Phase 5B.11B: Admin Resource Manager, Official DLD Syllabus and Final Release Preparation
+
+- **Type**: dld-workbench / admin-modernisation / resource-manager / official-syllabus / release-preparation
+- **Summary**: Implemented the Admin Resource Manager, connected dynamic published resources to student views, integrated the authoritative BoS syllabus PDF, and prepared end-of-day release readiness:
+  1. **Admin Resource Manager (`ResourceManagerView.jsx`, `AdminDashboard.jsx`)**:
+     - Added dedicated "Resource Manager" section inside Admin Dashboard accessible via top workspace mode switcher (`[Publishing Controls] | [Resource Manager] | [Project Desk]`).
+     - Course selection for Digital Logic Design (`1005261102`).
+     - Section A: Official Syllabus (editable Google Drive PDF link and publication toggle).
+     - Section B: Prescribed Textbooks (Mano & Ciletti 5/e, Roth 5/e URL and publication toggles).
+     - Section C: Reference Textbooks (Mano, Leach/Malvino/Saha, Jain URL and publication toggles).
+     - Section D: Unit-wise Study Materials for Units I through V with exactly TWO visible category panels per unit: PDF Materials and PPT Materials. Supports editing titles, entering URLs, quick URL save, publication toggles (Draft/Hidden vs Published/Visible), adding dynamic third, fourth or additional documents (+ Add PDF, + Add PPT), editing items in a modal, and deleting items with confirmation.
+     - Section E: External Learning Resources (Channels, Websites, Calculators) with edit and toggle controls.
+     - SQL Migration helper modal displaying migration SQL for quick copy into Supabase SQL editor.
+  2. **Persistent Storage & Security Guard (`resourceManagerService.js`)**:
+     - Database migration: `supabase/migrations/20261028000002_subject_resources_manager.sql` creating table `public.subject_resources` with full Row Level Security (RLS).
+     - Public read policy strictly enforces: `is_published = true AND url IS NOT NULL AND length(trim(url)) > 0`. Disabled/unpublished URLs are blocked at the database level and never leaked to students.
+     - Admin operations require verified owner admin status (`public.is_admin()`).
+     - Safe fallback: in unmigrated or local demo modes, seamlessly caches admin updates in session storage without crashing or rendering blank pages.
+     - Strict URL validation: accepts only valid HTTP and HTTPS schemes, rejecting `javascript:`, `data:`, and malformed inputs.
+  3. **Student-Facing Subject Resources Synchronization (`SubjectResourcesView.jsx`)**:
+     - Dynamically queries `fetchPublishedResources('dld')` on mount.
+     - Official Syllabus: Displays "View Official Syllabus PDF" when published with a valid URL; displays compact neutral "Link not yet added" when unpublished.
+     - Textbooks: Displays "Open Textbook" / "Open Book" when published; displays neutral bibliographic status when unpublished.
+     - Unit Materials: Displays all published PDF and PPT documents with "Open PDF" and "Open PPT" links (`target="_blank" rel="noopener noreferrer"`). When no documents in a category are published, displays one concise "Materials will be added soon" message without empty card lists or broken links.
+  4. **Official BoS Syllabus Integration (`dldSyllabus.js`)**:
+     - Verified Course Code: `1005261102`, Course Title: `DIGITAL LOGIC DESIGN`, I Year - I Semester, L-T-P-C: `3-0-0-3`, 3 Credits.
+     - 3 Course Educational Objectives, 5 Course Outcomes (CO1-CO5), Units I-V detailed curricula.
+     - Removed speculative CO-PO mapping matrix card from student view.
+  5. **Automated Verification & Release Readiness**:
+     - `verifyResourceManager.mjs`: 10/10 passed (Storage check, baseline seeding, security validation, Tests A-F for add, publish, disable, edit, multiple files, cleanup).
+     - `verifyPhase5B11Resources.mjs`: 184/184 passed.
+     - `verifyDldResources.mjs`: 237/237 passed.
+     - `verifyDldSection27.mjs`: 139/139 passed.
+     - Production Build: `npm run build` succeeded cleanly in 5.46s with 0 errors.
+     - Zero-Dash Compliance: Strictly zero em-dashes and zero en-dashes across all files.
+- **Affected Files**: `src/components/admin/AdminDashboard.jsx`, `src/components/admin/ResourceManagerView.jsx`, `src/components/SubjectResourcesView.jsx`, `src/services/resourceManagerService.js`, `src/data/dldSyllabus.js`, `src/data/dldSubjectResourcesData.js`, `supabase/migrations/20261028000002_subject_resources_manager.sql`, `scripts/verifyResourceManager.mjs`, `project-memory/DECISIONS.md`, `project-memory/CHANGELOG.md`, `project-memory/TECHNICAL_SNAPSHOT.md`.
+
 ## 2026-10-28: Phase 5A: Public Launch of English Communication for Everyone
 
 - **Type**: atlas-activities / english-communication / public-launch / production-release / vercel-deployment

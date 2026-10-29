@@ -397,16 +397,10 @@ const Section25ViewInternal = ({ section, initialTab = 'start-here', onNavigate 
   const [activeDemoId, setActiveDemoId] = useState('GD1');
   const [demoStepIdx, setDemoStepIdx] = useState(0);
 
-  // Tab 5 Worked Models state
-  const [modelFilter, setModelFilter] = useState('All');
-  const [formFilter, setFormFilter] = useState('All');
-  const [expandedModels, setExpandedModels] = useState({
-    'KM2.5-M01': true,
-    'KM2.5-M05': true,
-    'KM2.5-M12': true,
-    'KM2.5-M21': true,
-    'KM2.5-M27': true
-  });
+  // Tab 5 Worked Models state (Adopted Section 2.6 selection interface)
+  const [modelVarFilter, setModelVarFilter] = useState('All');
+  const [modelFormFilter, setModelFormFilter] = useState('All');
+  const [activeModelId, setActiveModelId] = useState('KM2.5-M01');
 
   // Tab 7 Practice Lab state
   const [practiceFilter, setPracticeFilter] = useState('All');
@@ -660,21 +654,45 @@ const Section25ViewInternal = ({ section, initialTab = 'start-here', onNavigate 
     setDemoStepIdx(0);
   };
 
-  // Model categories & form filters
-  const modelCategories = [
-    'All',
-    '2-Variable K-Map',
-    '3-Variable K-Map',
-    '4-Variable K-Map',
-    'Don\'t-Care Minimization',
-    'Special Cases'
-  ];
+  // Worked Models filtering (Section 2.6 pattern)
+  const matchesModelVarFilter = (model, filter) => {
+    if (filter === 'All') return true;
+    if (filter === '2-Variable') return model.mapType === 'twoVar' || (model.category && model.category.startsWith('2-Var'));
+    if (filter === '3-Variable') return model.mapType === 'threeVar' || (model.category && model.category.startsWith('3-Var'));
+    if (filter === '4-Variable') return model.mapType === 'fourVar' || (model.category && model.category.startsWith('4-Var'));
+    return true;
+  };
 
-  const filteredModels = data.workedModels.filter(m => {
-    const matchesCat = modelFilter === 'All' || m.category === modelFilter;
-    const matchesForm = formFilter === 'All' || m.form === formFilter;
-    return matchesCat && matchesForm;
-  });
+  const matchesModelFormFilter = (model, filter) => {
+    if (filter === 'All') return true;
+    return model.form === filter;
+  };
+
+  const filteredModels = data.workedModels.filter(m =>
+    matchesModelVarFilter(m, modelVarFilter) && matchesModelFormFilter(m, modelFormFilter)
+  );
+
+  const activeModel = filteredModels.find(m => m.id === activeModelId) || filteredModels[0] || data.workedModels[0];
+
+  const handleVarFilterChange = (v) => {
+    setModelVarFilter(v);
+    const nextFiltered = data.workedModels.filter(m =>
+      matchesModelVarFilter(m, v) && matchesModelFormFilter(m, modelFormFilter)
+    );
+    if (nextFiltered.length > 0 && !nextFiltered.some(m => m.id === activeModelId)) {
+      setActiveModelId(nextFiltered[0].id);
+    }
+  };
+
+  const handleFormFilterChange = (f) => {
+    setModelFormFilter(f);
+    const nextFiltered = data.workedModels.filter(m =>
+      matchesModelVarFilter(m, modelVarFilter) && matchesModelFormFilter(m, f)
+    );
+    if (nextFiltered.length > 0 && !nextFiltered.some(m => m.id === activeModelId)) {
+      setActiveModelId(nextFiltered[0].id);
+    }
+  };
 
   // Practice filters
   const practiceDifficulties = ['All', 'Basic', 'Intermediate', 'Advanced', 'Challenge'];
@@ -1773,215 +1791,330 @@ const Section25ViewInternal = ({ section, initialTab = 'start-here', onNavigate 
             </p>
           </div>
 
-          {/* Header & Dual Filter Controls (Task 8B) */}
-          <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-2xs space-y-4">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <h3 className="font-editorial text-xl font-bold text-[#1E293B]">
-                  Progressive Solved Models: 34 Classroom Blackboards
-                </h3>
-                <p className="text-xs text-[#5F6C64] mt-0.5">
-                  Complete classroom solutions with visual K-Maps, visible grouping overlays, and step-by-step term derivations.
-                </p>
+          {/* Filter Bar (Adopted Section 2.6 pattern) */}
+          <div className="p-4 rounded-xl bg-white border border-[#DCE7E1] shadow-2xs space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Filter className="w-4 h-4 text-[#285C49]" />
+                <span className="font-mono text-xs font-bold text-[#1E293B] uppercase tracking-wider">
+                  Filter Solved Models
+                </span>
               </div>
-
-              <span className="font-mono text-xs px-2.5 py-1 rounded-full bg-[#EBF3ED] text-[#285C49] font-bold border border-[#285C49]/20 self-start sm:self-auto">
-                Showing {filteredModels.length} of {data.workedModels.length} Models
-              </span>
+              <div className="text-xs font-mono text-slate-500">
+                Showing {filteredModels.length} of {data.workedModels.length} models
+              </div>
             </div>
 
-            {/* Filter Controls Row */}
-            <div className="space-y-2.5 pt-1 border-t border-[#DCE7E1]">
-              {/* Form Filter Pills (SOP vs POS) */}
+            <div className="flex flex-wrap items-center gap-3 pt-1 border-t border-[#F1F5F9]">
+              {/* Variable-count Filter */}
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="font-mono text-xs text-slate-400 font-semibold mr-1 flex items-center gap-1">
-                  Form:
-                </span>
-                {['All', 'SOP', 'POS'].map((form) => (
+                <span className="text-xs font-mono text-slate-500">Variables:</span>
+                {['All', '2-Variable', '3-Variable', '4-Variable'].map((v) => (
                   <button
-                    key={form}
-                    onClick={() => setFormFilter(form)}
-                    className={`px-3 py-1 rounded-lg font-mono text-xs font-bold transition-all ${
-                      formFilter === form
-                        ? form === 'POS' ? 'bg-purple-700 text-white shadow-xs' : 'bg-[#285C49] text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    key={v}
+                    onClick={() => handleVarFilterChange(v)}
+                    className={`px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition-all cursor-pointer ${
+                      modelVarFilter === v
+                        ? 'bg-[#285C49] text-white shadow-xs'
+                        : 'bg-[#FAF8F5] text-slate-600 hover:bg-[#EBF3ED]'
                     }`}
                   >
-                    {form === 'All' ? 'All Forms' : form === 'SOP' ? 'SOP (Σ m)' : 'POS (Π M)'}
+                    {v}
                   </button>
                 ))}
               </div>
 
-              {/* Category Filter Pills */}
-              <div className="flex flex-wrap items-center gap-1.5">
-                <span className="font-mono text-xs text-slate-400 font-semibold mr-1 flex items-center gap-1">
-                  <Filter className="w-3.5 h-3.5" /> Category:
-                </span>
-                {modelCategories.map((cat) => (
+              {/* Expression-form Filter */}
+              <div className="flex flex-wrap items-center gap-1.5 sm:ml-auto">
+                <span className="text-xs font-mono text-slate-500">Form:</span>
+                {['All', 'SOP', 'POS'].map((f) => (
                   <button
-                    key={cat}
-                    onClick={() => setModelFilter(cat)}
-                    className={`px-3 py-1.5 rounded-lg font-mono text-xs font-bold transition-all ${
-                      modelFilter === cat
-                        ? 'bg-[#285C49] text-white shadow-xs'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    key={f}
+                    onClick={() => handleFormFilterChange(f)}
+                    className={`px-2.5 py-1 rounded-lg font-mono text-xs font-bold transition-all cursor-pointer ${
+                      modelFormFilter === f
+                        ? f === 'POS' ? 'bg-purple-700 text-white shadow-xs' : 'bg-[#285C49] text-white shadow-xs'
+                        : 'bg-[#FAF8F5] text-slate-600 hover:bg-[#EBF3ED]'
                     }`}
                   >
-                    {cat}
+                    {f === 'All' ? 'All' : f === 'SOP' ? 'SOP (\u03A3 m)' : 'POS (\u03A0 M)'}
                   </button>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* Models Grid */}
-          <div className="grid grid-cols-1 gap-6">
-            {filteredModels.map((model) => {
-              const isExpanded = expandedModels[model.id] ?? true;
-              const isPOS = model.form === 'POS';
+          {/* Compact Example-Selection Cards Grid */}
+          {filteredModels.length === 0 ? (
+            <div className="p-8 text-center rounded-xl bg-white border border-[#DCE7E1]">
+              <p className="text-sm font-mono text-slate-500">No worked models match the selected filter combination.</p>
+              <button
+                onClick={() => { setModelVarFilter('All'); setModelFormFilter('All'); }}
+                className="mt-3 px-3 py-1.5 rounded-lg bg-[#285C49] text-white font-mono text-xs font-bold"
+              >
+                Reset Filters
+              </button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+              {filteredModels.map((model) => {
+                const isSelected = model.id === activeModel.id;
+                const isPOS = model.form === 'POS';
+                const varLabel = model.mapType === 'twoVar' ? '2-Var' : model.mapType === 'threeVar' ? '3-Var' : '4-Var';
+                const shortTitle = model.title.replace(/^Model \d+:\s*/, '');
 
-              return (
-                <div
-                  key={model.id}
-                  className="rounded-2xl bg-white border border-[#DCE7E1] shadow-soft overflow-hidden"
-                >
-                  {/* Model Card Header */}
-                  <div
-                    onClick={() => toggleModel(model.id)}
-                    className={`p-4 sm:p-5 flex items-center justify-between cursor-pointer border-b border-[#DCE7E1] transition-colors ${
-                      isPOS ? 'bg-[#FAF5FF] hover:bg-[#F3E8FF]' : 'bg-[#FAF8F5] hover:bg-[#F2F7F4]'
+                return (
+                  <button
+                    key={model.id}
+                    onClick={() => setActiveModelId(model.id)}
+                    className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'border-[#285C49] bg-[#F4F7F4] ring-2 ring-[#285C49]/20 shadow-xs'
+                        : 'border-[#E2E8F0] bg-white hover:border-[#CBD5E1] hover:bg-slate-50/60'
                     }`}
                   >
-                    <div className="space-y-1">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <span className="font-mono text-xs font-bold px-2 py-0.5 rounded bg-white text-[#285C49] border border-[#DCE7E1]">
+                    <div>
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-mono text-xs font-bold text-[#1E293B]">
                           {model.id}
                         </span>
-                        <span className="font-mono text-[11px] font-semibold text-slate-500">
-                          {model.category}
-                        </span>
-                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                        <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
                           isPOS
                             ? 'bg-purple-100 text-purple-800 border border-purple-200'
                             : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                         }`}>
                           {model.form || 'SOP'}
                         </span>
-                        <span className={`font-mono text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                      </div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="text-[10px] font-mono text-slate-500 font-medium">
+                          {varLabel}
+                        </span>
+                        <span className="text-slate-300 text-[10px]">&bull;</span>
+                        <span className={`text-[10px] font-mono font-medium ${
                           model.difficulty === 'Basic'
-                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                            ? 'text-blue-600'
                             : model.difficulty === 'Intermediate'
-                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
-                            : 'bg-purple-50 text-purple-700 border border-purple-200'
+                            ? 'text-amber-600'
+                            : 'text-purple-600'
                         }`}>
                           {model.difficulty}
                         </span>
                       </div>
-                      <h4 className="font-editorial text-base sm:text-lg font-bold text-[#1E293B]">
-                        {model.title}
-                      </h4>
                     </div>
+                    <div className="text-[11px] text-slate-600 mt-1.5 line-clamp-2 leading-tight">
+                      {shortTitle}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-                    <button className="p-1.5 text-slate-400 hover:text-slate-600">
-                      {isExpanded ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                    </button>
+          {/* Single Active Worked Solution Panel */}
+          {activeModel && (
+            <div className="p-6 rounded-2xl bg-white border border-[#DCE7E1] shadow-2xs space-y-6">
+              {/* Active Model Header */}
+              <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#DCE7E1] pb-4">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-xs font-bold text-[#285C49]">
+                      {activeModel.id}
+                    </span>
+                    <span className="text-slate-400">&bull;</span>
+                    <span className="font-mono text-xs text-slate-600">
+                      {activeModel.category}
+                    </span>
+                    <span className="text-slate-400">&bull;</span>
+                    <span className={`px-2 py-0.5 rounded text-xs font-mono font-bold ${
+                      activeModel.form === 'POS'
+                        ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                        : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                    }`}>
+                      {activeModel.form || 'SOP'}
+                    </span>
+                    <span className="text-slate-400">&bull;</span>
+                    <span className={`font-mono text-xs font-bold px-2 py-0.5 rounded ${
+                      activeModel.difficulty === 'Basic'
+                        ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                        : activeModel.difficulty === 'Intermediate'
+                        ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                        : 'bg-purple-50 text-purple-700 border border-purple-200'
+                    }`}>
+                      {activeModel.difficulty}
+                    </span>
+                  </div>
+                  <h3 className="font-editorial text-2xl font-bold text-[#1E293B] mt-1.5">
+                    {activeModel.title}
+                  </h3>
+                </div>
+
+                {/* Problem Statement Box */}
+                <div className="p-3 rounded-xl bg-[#FAF8F5] border border-[#E2E8F0] font-mono text-xs text-slate-700 max-w-full sm:max-w-md">
+                  <span className="text-slate-500 font-semibold block sm:inline mr-1.5">Problem:</span>
+                  <span className={`font-bold ${activeModel.form === 'POS' ? 'text-purple-900' : 'text-[#285C49]'}`}>
+                    {activeModel.problemStatement}
+                  </span>
+                </div>
+              </div>
+
+              {/* Grid + Solution Split View */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                {/* Left: Coloured K-Map */}
+                <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 rounded-xl bg-[#FAF8F5] border border-[#DCE7E1]">
+                  <div className="flex items-center justify-between w-full mb-3">
+                    <span className="font-mono text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      K-Map Diagram
+                    </span>
+                    <span className="font-mono text-[11px] text-slate-500">
+                      Map: {activeModel.mapType === 'twoVar' ? '2x2 (4 cells)' : activeModel.mapType === 'threeVar' ? '2x4 (8 cells)' : '4x4 (16 cells)'}
+                    </span>
+                  </div>
+                  <KMapGrid
+                    mapType={activeModel.mapType}
+                    minterms={activeModel.minterms || []}
+                    maxterms={activeModel.maxterms || []}
+                    dontCares={activeModel.dontCares || []}
+                    targetPolarity={activeModel.targetPolarity || (activeModel.form === 'POS' ? '0' : '1')}
+                    groups={activeModel.groupingSteps || []}
+                    activeGroup="ALL"
+                    size="md"
+                  />
+                  <div className="mt-3 text-[11px] font-mono text-slate-500 text-center space-y-0.5">
+                    <div>
+                      Polarity: {activeModel.targetPolarity === '0' || activeModel.form === 'POS' ? '0s (POS Minimization)' : '1s (SOP Minimization)'}
+                    </div>
+                    {activeModel.dontCares && activeModel.dontCares.length > 0 && (
+                      <div className="text-amber-700">
+                        Don't-cares: [{activeModel.dontCares.join(', ')}]
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Right: Group interpretation, Variable Elimination & Derivation */}
+                <div className="lg:col-span-7 space-y-5">
+                  {/* Group Interpretation & Variable Elimination Table */}
+                  <div className="space-y-2">
+                    <h4 className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E293B]">
+                      Group Interpretation & Variable Elimination
+                    </h4>
+
+                    <div className="overflow-x-auto border border-[#E2E8F0] rounded-xl">
+                      <table className="w-full text-left text-xs font-mono border-collapse">
+                        <thead>
+                          <tr className="bg-[#FAF8F5] border-b border-[#E2E8F0] text-slate-600">
+                            <th className="p-2.5 font-bold">Group</th>
+                            <th className="p-2.5 font-bold">Type</th>
+                            <th className="p-2.5 font-bold">Cells</th>
+                            <th className="p-2.5 font-bold">Fixed Variables</th>
+                            <th className="p-2.5 font-bold">Term</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {(activeModel.groupingSteps || []).map((st, gIdx) => {
+                            const color = GROUP_COLORS[gIdx % GROUP_COLORS.length] || GROUP_COLORS[0];
+                            return (
+                              <tr key={st.group || gIdx} className="border-b border-[#F1F5F9] hover:bg-slate-50/50">
+                                <td className="p-2.5 font-bold">
+                                  <span className={`inline-block px-1.5 py-0.5 rounded text-[10px] ${color.badge}`}>
+                                    {st.group}
+                                  </span>
+                                </td>
+                                <td className="p-2.5 text-slate-700">{st.type || `Size ${st.size}`}</td>
+                                <td className="p-2.5 text-slate-700">
+                                  {`{${Array.isArray(st.cells) ? st.cells.join(', ') : st.cells}}`}
+                                </td>
+                                <td className="p-2.5 text-slate-700">{st.constantVars || st.fixedVars || '-'}</td>
+                                <td className={`p-2.5 font-bold ${activeModel.form === 'POS' ? 'text-purple-900' : 'text-[#285C49]'}`}>
+                                  {st.term}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
 
-                  {/* Model Card Body */}
-                  {isExpanded && (
-                    <div className="p-5 sm:p-6 space-y-5">
-                      {/* Problem Statement Banner */}
-                      <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 font-mono text-xs sm:text-sm text-[#1E293B] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                        <div>
-                          <span className="text-slate-500 font-semibold">Problem: </span>
-                          <span className={`font-bold ${isPOS ? 'text-purple-900' : 'text-[#285C49]'}`}>
-                            {model.problemStatement}
-                          </span>
-                        </div>
-                        <span className="text-[11px] text-slate-500">
-                          Map: {model.mapType === 'twoVar' ? '2x2 (4 cells)' : model.mapType === 'threeVar' ? '2x4 (8 cells)' : '4x4 (16 cells)'}
-                        </span>
-                      </div>
-
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-                        {/* Left: Visual K-Map Grid */}
-                        <div className="lg:col-span-5 flex flex-col items-center justify-center p-4 bg-[#FAF8F5] rounded-xl border border-[#DCE7E1]">
-                          <KMapGrid
-                            mapType={model.mapType}
-                            minterms={model.minterms || []}
-                            maxterms={model.maxterms || []}
-                            dontCares={model.dontCares || []}
-                            targetPolarity={model.targetPolarity || '1'}
-                            groups={model.groupingSteps.map((s, idx) => ({ group: s.group, cells: s.cells, term: s.term }))}
-                            activeGroup="ALL"
-                          />
-                        </div>
-
-                        {/* Right: Step-by-Step Classroom Derivation */}
-                        <div className="lg:col-span-7 space-y-3">
-                          <h5 className="font-mono text-xs font-bold uppercase tracking-wider text-[#285C49]">
-                            Classroom Derivation Steps
-                          </h5>
-
-                          <div className="space-y-2 text-xs">
-                            {model.groupingSteps.map((st, sIdx) => (
-                              <div
-                                key={sIdx}
-                                className="p-3 rounded-lg bg-white border border-[#DCE7E1] space-y-1 font-mono"
-                              >
-                                <div className="flex items-center justify-between">
-                                  <span className="font-bold text-[#1E293B]">
-                                    {st.group}: {st.type || 'Group'}
-                                  </span>
-                                  {st.annotation && (
-                                    <span className="text-[10px] text-slate-500 font-sans italic">
-                                      {st.annotation}
-                                    </span>
-                                  )}
-                                </div>
-                                <div className="text-[11px] text-slate-600">
-                                  Cells: [{Array.isArray(st.cells) ? st.cells.join(', ') : st.cells}] {st.constantVars ? `| Constants: ${st.constantVars}` : ''}
-                                </div>
-                                <div className="pt-1 flex items-center justify-between text-xs">
-                                  <span className="text-slate-500">Derived Term:</span>
-                                  <span className={`font-bold px-2 py-0.5 rounded border ${
-                                    isPOS 
-                                      ? 'text-purple-900 bg-purple-50 border-purple-200' 
-                                      : 'text-emerald-800 bg-emerald-50 border-emerald-200'
-                                  }`}>
-                                    {st.term}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                  {/* Step-by-Step Derivation Steps */}
+                  <div className="space-y-2">
+                    <h4 className="font-mono text-xs font-bold uppercase tracking-wider text-[#1E293B]">
+                      Classroom Derivation Steps
+                    </h4>
+                    <div className="space-y-2">
+                      {(activeModel.groupingSteps || []).map((st, sIdx) => {
+                        const color = GROUP_COLORS[sIdx % GROUP_COLORS.length] || GROUP_COLORS[0];
+                        return (
+                          <div
+                            key={sIdx}
+                            className="p-3 rounded-lg bg-[#FAF8F5] border border-[#E2E8F0] space-y-1 font-mono text-xs"
+                          >
+                            <div className="flex flex-wrap items-center justify-between gap-1">
+                              <span className="font-bold text-[#1E293B] flex items-center gap-1.5">
+                                <span className={`px-1.5 py-0.5 rounded text-[10px] ${color.badge}`}>
+                                  {st.group}
+                                </span>
+                                <span>{st.type || 'Group'}</span>
+                              </span>
+                              {st.annotation && (
+                                <span className="text-[10px] text-slate-500 font-sans italic">
+                                  {st.annotation}
+                                </span>
+                              )}
+                            </div>
+                            <div className="text-[11px] text-slate-600">
+                              Cells: [{Array.isArray(st.cells) ? st.cells.join(', ') : st.cells}] {st.constantVars ? `| Constants: ${st.constantVars}` : ''}
+                            </div>
+                            <div className="pt-1 flex items-center justify-between text-xs">
+                              <span className="text-slate-500">Derived Term:</span>
+                              <span className={`font-bold px-2 py-0.5 rounded border ${
+                                activeModel.form === 'POS'
+                                  ? 'text-purple-900 bg-purple-50 border-purple-200'
+                                  : 'text-emerald-800 bg-emerald-50 border-emerald-200'
+                              }`}>
+                                {st.term}
+                              </span>
+                            </div>
                           </div>
+                        );
+                      })}
+                    </div>
+                  </div>
 
-                          {/* Final Answer Banner */}
-                          <div className={`p-3.5 rounded-xl text-white flex flex-col sm:flex-row sm:items-center justify-between gap-2 font-mono ${
-                            isPOS ? 'bg-purple-800' : 'bg-[#285C49]'
-                          }`}>
-                            <span className="text-xs uppercase tracking-wider text-emerald-200 font-semibold">
-                              Final Minimized Answer:
-                            </span>
-                            <span className="text-base font-bold text-white">
-                              {model.finalAnswer}
-                            </span>
-                          </div>
+                  {/* Final Boxed Answer */}
+                  <div className={`p-4 rounded-xl flex flex-wrap items-center justify-between gap-3 border ${
+                    activeModel.form === 'POS'
+                      ? 'bg-purple-50 border-purple-200 text-purple-950'
+                      : 'bg-[#F0FDF4] border-[#BBF7D0] text-[#166534]'
+                  }`}>
+                    <div>
+                      <span className={`font-mono text-[11px] uppercase tracking-wider font-bold block ${
+                        activeModel.form === 'POS' ? 'text-purple-800' : 'text-[#166534]'
+                      }`}>
+                        Final Minimized Boolean Expression:
+                      </span>
+                      <span className={`font-mono text-lg font-bold ${
+                        activeModel.form === 'POS' ? 'text-purple-900' : 'text-[#166534]'
+                      }`}>
+                        {activeModel.finalAnswer}
+                      </span>
+                    </div>
+                    <span className="px-2.5 py-1 rounded bg-white text-xs font-mono font-bold border border-current shadow-2xs">
+                      {activeModel.form === 'POS' ? 'POS Form Verified' : 'SOP Form Verified'}
+                    </span>
+                  </div>
 
-                          {/* Verification Note */}
-                          {model.verificationNote && (
-                            <p className="text-[11px] text-slate-500 italic pt-1">
-                              Note: {model.verificationNote}
-                            </p>
-                          )}
-                        </div>
-                      </div>
+                  {/* Verification Note */}
+                  {activeModel.verificationNote && (
+                    <div className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] text-slate-600 leading-relaxed">
+                      <strong className="text-slate-700">Verification Note:</strong> {activeModel.verificationNote}
                     </div>
                   )}
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

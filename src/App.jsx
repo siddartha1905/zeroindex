@@ -741,12 +741,20 @@ export function App() {
                 adminSession.isOwner
               );
 
+              // Safe development-only preview for faculty review of Sections 2.6 and 2.7
+              const isLocalFacultyReviewRoute = Boolean(
+                import.meta.env.DEV &&
+                (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) &&
+                workspaceTab === 'units' &&
+                (workspaceSubId === '2.6' || workspaceSubId === '2.7')
+              );
+
               // Validate route-level accessibility for active tab and section
               const activeRoute = workspaceTab === 'units'
                 ? `workspace/units/${workspaceSubId}`
                 : `workspace/${workspaceTab}`;
 
-              const isCurrentRouteAccessible = isAdminPreview || isRoutePubliclyAccessible(activeRoute, contentOverrides);
+              const isCurrentRouteAccessible = isAdminPreview || isLocalFacultyReviewRoute || isRoutePubliclyAccessible(activeRoute, contentOverrides);
 
               if (!isCurrentRouteAccessible) {
                 if (workspaceTab === 'units') {
@@ -791,6 +799,7 @@ export function App() {
                   initialSubModuleId={workspaceSubId}
                   contentOverrides={contentOverrides}
                   isAdminPreview={isAdminPreview}
+                  isLocalFacultyReview={isLocalFacultyReviewRoute}
                 />
               );
             })()

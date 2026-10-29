@@ -4,8 +4,8 @@
 
 - Package: `zeroindex`
 - Declared package version: `2.0.0`
-- Source files (.js/.jsx/.ts/.tsx/.css/.json): **100**
-- Verification script names discovered: **23**
+- Source files (.js/.jsx/.ts/.tsx/.css/.json): **103**
+- Verification script names discovered: **30**
 
 ## Selected declared dependencies
 
@@ -30,12 +30,19 @@
 - `scripts/verifyAdminDashboardModernisation.mjs`
 - `scripts/verifyAtlasActivityExperience.mjs`
 - `scripts/verifyDldResources.mjs`
+- `scripts/verifyDldSection25.mjs`
+- `scripts/verifyDldSection26.mjs`
+- `scripts/verifyDldSection27.mjs`
 - `scripts/verifyIdeaInboxFix.mjs`
 - `scripts/verifyInteractiveSolvers.mjs`
 - `scripts/verifyLiveSupabasePostMigration.mjs`
+- `scripts/verifyLiveSupabaseResources.mjs`
+- `scripts/verifyPhase5B11Resources.mjs`
 - `scripts/verifyProjectDeskFoundation.mjs`
 - `scripts/verifyProjectDeskPhase25Hardening.mjs`
 - `scripts/verifyProjectDeskPhase2UI.mjs`
+- `scripts/verifyResourceManager.mjs`
+- `scripts/verifyResponsiveTabs.mjs`
 - `scripts/verifySection15Math.mjs`
 - `scripts/verifySection17.mjs`
 - `scripts/verifySection21Math.mjs`
@@ -59,6 +66,7 @@
 - `src/components/BooleanLawsCheatSheet.jsx`
 - `src/components/BottomNav.jsx`
 - `src/components/BridgeLanding.jsx`
+- `src/components/ConnectedCircuitViewer.jsx`
 - `src/components/ContextualLearningStrip.jsx`
 - `src/components/CuratedVideoCard.jsx`
 - `src/components/DldSubjectHome.jsx`
@@ -105,6 +113,7 @@
 - `src/components/admin/AuditLogModal.jsx`
 - `src/components/admin/MfaEnrollModal.jsx`
 - `src/components/admin/ProjectDeskView.jsx`
+- `src/components/admin/ResourceManagerView.jsx`
 - `src/components/admin/SecureDraftPreviewModal.jsx`
 - `src/components/admin/SupabaseSetupModal.jsx`
 - `src/components/atlas/EverydayConversationsActivity.jsx`
@@ -148,6 +157,7 @@
 - `src/services/authService.js`
 - `src/services/contentRegistryService.js`
 - `src/services/projectDeskService.js`
+- `src/services/resourceManagerService.js`
 - `src/services/supabaseClient.js`
 - `src/theme/pastelTheme.js`
 - `src/utils/booleanEngine.js`

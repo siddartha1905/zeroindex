@@ -42,6 +42,7 @@ import { AuditLogModal } from './AuditLogModal';
 import { SecureDraftPreviewModal } from './SecureDraftPreviewModal';
 import { SupabaseSetupModal } from './SupabaseSetupModal';
 import { ProjectDeskView } from './ProjectDeskView';
+import { ResourceManagerView } from './ResourceManagerView';
 
 export const AdminDashboard = ({ 
   adminSession, 
@@ -565,14 +566,27 @@ export const AdminDashboard = ({
               </button>
             )
           ) : (
-            <button
-              type="button"
-              onClick={() => handleInspectDraft(item.id)}
-              className="px-2.5 py-1.5 rounded-xl bg-white border border-[#DDE2DA] hover:border-[#285C49] text-[#285C49] font-bold text-[11px] transition-colors cursor-pointer"
-              title="Inspect confidential draft"
-            >
-              Inspect Draft
-            </button>
+            <div className="flex items-center gap-1.5">
+              {Boolean(import.meta.env.DEV && typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') && (item.id === 'dld-sec-2.6' || item.id === 'dld-sec-2.7')) && (
+                <button
+                  type="button"
+                  onClick={() => onPreviewRoute ? onPreviewRoute(item.route) : (onNavigatePublicRoute && onNavigatePublicRoute(item.route))}
+                  className="px-2.5 py-1.5 rounded-xl bg-[#EBF3ED] border border-[#C2D8C9] hover:bg-[#DCE7E1] text-[#285C49] font-bold text-[11px] transition-colors cursor-pointer flex items-center gap-1"
+                  title="Open local draft preview for faculty review"
+                >
+                  <ExternalLink className="w-3.5 h-3.5" />
+                  <span>Preview Locally</span>
+                </button>
+              )}
+              <button
+                type="button"
+                onClick={() => handleInspectDraft(item.id)}
+                className="px-2.5 py-1.5 rounded-xl bg-white border border-[#DDE2DA] hover:border-[#285C49] text-[#285C49] font-bold text-[11px] transition-colors cursor-pointer"
+                title="Inspect confidential draft"
+              >
+                Inspect Draft
+              </button>
+            </div>
           )}
 
         </div>
@@ -760,7 +774,7 @@ export const AdminDashboard = ({
           </div>
         )}
 
-        {/* Primary Workspace Mode Switcher: Publishing Controls vs Project Desk */}
+        {/* Primary Workspace Mode Switcher: Publishing Controls vs Resource Manager vs Project Desk */}
         <div className="flex items-center justify-start border-b border-[#DDE2DA] pb-4">
           <div className="flex items-center gap-1.5 p-1 rounded-2xl bg-[#F0F1EB]">
             <button
@@ -774,6 +788,19 @@ export const AdminDashboard = ({
             >
               <Layers className="w-4 h-4" />
               <span>Publishing Controls</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setWorkspaceMode('resource-manager')}
+              className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center gap-2 ${
+                workspaceMode === 'resource-manager'
+                  ? 'bg-white text-[#285C49] shadow-xs'
+                  : 'text-[#5F6C64] hover:text-[#25352D]'
+              }`}
+            >
+              <FolderOpen className="w-4 h-4" />
+              <span>Resource Manager</span>
             </button>
 
             <button
@@ -794,7 +821,9 @@ export const AdminDashboard = ({
           </div>
         </div>
 
-        {workspaceMode === 'project-desk' ? (
+        {workspaceMode === 'resource-manager' ? (
+          <ResourceManagerView adminSession={adminSession} />
+        ) : workspaceMode === 'project-desk' ? (
           <ProjectDeskView adminSession={adminSession} />
         ) : (
           <>

@@ -1895,13 +1895,13 @@ export const dldSection25Data = {
       verificationNote: "Without don't-cares {4, 6}, {0, 2} is a pair yielding (A + C). With don't-cares, it expands to quad (C)."
     },
 
-    // --- SPECIAL CASES & TIE-BREAKING MODELS (2) ---
+    // --- SPECIAL CASES (2) ---
     {
       id: "KM2.5-M33",
       category: "Special Cases",
       form: "SOP",
       difficulty: "Advanced",
-      title: "Model 33: Multiple Valid Minimal Covers (Tie-Breaking)",
+      title: "Model 33: Essential Prime Implicants with a Redundant Center Quad",
       problemStatement: "Minimize in SOP: F(A, B, C, D) = Σ m(1, 5, 6, 7, 11, 12, 13, 15)",
       mapType: "fourVar",
       minterms: [1, 5, 6, 7, 11, 12, 13, 15],
@@ -1909,44 +1909,44 @@ export const dldSection25Data = {
       targetPolarity: "1",
       groupingSteps: [
         {
-          group: "EPI G1",
-          cells: [5, 7, 13, 15],
-          size: 4,
-          type: "Center Quad",
-          constantVars: "B=1, D=1",
-          term: "BD",
-          annotation: "[Essential Prime Implicant]"
+          group: "G1",
+          cells: [1, 5],
+          size: 2,
+          type: "Pair (Col CD=01, Rows AB=00 & 01)",
+          constantVars: "A=0, C=0, D=1; B changes",
+          term: "A'C'D",
+          annotation: "[Essential Prime Implicant: uniquely covers minterm 1]"
         },
         {
-          group: "EPI G2",
+          group: "G2",
           cells: [6, 7],
           size: 2,
-          type: "Pair",
-          constantVars: "A=0, B=1, C=1",
+          type: "Pair (Row AB=01, Cols CD=11 & 10)",
+          constantVars: "A=0, B=1, C=1; D changes",
           term: "A'BC",
-          annotation: "[Essential: covers minterm 6]"
+          annotation: "[Essential Prime Implicant: uniquely covers minterm 6]"
         },
         {
-          group: "EPI G3",
+          group: "G3",
           cells: [12, 13],
           size: 2,
-          type: "Pair",
-          constantVars: "A=1, B=1, C=0",
+          type: "Pair (Row AB=11, Cols CD=00 & 01)",
+          constantVars: "A=1, B=1, C=0; D changes",
           term: "ABC'",
-          annotation: "[Essential: covers minterm 12]"
+          annotation: "[Essential Prime Implicant: uniquely covers minterm 12]"
         },
         {
-          group: "Choice A (Quad)",
-          cells: [1, 5, 11, 15],
-          size: 4,
-          type: "Quad (Cols 01 & 11, Rows 00 & 10)",
-          constantVars: "C'D",
-          term: "C'D (covering m1)",
-          annotation: "[Option 1 minimal cover: F = BD + A'BC + ABC' + C'D]"
+          group: "G4",
+          cells: [11, 15],
+          size: 2,
+          type: "Pair (Col CD=11, Rows AB=11 & 10)",
+          constantVars: "A=1, C=1, D=1; B changes",
+          term: "ACD",
+          annotation: "[Essential Prime Implicant: uniquely covers minterm 11]"
         }
       ],
-      finalAnswer: "F = BD + A'BC + ABC' + C'D (Multiple minimal covers exist)",
-      verificationNote: "Demonstrates that K-Map minimization does not always have a uniquely singular algebraic representation."
+      finalAnswer: "F = A'C'D + A'BC + ABC' + ACD",
+      verificationNote: "All four pairs are Essential Prime Implicants (EPIs) because minterms 1, 6, 11, and 12 are uniquely covered by G1, G2, G4, and G3 respectively. While the center cells {5, 7, 13, 15} form a valid 4-cell prime implicant quad yielding BD, all four of its minterms are already completely covered by the four essential pairs. Therefore, BD is a redundant prime implicant and must be omitted to preserve minimality. The unique minimal SOP has 4 terms and 12 literals."
     },
     {
       id: "KM2.5-M34",

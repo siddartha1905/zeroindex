@@ -156,29 +156,32 @@ export const Section24View = ({ section, onNavigate }) => {
         </div>
       </div>
 
-      {/* 2. Navigation Tabs */}
-      <div className="border-b border-[#DCE7E1] bg-white rounded-xl p-1.5 shadow-2xs overflow-x-auto">
-        <nav className="flex space-x-1 sm:space-x-2 min-w-max" aria-label="Tabs">
-          {tabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3.5 py-2.5 rounded-lg text-xs font-bold transition-all ${
-                  isActive
-                    ? 'bg-[#1E4537] text-white shadow-xs'
-                    : 'text-[#5F6C64] hover:text-[#1E4537] hover:bg-[#F2F7F4]'
-                }`}
-              >
-                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-[#5F6C64]'}`} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </nav>
-      </div>
+      {/* 2. Responsive 6-Tab Navigation Bar (Section 2.5 pattern: no horizontal scrollbar, fully discoverable) */}
+      <nav 
+        aria-label="Section navigation"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-1.5 p-1.5 bg-[#FAF8F5] border border-[#DCE7E1] rounded-2xl shadow-2xs"
+      >
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
+          return (
+            <button
+              key={tab.id}
+              role="tab"
+              aria-selected={isActive}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center justify-center gap-1.5 px-2.5 py-2.5 sm:py-2 rounded-xl font-mono text-xs font-semibold text-center transition-all cursor-pointer leading-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-[#285C49] ${
+                isActive
+                  ? 'bg-white text-[#285C49] shadow-xs border border-[#DCE7E1] font-bold ring-1 ring-[#285C49]/20'
+                  : 'text-[#5F6C64] hover:text-[#1E293B] hover:bg-white/60'
+              }`}
+            >
+              <Icon className={`w-3.5 h-3.5 flex-shrink-0 ${isActive ? 'text-[#285C49]' : 'text-[#8C9A90]'}`} />
+              <span className="text-center">{tab.label}</span>
+            </button>
+          );
+        })}
+      </nav>
 
       {/* ------------------------------------------------------------------ */}
       {/* TAB 1: START HERE                                                  */}
