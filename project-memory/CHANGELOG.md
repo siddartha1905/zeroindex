@@ -2,6 +2,32 @@
 
 Record significant completed work in this document. Future intentions belong in `ROADMAP.md`. Each entry must state the actual change, affected files, tests performed, and deployment state.
 
+## 2026-10-29: Phase 5B.12: Publish DLD Sections 2.6 and 2.7 to Students
+
+- **Type**: curriculum-publication / access-control / route-verification / production-release
+- **Summary**: Published DLD Section 2.6 (Don't-Care Conditions, `dld-sec-2.6`) and Section 2.7 (NAND and NOR Implementation, `dld-sec-2.7`) following explicit faculty owner authorization:
+  1. **Inspection of Publishing Controls**:
+     - Verified that the Admin Dashboard could not publish without code changes because items were set to `editorialStatus: 'planned'`, triggering mandatory safeguards in `updateItemVisibility()` that prevent publication of non-published items.
+     - Confirmed that modifying canonical registry records to `published` with `isPublic: true` was required.
+  2. **Canonical Publication and Fail-Closed Safeguard**:
+     - Updated `dld-sec-2.6` and `dld-sec-2.7` in `src/data/centralContentRegistry.js` to `editorialStatus: 'published'` and `isPublic: true`.
+     - Updated `fetchContentRegistry()` fallback in `src/services/contentRegistryService.js` and `isItemPubliclyAccessible()` fallback in `src/data/centralContentRegistry.js` to preserve published status for canonically approved curriculum while ensuring all drafts and planned items (Units 3 to 5, Atlas roadmaps) strictly fail closed.
+  3. **Curriculum Availability and Navigation Synchronization**:
+     - Updated `src/data/dldAvailabilityConfig.js` to set Unit II to "Available" with 7 completed sections and overall status "Units I & II Live".
+     - Updated `src/data/dldUnit2Master.js` publication status to "Available (Sections 2.1 to 2.7 Complete)".
+     - Updated `src/components/DldWorkspace.jsx` to dynamically determine planned status via `!isSectionAccessible(sub.id)`.
+  4. **Verification and Production Build**:
+     - `testUniversalVisibility.mjs`: PASSED (all 5 pillars comply, Sections 2.1 to 2.7 accessible, Unit III blocked).
+     - `verifyAdminControlSystem.mjs`: 67/67 PASSED.
+     - `verifyDldSection26.mjs`: 55/55 PASSED.
+     - `verifyDldSection27.mjs`: 139/139 PASSED.
+     - `verifyDldResources.mjs`: 237/237 PASSED.
+     - `verifyResponsiveTabs.mjs`: 49/49 PASSED.
+     - `verifyLiveSupabaseResources.mjs`: PASSED.
+     - `npm run build`: Succeeded in 4.95s with zero errors.
+     - Zero-Dash Standard: 0 em-dashes and 0 en-dashes across all files.
+- **Affected Files**: `src/data/centralContentRegistry.js`, `src/services/contentRegistryService.js`, `src/data/dldAvailabilityConfig.js`, `src/data/dldUnit2Master.js`, `src/components/DldWorkspace.jsx`, `scripts/testUniversalVisibility.mjs`, `scripts/verifyAdminControlSystem.mjs`, `scripts/verifyDldSection26.mjs`, `project-memory/DECISIONS.md`, `project-memory/CURRENT_STATE.md`, `project-memory/CHANGELOG.md`.
+
 ## 2026-10-29: Phase 5B.11D: Resume Final Release After Successful Supabase Migration
 
 - **Type**: supabase-verification / live-persistence / security-hardening / release-audit / build-verification

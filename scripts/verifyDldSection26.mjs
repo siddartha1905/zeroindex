@@ -339,9 +339,9 @@ console.log('\nSUITE 6: Access Control & Publication Gating');
 
 const sec26Record = centralContentRegistry.find(item => item.id === 'dld-sec-2.6');
 assert(sec26Record !== undefined, 'Central content registry contains dld-sec-2.6 record');
-assert(sec26Record?.editorialStatus === 'planned', 'Registry editorialStatus is planned');
-assert(sec26Record?.isPublic === false, 'Registry isPublic flag is false (unpublished for general visitors)');
-assert(isItemPubliclyAccessible('dld-sec-2.6', {}) === false, 'isItemPubliclyAccessible returns false for public visitors with no overrides');
+assert(sec26Record?.editorialStatus === 'published', 'Registry editorialStatus is published');
+assert(sec26Record?.isPublic === true, 'Registry isPublic flag is true (published for students)');
+assert(isItemPubliclyAccessible('dld-sec-2.6', {}) === true, 'isItemPubliclyAccessible returns true for students with no overrides');
 
 // -------------------------------------------------------------
 // SUITE 7: Strict Zero-Dash Standard Audit

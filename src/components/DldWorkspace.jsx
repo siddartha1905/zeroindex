@@ -359,7 +359,7 @@ export const DldWorkspace = ({
                               .filter(sub => isSectionAccessible(sub.id))
                               .map((sub) => {
                                 const isSubActive = activeSubModuleId === sub.id;
-                                const isPlanned = sub.id === '2.6' || sub.id === '2.7';
+                                const isPlanned = !isSectionAccessible(sub.id);
                                 return (
                                   <button
                                     key={sub.id}

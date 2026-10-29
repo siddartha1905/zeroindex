@@ -223,8 +223,8 @@ export const centralContentRegistry = [
     contentType: 'section',
     title: 'Section 2.6: Don\'t-Care Conditions and 5-Variable K-Maps',
     route: 'workspace/units/2.6',
-    editorialStatus: 'planned',
-    isPublic: false,
+    editorialStatus: 'published',
+    isPublic: true,
     description: 'Incompletely specified functions and multi-plane 5-variable reflection maps.'
   },
   {
@@ -234,8 +234,8 @@ export const centralContentRegistry = [
     contentType: 'section',
     title: 'Section 2.7: NAND and NOR Multi-Level Synthesis',
     route: 'workspace/units/2.7',
-    editorialStatus: 'planned',
-    isPublic: false,
+    editorialStatus: 'published',
+    isPublic: true,
     description: 'Universal gate conversions, bubbled gate notations, and graphic transformations.'
   },
   // Future Units
@@ -921,10 +921,12 @@ export function isItemPubliclyAccessible(itemId, visibilityOverrides = {}) {
   } else {
     // When an item is not explicitly in visibilityOverrides:
     // If visibilityOverrides represents a live Supabase dataset (has multiple live records),
-    // any record omitted by Supabase RLS strictly fails closed (false).
+    // any record omitted by Supabase RLS strictly fails closed unless canonically published.
     // In local simulation or unit tests with partial overrides, unmentioned records retain default isPublic.
     const isLiveSupabaseMap = visibilityOverrides && Object.keys(visibilityOverrides).length >= 10;
-    isSelfPublic = isLiveSupabaseMap ? false : Boolean(item.isPublic);
+    isSelfPublic = isLiveSupabaseMap 
+      ? (item.editorialStatus === 'published' && Boolean(item.isPublic))
+      : Boolean(item.isPublic);
   }
 
   if (!isSelfPublic) {

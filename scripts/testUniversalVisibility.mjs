@@ -98,15 +98,15 @@ async function runUniversalVisibilityAudit() {
     assert(accessible === true, `Section ${secId} is PUBLIC`, `Expected true, got ${accessible}`);
   }
 
-  // Unit II sections: 2.1 to 2.5 match Unit II access; 2.6 and 2.7 (planned) are always blocked
+  // Unit II sections: 2.1 to 2.7 match Unit II access; Unit III sections (3.1 to 3.7, planned) are always blocked
   const expectedUnit2Access = Boolean(dldUnit2Public);
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 7; i++) {
     const secId = `2.${i}`;
     const accessible = isRoutePubliclyAccessible(`workspace/units/${secId}`, liveOverrides);
     assert(accessible === expectedUnit2Access, `Section ${secId} matches Unit II live access (${expectedUnit2Access})`, `Expected ${expectedUnit2Access}, got ${accessible}`);
   }
-  for (let i = 6; i <= 7; i++) {
-    const secId = `2.${i}`;
+  for (let i = 1; i <= 7; i++) {
+    const secId = `3.${i}`;
     const accessible = isRoutePubliclyAccessible(`workspace/units/${secId}`, liveOverrides);
     assert(accessible === false, `Planned Section ${secId} is BLOCKED`, `Expected false, got ${accessible}`);
   }

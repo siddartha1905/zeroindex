@@ -21,7 +21,7 @@ export const dldUnit2Master = {
   title: "Boolean Algebra and Gate-Level Minimization",
   courseOutcome: "CO2",
   estimatedTime: "9 Lectures / 3 Weeks",
-  publicationStatus: "Partially Available (Sections 2.1 to 2.5 Live)",
+  publicationStatus: "Available (Sections 2.1 to 2.7 Complete)",
   isLive: true,
   summary: "Axiomatic foundations of switching algebra, Huntington postulates, algebraic theorems, canonical and standard forms, two-, three-, and four-variable Karnaugh Map minimization, prime implicant determination, don't-care conditions, and universal NAND/NOR logic synthesis.",
 
