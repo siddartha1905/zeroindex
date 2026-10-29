@@ -94,10 +94,10 @@ export async function fetchContentRegistry() {
               updatedAt: dbRow.updated_at
             };
           }
-          // Fail closed: Any item omitted by Supabase RLS is hidden or unpublished
+          // Fail closed for drafts and planned items; preserve published status for approved curriculum
           return {
             ...item,
-            isPublic: false
+            isPublic: item.editorialStatus === 'published' && Boolean(item.isPublic)
           };
         });
       }

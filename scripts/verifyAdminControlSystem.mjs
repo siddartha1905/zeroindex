@@ -84,12 +84,14 @@ async function runSuite() {
 
   // Published items are publicly accessible by default
   assert(isItemPubliclyAccessible('atlas-english-communication') === true, 'Published English Communication roadmap is publicly accessible');
+  assert(isItemPubliclyAccessible('dld-sec-2.6') === true, 'Published DLD Section 2.6 is publicly accessible');
+  assert(isItemPubliclyAccessible('dld-sec-2.7') === true, 'Published DLD Section 2.7 is publicly accessible');
 
   // Draft and planned items are NEVER publicly accessible even if isPublic is forced
   assert(isItemPubliclyAccessible('readout-article-relays-to-tensors') === false, 'Readout draft is strictly inaccessible to public');
   assert(isItemPubliclyAccessible('folio-essay-teaching-from-index-zero') === false, 'Folio draft is strictly inaccessible to public');
   assert(isItemPubliclyAccessible('atlas-soft-skills') === false, 'Planned Atlas roadmap is strictly inaccessible to public');
-  assert(isItemPubliclyAccessible('dld-sec-2.6') === false, 'Planned DLD Section 2.6 is strictly inaccessible to public');
+  assert(isItemPubliclyAccessible('dld-unit-3') === false, 'Planned DLD Unit III is strictly inaccessible to public');
 
   // Test forcing isPublic on draft via overrides: must still return false
   const forcedDraftOverrides = { 'readout-article-relays-to-tensors': true, 'atlas-soft-skills': true };
