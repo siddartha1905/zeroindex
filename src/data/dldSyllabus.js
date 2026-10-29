@@ -72,7 +72,7 @@ export const dldSyllabus = {
       unitNumber: 2,
       roman: "UNIT-II",
       title: "Boolean Algebra and Gate-Level Minimization",
-      status: "Partially Available (Sections 2.1 to 2.5)",
+      status: "Available (Sections 2.1 to 2.7 Complete)",
       hours: "9 Lectures",
       courseOutcome: "CO2",
       summary: "Concept of Boolean algebra, Basic Theorems and Properties of Boolean algebra, Boolean Functions, Canonical and Standard Forms, Minterms and Maxterms, Products of Sum Simplification, Sum of Products Simplification, Gate level Minimization Map Method, Three-Variable K-Map, Four Variable K-Maps, Don't-Care Conditions, NAND and NOR Implementation, Exclusive-OR Function implementation using NAND and NOR gates.",

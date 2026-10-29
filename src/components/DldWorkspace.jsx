@@ -320,7 +320,7 @@ export const DldWorkspace = ({
                                   ? (isSelected ? 'bg-white/20 text-white' : 'bg-[#2E6F40]/10 text-[#2E6F40]')
                                   : (isSelected ? 'bg-white/20 text-white' : 'bg-[#FEF3C7] text-[#D97706]')
                           }`}>
-                            {!isUnitAvail ? 'Unavailable' : isUnit1 ? 'Available' : (unit.unitNumber === 2 ? 'Partially Available' : 'Planned')}
+                            {!isUnitAvail ? 'Unavailable' : (unit.unitNumber === 1 || unit.unitNumber === 2) ? 'Available' : 'Planned'}
                           </span>
                         </button>
 
